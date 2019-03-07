@@ -2,7 +2,7 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="Oracle - @pvysdev" uuid="5c18d5b1-8912-4264-9746-0f7ce258c608">
-      <database-info product="Oracle" version="Oracle Database 11g Release 11.2.0.3.0 - 64bit Production" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0" family="ORACLE" exact-version="11.2.0.3">
+      <database-info product="Oracle" version="Oracle Database 11g Release 11.2.0.3.0 - 64bit Production" jdbc-version="4.0" driver-name="Oracle JDBC driver" driver-version="12.1.0.2.0" dbms="ORACLE" exact-version="11.2.0.3">
         <extra-name-characters>$#</extra-name-characters>
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
