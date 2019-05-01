@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -57,6 +58,8 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
      */
     @Override
     public int cost(Properties reqLabels, Properties currentLabels) {
+        Objects.requireNonNull(reqLabels);
+        Objects.requireNonNull(currentLabels);
         // exact match
         if (reqLabels.equals(currentLabels)) {
             LOG.debug("Exact connection match ({})", EXACT_MATCH);
@@ -109,6 +112,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     @SuppressWarnings("squid:S1192")
     private void initToken(String token, LabelableConnection labelableConnection)
             throws SQLException {
+        LOG.debug("Configure: Initialize connection for token {}", token);
         throwNoConnection(labelableConnection);
         BigDecimal userId;
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
@@ -132,6 +136,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
     private void initUser(String userId, LabelableConnection labelableConnection)
             throws SQLException {
+        LOG.debug("Configure: Initialize connection for user {}", userId);
         throwNoConnection(labelableConnection);
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
                 "BEGIN" +
@@ -151,6 +156,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
     private void initGeneric(LabelableConnection labelableConnection)
             throws SQLException {
+        LOG.debug("Configure: Initialize generic connection");
         throwNoConnection(labelableConnection);
         BigDecimal userId;
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
@@ -172,33 +178,27 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
     @Override
     public boolean configure(Properties reqLabels, Object conn) {
+        Objects.requireNonNull(reqLabels);
         try {
             LabelableConnection lconn = (LabelableConnection) conn;
             var currentLabels = lconn.getConnectionLabels();
+            LOG.debug("Configure connection for labels {}; current {}", reqLabels, currentLabels);
             if (reqLabels.containsKey(PROPERTY_TOKEN)) {
                 // required token connection
-                if (reqLabels.getProperty(PROPERTY_TOKEN).equals(currentLabels.getProperty(PROPERTY_TOKEN))) {
-                    LOG.debug("Configure: Token match for current session, no action needed");
-                } else {
-                    LOG.debug("Configure: Initialize connection for token {}",
-                            () -> reqLabels.getProperty(PROPERTY_TOKEN));
+                if ((currentLabels == null) ||
+                        (!reqLabels.getProperty(PROPERTY_TOKEN).equals(currentLabels.getProperty(PROPERTY_TOKEN)))) {
                     initToken(reqLabels.getProperty(PROPERTY_TOKEN), lconn);
                 }
             } else if (reqLabels.containsKey(PROPERTY_USER)) {
                 // required user connection
-                if (reqLabels.getProperty(PROPERTY_USER).equals(currentLabels.getProperty(PROPERTY_USER))) {
-                    LOG.debug("Configure: User match for current connection, no action needed");
-                } else {
-                    LOG.debug("Configure: Initialize connection for user {}",
-                            () -> reqLabels.getProperty(PROPERTY_USER));
+                if ((currentLabels == null) ||
+                        (!reqLabels.getProperty(PROPERTY_USER).equals(currentLabels.getProperty(PROPERTY_USER)))) {
                     initUser(reqLabels.getProperty(PROPERTY_USER), lconn);
                 }
             } else {
                 // required generic connection
-                if (CONNECTION_GENERIC.equals(currentLabels.getProperty(PROPERTY_TYPE))) {
-                    LOG.debug("Configure: Reusing generic connection, no action needed");
-                } else {
-                    LOG.debug("Configure: Initialize generic connection");
+                if ((currentLabels == null) ||
+                        (!CONNECTION_GENERIC.equals(currentLabels.getProperty(PROPERTY_TYPE)))) {
                     initGeneric(lconn);
                 }
             }
