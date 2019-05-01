@@ -21,10 +21,10 @@ import java.sql.SQLException;
  */
 @SuppressWarnings("unused")
 @ApplicationScoped
-public class ProvysDBContext {
+public class ProvysDbContext {
 
     @Nonnull
-    private static final Logger LOG = LogManager.getLogger(ProvysDBContext.class);
+    private static final Logger LOG = LogManager.getLogger(ProvysDbContext.class);
 
     @Nonnull
     private final ProvysConnectionPoolDataSource provysDataSource;
@@ -38,7 +38,7 @@ public class ProvysDBContext {
      *
      * @throws SQLException when initialisation of session pool for connection to PROVYS database fails
      */
-    public ProvysDBContext() throws SQLException {
+    public ProvysDbContext() throws SQLException {
         provysDataSource = buildProvysDBDataSource();
         jooqConfiguration = buildJooqConfiguration();
     }
