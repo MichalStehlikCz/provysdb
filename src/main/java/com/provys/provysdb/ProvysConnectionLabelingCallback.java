@@ -115,13 +115,14 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
         LOG.debug("Configure: Initialize connection for token {}", token);
         throwNoConnection(labelableConnection);
         BigDecimal userId;
+        // switch using token supported even if working under light user (like REP)
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
                 "BEGIN" +
-                        "  KER_User_PG.mp_SetUserID(\n" +
+                        "  KEC_User_CP.mp_SetUserID(\n" +
                         "        p_TokenID => :c_Token\n" +
                         "      , p_Remove => FALSE\n" +
                         "    );\n" +
-                        "  :c_User_ID:=KER_User_PG.mf_GetUserID;" +
+                        "  :c_User_ID:=KER_User_EP.mf_GetUserID;" +
                         "  KER_Server_EP.mp_Commit;\n" +
                         "END;")) {
             callableStatement.setString("c_Token", token);
@@ -138,6 +139,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
             throws SQLException {
         LOG.debug("Configure: Initialize connection for user {}", userId);
         throwNoConnection(labelableConnection);
+        // user impersonalisation only works under strong user (PG access)
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
                 "BEGIN" +
                         "  KER_User_PG.mp_SetUserID(\n" +
@@ -159,12 +161,11 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
         LOG.debug("Configure: Initialize generic connection");
         throwNoConnection(labelableConnection);
         BigDecimal userId;
+        // default session initialisation works under any user
         try (var callableStatement = ((Connection) labelableConnection).prepareCall(
                 "BEGIN" +
-                        "  KER_User_PG.mp_SetUserID(\n" +
-                        "        p_TestRights => FALSE\n" +
-                        "    );\n" +
-                        "  :c_User_ID:=KER_User_PG.mf_GetUserID;" +
+                        "  KEC_User_CP.mp_SetUserID;\n" +
+                        "  :c_User_ID:=KER_User_EP.mf_GetUserID;" +
                         "  KER_Server_EP.mp_Commit;\n" +
                         "END;")) {
             callableStatement.registerOutParameter("c_User_ID", Types.NUMERIC);
