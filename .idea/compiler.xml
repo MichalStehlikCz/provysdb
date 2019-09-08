@@ -6,10 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="provysdb" />
+        <module name="dbcontext" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="dbcontext" target="11" />
       <module name="provysdb" target="11" />
     </bytecodeTargetLevel>
   </component>

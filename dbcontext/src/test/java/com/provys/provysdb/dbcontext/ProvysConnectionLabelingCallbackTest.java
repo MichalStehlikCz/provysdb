@@ -1,4 +1,4 @@
-package com.provys.provysdb;
+package com.provys.provysdb.dbcontext;
 
 import com.provys.common.exception.InternalException;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +12,7 @@ import java.io.StringReader;
 import java.util.Properties;
 import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
-import static com.provys.provysdb.ProvysConnectionLabelingCallback.*;
+import static com.provys.provysdb.dbcontext.ProvysConnectionLabelingCallback.*;
 
 class ProvysConnectionLabelingCallbackTest {
 

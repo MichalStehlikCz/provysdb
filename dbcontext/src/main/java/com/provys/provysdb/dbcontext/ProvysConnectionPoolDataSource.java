@@ -1,4 +1,4 @@
-package com.provys.provysdb;
+package com.provys.provysdb.dbcontext;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

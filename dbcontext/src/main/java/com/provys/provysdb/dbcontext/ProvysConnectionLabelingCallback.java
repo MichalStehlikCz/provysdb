@@ -1,4 +1,4 @@
-package com.provys.provysdb;
+package com.provys.provysdb.dbcontext;
 
 import com.provys.common.exception.InternalException;
 import oracle.ucp.ConnectionLabelingCallback;

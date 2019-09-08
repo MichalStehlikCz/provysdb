@@ -1,4 +1,4 @@
-package com.provys.provysdb;
+package com.provys.provysdb.dbcontext;
 
 import com.provys.common.exception.RegularException;
 import org.apache.logging.log4j.LogManager;
@@ -76,6 +76,7 @@ public class ProvysDbContext {
      * Retrieve DSLContext for use by JOOQ to construct and execute queries and statements against Provys database.
      * Context is attached to PROVYS database and has proper logging and other settings.
      *
+     * @param dbToken is token stored in database, used to validate user in switch of Provys user context in database
      * @return context based on provys data source
      */
     @Nonnull

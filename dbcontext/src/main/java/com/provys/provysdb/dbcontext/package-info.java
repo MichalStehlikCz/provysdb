@@ -1,4 +1,4 @@
 @ParametersAreNonnullByDefault
-package com.provys.provysdb;
+package com.provys.provysdb.dbcontext;
 
 import javax.annotation.ParametersAreNonnullByDefault;
