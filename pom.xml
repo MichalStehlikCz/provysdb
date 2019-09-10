@@ -107,7 +107,12 @@
             <dependency>
                 <groupId>com.provys.common</groupId>
                 <artifactId>common-exception</artifactId>
-                <version>1.0.4</version>
+                <version>1.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>com.provys.common</groupId>
+                <artifactId>common-datatype</artifactId>
+                <version>1.0.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -92,6 +92,40 @@ public class ProvysDbContext {
     }
 
     /**
+     * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper that provides
+     * monitoring, logging and wrappers around prepared statement and result-set, supporting Provys framework specific
+     * classes / mapping to types used in database
+     *
+     * @return retrieved connection
+     */
+    @Nonnull
+    public ProvysConnection getConnection() {
+        try {
+            return new ProvysConnection(provysDataSource.getConnection());
+        } catch (SQLException e) {
+            throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
+        }
+    }
+
+    /**
+     * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper that provides
+     * monitoring, logging and wrappers around prepared statement and result-set, supporting Provys framework specific
+     * classes / mapping to types used in database. Uses token to switch to particular Provys user account
+     *
+     * @param dbToken is valid token, registered in Provys database
+     * @return retrieved connection
+     */
+    @Nonnull
+    public ProvysConnection getConnection(String dbToken) {
+        try {
+            return new ProvysConnection(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)));
+        } catch (SQLException e) {
+            throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",
+                    "Failed to initialize connection with token", e);
+        }
+    }
+
+    /**
      * @return username used to open connection to Provys database
      */
     @Nonnull
