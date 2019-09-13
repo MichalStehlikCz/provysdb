@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/sqlbuilder/SqlBuilder.iml" filepath="$PROJECT_DIR$/sqlbuilder/SqlBuilder.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbcontext/dbcontext.iml" filepath="$PROJECT_DIR$/dbcontext/dbcontext.iml" />
       <module fileurl="file://$PROJECT_DIR$/provysdb.iml" filepath="$PROJECT_DIR$/provysdb.iml" />
       <module fileurl="file://$PROJECT_DIR$/sqlparser/sqlparser.iml" filepath="$PROJECT_DIR$/sqlparser/sqlparser.iml" />

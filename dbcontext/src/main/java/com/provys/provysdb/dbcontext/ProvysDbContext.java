@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * Class supports connection to Provys database and gives access to this database either via datasource or via JOOQ
- * context.
+ * Class supports connection to Provys database and gives access to this database via connection (class
+ * {@code ProvysConnection})
  *
  * @author stehlik
  */
@@ -101,7 +101,7 @@ public class ProvysDbContext {
     @Nonnull
     public ProvysConnection getConnection() {
         try {
-            return new ProvysConnection(provysDataSource.getConnection());
+            return new ProvysConnectionImpl(provysDataSource.getConnection());
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
         }
@@ -118,7 +118,7 @@ public class ProvysDbContext {
     @Nonnull
     public ProvysConnection getConnection(String dbToken) {
         try {
-            return new ProvysConnection(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)));
+            return new ProvysConnectionImpl(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)));
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",
                     "Failed to initialize connection with token", e);
