@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sqlbuilder</artifactId>
     <packaging>jar</packaging>
-    <name>DbContext</name>
+    <name>SqlBuilder</name>
     <dependencies>
         <dependency>
             <groupId>javax.enterprise</groupId>

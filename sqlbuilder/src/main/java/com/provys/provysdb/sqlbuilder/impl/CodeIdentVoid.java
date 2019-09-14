@@ -35,4 +35,11 @@ class CodeIdentVoid implements CodeIdent {
     public void use(StringBuilder builder) {
         // does nothing and it is exactly what we want
     }
+
+    @Nonnull
+    @Override
+    public CodeIdent copy() {
+        // is non-mutable thus can return self
+        return this;
+    }
 }

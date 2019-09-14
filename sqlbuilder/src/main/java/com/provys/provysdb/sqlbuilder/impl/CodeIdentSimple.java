@@ -7,12 +7,17 @@ import javax.annotation.Nonnull;
 /**
  * Simple ident (all lines with the same prefix)
  */
-public class CodeIdentSimple implements CodeIdent {
+class CodeIdentSimple implements CodeIdent {
+
+    @Nonnull
+    static CodeIdentSimple of(String ident) {
+        return new CodeIdentSimple(ident);
+    }
 
     @Nonnull
     private final String ident;
 
-    CodeIdentSimple(String ident) {
+    private CodeIdentSimple(String ident) {
         this.ident = ident;
     }
 
@@ -26,5 +31,12 @@ public class CodeIdentSimple implements CodeIdent {
     @Override
     public void use(StringBuilder builder) {
         builder.append(get());
+    }
+
+    @Nonnull
+    @Override
+    public CodeIdent copy() {
+        /* non-mutable, thus can return itself */
+        return this;
     }
 }
