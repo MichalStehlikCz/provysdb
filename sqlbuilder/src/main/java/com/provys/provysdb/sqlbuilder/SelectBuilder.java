@@ -118,4 +118,13 @@ public interface SelectBuilder {
      */
     @Nonnull
     Select build();
+
+    /**
+     * Return alias corresponding to given alias text; used to replace {@code <<int>>} strings with actual values
+     *
+     * @param tableAlias is text supplied for lookup
+     * @return string corresponding to supplied alias
+     */
+    @Nonnull
+    String getTableAlias(SqlTableAlias tableAlias);
 }

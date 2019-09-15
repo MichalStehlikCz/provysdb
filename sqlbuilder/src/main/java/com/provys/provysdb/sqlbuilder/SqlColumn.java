@@ -13,5 +13,5 @@ public interface SqlColumn extends SqlElement {
      * column, its name is also used as alias
      */
     @Nonnull
-    Optional<String> getAlias();
+    Optional<SqlName> getAlias();
 }

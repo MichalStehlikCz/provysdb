@@ -3,8 +3,10 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.CodeIdent;
 import com.provys.provysdb.sqlbuilder.CodeIdentBuilder;
+import com.provys.provysdb.sqlbuilder.SqlName;
 
 import javax.annotation.Nonnull;
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -40,6 +42,30 @@ class CodeBuilderImpl implements CodeBuilder {
         }
         this.text.append(text);
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder append(char character) {
+        return append(Character.toString(character));
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder append(int number) {
+        return appendLine(Integer.toString(number));
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder append(BigInteger number) {
+        return append(number.toString());
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder append(SqlName name) {
+        return append(name.getName());
     }
 
     @Nonnull

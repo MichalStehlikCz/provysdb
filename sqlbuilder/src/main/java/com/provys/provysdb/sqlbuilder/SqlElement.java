@@ -10,7 +10,7 @@ interface SqlElement {
      *
      * @param builder is StringBuilder, used to construct sql text
      */
-    void addSql(StringBuilder builder);
+    void addSql(SelectBuilder selectBuilder, CodeBuilder builder);
 
     /**
      * @return list of binds, used in this element

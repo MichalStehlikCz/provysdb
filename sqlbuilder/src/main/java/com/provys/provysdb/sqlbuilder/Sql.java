@@ -7,27 +7,68 @@ import javax.annotation.Nonnull;
  */
 public interface Sql {
 
+    /**
+     * Create Sql name object based on supplied text. Validates name during creation.
+     *
+     * @return created name object
+     */
+    @Nonnull
+    SqlName name(String name);
 
     /**
-     * Add predefined column to list of columns
+     * Create column with given name
      *
-     * @param column is definition of column to be added to statement
+     * @param column is name of table column to be assigned to column
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn column(SqlName column);
+
+    /**
+     * Create column with given name and alias
+     *
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn column(SqlName column, SqlName alias);
+
+    /**
+     * Create column with given table alias, name and alias
+     *
+     * @param tableAlias is alias of table column is in
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn column(SqlTableAlias tableAlias, SqlName column, SqlName alias);
+
+    /**
+     * Create new column
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param alias is alias to be used for column
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder column(SqlColumn column);
+    SqlColumn column(String tableAlias, String columnName, String alias);
 
     /**
-     * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
-     * added to from clause, column is added as is, without table alias
+     * Create new column; no alias is created, meaning column name will be sued instead
      *
-     * @param columnName is name of column; it should be column in last item, added to from clause. It must be valid
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
      *                   column name (in "" or first character letter and remaining letters, numbers and characters $
      *                   and #). Use columnSql to add columns based on sql expressions
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder column(String columnName);
+    SqlColumn column(String tableAlias, String columnName);
 
     /**
      * Add column with given SQL text to list of columns
@@ -36,7 +77,7 @@ public interface Sql {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String columnSql);
+    SqlColumn columnSql(String columnSql);
 
     /**
      * Add column with given SQL text and alias to list of columns
@@ -46,7 +87,13 @@ public interface Sql {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias);
+    SqlColumn columnSql(String sql, String alias);
+
+    /**
+     * Create Sql table alias object based on supplied text. Validates text during creation.
+     */
+    @Nonnull
+    SqlTableAlias tableAlias(String tableAlias);
 
     /**
      * Create from clause based on table

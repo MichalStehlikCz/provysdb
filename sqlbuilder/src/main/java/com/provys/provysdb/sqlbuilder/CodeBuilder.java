@@ -1,6 +1,7 @@
 package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
+import java.math.BigInteger;
 
 /**
  * CodeBuilder is object that allows to build SQL statement (string) from lines.
@@ -18,6 +19,42 @@ public interface CodeBuilder {
      */
     @Nonnull
     CodeBuilder append(String text);
+
+    /**
+     * Appends piece of text to already existing code; char variant
+     *
+     * @param character contains text to be added
+     * @return returns self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder append(char character);
+
+    /**
+     * Appends piece of text to already existing code; int variant
+     *
+     * @param number contains text to be added
+     * @return returns self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder append(int number);
+
+    /**
+     * Appends piece of text to already existing code; BigInteger variant
+     *
+     * @param number contains text to be added
+     * @return returns self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder append(BigInteger number);
+
+    /**
+     * Appends piece of text to already existing code; SqlName variant
+     *
+     * @param name contains text to be added
+     * @return returns self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder append(SqlName name);
 
     /**
      * Appends piece of text that might span multiple lines to already existing

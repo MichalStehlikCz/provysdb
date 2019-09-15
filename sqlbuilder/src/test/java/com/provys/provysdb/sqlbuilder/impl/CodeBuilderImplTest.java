@@ -2,6 +2,8 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 import static org.assertj.core.api.Assertions.*;
 
 class CodeBuilderImplTest {
@@ -9,6 +11,21 @@ class CodeBuilderImplTest {
     @Test
     void appendTest() {
         assertThat(new CodeBuilderImpl().append("abc").append("def").build()).isEqualTo("abcdef");
+    }
+
+    @Test
+    void append2Test() {
+        assertThat(new CodeBuilderImpl().append('x').append('\n').build()).isEqualTo("x\n");
+    }
+
+    @Test
+    void append3Test() {
+        assertThat(new CodeBuilderImpl().append(123).build()).isEqualTo("123");
+    }
+
+    @Test
+    void append4Test() {
+        assertThat(new CodeBuilderImpl().append(BigInteger.valueOf(125874698)).build()).isEqualTo("125874698");
     }
 
     @Test
