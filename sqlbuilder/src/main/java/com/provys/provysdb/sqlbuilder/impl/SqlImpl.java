@@ -4,6 +4,8 @@ import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class SqlImpl implements Sql {
 
@@ -27,6 +29,12 @@ public class SqlImpl implements Sql {
 
     @Nonnull
     @Override
+    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlName column) {
+        return new SqlColumnSimple(tableAlias, column, null);
+    }
+
+    @Nonnull
+    @Override
     public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlName column, @Nullable SqlName alias) {
         return new SqlColumnSimple(tableAlias, column, alias);
     }
@@ -44,14 +52,28 @@ public class SqlImpl implements Sql {
         return column(tableAlias, columnName, null);
     }
 
+    @Nonnull
     @Override
     public SqlColumn columnSql(String columnSql) {
-        return null;
+        return columnSql(columnSql, null);
     }
 
+    @Nonnull
     @Override
-    public SqlColumn columnSql(String sql, String alias) {
-        return null;
+    public SqlColumn columnSql(String columnSql, @Nullable String alias) {
+        return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias));
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnSql(String columnSql, @Nullable String alias, BindVariable... binds) {
+        return columnSql(columnSql, alias, Arrays.asList(binds));
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnSql(String columnSql, @Nullable String alias, Collection<BindVariable> binds) {
+        return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias), binds);
     }
 
     @Nonnull
@@ -60,63 +82,95 @@ public class SqlImpl implements Sql {
         return new SqlTableAliasImpl(tableAlias);
     }
 
+    @Nonnull
+    @Override
+    public SqlFrom from(SqlName tableName, SqlTableAlias alias) {
+        return new SqlFromSimple(tableName, alias);
+    }
+
+    @Nonnull
     @Override
     public SqlFrom from(String tableName, String alias) {
-        return null;
+        return from(name(tableName), tableAlias(alias));
     }
 
+    @Nonnull
+    @Override
+    public SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
+        return new SqlFromSql(sqlSelect, alias);
+    }
+
+    @Nonnull
     @Override
     public SqlFrom fromSql(String sqlSelect, String alias) {
-        return null;
+        return fromSql(sqlSelect, tableAlias(alias));
     }
 
+    @Nonnull
     @Override
-    public SqlFrom from(Select sqlSelect, String alias) {
-        return null;
+    public SqlFrom from(Select select, SqlTableAlias alias) {
+        return new SqlFromSelect(select, alias);
     }
 
+    @Nonnull
     @Override
-    public SqlWhere where(SqlWhere condition) {
-        return null;
+    public SqlFrom from(Select select, String alias) {
+        return new SqlFromSelect(select, tableAlias(alias));
     }
 
+    @Nonnull
     @Override
     public SqlWhere whereSql(String conditionSql) {
-        return null;
+        return new SqlWhereSimple(conditionSql);
     }
 
+    @Nonnull
     @Override
     public SqlWhere whereSql(String conditionSql, BindVariable... bindVariable) {
-        return null;
+        return whereSql(conditionSql, Arrays.asList(bindVariable));
     }
 
+    @Nonnull
+    @Override
+    public SqlWhere whereSql(String conditionSql, Collection<BindVariable> binds) {
+        return new SqlWhereSimpleWithBinds(conditionSql, binds);
+    }
+
+    @Nonnull
     @Override
     public SqlWhere whereAnd(SqlWhere... whereConditions) {
-        return null;
+        return whereAnd(Arrays.asList(whereConditions));
     }
 
+    @Nonnull
     @Override
-    public SqlWhere whereAnd(Iterable<SqlWhere> whereConditions) {
-        return null;
+    public SqlWhere whereAnd(Collection<SqlWhere> whereConditions) {
+        // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
+        return new SqlWhereJoinerImpl(SqlConditionOperator.AND, whereConditions).build();
     }
 
+    @Nonnull
     @Override
     public SqlWhereJoiner whereAndJoiner() {
-        return null;
+        return new SqlWhereJoinerImpl(SqlConditionOperator.AND);
     }
 
+    @Nonnull
     @Override
     public SqlWhere whereOr(SqlWhere... whereConditions) {
-        return null;
+        return whereOr(Arrays.asList(whereConditions));
     }
 
+    @Nonnull
     @Override
-    public SqlWhere whereOr(Iterable<SqlWhere> whereConditions) {
-        return null;
+    public SqlWhere whereOr(Collection<SqlWhere> whereConditions) {
+        // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
+        return new SqlWhereJoinerImpl(SqlConditionOperator.OR, whereConditions).build();
     }
 
+    @Nonnull
     @Override
     public SqlWhereJoiner whereOrJoiner() {
-        return null;
+        return new SqlWhereJoinerImpl(SqlConditionOperator.OR);
     }
 }

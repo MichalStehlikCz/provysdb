@@ -28,7 +28,6 @@ class SqlColumnSimple extends SqlColumnBase {
         }
         builder.append(column);
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
-        builder.appendLine();
     }
 
     @Nonnull

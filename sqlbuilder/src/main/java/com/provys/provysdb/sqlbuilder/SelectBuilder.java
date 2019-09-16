@@ -1,7 +1,11 @@
 package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
+/**
+ * Builder class used for construction of select statements.
+ */
 public interface SelectBuilder {
 
     /**
@@ -17,6 +21,37 @@ public interface SelectBuilder {
      * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
      * added to from clause, column is added as is, without table alias
      *
+     * @param column is name of table column to be assigned to column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder column(SqlName column);
+
+    /**
+     * Add column with given name and alias
+     *
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder column(SqlName column, SqlName alias);
+
+    /**
+     * Add column with given table alias, name and alias
+     *
+     * @param tableAlias is alias of table column is in
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder column(SqlTableAlias tableAlias, SqlName column, SqlName alias);
+
+    /**
+     * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
+     * added to from clause, column is added as is, without table alias
+     *
      * @param columnName is name of column; it should be column in last item, added to from clause. It must be valid
      *                   column name (in "" or first character letter and remaining letters, numbers and characters $
      *                   and #). Use columnSql to add columns based on sql expressions
@@ -26,7 +61,32 @@ public interface SelectBuilder {
     SelectBuilder column(String columnName);
 
     /**
-     * Add column with given SQL text to list of columns
+     * Add column with table alias, column name and alias
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param alias is alias to be used for column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder column(String tableAlias, String columnName, String alias);
+
+    /**
+     * Add new column; no alias is created, meaning column name will be used instead
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder column(String tableAlias, String columnName);
+
+    /**
+     * Add column with given SQL text
      *
      * @param columnSql is text that will be used as column definition
      * @return self to support fluent build
@@ -35,7 +95,7 @@ public interface SelectBuilder {
     SelectBuilder columnSql(String columnSql);
 
     /**
-     * Add column with given SQL text and alias to list of columns
+     * Add column with given SQL text and alias
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -43,6 +103,26 @@ public interface SelectBuilder {
      */
     @Nonnull
     SelectBuilder columnSql(String sql, String alias);
+
+    /**
+     * Add column with given SQL text, alias and binds to list of columns
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnSql(String sql, String alias, BindVariable... binds);
+
+    /**
+     * Add column with given SQL text, alias and binds to list of columns
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnSql(String sql, String alias, Collection<BindVariable> binds);
 
     /**
      * Add table to from clause of the statement
@@ -54,7 +134,17 @@ public interface SelectBuilder {
     SelectBuilder from(SqlFrom table);
 
     /**
-     * Add table to from clause of the statement
+     * Create from clause based on table
+     *
+     * @param tableName is name of table select is from
+     * @param alias is alias new table will get
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder from(SqlName tableName, SqlTableAlias alias);
+
+    /**
+     * Create from clause based on table; String version
      *
      * @param tableName is name of table select is from
      * @param alias is alias new table will get
@@ -64,7 +154,17 @@ public interface SelectBuilder {
     SelectBuilder from(String tableName, String alias);
 
     /**
-     * Add sql expression to from clause of the statement
+     * Create from clause based on Sql expression
+     *
+     * @param sqlSelect is SQL expression used as data source in SQL clause
+     * @param alias is alias new table will get
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder fromSql(String sqlSelect, SqlTableAlias alias);
+
+    /**
+     * Create from clause based on Sql expression; String version
      *
      * @param sqlSelect is SQL expression used as data source in SQL clause
      * @param alias is alias new table will get
@@ -76,24 +176,34 @@ public interface SelectBuilder {
     /**
      * Add sql expression to from clause of the statement
      *
-     * @param sqlSelect is select statement that will be used in from clause
+     * @param select is select statement that will be used in from clause
      * @param alias as alias to be assigned to given expression
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder from(Select sqlSelect, String alias);
+    SelectBuilder from(Select select, SqlTableAlias alias);
 
     /**
-     * Add where condition. Multiple where conditions are combined using AND
+     * Add sql expression to from clause of the statement
      *
-     * @param condition is condition to be added
+     * @param select is select statement that will be used in from clause
+     * @param alias as alias to be assigned to given expression
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder where(SqlWhere condition);
+    SelectBuilder from(Select select, String alias);
 
     /**
-     * Add where condition. Multiple where conditions are combined using AND
+     * Add where condition
+     *
+     * @param where is sql where condition to be added
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereSql(SqlWhere where);
+
+    /**
+     * Add where condition
      *
      * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
      *                    statement
@@ -103,28 +213,95 @@ public interface SelectBuilder {
     SelectBuilder whereSql(String conditionSql);
 
     /**
-     * Add where condition with binds. Multiple where conditions are combined using AND
+     * Add where condition with binds
      *
      * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
      *                    statement
-     * @param bindVariable is list of bind variables, associated with condition
+     * @param binds is list of bind variables, associated with condition
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(String conditionSql, BindVariable... bindVariable);
+    SelectBuilder whereSql(String conditionSql, BindVariable... binds);
 
     /**
-     * Build {@code SqlStatement} from this builder
+     * Add where condition with binds
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @param binds is list of bind variables, associated with condition
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereSql(String conditionSql, Collection<BindVariable> binds);
+
+    /**
+     * Add multiple conditions combined using AND
+     *
+     * @param whereConditions are where conditions to be combined
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereAnd(SqlWhere... whereConditions);
+
+    /**
+     * Add multiple conditions combined using AND
+     *
+     * @param whereConditions are where conditions to be combined
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereAnd(Collection<SqlWhere> whereConditions);
+
+    /**
+     * Add multiple conditions combined using OR
+     *
+     * @param whereConditions are where conditions to be combined
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereOr(SqlWhere... whereConditions);
+
+    /**
+     * Add multiple conditions combined using OR
+     *
+     * @param whereConditions are where conditions to be combined
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereOr(Collection<SqlWhere> whereConditions);
+
+    /**
+     * Add bind variable. If variable already exists, verifies that supplied value is compatible with existsing one and
+     * throws and exception if it is not (different type or different values)
+     *
+     * @param bind is bind variable to be added
+     * @return self to allow fluent build
+     */
+    @Nonnull
+    SelectBuilder addBind(BindVariable bind);
+
+    /**
+     * Add bind variables
+     *
+     * @param binds is list of bind variables to be added
+     * @return self to allow fluent build
+     */
+    @Nonnull
+    SelectBuilder addBinds(Collection<BindVariable> binds);
+
+    /**
+     * Build select statement from builder
+     *
+     * @return resulting (unmutable) select statement
      */
     @Nonnull
     Select build();
 
     /**
-     * Return alias corresponding to given alias text; used to replace {@code <<int>>} strings with actual values
+     * Create clone of the statement. Does deep copy, but keeps references to unmutable objects
      *
-     * @param tableAlias is text supplied for lookup
-     * @return string corresponding to supplied alias
+     * @return clone of this statement
      */
     @Nonnull
-    String getTableAlias(SqlTableAlias tableAlias);
+    SelectBuilder copy();
 }

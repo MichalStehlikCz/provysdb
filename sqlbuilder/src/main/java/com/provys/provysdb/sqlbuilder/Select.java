@@ -18,5 +18,5 @@ public interface Select {
      * @return collection of bind variables used in this statement
      */
     @Nonnull
-    Collection<BindVariable> getBindVariables();
+    Collection<BindVariable> getBinds();
 }

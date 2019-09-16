@@ -57,6 +57,15 @@ public interface CodeBuilder {
     CodeBuilder append(SqlName name);
 
     /**
+     * Appends piece of text to already existing code; SqlTableAlias variant
+     *
+     * @param alias contains text to be added
+     * @return returns self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder append(SqlTableAlias alias);
+
+    /**
      * Appends piece of text that might span multiple lines to already existing
      * code.
      * Inserts proper ident to newlines in supplied text; ident uses spaces, not currently set prefix and is increased

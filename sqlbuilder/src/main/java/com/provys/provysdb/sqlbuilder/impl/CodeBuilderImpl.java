@@ -1,9 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.CodeIdent;
-import com.provys.provysdb.sqlbuilder.CodeIdentBuilder;
-import com.provys.provysdb.sqlbuilder.SqlName;
+import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
@@ -66,6 +63,12 @@ class CodeBuilderImpl implements CodeBuilder {
     @Override
     public CodeBuilder append(SqlName name) {
         return append(name.getName());
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder append(SqlTableAlias alias) {
+        return append(alias.getAliasText());
     }
 
     @Nonnull

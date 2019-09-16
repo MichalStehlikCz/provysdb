@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 public interface SqlFrom extends SqlElement {
 
     /**
-     * @return alias this column is associated with; empty optional if column has no alias. Note that if it is simple
-     * column, its name is also used as alias
+     * @return alias this table is associated with; mandatory for element in from clause, as even though it is not
+     * required in SQL, it is enforced by PROVYS StyleGuide
      */
     @Nonnull
-    String getAlias();
+    SqlTableAlias getAlias();
 }
