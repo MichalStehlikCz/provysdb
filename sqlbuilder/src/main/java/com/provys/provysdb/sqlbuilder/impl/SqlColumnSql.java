@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SelectBuilder;
 import com.provys.provysdb.sqlbuilder.SqlName;
 
 import javax.annotation.Nonnull;
@@ -29,7 +28,7 @@ class SqlColumnSql extends SqlColumnBase {
     }
 
     @Override
-    public void addSql(SelectBuilder selectBuilder, CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         builder.appendWrapped(sql, 4);
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
     }

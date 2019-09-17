@@ -9,6 +9,7 @@ import java.math.BigInteger;
  *
  * @author stehlik
  */
+@SuppressWarnings("UnusedReturnValue")
 public interface CodeBuilder {
 
     /**

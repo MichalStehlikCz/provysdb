@@ -1,7 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.SelectBuilder;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,21 +31,16 @@ class SqlTableAliasImpl implements SqlTableAlias {
     }
 
     @Nonnull
-    private final String aliasText;
+    private final String alias;
 
-    SqlTableAliasImpl(String aliasText) {
-        this.aliasText = validate(aliasText);
+    SqlTableAliasImpl(String alias) {
+        this.alias = validate(alias);
     }
 
     @Nonnull
     @Override
-    public String getAliasText() {
-        return aliasText;
-    }
-
-    @Override
-    public String getAlias(SelectBuilder selectBuilder) {
-        return selectBuilder.getTableAlias(this);
+    public String getAlias() {
+        return alias;
     }
 
     @Override
@@ -56,18 +50,18 @@ class SqlTableAliasImpl implements SqlTableAlias {
 
         SqlTableAliasImpl that = (SqlTableAliasImpl) o;
 
-        return getAliasText().equals(that.getAliasText());
+        return getAlias().equals(that.getAlias());
     }
 
     @Override
     public int hashCode() {
-        return getAliasText().hashCode();
+        return getAlias().hashCode();
     }
 
     @Override
     public String toString() {
         return "SqlTableAliasImpl{" +
-                "aliasText='" + aliasText + '\'' +
+                "alias='" + alias + '\'' +
                 '}';
     }
 }

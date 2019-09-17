@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.regex.Pattern;
 
 /**
- * Implements support for SQL strings that can act as name; simple wrapper on String class, unmutable
+ * Implements support for SQL strings that can act as name; simple wrapper on String class, non-mutable
  */
 class SqlNameImpl implements SqlName {
 

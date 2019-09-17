@@ -6,12 +6,7 @@ package com.provys.provysdb.sqlbuilder;
  */
 public interface SqlTableAlias {
     /**
-     * @return alias text (e.g. potentially in form {@code <<int>>})
+     * @return alias (potentially in form {@code <<int>>})
      */
-    String getAliasText();
-
-    /**
-     * @return effective value of alias (e.g. actual value if indexed alias has been used originally)
-     */
-    String getAlias(SelectBuilder selectBuilder);
+    String getAlias();
 }

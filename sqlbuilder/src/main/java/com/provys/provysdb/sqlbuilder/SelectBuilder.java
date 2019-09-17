@@ -6,6 +6,7 @@ import java.util.Collection;
 /**
  * Builder class used for construction of select statements.
  */
+@SuppressWarnings("UnusedReturnValue")
 public interface SelectBuilder {
 
     /**
@@ -194,6 +195,14 @@ public interface SelectBuilder {
     SelectBuilder from(Select select, String alias);
 
     /**
+     * Add from clause for pseudo-table dual
+     *
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder fromDual();
+
+    /**
      * Add where condition
      *
      * @param where is sql where condition to be added
@@ -271,7 +280,7 @@ public interface SelectBuilder {
     SelectBuilder whereOr(Collection<SqlWhere> whereConditions);
 
     /**
-     * Add bind variable. If variable already exists, verifies that supplied value is compatible with existsing one and
+     * Add bind variable. If variable already exists, verifies that supplied value is compatible with existing one and
      * throws and exception if it is not (different type or different values)
      *
      * @param bind is bind variable to be added
@@ -292,13 +301,13 @@ public interface SelectBuilder {
     /**
      * Build select statement from builder
      *
-     * @return resulting (unmutable) select statement
+     * @return resulting (non-mutable) select statement
      */
     @Nonnull
     Select build();
 
     /**
-     * Create clone of the statement. Does deep copy, but keeps references to unmutable objects
+     * Create clone of the statement. Does deep copy, but keeps references to non-mutable objects
      *
      * @return clone of this statement
      */

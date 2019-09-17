@@ -2,34 +2,31 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlWhere;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
-class SqlWhereSimple implements SqlWhere {
+class SqlFromDual extends SqlFromBase {
 
-    @Nonnull
-    private final String sql;
+    private static final SqlFromDual INSTANCE = new SqlFromDual();
 
-    SqlWhereSimple(String sql) {
-        this.sql = sql;
+    static SqlFromDual getInstance() {
+        return INSTANCE;
+    }
+
+    private SqlFromDual() {
+        super(new SqlTableAliasImpl("dual"));
     }
 
     @Override
     public void addSql(CodeBuilder builder) {
-        builder.append('(').append(sql).append(')');
+        builder.append("dual");
     }
 
     @Nonnull
     @Override
     public Collection<BindVariable> getBinds() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
     }
 }

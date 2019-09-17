@@ -17,7 +17,7 @@ public class SqlFromSelect extends SqlFromBase {
     }
 
     @Override
-    public void addSql(SelectBuilder selectBuilder, CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         builder.append('(').appendLine()
                 .increasedIdent(2)
                 .appendWrapped(select.getSql())

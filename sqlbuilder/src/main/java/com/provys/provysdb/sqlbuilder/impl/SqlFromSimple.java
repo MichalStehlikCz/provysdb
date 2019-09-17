@@ -21,7 +21,7 @@ class SqlFromSimple extends SqlFromBase {
     }
 
     @Override
-    public void addSql(SelectBuilder selectBuilder, CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         builder.append(tableName).append(' ').append(getAlias());
     }
 

@@ -50,7 +50,7 @@ class CodeBuilderImpl implements CodeBuilder {
     @Nonnull
     @Override
     public CodeBuilder append(int number) {
-        return appendLine(Integer.toString(number));
+        return append(Integer.toString(number));
     }
 
     @Nonnull
@@ -68,7 +68,7 @@ class CodeBuilderImpl implements CodeBuilder {
     @Nonnull
     @Override
     public CodeBuilder append(SqlTableAlias alias) {
-        return append(alias.getAliasText());
+        return append(alias.getAlias());
     }
 
     @Nonnull
@@ -148,7 +148,7 @@ class CodeBuilderImpl implements CodeBuilder {
     @SuppressWarnings("squid:S3457")
     public CodeBuilder setIdent(String ident, int chars) {
         if (chars < ident.length()) {
-            throw new IllegalArgumentException("Ident length cannot be smaler than length of supplied ident prefix");
+            throw new IllegalArgumentException("Ident length cannot be smaller than length of supplied ident prefix");
         }
         return setIdent(String.format("%1$" + chars + "s", ident));
     }
@@ -163,11 +163,11 @@ class CodeBuilderImpl implements CodeBuilder {
     @Override
     public CodeBuilder setIdent(String firstIdent, String ident, int chars) {
         if (chars < firstIdent.length()) {
-            throw new IllegalArgumentException("Ident length cannot be smaler than length of supplied first line " +
+            throw new IllegalArgumentException("Ident length cannot be smaller than length of supplied first line " +
                     "ident prefix");
         }
         if (chars < ident.length()) {
-            throw new IllegalArgumentException("Ident length cannot be smaler than length of supplied ident prefix");
+            throw new IllegalArgumentException("Ident length cannot be smaller than length of supplied ident prefix");
         }
         var format = "%1$" + chars + "s";
         return setIdent(String.format(format, firstIdent), String.format(format, ident));

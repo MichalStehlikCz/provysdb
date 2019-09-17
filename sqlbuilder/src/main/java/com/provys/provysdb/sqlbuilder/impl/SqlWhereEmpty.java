@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SelectBuilder;
 import com.provys.provysdb.sqlbuilder.SqlWhere;
 
 import javax.annotation.Nonnull;
@@ -20,7 +19,7 @@ class SqlWhereEmpty implements SqlWhere {
     private SqlWhereEmpty() {}
 
     @Override
-    public void addSql(SelectBuilder selectBuilder, CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         // we are expected to insert condition...
         builder.append("(1=1)");
     }

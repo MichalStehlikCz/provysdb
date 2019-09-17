@@ -24,12 +24,19 @@ class SqlWhereJoinerImpl implements SqlWhereJoiner {
 
     SqlWhereJoinerImpl(SqlConditionOperator operator, Collection<SqlWhere> conditions) {
         this.operator = Objects.requireNonNull(operator);
-        this.conditions = conditions.stream().filter(condition -> !condition.isEmpty()).collect(Collectors.toList());
+        if (operator == SqlConditionOperator.AND) {
+            // in AND, we skip trivial condition
+            this.conditions = conditions.stream().filter(condition -> !condition.isEmpty()).collect(Collectors.toList());
+        } else {
+            // in OR, trivial condition is handled in build
+            this.conditions = new ArrayList<>(conditions);
+        }
     }
 
     @Override
     public SqlWhereJoiner add(SqlWhere sqlWhere) {
-        if (!sqlWhere.isEmpty()) {
+        // in case of OR, trivial condition is handled in build; in AND, we can just skip it
+        if (!sqlWhere.isEmpty() || (operator == SqlConditionOperator.OR)) {
             conditions.add(sqlWhere);
         }
         return this;
@@ -42,6 +49,10 @@ class SqlWhereJoinerImpl implements SqlWhereJoiner {
         }
         if (conditions.size() == 1) {
             return conditions.get(0);
+        }
+        // in case of OR, we handle trivial condition here...
+        if ((operator == SqlConditionOperator.OR) && (conditions.stream().anyMatch(SqlWhere::isEmpty))) {
+            return SqlWhereEmpty.getInstance();
         }
         return new SqlWhereJoined(operator, conditions);
     }

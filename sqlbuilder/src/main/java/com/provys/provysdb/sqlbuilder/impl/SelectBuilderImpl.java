@@ -6,11 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 class SelectBuilderImpl implements SelectBuilder {
 
@@ -22,14 +21,29 @@ class SelectBuilderImpl implements SelectBuilder {
     private final List<SqlFrom> tables;
     private final Map<SqlTableAlias, SqlFrom> tableByAlias;
     private final List<SqlWhere> conditions;
+    private final Map<SqlName, BindVariable> bindByName;
 
     SelectBuilderImpl(Sql sql) {
-        this.sql = sql;
+        this.sql = Objects.requireNonNull(sql);
         columns = new ArrayList<>(5);
         columnByName = new ConcurrentHashMap<>(5);
         tables = new ArrayList<>(2);
         tableByAlias = new ConcurrentHashMap<>(2);
         conditions = new ArrayList<>(5);
+        bindByName = new ConcurrentHashMap<>(5);
+    }
+
+    private SelectBuilderImpl(Sql sql, Collection<SqlColumn> columns, Collection<SqlFrom> tables,
+                      Collection<SqlWhere> conditions, Collection<BindVariable> binds) {
+        this.sql = sql;
+        this.columns = new ArrayList<>(columns);
+        this.columnByName = columns.stream().filter(column -> column.getAlias().isPresent()).collect(
+                Collectors.toConcurrentMap(column -> column.getAlias().orElse(null), Function.identity()));
+        this.tables = new ArrayList<>(tables);
+        this.tableByAlias = tables.stream().collect(Collectors.toConcurrentMap(SqlFrom::getAlias, Function.identity()));
+        this.conditions = new ArrayList<>(conditions);
+        this.bindByName = binds.stream().collect(Collectors.toConcurrentMap(BindVariable::getName, Function.identity(),
+                BindVariable::combine));
     }
 
     private void mapColumn(SqlName alias, SqlColumn column) {
@@ -113,7 +127,7 @@ class SelectBuilderImpl implements SelectBuilder {
 
     private void mapTable(SqlTableAlias alias, SqlFrom table) {
         if (tableByAlias.putIfAbsent(alias, table) != null) {
-            throw new InternalException(LOG, "Attempt to insert duplicate table to from list (" + alias.getAliasText() +
+            throw new InternalException(LOG, "Attempt to insert duplicate table to from list (" + alias.getAlias() +
                     " , " + this.toString() + ")");
         }
     }
@@ -129,108 +143,152 @@ class SelectBuilderImpl implements SelectBuilder {
     @Nonnull
     @Override
     public SelectBuilder from(SqlName tableName, SqlTableAlias alias) {
-        return null;
+        return from(sql.from(tableName, alias));
     }
 
     @Nonnull
     @Override
     public SelectBuilder from(String tableName, String alias) {
-        return null;
+        return from(sql.from(tableName, alias));
     }
 
     @Nonnull
     @Override
     public SelectBuilder fromSql(String sqlSelect, SqlTableAlias alias) {
-        return null;
+        return from(sql.fromSql(sqlSelect, alias));
     }
 
     @Nonnull
     @Override
     public SelectBuilder fromSql(String sqlSelect, String alias) {
-        return null;
+        return from(sql.fromSql(sqlSelect, alias));
     }
 
     @Nonnull
     @Override
     public SelectBuilder from(Select select, SqlTableAlias alias) {
-        return null;
+        return from(sql.from(select, alias));
     }
 
     @Nonnull
     @Override
     public SelectBuilder from(Select select, String alias) {
-        return null;
+        return from(sql.from(select, alias));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder fromDual() {
+        return from(sql.fromDual());
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereSql(SqlWhere where) {
-        return null;
+        if (!where.isEmpty()) {
+            conditions.add(where);
+        }
+        return this;
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereSql(String conditionSql) {
-        return null;
+        return whereSql(sql.whereSql(conditionSql));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereSql(String conditionSql, BindVariable... binds) {
-        return null;
+        return whereSql(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereSql(String conditionSql, Collection<BindVariable> binds) {
-        return null;
+        return whereSql(sql.whereSql(conditionSql, binds));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereAnd(SqlWhere... whereConditions) {
-        return null;
+        return whereSql(sql.whereAnd(whereConditions));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereAnd(Collection<SqlWhere> whereConditions) {
-        return null;
+        return whereSql(sql.whereAnd(whereConditions));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereOr(SqlWhere... whereConditions) {
-        return null;
+        return whereSql(sql.whereOr(whereConditions));
     }
 
     @Nonnull
     @Override
     public SelectBuilder whereOr(Collection<SqlWhere> whereConditions) {
-        return null;
+        return whereSql(sql.whereOr(whereConditions));
     }
 
     @Nonnull
     @Override
     public SelectBuilder addBind(BindVariable bind) {
-        return null;
+        bindByName.compute(bind.getName(), (key, oldBind) -> (oldBind==null) ? bind : bind.combine(oldBind));
+        return this;
     }
 
     @Nonnull
     @Override
     public SelectBuilder addBinds(Collection<BindVariable> binds) {
-        return null;
+        for (var bind : binds) {
+            addBind(bind);
+        }
+        return this;
+    }
+
+    private void addConditions(Collection<SqlWhere> conditions, CodeBuilder builder) {
+        for (var condition : conditions) {
+            if ((condition instanceof SqlWhereJoined) && ((SqlWhereJoined) condition).getOperator().equals(SqlConditionOperator.AND)) {
+                addConditions(((SqlWhereJoined) condition).getConditions(), builder);
+            } else {
+                condition.addSql(builder);
+            }
+        }
     }
 
     @Nonnull
     @Override
     public Select build() {
-        return null;
+        var builder = new CodeBuilderImpl()
+                .appendLine("SELECT")
+                .increasedIdent("", ", ", 4);
+        for (var column : columns) {
+            column.addSql(builder);
+            builder.appendLine();
+        }
+        builder.popIdent()
+                .appendLine("FROM")
+                .increasedIdent("", ", ", 4);
+        for (var table : tables) {
+            table.addSql(builder);
+            builder.appendLine();
+        }
+        builder.popIdent();
+        if (!conditions.isEmpty()) {
+            builder.appendLine("WHERE")
+                    .increasedIdent("", "AND ", 6);
+            addConditions(conditions, builder);
+            builder.popIdent();
+        }
+        return new SelectImpl(builder.build(), Collections.unmodifiableCollection(bindByName.values()));
     }
 
     @Nonnull
     @Override
     public SelectBuilder copy() {
-        return null;
+        return new SelectBuilderImpl(sql, columns, tables, conditions, bindByName.values());
     }
 }

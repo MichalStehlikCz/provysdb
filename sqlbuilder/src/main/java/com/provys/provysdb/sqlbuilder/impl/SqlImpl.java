@@ -11,6 +11,12 @@ public class SqlImpl implements Sql {
 
     @Nonnull
     @Override
+    public SelectBuilder select() {
+        return new SelectBuilderImpl(this);
+    }
+
+    @Nonnull
+    @Override
     public SqlName name(String name) {
         return new SqlNameImpl(name);
     }
@@ -116,6 +122,12 @@ public class SqlImpl implements Sql {
     @Override
     public SqlFrom from(Select select, String alias) {
         return new SqlFromSelect(select, tableAlias(alias));
+    }
+
+    @Nonnull
+    @Override
+    public SqlFrom fromDual() {
+        return SqlFromDual.getInstance();
     }
 
     @Nonnull

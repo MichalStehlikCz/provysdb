@@ -9,6 +9,12 @@ import java.util.Collection;
 public interface Sql {
 
     /**
+     * @return select statement builder
+     */
+    @Nonnull
+    SelectBuilder select();
+
+    /**
      * Create Sql name object based on supplied text. Validates name during creation.
      *
      * @return created name object
@@ -187,6 +193,14 @@ public interface Sql {
      */
     @Nonnull
     SqlFrom from(Select select, String alias);
+
+    /**
+     * Create from clause for pseudo-table dual
+     *
+     * @return clause fro pseudo-table dual
+     */
+    @Nonnull
+    SqlFrom fromDual();
 
     /**
      * Create where condition

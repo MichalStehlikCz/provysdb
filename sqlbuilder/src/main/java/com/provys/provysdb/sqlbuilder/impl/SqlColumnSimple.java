@@ -22,9 +22,9 @@ class SqlColumnSimple extends SqlColumnBase {
     }
 
     @Override
-    public void addSql(SelectBuilder selectBuilder, CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         if (tableAlias != null) {
-            builder.append(tableAlias.getAlias(selectBuilder)).append('.');
+            builder.append(tableAlias.getAlias()).append('.');
         }
         builder.append(column);
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
@@ -43,8 +43,8 @@ class SqlColumnSimple extends SqlColumnBase {
 
         SqlColumnSimple that = (SqlColumnSimple) o;
 
-        if (tableAlias != null ? !tableAlias.equals(that.tableAlias) : that.tableAlias != null) return false;
-        return column.equals(that.column);
+        return Objects.equals(tableAlias, that.tableAlias) &&
+                column.equals(that.column);
     }
 
     @Override

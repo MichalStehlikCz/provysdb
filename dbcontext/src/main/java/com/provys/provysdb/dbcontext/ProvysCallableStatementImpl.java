@@ -708,13 +708,6 @@ class ProvysCallableStatementImpl<T extends CallableStatement> extends ProvysPre
     }
 
     @Override
-    @Deprecated(since = "1.2")
-    @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-    public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
-        statement.setUnicodeStream(parameterIndex, x, length);
-    }
-
-    @Override
     public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
         statement.setBinaryStream(parameterIndex, x, length);
     }
