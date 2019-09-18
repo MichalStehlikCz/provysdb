@@ -1,6 +1,8 @@
 package com.provys.provysdb.dbcontext;
 
 import com.provys.common.exception.RegularException;
+import com.provys.provysdb.sqlbuilder.Sql;
+import com.provys.provysdb.sqlbuilder.impl.SqlImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Configuration;
@@ -31,6 +33,8 @@ public class ProvysDbContext {
     private final ProvysConnectionPoolDataSource provysDataSource;
     @Nonnull
     private final Configuration jooqConfiguration;
+    @Nonnull
+    private final Sql sql;
 
     /**
      * Default creator for Provys database context.
@@ -42,6 +46,7 @@ public class ProvysDbContext {
     public ProvysDbContext() throws SQLException {
         provysDataSource = buildProvysDBDataSource();
         jooqConfiguration = buildJooqConfiguration();
+        sql = new SqlImpl();
     }
 
     @Nonnull
@@ -89,6 +94,14 @@ public class ProvysDbContext {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",
                     "Failed to initialize connection with token", e);
         }
+    }
+
+    /**
+     * @return Sql - root object of select builder
+     */
+    @Nonnull
+    public Sql getSql() {
+        return sql;
     }
 
     /**

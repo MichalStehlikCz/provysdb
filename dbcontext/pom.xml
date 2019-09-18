@@ -71,6 +71,11 @@
             <groupId>com.provys.common</groupId>
             <artifactId>common-datatype</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.provys.provysdb</groupId>
+            <artifactId>sqlbuilder</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

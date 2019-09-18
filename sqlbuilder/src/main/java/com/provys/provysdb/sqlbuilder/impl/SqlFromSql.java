@@ -10,7 +10,7 @@ public class SqlFromSql extends SqlFromBase {
     @Nonnull
     private final String sql;
     @Nonnull
-    private final List<BindVariable> binds;
+    private final List<BindVariableImpl> binds;
 
     SqlFromSql(String sql, SqlTableAlias alias) {
         super(alias);
@@ -18,7 +18,7 @@ public class SqlFromSql extends SqlFromBase {
         this.binds = Collections.emptyList();
     }
 
-    SqlFromSql(String sql, SqlTableAlias alias, Collection<BindVariable> binds) {
+    SqlFromSql(String sql, SqlTableAlias alias, Collection<BindVariableImpl> binds) {
         super(alias);
         this.sql = Objects.requireNonNull(sql);
         this.binds = new ArrayList<>(binds);
