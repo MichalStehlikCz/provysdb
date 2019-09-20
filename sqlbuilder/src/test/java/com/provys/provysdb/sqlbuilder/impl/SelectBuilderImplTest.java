@@ -2,17 +2,14 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.Sql;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
 class SelectBuilderImplTest {
 
-    private static final Sql sql = new SqlImpl();
+    private static final Sql sql = new SqlTest();
 
     @Test
     void select1FromDualTest() {

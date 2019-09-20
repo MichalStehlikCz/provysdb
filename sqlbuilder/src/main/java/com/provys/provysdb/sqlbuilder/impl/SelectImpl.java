@@ -25,7 +25,7 @@ class SelectImpl implements Select {
 
     @Nonnull
     @Override
-    public String getSql() {
+    public String getSqlText() {
         return sql;
     }
 
@@ -33,6 +33,16 @@ class SelectImpl implements Select {
     @Override
     public Collection<BindVariable> getBinds() {
         return Collections.unmodifiableList(binds);
+    }
+
+    @Override
+    public int getPositions() {
+        return 0;
+    }
+
+    @Override
+    public Map<BindVariable, List<Integer>> getBindPositions() {
+        return null;
     }
 
     @Override

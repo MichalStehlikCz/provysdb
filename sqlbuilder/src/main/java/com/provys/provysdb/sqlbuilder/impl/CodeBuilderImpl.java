@@ -4,8 +4,7 @@ import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 /**
  * Implementation of code builder - tool to build SQL text with formatting.
@@ -16,6 +15,8 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     private final StringBuilder text;
+    @Nonnull
+    private final List<BindVariable> binds = new ArrayList<>(1);
     private boolean newLine = true;
     @Nonnull
     private CodeIdent ident = CodeIdentVoid.getInstance();
@@ -201,7 +202,20 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
+    public CodeBuilder addBind(BindVariable bind) {
+        binds.add(Objects.requireNonNull(bind));
+        return this;
+    }
+
+    @Nonnull
+    @Override
     public String build() {
         return this.text.toString();
+    }
+
+    @Nonnull
+    @Override
+    public List<BindVariable> getBinds() {
+        return Collections.unmodifiableList(binds);
     }
 }

@@ -6,16 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="sqlparser" />
-        <module name="SqlBuilder" />
+        <module name="DbContextApi" />
+        <module name="SqlBuilderApi" />
+        <module name="sqlbuilder" />
         <module name="dbcontext" />
+        <module name="sqlparser" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="dbcontext" target="11" />
+      <module name="DbContextApi" target="11" />
       <module name="provysdb" target="1.5" />
       <module name="sqlbuilder" target="11" />
-      <module name="SqlBuilder" target="11" />
+      <module name="SqlBuilderApi" target="11" />
       <module name="sqlparser" target="11" />
     </bytecodeTargetLevel>
   </component>

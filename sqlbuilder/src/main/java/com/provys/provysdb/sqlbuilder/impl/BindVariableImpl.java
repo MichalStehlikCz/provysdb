@@ -10,9 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Represents variable connected with select statement, its type and value.
@@ -33,10 +31,25 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
         return new BindVariableImpl<>(name, value);
     }
 
+    /**
+     * Get bind variable with specified name, type and value
+     *
+     * @param name is name of bind
+     * @param type is type new bind variable should get
+     * @param value is value to be used for the bind
+     * @return bind variable with given name, type and value
+     */
     public static <T> BindVariableImpl ofType(SqlName name, Class<T> type, @Nullable T value) {
         return new BindVariableImpl<>(name, type, value);
     }
 
+    /**
+     * Get bind variable with specified name, type and no value (aka null)
+     *
+     * @param name is name of bind
+     * @param type is type new bind variable should get
+     * @return bind variable with given name, type and no value
+     */
     public static <T> BindVariableImpl ofType(SqlName name, Class<T> type) {
         return new BindVariableImpl<>(name, type, null);
     }
@@ -65,9 +78,6 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
         this.value = value;
     }
 
-    /**
-     * @return name of bind variable
-     */
     @Override
     @Nonnull
     public SqlName getName() {
@@ -77,6 +87,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
     /**
      * @return type associated with bind variable
      */
+    @Override
     @Nonnull
     public Class<T> getType() {
         return type;
@@ -97,6 +108,20 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
     @Override
     public Optional<T> getValue() {
         return Optional.ofNullable(value);
+    }
+
+    @Nonnull
+    @Override
+    public BindVariableT<T> withValue(@Nullable Object value) {
+        if (Objects.equals(this.value, value)) {
+            return this;
+        }
+        if ((value != null) && (!type.isAssignableFrom(value.getClass()))) {
+            throw new InternalException(LOG, "Cannot set value to bind variable " + name + ", type " + this.type +
+                    ", value type " + value.getClass());
+        }
+        //noinspection unchecked
+        return new BindVariableImpl<>(name, type, (T) value);
     }
 
     @Override
@@ -155,12 +180,13 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
 
     @Override
     public void addSql(CodeBuilder builder) {
-
+        builder.append('?');
+        builder.addBind(this);
     }
 
     @Nonnull
     @Override
     public Collection<BindVariable> getBinds() {
-        return null;
+        return Collections.singletonList(this);
     }
 }

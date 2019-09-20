@@ -9,6 +9,8 @@
         <module>dbcontext</module>
         <module>sqlparser</module>
         <module>sqlbuilder</module>
+        <module>sqlbuilder-api</module>
+        <module>DbContextApi</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
