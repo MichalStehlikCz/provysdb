@@ -2,8 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/DbContextApi" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/dbcontext" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dbcontext-api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sqlbuilder" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sqlbuilder-api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/sqlparser" charset="UTF-8" />

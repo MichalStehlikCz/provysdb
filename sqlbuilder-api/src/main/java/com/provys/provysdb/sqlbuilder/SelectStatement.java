@@ -4,6 +4,7 @@ import com.provys.provysdb.dbcontext.DbResultSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.sql.SQLException;
 
 /**
  * Class corresponds to PreparedStatement, built from Statement. It allows to bind values to variables, execute

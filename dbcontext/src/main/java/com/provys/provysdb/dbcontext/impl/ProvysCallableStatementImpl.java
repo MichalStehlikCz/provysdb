@@ -625,11 +625,6 @@ class ProvysCallableStatementImpl<T extends CallableStatement> extends ProvysPre
     }
 
     @Override
-    public ResultSet executeQuery() throws SQLException {
-        return statement.executeQuery();
-    }
-
-    @Override
     public int executeUpdate() throws SQLException {
         return statement.executeUpdate();
     }

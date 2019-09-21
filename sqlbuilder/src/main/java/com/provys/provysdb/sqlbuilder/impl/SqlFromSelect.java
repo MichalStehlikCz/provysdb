@@ -20,7 +20,7 @@ public class SqlFromSelect extends SqlFromBase {
     public void addSql(CodeBuilder builder) {
         builder.append('(').appendLine()
                 .increasedIdent(2)
-                .appendWrapped(select.getSql())
+                .appendWrapped(select.getSqlText())
                 .popIdent()
                 .append(") ")
                 .append(getAlias());
