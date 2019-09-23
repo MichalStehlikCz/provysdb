@@ -1,9 +1,15 @@
 package com.provys.provysdb.dbcontext.type;
 
+import com.provys.common.exception.InternalException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SqlTypeMap {
+
+    private static final Logger LOG = LogManager.getLogger(SqlTypeMap.class);
 
     private final Map<Class<?>, SqlTypeAdapter<?>> adaptersByClass = new ConcurrentHashMap<>(10);
 
@@ -13,7 +19,7 @@ public class SqlTypeMap {
             if (type.getSuperclass() != null) {
                 result = getAdapter(type.getSuperclass());
             } else {
-                throw new
+                throw new InternalException(LOG, "No sql type adapter found for class " + type);
             }
         }
         //noinspection unchecked
