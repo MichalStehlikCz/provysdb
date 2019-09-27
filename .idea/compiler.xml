@@ -7,21 +7,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="dbcontext" />
-        <module name="dbcontext-api" />
-        <module name="DbContextApi" />
-        <module name="sqlbuilder" />
-        <module name="sqlbuilder-api" />
-        <module name="SqlBuilderApi" />
         <module name="sqlparser" />
+        <module name="sqlbuilder" />
+        <module name="SqlBuilderApi" />
+        <module name="DbContextApi" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="dbcontext" target="11" />
-      <module name="dbcontext-api" target="11" />
       <module name="DbContextApi" target="11" />
       <module name="provysdb" target="1.5" />
       <module name="sqlbuilder" target="11" />
-      <module name="sqlbuilder-api" target="11" />
       <module name="SqlBuilderApi" target="11" />
       <module name="sqlparser" target="11" />
     </bytecodeTargetLevel>

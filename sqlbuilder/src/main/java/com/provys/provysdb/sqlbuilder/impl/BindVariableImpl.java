@@ -26,6 +26,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param name is name of bind
      * @param value is value to be used for the bind
      * @return bind variable with given name and value
+     * @param <T> is type of value held by this variable
      */
     public static <T> BindVariableImpl<T> ofObject(SqlName name, T value) {
         return new BindVariableImpl<>(name, value);
@@ -38,6 +39,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param type is type new bind variable should get
      * @param value is value to be used for the bind
      * @return bind variable with given name, type and value
+     * @param <T> is type of value held by this variable
      */
     public static <T> BindVariableImpl ofType(SqlName name, Class<T> type, @Nullable T value) {
         return new BindVariableImpl<>(name, type, value);
@@ -49,6 +51,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param name is name of bind
      * @param type is type new bind variable should get
      * @return bind variable with given name, type and no value
+     * @param <T> is type of value held by this variable
      */
     public static <T> BindVariableImpl ofType(SqlName name, Class<T> type) {
         return new BindVariableImpl<>(name, type, null);

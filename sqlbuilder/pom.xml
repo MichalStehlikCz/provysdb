@@ -59,12 +59,12 @@
         </dependency>
         <dependency>
             <groupId>com.provys.provysdb</groupId>
-            <artifactId>sqlbuilder-api</artifactId>
+            <artifactId>dbcontext-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.provys.provysdb</groupId>
-            <artifactId>dbcontext</artifactId>
+            <artifactId>sqlbuilder-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

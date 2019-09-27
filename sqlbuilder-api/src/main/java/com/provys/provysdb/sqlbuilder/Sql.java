@@ -25,60 +25,70 @@ public interface Sql {
     SelectBuilder select();
 
     /**
+     * @param value is value of literal
      * @return varchar literal
      */
     @Nonnull
     LiteralT<String> literal(String value);
 
     /**
+     * @param value is value of literal
      * @return NVarchar literal
      */
     @Nonnull
     LiteralT<String> literalNVarchar(String value);
 
     /**
+     * @param value is value of literal
      * @return byte literal
      */
     @Nonnull
     LiteralT<Byte> literal(byte value);
 
     /**
+     * @param value is value of literal
      * @return short literal
      */
     @Nonnull
     LiteralT<Short> literal(short value);
 
     /**
+     * @param value is value of literal
      * @return integer literal
      */
     @Nonnull
     LiteralT<Integer> literal(int value);
 
     /**
+     * @param value is value of literal
      * @return long literal
      */
     @Nonnull
     LiteralT<Long> literal(long value);
 
     /**
+     * @param value is value of literal
      * @return BigInteger literal
      */
     @Nonnull
     LiteralT<BigInteger> literal(BigInteger value);
 
     /**
+     * @param value is value of literal
      * @return float literal
      */
     @Nonnull
     LiteralT<Float> literal(float value);
 
     /**
+     * @param value is value of literal
      * @return double literal
      */
     @Nonnull
     LiteralT<Double> literal(double value);
 
     /**
+     * @param value is value of literal
      * @return BigDecimal literal
      */
     @Nonnull
@@ -87,6 +97,7 @@ public interface Sql {
     /**
      * Create Sql name object based on supplied text. Validates name during creation.
      *
+     * @param name to be created
      * @return created name object
      */
     @Nonnull
@@ -200,6 +211,9 @@ public interface Sql {
 
     /**
      * Create Sql table alias object based on supplied text. Validates text during creation.
+     *
+     * @param tableAlias is alias (String value)
+     * @return created alias object
      */
     @Nonnull
     SqlTableAlias tableAlias(String tableAlias);

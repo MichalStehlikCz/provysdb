@@ -15,6 +15,8 @@ public interface SqlWhereJoiner {
 
     /**
      * Build condition from joined conditions
+     *
+     * @return resulting combined (constant) where condition
      */
     SqlWhere build();
 }

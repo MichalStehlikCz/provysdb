@@ -1,39 +1,66 @@
 package com.provys.provysdb.sqlparser;
 
+import com.provys.common.datatype.StringParser;
+
+import java.util.Collection;
+import java.util.Scanner;
+import java.util.stream.Stream;
+
 /**
- * Represents single token parsed from SQL source. Gives access to type of token and its position in original file,
- * derived classes add additional information (like parsed text)
+ * Tokenizer is used to parse supplied text into tokens
  */
 public abstract class SqlTokenizer {
+
+    private final int maxTokens;
+
+    SqlTokenizer() {
+        maxTokens = 1000000;
+    }
+
+    SqlTokenizer(int maxTokens) {
+        this.maxTokens = maxTokens;
+    }
+
+    public Collection<SqlToken> tokenize(String source) {
+        try (Scanner scanner = new Scanner(source)) {
+            return tokenize(scanner);
+        }
+    }
+
+    public Collection<SqlToken> tokenize(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            StringParser line = new StringParser(scanner.nextLine());
+
+        }
+    }
+
+    private class SqlScanner {
+
+        private final Scanner scanner;
+        private StringParser currentLine;
+
+        private SqlScanner(Scanner scanner) {
+            this.scanner = scanner;
+        }
+
+        /**
+         * Skip whitespace and navigate to start of next token
+         *
+         * @return true if next token was found and false if end of file was reached
+         */
+        private boolean nextToken() {
+            if ((currentLine == null) || (!currentLine.hasNext())) {
+                if (!scanner.hasNextLine()) {
+                    return false;
+                }
+                this.currentLine = new StringParser(scanner.nextLine());
+            }
+            
+
+            return true;
+        }
+    }
     /*
-    CREATE OR REPLACE TYPE BODY KER_GenTokenizer_TO
-    IS
-
-    STATIC FUNCTION mfw_GetVersion
-    RETURN VARCHAR2
-    IS
-            BEGIN
-    RETURN '1.0.0.0.15-04-2019';
-    END;
-
-    STATIC FUNCTION mf_Create(
-            p_MaxTokens INTEGER :=1000000
-    ) RETURN KER_GenTokenizer_TO
-    IS
-    lo_GenTokenizer KER_GenTokenizer_TO;
-    BEGIN
-    lo_GenTokenizer:=KER_GenTokenizer_TO(MaxTokens => p_MaxTokens);
-    RETURN lo_GenTokenizer;
-    END;
-
-    MEMBER FUNCTION mf_GetMaxTokens(
-            SELF KER_GenTokenizer_TO
-    ) RETURN INTEGER
-    IS
-            BEGIN
-    RETURN SELF.MaxTokens;
-    END;
-
     MEMBER PROCEDURE mp_Tokenize(
             SELF KER_GenTokenizer_TO
             , pt_SrcLine KER_NoteList_TT
