@@ -1,15 +1,20 @@
 package com.provys.provysdb.sqlparser;
 
 import com.provys.common.datatype.StringParser;
+import com.provys.common.exception.InternalException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Scanner;
-import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Tokenizer is used to parse supplied text into tokens
  */
-public abstract class SqlTokenizer {
+public class SqlTokenizer {
+
+    private static final Logger LOG = LogManager.getLogger(SqlTokenizer.class);
 
     private final int maxTokens;
 
@@ -28,19 +33,90 @@ public abstract class SqlTokenizer {
     }
 
     public Collection<SqlToken> tokenize(Scanner scanner) {
-        while (scanner.hasNextLine()) {
-            StringParser line = new StringParser(scanner.nextLine());
-
+        var sqlScanner = new SqlScanner(scanner);
+        var tokens = new ArrayList<SqlToken>(50);
+        while (sqlScanner.hasNext()) {
+            tokens.add(sqlScanner.next());
+            if (tokens.size() > maxTokens) {
+                throw new InternalException(LOG, "Maximal number of parsed tokens exceeded");
+            }
         }
+        return tokens;
     }
 
-    private class SqlScanner {
+    private static class SqlScanner implements Iterator<SqlToken> {
 
+        /**
+         * Check if supplied character is whitespace
+         */
+        private static boolean isWhiteSpace(char character) {
+            return (character == ' ') || (character == '\t') || (character == '\n');
+        }
+
+        @Nonnull
         private final Scanner scanner;
+        @Nullable
         private StringParser currentLine;
+        private int line;
 
         private SqlScanner(Scanner scanner) {
             this.scanner = scanner;
+            if (scanner.hasNextLine()) {
+                this.currentLine = new StringParser(scanner.nextLine());
+            } else {
+                this.currentLine = null;
+            }
+            line = 1;
+        }
+
+        /**
+         * Read next character.
+         * If placed at the end of line, returns newline character and sets endOfLine flag.
+         */
+        private char nextChar() {
+            if (currentLine == null) {
+                throw new NoSuchElementException("Cannot read next character - end of file reached");
+            }
+            if (currentLine.hasNext()) {
+                return currentLine.next();
+            }
+            if (scanner.hasNextLine()) {
+                currentLine = new StringParser(scanner.nextLine());
+                line++;
+            } else {
+                currentLine = null;
+            }
+            return '\n';
+        }
+
+        /**
+         * Get next character, but do not navigate to it.
+         */
+        private char peekChar() {
+            if (currentLine == null) {
+                throw new NoSuchElementException("Cannot check next character - end of file reached");
+            }
+            if (currentLine.hasNext()) {
+                return currentLine.peek();
+            }
+            return '\n';
+        }
+
+        /**
+         * Check if there is next character
+         */
+        private boolean hasNextChar() {
+            return (currentLine != null);
+        }
+
+        /**
+         * @return position on current line
+         */
+        private int getPos() {
+            if (currentLine == null) {
+                throw new IllegalStateException("Cannot return position - end of file reached");
+            }
+            return currentLine.getPos();
         }
 
         /**
@@ -48,36 +124,161 @@ public abstract class SqlTokenizer {
          *
          * @return true if next token was found and false if end of file was reached
          */
-        private boolean nextToken() {
-            if ((currentLine == null) || (!currentLine.hasNext())) {
-                if (!scanner.hasNextLine()) {
-                    return false;
-                }
-                this.currentLine = new StringParser(scanner.nextLine());
+        private boolean skipWhiteSpace() {
+            while (hasNextChar() && isWhiteSpace(peekChar())) {
+                nextChar();
             }
-            
+            return hasNextChar();
+        }
 
-            return true;
+        /**
+         * Check if current position is before specified text. Do not move current position.
+         *
+         * @return true if position is before specified text, false otherwise
+         */
+        private boolean isOnText(String text) {
+            if (currentLine == null) {
+                return false;
+            }
+            return currentLine.isOnText(text);
+        }
+
+        /**
+         * Check if current position is before specified text. Skip given text if it was.
+         *
+         * @return true if position was before specified text, false otherwise
+         */
+        private boolean onText(String text) {
+            if (currentLine == null) {
+                return false;
+            }
+            return currentLine.onText(text);
+        }
+
+        /**
+         * Read the rest of the line
+         *
+         * @return rest of current line, position wil be placed on end of line
+         */
+        @Nonnull
+        private String readLine() {
+            if (currentLine == null) {
+                throw new NoSuchElementException("Cannot read line - end of file reached");
+            }
+            return currentLine.readString();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return skipWhiteSpace();
+        }
+
+        /**
+         * Invoked when current position is on --
+         *
+         * @return token representing single line comment read
+         */
+        @Nonnull
+        private SqlToken readSingleLineComment() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read single line comment at the end of file");
+            }
+            var pos = getPos();
+            if (!onText("--")) {
+                throw new IllegalStateException("Read single line comment should only be called on --");
+            }
+            return new SqlSingleLineComment(line, pos, readLine());
+        }
+
+        /**
+         * Invoked when current position is on start of multi-line comment
+         *
+         * @return token representing multi line comment
+         */
+        @Nonnull
+        private SqlToken readMultiLineComment() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read multiline comment at the end of file");
+            }
+            var pos = getPos();
+            if (!onText("/*")) {
+                throw new IllegalStateException("Read multiline comment should only be called on /*");
+            }
+            var comment = new StringBuilder();
+            boolean isStar = false;
+            while (hasNextChar()) {
+                char nextChar = nextChar();
+                if (isStar) {
+                    if (nextChar == '/') {
+                        // end of comment reached
+                        return new SqlMultiLineComment(line, pos, comment.toString());
+                    } else {
+                        comment.append('*');
+                        isStar = false;
+                    }
+                }
+                if (nextChar == '*') {
+                    isStar = true;
+                } else {
+                    comment.append(nextChar);
+                }
+            }
+            throw new InternalException(LOG, "Unclosed multiline comment - end of file reached");
+        }
+
+        /**
+         * Invoken when next character corresponds to one of symbols
+         *
+         * @return token representing symbol
+         */
+        @Nonnull
+        private SqlToken readSymbol() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read symbol at the end of file");
+            }
+            var pos = currentLine.getPos();
+            String firstChar = Character.toString(nextChar());
+            if (currentLine.hasNext()) {
+                String twoChars = firstChar + currentLine.peek();
+                if (SqlSymbol.SYMBOLS.contains(twoChars)) {
+                    return new SqlSymbol(line, pos, twoChars);
+                }
+            }
+            if (SqlSymbol.SYMBOLS.contains(firstChar)) {
+                return new SqlSymbol(line, pos, firstChar);
+            }
+            throw new InternalException(LOG, "Invalid character '" + firstChar + "' found parsing SQL on line " + line
+                    + ", position " + pos);
+        }
+
+        @Override
+        public SqlToken next() {
+            if (!skipWhiteSpace() || (currentLine == null)) { // condition on currentLine is not necessary as
+                // skipWhiteSpace would return false, but static code analysis is unable to consider it and would
+                // produce warning
+                throw new NoSuchElementException("Cannot read Sql token - end of code reached");
+            }
+            switch (peekChar()) {
+                case '-':
+                    if (currentLine.isOnText("--")) {
+                        return readSingleLineComment();
+                    } else {
+                        return readSymbol();
+                    }
+                case '/':
+                    if (currentLine.isOnText("/*")) {
+                        return readMultiLineComment();
+                    } else {
+                        return readSymbol();
+                    }
+                default:
+                    // all other characters should be tried as symbols
+                    return readSymbol();
+            }
         }
     }
+
     /*
-    MEMBER PROCEDURE mp_Tokenize(
-            SELF KER_GenTokenizer_TO
-            , pt_SrcLine KER_NoteList_TT
-            , ot_Token OUT NOCOPY KER_GenToken_TT
-    )
-    IS
-    l_Line VARCHAR2(4000);
-    l_Token KER_GenToken_TO;
-    l_Line_i SIMPLE_INTEGER:=1;
-
-    PROCEDURE mpi_ReadSingleLineComment
-    IS
-            BEGIN
-    l_Token:=KER_GenToken_TO.mf_Create('COMMENT', '--', l_Line);
-    l_Line:=NULL;
-    END;
-
     PROCEDURE mpi_ReadMultiLineComment
     IS
     l_Comment VARCHAR2(32000);

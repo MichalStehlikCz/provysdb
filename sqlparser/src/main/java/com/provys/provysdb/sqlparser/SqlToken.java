@@ -1,5 +1,7 @@
 package com.provys.provysdb.sqlparser;
 
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -21,4 +23,11 @@ public interface SqlToken {
      */
     @Nonnull
     SqlTokenType getType();
+
+    /**
+     * Append token to code builder
+     *
+     * @param builder is code builder token should be appended to
+     */
+    void append(CodeBuilder builder);
 }
