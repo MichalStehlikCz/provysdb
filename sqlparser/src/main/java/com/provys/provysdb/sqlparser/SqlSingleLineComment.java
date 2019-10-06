@@ -3,6 +3,7 @@ package com.provys.provysdb.sqlparser;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents single line comment in Sql code
@@ -29,19 +30,26 @@ class SqlSingleLineComment extends SqlTokenBase {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
 
         SqlSingleLineComment that = (SqlSingleLineComment) o;
-
-        return (getLine() == that.getLine()) &&
-                (getPos() == that.getPos()) &&
-                text.equals(that.text);
+        return text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        return text.hashCode();
+        return super.hashCode()*31 + text.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "SqlSingleLineComment{" +
+                "text='" + text + '\'' +
+                "} " + super.toString();
     }
 }

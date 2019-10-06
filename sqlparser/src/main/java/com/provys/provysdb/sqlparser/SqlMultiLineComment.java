@@ -28,4 +28,29 @@ public class SqlMultiLineComment extends SqlTokenBase {
     public void append(CodeBuilder builder) {
         builder.append("/*").append(comment).append("*/");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SqlMultiLineComment that = (SqlMultiLineComment) o;
+
+        return comment.equals(that.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + comment.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SqlMultiLineComment{" +
+                "comment='" + comment + '\'' +
+                "} " + super.toString();
+    }
 }
