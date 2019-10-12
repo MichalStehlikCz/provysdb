@@ -62,7 +62,7 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
-    public CodeBuilder append(SqlName name) {
+    public CodeBuilder append(SqlIdentifierImpl name) {
         return append(name.getName());
     }
 

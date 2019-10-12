@@ -1,10 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.BindVariable;
-import com.provys.provysdb.sqlbuilder.BindVariableT;
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlName;
+import com.provys.provysdb.sqlbuilder.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +25,8 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @return bind variable with given name and value
      * @param <T> is type of value held by this variable
      */
-    public static <T> BindVariableImpl<T> ofObject(SqlName name, T value) {
+    @Nonnull
+    public static <T> BindVariableImpl<T> ofObject(BindName name, T value) {
         return new BindVariableImpl<>(name, value);
     }
 
@@ -41,7 +39,8 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @return bind variable with given name, type and value
      * @param <T> is type of value held by this variable
      */
-    public static <T> BindVariableImpl ofType(SqlName name, Class<T> type, @Nullable T value) {
+    @Nonnull
+    public static <T> BindVariableImpl ofType(BindName name, Class<T> type, @Nullable T value) {
         return new BindVariableImpl<>(name, type, value);
     }
 
@@ -53,25 +52,26 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @return bind variable with given name, type and no value
      * @param <T> is type of value held by this variable
      */
-    public static <T> BindVariableImpl ofType(SqlName name, Class<T> type) {
+    @Nonnull
+    public static <T> BindVariableImpl ofType(BindName name, Class<T> type) {
         return new BindVariableImpl<>(name, type, null);
     }
 
     @Nonnull
-    private final SqlName name;
+    private final BindName name;
     @Nonnull
     private final Class<T> type;
     @Nullable
     private final T value;
 
-    private BindVariableImpl(SqlName name, T value) {
+    private BindVariableImpl(BindName name, T value) {
         this.name = Objects.requireNonNull(name);
         //noinspection unchecked
         this.type = (Class<T>) value.getClass();
         this.value = value;
     }
 
-    private BindVariableImpl(SqlName name, Class<T> type, @Nullable T value) {
+    private BindVariableImpl(BindName name, Class<T> type, @Nullable T value) {
         if ((value != null) && !type.isInstance(value)) {
             throw new InternalException(LOG, "Incorrect type of bind value for variable " + name +
                     " (type " + type + ", value " + value.getClass() + ")");
@@ -83,7 +83,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
 
     @Override
     @Nonnull
-    public SqlName getName() {
+    public BindName getName() {
         return name;
     }
 

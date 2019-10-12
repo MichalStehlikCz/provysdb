@@ -1,6 +1,7 @@
-package com.provys.provysdb.sqlparser;
+package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -8,12 +9,12 @@ import java.util.Objects;
 /**
  * Instance represents multi-line comment
  */
-public class SqlMultiLineComment extends SqlTokenBase {
+public class ParsedMultiLineComment extends ParsedTokenBase {
 
     @Nonnull
     private final String comment;
 
-    SqlMultiLineComment(int line, int pos, String comment) {
+    ParsedMultiLineComment(int line, int pos, String comment) {
         super(line, pos);
         this.comment = Objects.requireNonNull(comment);
     }
@@ -35,7 +36,7 @@ public class SqlMultiLineComment extends SqlTokenBase {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        SqlMultiLineComment that = (SqlMultiLineComment) o;
+        ParsedMultiLineComment that = (ParsedMultiLineComment) o;
 
         return comment.equals(that.comment);
     }

@@ -7,11 +7,17 @@ import javax.annotation.Nonnull;
  * characters _, # and $), that is translated to lowercase or quoted name (enclosed in ", containing any printable
  * character, case sensitive)
  */
-public interface SqlName {
+public interface SqlIdentifier {
 
     /**
-     * @return textual representation of name (e.g. name itself)
+     * @return textual representation of name (e.g. name itself, including delimiter)
      */
     @Nonnull
-    String getName();
+    String getText();
+
+    /**
+     * @return name as represented in database catalogue (e.g. ordinary name uppercased, without delimiters, ...)
+     */
+    @Nonnull
+    String getDbName();
 }

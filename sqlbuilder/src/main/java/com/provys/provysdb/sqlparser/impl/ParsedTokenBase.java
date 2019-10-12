@@ -1,4 +1,6 @@
-package com.provys.provysdb.sqlparser;
+package com.provys.provysdb.sqlparser.impl;
+
+import com.provys.provysdb.sqlparser.SqlParsedToken;
 
 import javax.annotation.Nullable;
 
@@ -6,12 +8,12 @@ import javax.annotation.Nullable;
  * Represents single token parsed from SQL source. Gives access to type of token and its position in original file,
  * derived classes add additional information (like parsed text)
  */
-public abstract class SqlTokenBase implements SqlToken {
+public abstract class ParsedTokenBase implements SqlParsedToken {
 
     private final int line;
     private final int pos;
 
-    SqlTokenBase(int line, int pos) {
+    ParsedTokenBase(int line, int pos) {
         this.line = line;
         this.pos = pos;
     }
@@ -36,7 +38,7 @@ public abstract class SqlTokenBase implements SqlToken {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SqlTokenBase that = (SqlTokenBase) o;
+        ParsedTokenBase that = (ParsedTokenBase) o;
 
         if (line != that.line) return false;
         return pos == that.pos;

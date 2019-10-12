@@ -13,9 +13,9 @@ class SqlColumnSimple extends SqlColumnBase {
     @Nullable
     private final SqlTableAlias tableAlias;
     @Nonnull
-    private final SqlName column;
+    private final SqlIdentifier column;
 
-    SqlColumnSimple(@Nullable SqlTableAlias tableAlias, SqlName column, @Nullable SqlName alias) {
+    SqlColumnSimple(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, @Nullable SqlIdentifier alias) {
         super(alias);
         this.tableAlias = tableAlias;
         this.column = Objects.requireNonNull(column);

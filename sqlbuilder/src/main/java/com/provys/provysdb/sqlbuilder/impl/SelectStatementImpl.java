@@ -23,7 +23,7 @@ public class SelectStatementImpl implements SelectStatement {
     private final DbConnection connection;
     private final boolean closeConnection;
     private final DbPreparedStatement statement;
-    private final Map<SqlName, BindVariable> bindValues;
+    private final Map<BindName, BindVariable> bindValues;
     private boolean closed = false;
 
     SelectStatementImpl(Select select, Sql sqlContext) {
@@ -54,7 +54,7 @@ public class SelectStatementImpl implements SelectStatement {
 
     @Nonnull
     @Override
-    public SelectStatement bindValue(SqlName bind, @Nullable Object value) {
+    public SelectStatement bindValue(BindName bind, @Nullable Object value) {
         if (closed) {
             throw new InternalException(LOG, "Attempt to bind value in closed statement " + this);
         }
@@ -69,7 +69,7 @@ public class SelectStatementImpl implements SelectStatement {
     @Nonnull
     @Override
     public SelectStatement bindValue(String bind, @Nullable Object value) {
-        return bindValue(new SqlNameImpl(bind), value);
+        return bindValue(new BindNameImpl(bind), value);
     }
 
     @Nonnull

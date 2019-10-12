@@ -1,6 +1,7 @@
-package com.provys.provysdb.sqlparser;
+package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -10,9 +11,9 @@ import java.util.Set;
 /**
  * Instance represents valid SQL symbol
  */
-public class SqlSymbol extends SqlTokenBase {
+class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
-    public static final Set<String> SYMBOLS;
+    static final Set<String> SYMBOLS;
     static {
         SYMBOLS = new HashSet<>();
         SYMBOLS.add("=>");
@@ -39,7 +40,7 @@ public class SqlSymbol extends SqlTokenBase {
     @Nonnull
     private final String symbol;
 
-    SqlSymbol(int line, int pos, String symbol) {
+    ParsedSymbol(int line, int pos, String symbol) {
         super(line, pos);
         this.symbol = Objects.requireNonNull(symbol);
     }
@@ -48,6 +49,12 @@ public class SqlSymbol extends SqlTokenBase {
     @Override
     public SqlTokenType getType() {
         return SqlTokenType.SYMBOL;
+    }
+
+    @Override
+    @Nonnull
+    public String getSymbol() {
+        return symbol;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class SqlSymbol extends SqlTokenBase {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        SqlSymbol sqlSymbol = (SqlSymbol) o;
+        ParsedSymbol sqlSymbol = (ParsedSymbol) o;
 
         return symbol.equals(sqlSymbol.symbol);
     }

@@ -9,11 +9,11 @@ import java.util.Objects;
 /**
  * Sql builder using supplied token to switch Provys user
  */
-public class SqlToken extends SqlBase {
+public class SqlWithToken extends SqlBase {
 
     private final String dbToken;
 
-    SqlToken(DbContext dbContext, String dbToken) {
+    SqlWithToken(DbContext dbContext, String dbToken) {
         super(dbContext);
         this.dbToken = Objects.requireNonNull(dbToken);
     }

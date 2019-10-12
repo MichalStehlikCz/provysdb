@@ -13,9 +13,9 @@ import java.util.Objects;
 class SqlFromSimple extends SqlFromBase {
 
     @Nonnull
-    private final SqlName tableName;
+    private final SqlIdentifier tableName;
 
-    SqlFromSimple(SqlName tableName, SqlTableAlias alias) {
+    SqlFromSimple(SqlIdentifier tableName, SqlTableAlias alias) {
         super(alias);
         this.tableName = Objects.requireNonNull(tableName);
     }

@@ -4,7 +4,7 @@ import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
 import javax.annotation.Nonnull;
 
-class LiteralVarchar extends LiteralBase<String> {
+public class LiteralVarchar extends LiteralBase<String> {
 
     /**
      * Get literal corresponding to given String value
@@ -12,7 +12,7 @@ class LiteralVarchar extends LiteralBase<String> {
      * @param value is string value this literal represents
      */
     @Nonnull
-    static LiteralVarchar of(String value) {
+    public static LiteralVarchar of(String value) {
         return new LiteralVarchar(value);
     }
 

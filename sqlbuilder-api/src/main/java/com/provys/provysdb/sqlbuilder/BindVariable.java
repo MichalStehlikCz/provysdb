@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface BindVariable extends Expression {
 
     @Nonnull
-    SqlName getName();
+    BindName getName();
 
     @Nonnull
     Class<?> getType();

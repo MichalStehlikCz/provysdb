@@ -1,7 +1,10 @@
-package com.provys.provysdb.sqlparser;
+package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.common.datatype.StringParser;
 import com.provys.common.exception.InternalException;
+import com.provys.common.exception.RegularException;
+import com.provys.provysdb.sqlparser.SqlParsedToken;
+import com.provys.provysdb.sqlparser.SqlTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,29 +15,31 @@ import java.util.*;
 /**
  * Tokenizer is used to parse supplied text into tokens
  */
-public class SqlTokenizer {
+public class DefaultSqlTokenizer implements SqlTokenizer {
 
-    private static final Logger LOG = LogManager.getLogger(SqlTokenizer.class);
+    private static final Logger LOG = LogManager.getLogger(DefaultSqlTokenizer.class);
 
     private final int maxTokens;
 
-    SqlTokenizer() {
+    DefaultSqlTokenizer() {
         maxTokens = 1000000;
     }
 
-    SqlTokenizer(int maxTokens) {
+    DefaultSqlTokenizer(int maxTokens) {
         this.maxTokens = maxTokens;
     }
 
-    public Collection<SqlToken> tokenize(String source) {
+    @Override
+    public Collection<SqlParsedToken> tokenize(String source) {
         try (Scanner scanner = new Scanner(source)) {
             return tokenize(scanner);
         }
     }
 
-    public Collection<SqlToken> tokenize(Scanner scanner) {
+    @Override
+    public Collection<SqlParsedToken> tokenize(Scanner scanner) {
         var sqlScanner = new SqlScanner(scanner);
-        var tokens = new ArrayList<SqlToken>(50);
+        var tokens = new ArrayList<SqlParsedToken>(50);
         while (sqlScanner.hasNext()) {
             tokens.add(sqlScanner.next());
             if (tokens.size() > maxTokens) {
@@ -44,7 +49,7 @@ public class SqlTokenizer {
         return tokens;
     }
 
-    private static class SqlScanner implements Iterator<SqlToken> {
+    private static class SqlScanner implements Iterator<SqlParsedToken> {
 
         /**
          * Check if supplied character is whitespace
@@ -66,7 +71,7 @@ public class SqlTokenizer {
             } else {
                 this.currentLine = null;
             }
-            line = 1;
+            line = 1; // we want to index lines from 1 in output
         }
 
         /**
@@ -110,13 +115,14 @@ public class SqlTokenizer {
         }
 
         /**
-         * @return position on current line
+         * @return position on current line; position in tokenizer is one indexed, as when displayed to users, it makes
+         * more sense, moreover it is what SQL users are used to
          */
         private int getPos() {
             if (currentLine == null) {
                 throw new IllegalStateException("Cannot return position - end of file reached");
             }
-            return currentLine.getPos();
+            return currentLine.getPos() + 1; // we want to display positions from 1
         }
 
         /**
@@ -179,7 +185,7 @@ public class SqlTokenizer {
          * @return token representing single line comment read
          */
         @Nonnull
-        private SqlToken readSingleLineComment() {
+        private SqlParsedToken readSingleLineComment() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
                 throw new IllegalStateException("Cannot read single line comment at the end of file");
             }
@@ -187,7 +193,7 @@ public class SqlTokenizer {
             if (!onText("--")) {
                 throw new IllegalStateException("Read single line comment should only be called on --");
             }
-            return new SqlSingleLineComment(line, pos, readLine());
+            return new ParsedSingleLineComment(line, pos, readLine());
         }
 
         /**
@@ -196,11 +202,12 @@ public class SqlTokenizer {
          * @return token representing multi line comment
          */
         @Nonnull
-        private SqlToken readMultiLineComment() {
+        private SqlParsedToken readMultiLineComment() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
                 throw new IllegalStateException("Cannot read multiline comment at the end of file");
             }
             var pos = getPos();
+            var startLine = line;
             if (!onText("/*")) {
                 throw new IllegalStateException("Read multiline comment should only be called on /*");
             }
@@ -211,7 +218,7 @@ public class SqlTokenizer {
                 if (isStar) {
                     if (nextChar == '/') {
                         // end of comment reached
-                        return new SqlMultiLineComment(line, pos, comment.toString());
+                        return new ParsedMultiLineComment(startLine, pos, comment.toString());
                     } else {
                         comment.append('*');
                         isStar = false;
@@ -232,89 +239,145 @@ public class SqlTokenizer {
          * @return token representing symbol
          */
         @Nonnull
-        private SqlToken readSymbol() {
+        private SqlParsedToken readSymbol() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
                 throw new IllegalStateException("Cannot read symbol at the end of file");
             }
-            var pos = currentLine.getPos();
+            var pos = getPos();
             String firstChar = Character.toString(nextChar());
-            if (currentLine.hasNext()) {
-                String twoChars = firstChar + currentLine.peek();
-                if (SqlSymbol.SYMBOLS.contains(twoChars)) {
-                    return new SqlSymbol(line, pos, twoChars);
+            if (hasNextChar()) {
+                String twoChars = firstChar + peekChar();
+                if (ParsedSymbol.SYMBOLS.contains(twoChars)) {
+                    return new ParsedSymbol(line, pos, twoChars);
                 }
             }
-            if (SqlSymbol.SYMBOLS.contains(firstChar)) {
-                return new SqlSymbol(line, pos, firstChar);
+            if (ParsedSymbol.SYMBOLS.contains(firstChar)) {
+                return new ParsedSymbol(line, pos, firstChar);
             }
             throw new InternalException(LOG, "Invalid character '" + firstChar + "' found parsing SQL on line " + line
                     + ", position " + pos);
         }
 
+        @Nonnull
+        private SqlParsedToken readOrdinaryIdentifier() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read name at the end of file");
+            }
+            var pos = getPos();
+            var name = new StringBuilder();
+            while (hasNextChar() && (
+                    ((peekChar() >= 'A') && (peekChar() <= 'Z')) ||
+                            ((peekChar() >= 'a') && (peekChar() <= 'z')) ||
+                            ((peekChar() >= '0') && (peekChar() <= '9')) ||
+                            (peekChar() == '_') || (peekChar() == '$') ||
+                            (peekChar() == '#'))) {
+                 name.append(nextChar());
+            }
+            return new ParsedIdentifier(line, pos, name.toString());
+        }
+
+        @Nonnull
+        private SqlParsedToken readDelimitedIdentifier() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read name at the end of file");
+            }
+            var pos = getPos();
+            if (nextChar() != '"') {
+                throw new IllegalStateException("Delimited identifier must start with \"");
+            }
+            var name = new StringBuilder();
+            while (hasNextChar()) {
+                if (peekChar() == '\n') {
+                    throw new RegularException(LOG, "SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
+                            "End of line encountered reading delimited token at line <<LINE>>, position <<POS>>",
+                            Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
+                }
+                if (peekChar() == '"') {
+                    nextChar();
+                    if (peekChar() != '"') {
+                        return new ParsedDelimitedIdentifier(line, pos, name.toString());
+                    }
+                    // two double quotation marks are evaluated as single one
+                }
+                name.append(nextChar());
+            }
+            throw new RegularException(LOG, "SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
+                    "End of file encountered reading delimited token at line <<LINE>>, position <<POS>>",
+                    Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
+        }
+
+        @Nonnull
+        private SqlParsedToken readStringLiteral() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read literal at the end of file");
+            }
+            var pos = getPos();
+            if (nextChar() != '\'') {
+                throw new IllegalStateException("String literal must start with '");
+            }
+            var value = new StringBuilder();
+            while (hasNextChar()) {
+                if (peekChar() == '\'') {
+                    nextChar();
+                    if (peekChar() != '\'') {
+                        return new ParsedVarchar(line, pos, value.toString());
+                    }
+                    // two quotation marks are evaluated as single one
+                }
+                value.append(nextChar());
+            }
+            throw new RegularException(LOG, "SQLPARSER_UNFINISHED_STRING_LITERAL",
+                    "End of file encountered reading string literal at line <<LINE>>, position <<POS>>",
+                    Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
+        }
+
+        @Nonnull
+        private SqlParsedToken readMinus() {
+            if (isOnText("--")) {
+                return readSingleLineComment();
+            } else {
+                return readSymbol();
+            }
+        }
+
+        @Nonnull
+        private SqlParsedToken readSlash() {
+            if (isOnText("/*")) {
+                return readMultiLineComment();
+            } else {
+                return readSymbol();
+            }
+        }
+
         @Override
-        public SqlToken next() {
+        public SqlParsedToken next() {
             if (!skipWhiteSpace() || (currentLine == null)) { // condition on currentLine is not necessary as
                 // skipWhiteSpace would return false, but static code analysis is unable to consider it and would
                 // produce warning
                 throw new NoSuchElementException("Cannot read Sql token - end of code reached");
             }
-            switch (peekChar()) {
-                case '-':
-                    if (currentLine.isOnText("--")) {
-                        return readSingleLineComment();
-                    } else {
+            if (((peekChar() >= 'a') && (peekChar() <= 'z')) || ((peekChar() >= 'A') && (peekChar() <= 'Z'))) {
+                return readOrdinaryIdentifier();
+            } else {
+                switch (peekChar()) {
+                    case '-':
+                        return readMinus();
+                    case '/':
+                        return readSlash();
+                    case '"':
+                        return readDelimitedIdentifier();
+                    case '\'':
+                        return readStringLiteral();
+                    default:
+                        // all other characters should be tried as symbols
                         return readSymbol();
-                    }
-                case '/':
-                    if (currentLine.isOnText("/*")) {
-                        return readMultiLineComment();
-                    } else {
-                        return readSymbol();
-                    }
-                default:
-                    // all other characters should be tried as symbols
-                    return readSymbol();
+                }
             }
         }
     }
 
-    /*
-    PROCEDURE mpi_ReadMultiLineComment
-    IS
-    l_Comment VARCHAR2(32000);
-    BEGIN
-    WHILE (INSTR(l_Line, '* /')=0) LOOP
-    l_Comment:=l_Comment||l_Line;
-    l_Line_i:=l_Line_i+1;
-    IF (l_Line_i>pt_SrcLine.COUNT) THEN
-        KER_Exception_EP.mp_Raise('Unfinished comment');
-    END IF;
-    l_Line:=' '||LTRIM(RTRIM(pt_SrcLine(l_Line_i), ' '||CHR(9)||CHR(10)||CHR(13)), ' '||CHR(9));
-    END LOOP;
-    l_Comment:=l_Comment||SUBSTR(l_Line, 1, INSTR(l_Line, '* /')+1);
-    l_Token:=KER_GenToken_TO.mf_Create('COMMENT', '/*', l_Comment);
-    l_Line:=SUBSTR(l_Line, INSTR(l_Line, '* /')+2);
-    END;
 
-    PROCEDURE mpi_ReadStringLiteral
-    IS
-    l_Pos PLS_INTEGER :=2;
-    BEGIN
-            LOOP
-    l_Pos:=INSTR(l_Line, '''', l_Pos);
-    IF (l_Pos=0) THEN
-        KER_Exception_EP.mp_Raise('End of string not found on line '||l_Line_i);
-    END IF;
-    IF (SUBSTR(l_Line, l_Pos+1, 1)='''') THEN
-    / * double apostrophe is escape for apos character *
-    l_Pos:=l_Pos+2;
-    ELSE
-            EXIT;
-    END IF;
-    END LOOP;
-    l_Token:=KER_GenToken_TO.mf_Create('LITERAL', 'VARCHAR2', SUBSTR(l_Line, 1, l_Pos));
-    l_Line:=SUBSTR(l_Line, l_Pos+1);
-    END;
+    /*
 
     PROCEDURE mpi_ReadDateLiteral
     IS

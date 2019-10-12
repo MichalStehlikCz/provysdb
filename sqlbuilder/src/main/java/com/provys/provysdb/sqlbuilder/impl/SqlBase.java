@@ -92,31 +92,31 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlName name(String name) {
-        return new SqlNameImpl(name);
+    public SqlIdentifierImpl name(String name) {
+        return SqlIdentifierImpl.parse(name);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(SqlName column) {
+    public SqlColumn column(SqlIdentifier column) {
         return column(null, column, null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(SqlName column, @Nullable SqlName alias) {
+    public SqlColumn column(SqlIdentifier column, @Nullable SqlIdentifier alias) {
         return column(null, column, alias);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlName column) {
+    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column) {
         return new SqlColumnSimple(tableAlias, column, null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlName column, @Nullable SqlName alias) {
+    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, @Nullable SqlIdentifier alias) {
         return new SqlColumnSimple(tableAlias, column, alias);
     }
 
@@ -165,7 +165,7 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlFrom from(SqlName tableName, SqlTableAlias alias) {
+    public SqlFrom from(SqlIdentifier tableName, SqlTableAlias alias) {
         return new SqlFromSimple(tableName, alias);
     }
 

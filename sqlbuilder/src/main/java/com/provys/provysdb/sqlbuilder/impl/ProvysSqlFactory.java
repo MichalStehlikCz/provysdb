@@ -31,6 +31,6 @@ public class ProvysSqlFactory implements SqlFactory {
     @Nonnull
     @Override
     public Sql getSql(String dbToken) {
-        return new SqlToken(dbContext, dbToken);
+        return new SqlWithToken(dbContext, dbToken);
     }
 }

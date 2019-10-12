@@ -26,7 +26,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder column(SqlName column);
+    SelectBuilder column(SqlIdentifier column);
 
     /**
      * Add column with given name and alias
@@ -36,7 +36,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder column(SqlName column, SqlName alias);
+    SelectBuilder column(SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Add column with given table alias, name and alias
@@ -47,7 +47,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder column(SqlTableAlias tableAlias, SqlName column, SqlName alias);
+    SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
@@ -142,7 +142,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder from(SqlName tableName, SqlTableAlias alias);
+    SelectBuilder from(SqlIdentifier tableName, SqlTableAlias alias);
 
     /**
      * Create from clause based on table; String version

@@ -56,7 +56,7 @@ public interface CodeBuilder {
      * @return returns self to support fluent build
      */
     @Nonnull
-    CodeBuilder append(SqlName name);
+    CodeBuilder append(SqlIdentifier name);
 
     /**
      * Appends piece of text to already existing code; SqlTableAlias variant

@@ -101,7 +101,7 @@ public interface Sql {
      * @return created name object
      */
     @Nonnull
-    SqlName name(String name);
+    SqlIdentifier name(String name);
 
     /**
      * Create column with given name
@@ -110,7 +110,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlName column);
+    SqlColumn column(SqlIdentifier column);
 
     /**
      * Create column with given name and alias
@@ -120,7 +120,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlName column, SqlName alias);
+    SqlColumn column(SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Create column with given table alias, name and alias
@@ -130,7 +130,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlTableAlias tableAlias, SqlName column);
+    SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column);
 
     /**
      * Create column with given table alias, name and alias
@@ -141,7 +141,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlTableAlias tableAlias, SqlName column, SqlName alias);
+    SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Create new column
@@ -226,7 +226,7 @@ public interface Sql {
      * @return created from clause
      */
     @Nonnull
-    SqlFrom from(SqlName tableName, SqlTableAlias alias);
+    SqlFrom from(SqlIdentifier tableName, SqlTableAlias alias);
 
     /**
      * Create from clause based on table; String version

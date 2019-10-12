@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlName;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,15 +9,15 @@ import java.util.Optional;
 
 abstract class SqlColumnBase implements SqlColumn {
     @Nullable
-    private final SqlName alias;
+    private final SqlIdentifier alias;
 
-    SqlColumnBase(@Nullable SqlName alias) {
+    SqlColumnBase(@Nullable SqlIdentifier alias) {
         this.alias = alias;
     }
 
     @Nonnull
     @Override
-    public Optional<SqlName> getAlias() {
+    public Optional<SqlIdentifier> getAlias() {
         return Optional.ofNullable(alias);
     }
 }
