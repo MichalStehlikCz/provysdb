@@ -4,10 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public interface BindVariable extends Expression {
-
-    @Nonnull
-    BindName getName();
+public interface BindVariable extends BindName, Expression {
 
     @Nonnull
     Class<?> getType();
@@ -24,16 +21,6 @@ public interface BindVariable extends Expression {
     <T> Optional<T> getValue(Class<T> type);
 
     /**
-     * Return bind value with the same name and type, but with new value. Used as part of bind value method. Specified
-     * object must be of the type compatible with bind variable
-     *
-     * @param value is value to be assigned to new bind
-     * @return bind variable with the same name as old one, but with the new value
-     */
-    @Nonnull
-    BindVariable withValue(@Nullable Object value);
-
-    /**
      * Method can be used when constructing statement and merging its parts. It combines two bind values; they should
      * have the same name and type. It verifies their values; if they have different non-null values, exception is
      * raised. Otherwise it uses one of variables to be combined, preferring one with the value
@@ -42,5 +29,5 @@ public interface BindVariable extends Expression {
      * @return this or other bind variable, depending which has more complete information
      */
     @Nonnull
-    BindVariable combine(BindVariable other);
+    BindVariable combine(BindName other);
 }

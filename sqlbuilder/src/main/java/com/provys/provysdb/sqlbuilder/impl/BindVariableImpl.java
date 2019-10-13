@@ -8,11 +8,12 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Represents variable connected with select statement, its type and value.
  */
-public class BindVariableImpl<T> implements BindVariableT<T> {
+public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T> {
 
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(BindVariableImpl.class);
@@ -26,7 +27,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param <T> is type of value held by this variable
      */
     @Nonnull
-    public static <T> BindVariableImpl<T> ofObject(BindName name, T value) {
+    public static <T> BindVariableImpl<T> ofObject(String name, T value) {
         return new BindVariableImpl<>(name, value);
     }
 
@@ -40,7 +41,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param <T> is type of value held by this variable
      */
     @Nonnull
-    public static <T> BindVariableImpl ofType(BindName name, Class<T> type, @Nullable T value) {
+    public static <T> BindVariableImpl ofType(String name, Class<T> type, @Nullable T value) {
         return new BindVariableImpl<>(name, type, value);
     }
 
@@ -53,37 +54,35 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
      * @param <T> is type of value held by this variable
      */
     @Nonnull
-    public static <T> BindVariableImpl ofType(BindName name, Class<T> type) {
+    public static <T> BindVariableImpl ofType(String name, Class<T> type) {
         return new BindVariableImpl<>(name, type, null);
     }
 
-    @Nonnull
-    private final BindName name;
     @Nonnull
     private final Class<T> type;
     @Nullable
     private final T value;
 
-    private BindVariableImpl(BindName name, T value) {
-        this.name = Objects.requireNonNull(name);
+    private BindVariableImpl(String name, T value) {
+        super(name);
         //noinspection unchecked
         this.type = (Class<T>) value.getClass();
         this.value = value;
     }
 
-    private BindVariableImpl(BindName name, Class<T> type, @Nullable T value) {
+    private BindVariableImpl(String name, Class<T> type, @Nullable T value) {
+        super(name);
         if ((value != null) && !type.isInstance(value)) {
             throw new InternalException(LOG, "Incorrect type of bind value for variable " + name +
                     " (type " + type + ", value " + value.getClass() + ")");
         }
-        this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
         this.value = value;
     }
 
     @Override
     @Nonnull
-    public BindName getName() {
+    public String getName() {
         return name;
     }
 
@@ -149,7 +148,7 @@ public class BindVariableImpl<T> implements BindVariableT<T> {
         } else if (other.getValue(Object.class).isEmpty()) {
             return this;
         }
-        throw new InternalException(LOG, "Cannot combine bind variable " + getName().getName() + " - values differ (" +
+        throw new InternalException(LOG, "Cannot combine bind variable " + getName() + " - values differ (" +
                 this.value + "!=" + other.getValue(Object.class).orElse(null) + ")");
     }
 

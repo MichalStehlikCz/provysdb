@@ -19,5 +19,5 @@ public interface Expression {
      * @return list of binds, used in this element
      */
     @Nonnull
-    Collection<BindVariable> getBinds();
+    Collection<BindName> getBinds();
 }

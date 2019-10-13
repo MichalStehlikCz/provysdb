@@ -62,8 +62,8 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
-    public CodeBuilder append(SqlIdentifierImpl name) {
-        return append(name.getName());
+    public CodeBuilder append(SqlIdentifier name) {
+        return append(name.getText());
     }
 
     @Nonnull
