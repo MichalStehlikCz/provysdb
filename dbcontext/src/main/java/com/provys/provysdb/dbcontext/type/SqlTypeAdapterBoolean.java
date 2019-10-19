@@ -27,6 +27,11 @@ public class SqlTypeAdapterBoolean extends SqlTypeAdapterBase<Boolean> {
     }
 
     @Override
+    public Class<Boolean> getType() {
+        return Boolean.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.CHAR;
     }

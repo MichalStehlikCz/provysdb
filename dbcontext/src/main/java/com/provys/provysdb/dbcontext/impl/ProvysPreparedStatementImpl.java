@@ -3,7 +3,9 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
+import com.provys.provysdb.dbcontext.type.SqlTypeMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
@@ -17,8 +19,20 @@ import java.util.Calendar;
 class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysStatementImpl<T>
         implements DbPreparedStatement {
 
-    ProvysPreparedStatementImpl(T preparedStatement) {
+    @Nonnull
+    private final SqlTypeMap sqlTypeMap;
+
+    ProvysPreparedStatementImpl(T preparedStatement, SqlTypeMap sqlTypeMap) {
         super(preparedStatement);
+        this.sqlTypeMap = sqlTypeMap;
+    }
+
+    /**
+     * @return value of field sqlTypeMap
+     */
+    @Nonnull
+    SqlTypeMap getSqlTypeMap() {
+        return sqlTypeMap;
     }
 
     @Override
@@ -339,5 +353,10 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
         } else {
             setBigDecimal(parameterIndex, new BigDecimal(value, 0));
         }
+    }
+
+    @Override
+    public <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException {
+        sqlTypeMap.getAdapter(type).bindValue(statement, parameterIndex, value);
     }
 }

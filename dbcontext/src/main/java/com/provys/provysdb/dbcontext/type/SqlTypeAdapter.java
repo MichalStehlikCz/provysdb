@@ -15,6 +15,11 @@ import java.util.Optional;
 public interface SqlTypeAdapter<T> {
 
     /**
+     * @return class this adapter is associated with
+     */
+    Class<T> getType();
+
+    /**
      * @return sql type associated with this adapter
      */
     int getSqlType();

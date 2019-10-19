@@ -23,7 +23,7 @@ public class SelectStatementImpl implements SelectStatement {
     private final DbConnection connection;
     private final boolean closeConnection;
     private final DbPreparedStatement statement;
-    private final Map<BindName, BindVariable> bindValues;
+    private final Map<String, BindName> bindValues;
     private boolean closed = false;
 
     SelectStatementImpl(Select select, Sql sqlContext) {
@@ -36,7 +36,7 @@ public class SelectStatementImpl implements SelectStatement {
             throw new InternalException(LOG, "Failed to parse statement " + select, e);
         }
         this.bindValues = select.getBinds().stream()
-                .collect(Collectors.toConcurrentMap(BindVariable::getName, Function.identity()));
+                .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
     }
 
     SelectStatementImpl(Select select, DbConnection connection) {
@@ -49,27 +49,21 @@ public class SelectStatementImpl implements SelectStatement {
             throw new InternalException(LOG, "Failed to parse statement " + select, e);
         }
         this.bindValues = select.getBinds().stream()
-                .collect(Collectors.toConcurrentMap(BindVariable::getName, Function.identity()));
-    }
-
-    @Nonnull
-    @Override
-    public SelectStatement bindValue(BindName bind, @Nullable Object value) {
-        if (closed) {
-            throw new InternalException(LOG, "Attempt to bind value in closed statement " + this);
-        }
-        var oldValue = bindValues.get(bind);
-        if (oldValue == null) {
-            throw new InternalException(LOG, "Bind with name " + bind + " not found in statement " + this);
-        }
-        bindValues.put(oldValue.getName(), oldValue.withValue(value));
-        return this;
+                .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
     }
 
     @Nonnull
     @Override
     public SelectStatement bindValue(String bind, @Nullable Object value) {
-        return bindValue(new BindNameImpl(bind), value);
+        if (closed) {
+            throw new InternalException(LOG, "Attempt to bind value in closed statement " + this);
+        }
+        var oldValue = bindValues.get(bind);
+        if (oldValue == null) {
+            throw new InternalException(LOG, "Bind variable with name " + bind + " not found in statement " + this);
+        }
+        bindValues.put(oldValue.getName(), oldValue.withValue(value));
+        return this;
     }
 
     @Nonnull
@@ -78,16 +72,15 @@ public class SelectStatementImpl implements SelectStatement {
         return bindValue(bind.getName(), value);
     }
 
-    private void bindValue(int position, BindVariable bindValue) {
-
-    }
-
     private void bindValues() {
         var bindPositions = select.getBindPositions();
         for (var bindPosition : bindPositions.keySet()) {
             var bindValue = bindValues.get(bindPosition.getName());
             for (var position : bindPositions.get(bindPosition)) {
-                bindValue(position, bindValue);
+                if (!(bindValue instanceof BindVariable)) {
+                    throw new InternalException(LOG, "Value not assigned to bind variable " + bindValue.getName());
+                }
+                ((BindVariable) bindValue).bind(statement, position);
             }
         }
     }
@@ -97,6 +90,7 @@ public class SelectStatementImpl implements SelectStatement {
         if (closed) {
             throw new InternalException(LOG, "Attempt to execute closed statement " + this);
         }
+        bindValues();
         try {
             return statement.executeQuery();
         } catch (SQLException e) {

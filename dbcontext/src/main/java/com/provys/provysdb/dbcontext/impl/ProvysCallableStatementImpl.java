@@ -1,6 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.provysdb.dbcontext.DbCallableStatement;
+import com.provys.provysdb.dbcontext.type.SqlTypeMap;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -13,8 +14,8 @@ import java.util.Map;
 class ProvysCallableStatementImpl<T extends CallableStatement> extends ProvysPreparedStatementImpl<T>
         implements DbCallableStatement {
 
-    ProvysCallableStatementImpl(T statement) {
-        super(statement);
+    ProvysCallableStatementImpl(T statement, SqlTypeMap sqlTypeMap) {
+        super(statement, sqlTypeMap);
     }
 
     @Override

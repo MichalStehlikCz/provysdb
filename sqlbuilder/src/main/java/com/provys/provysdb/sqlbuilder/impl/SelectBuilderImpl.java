@@ -17,11 +17,11 @@ class SelectBuilderImpl implements SelectBuilder {
 
     private final Sql sql;
     private final List<SqlColumn> columns;
-    private final Map<SqlIdentifierImpl, SqlColumn> columnByName;
+    private final Map<SqlIdentifier, SqlColumn> columnByName;
     private final List<SqlFrom> tables;
     private final Map<SqlTableAlias, SqlFrom> tableByAlias;
     private final List<SqlWhere> conditions;
-    private final Map<SqlIdentifierImpl, BindVariable> bindByName;
+    private final Map<String, BindVariable> bindByName;
 
     SelectBuilderImpl(Sql sql) {
         this.sql = Objects.requireNonNull(sql);
@@ -46,9 +46,9 @@ class SelectBuilderImpl implements SelectBuilder {
                 BindVariable::combine));
     }
 
-    private void mapColumn(SqlIdentifierImpl alias, SqlColumn column) {
+    private void mapColumn(SqlIdentifier alias, SqlColumn column) {
         if (columnByName.putIfAbsent(alias, column) != null) {
-            throw new InternalException(LOG, "Attempt to insert duplicate column to column list (" + alias.getName() +
+            throw new InternalException(LOG, "Attempt to insert duplicate column to column list (" + alias.getText() +
                     " , " + this.toString() + ")");
         }
     }
@@ -63,19 +63,19 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
-    public SelectBuilder column(SqlIdentifierImpl column) {
+    public SelectBuilder column(SqlIdentifier column) {
         return column(sql.column(column));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder column(SqlIdentifierImpl column, SqlIdentifierImpl alias) {
+    public SelectBuilder column(SqlIdentifier column, SqlIdentifier alias) {
         return column(sql.column(column, alias));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifierImpl column, SqlIdentifierImpl alias) {
+    public SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias) {
         return column(sql.column(tableAlias, column, alias));
     }
 
@@ -142,7 +142,7 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
-    public SelectBuilder from(SqlIdentifierImpl tableName, SqlTableAlias alias) {
+    public SelectBuilder from(SqlIdentifier tableName, SqlTableAlias alias) {
         return from(sql.from(tableName, alias));
     }
 

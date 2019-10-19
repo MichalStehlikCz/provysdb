@@ -39,6 +39,11 @@ public class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
     }
 
     @Override
+    public Class<BigInteger> getType() {
+        return BigInteger.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.BIGINT;
     }

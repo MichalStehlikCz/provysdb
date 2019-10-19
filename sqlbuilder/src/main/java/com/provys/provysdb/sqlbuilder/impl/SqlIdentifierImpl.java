@@ -5,10 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.regex.Pattern;
 
 /**
- * Implements support for SQL strings that can act as name; simple wrapper on String class, non-mutable
+ * Implements support for SQL strings that can act as name; simple wrapper on String class, non-mutable. Does
+ * normalisation of supplied text, thus equals on sql identifiers is equivalent to two identifiers pointing to the same
+ * object
  */
 public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier {
 
@@ -61,7 +64,7 @@ public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIden
     private final String name;
     private boolean delimited;
 
-    SqlIdentifierImpl(String name) {
+    private SqlIdentifierImpl(String name) {
         this.name = validate(name);
         delimited = !PATTERN_ORDINARY.matcher(this.name).matches();
     }
@@ -81,7 +84,7 @@ public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIden
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

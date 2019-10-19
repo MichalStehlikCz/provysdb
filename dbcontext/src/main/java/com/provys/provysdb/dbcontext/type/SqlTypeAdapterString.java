@@ -19,6 +19,11 @@ public class SqlTypeAdapterString extends SqlTypeAdapterBase<String> {
     }
 
     @Override
+    public Class<String> getType() {
+        return String.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.VARCHAR;
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.*;
 
 class DefaultSqlTokenizerTest {
 
@@ -29,7 +30,7 @@ class DefaultSqlTokenizerTest {
                         , new ParsedIdentifier(3, 1, "FROM")
                         , new ParsedIdentifier(4, 5, "ABC")
                         , new ParsedSymbol(4, 8, ".")
-                        , new ParsedDelimitedIdentifier(4, 9, "Abc\"def")
+                        , new ParsedIdentifier(4, 9, "\"Abc\"\"def\"")
                         , new ParsedSymbol(4, 19, "+")}}
         );
     }

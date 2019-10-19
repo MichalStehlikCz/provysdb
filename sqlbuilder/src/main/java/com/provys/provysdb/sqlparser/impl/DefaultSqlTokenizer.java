@@ -154,6 +154,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
          *
          * @return true if position was before specified text, false otherwise
          */
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         private boolean onText(String text) {
             if (currentLine == null) {
                 return false;
@@ -285,7 +286,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             if (nextChar() != '"') {
                 throw new IllegalStateException("Delimited identifier must start with \"");
             }
-            var name = new StringBuilder();
+            var name = new StringBuilder().append('"');
             while (hasNextChar()) {
                 if (peekChar() == '\n') {
                     throw new RegularException(LOG, "SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
@@ -293,9 +294,9 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                             Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
                 }
                 if (peekChar() == '"') {
-                    nextChar();
+                    name.append(nextChar());
                     if (peekChar() != '"') {
-                        return new ParsedDelimitedIdentifier(line, pos, name.toString());
+                        return new ParsedIdentifier(line, pos, name.toString());
                     }
                     // two double quotation marks are evaluated as single one
                 }

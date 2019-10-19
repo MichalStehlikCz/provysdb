@@ -1,12 +1,14 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
+import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.sqlbuilder.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -80,12 +82,6 @@ public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T
         this.value = value;
     }
 
-    @Override
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
     /**
      * @return type associated with bind variable
      */
@@ -99,8 +95,8 @@ public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T
     @Override
     public <U> Optional<U> getValue(Class<U> type) {
         if (!type.isAssignableFrom(this.type)) {
-            throw new InternalException(LOG, "Cannot convert value of bind variable " + name + " from " + this.type +
-                    " to " + type);
+            throw new InternalException(LOG, "Cannot convert value of bind variable " + getName() + " from " +
+                    this.type + " to " + type);
         }
         //noinspection unchecked
         return Optional.ofNullable((U) value);
@@ -119,65 +115,80 @@ public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T
             return this;
         }
         if ((value != null) && (!type.isAssignableFrom(value.getClass()))) {
-            throw new InternalException(LOG, "Cannot set value to bind variable " + name + ", type " + this.type +
+            throw new InternalException(LOG, "Cannot set value to bind variable " + getName() + ", type " + this.type +
                     ", value type " + value.getClass());
         }
         //noinspection unchecked
-        return new BindVariableImpl<>(name, type, (T) value);
+        return new BindVariableImpl<>(getName(), type, (T) value);
     }
 
     @Override
     @Nonnull
-    public BindVariable combine(BindVariable other) {
+    public BindVariable combine(BindName other) {
         if (other == this) {
             return this;
         }
-        if (!name.equals(other.getName())) {
+        if (!getName().equals(other.getName())) {
             throw new InternalException(LOG,
-                    "Cannot combine bind variables with different names (" + name + "!=" + other.getName() + ")");
+                    "Cannot combine bind variables with different names (" + getName() + "!=" + other.getName() + ")");
         }
-        if (!type.equals(other.getType())) {
+        if (!(other instanceof BindVariable)) {
+            return this;
+        }
+        var otherVariable = (BindVariable) other;
+        if (!type.equals(otherVariable.getType())) {
             throw new InternalException(LOG,
-                    "Cannot combine bind variables with different types (" + type + "!=" + other.getType() + ")");
+                    "Cannot combine bind variables with different types (" + type + "!=" + otherVariable.getType() +
+                            ")");
         }
-        if (Objects.equals(other.getValue(Object.class).orElse(null), value)) {
+        if (Objects.equals(otherVariable.getValue(Object.class).orElse(null), value)) {
             return this;
         }
         if (value == null) {
-            return other;
-        } else if (other.getValue(Object.class).isEmpty()) {
+            return otherVariable;
+        } else if (otherVariable.getValue(Object.class).isEmpty()) {
             return this;
         }
         throw new InternalException(LOG, "Cannot combine bind variable " + getName() + " - values differ (" +
-                this.value + "!=" + other.getValue(Object.class).orElse(null) + ")");
+                this.value + "!=" + otherVariable.getValue(Object.class).orElse(null) + ")");
     }
 
     @Override
-    public boolean equals(Object o) {
+    public void bind(DbPreparedStatement statement, int parameterIndex) {
+        try {
+            statement.setValue(parameterIndex, type, value);
+        } catch (SQLException e) {
+            throw new InternalException(LOG, "Error binding value " + value + '(' + type + ") to statement " +
+                    statement, e);
+        }
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
-        if (!(o instanceof BindVariableImpl)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
-        BindVariableImpl that = (BindVariableImpl) o;
+        BindVariableImpl<?> that = (BindVariableImpl<?>) o;
 
-        if (!name.equals(that.name)) return false;
         if (!type.equals(that.type)) return false;
-        return Objects.equals(value, that.value);
+        return value != null ? value.equals(that.value) : that.value == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getName().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + type.hashCode();
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "BindVariable{" +
-                "name=" + name +
-                ", type=" + type +
+        return "BindVariableImpl{" +
+                "type=" + type +
                 ", value=" + value +
-                '}';
+                "} " + super.toString();
     }
 
     @Override
@@ -188,7 +199,7 @@ public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T
 
     @Nonnull
     @Override
-    public Collection<BindVariable> getBinds() {
+    public Collection<BindName> getBinds() {
         return Collections.singletonList(this);
     }
 }

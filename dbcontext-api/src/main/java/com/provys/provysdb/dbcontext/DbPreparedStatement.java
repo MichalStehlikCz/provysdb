@@ -45,4 +45,14 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @throws SQLException when any problem is encountered
      */
     void setNullableDtUid(int parameterIndex, @Nullable BigInteger value) throws SQLException;
+
+    /**
+     * Set (optional) value to bind value, use default conversion of supplied type to Sql
+     *
+     * @param parameterIndex is index of bind value in statement
+     * @param type is type of supplied value
+     * @param value is value to be bound
+     * @throws SQLException when any problem is encountered on JDBC level
+     */
+    <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException;
 }

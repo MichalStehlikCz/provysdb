@@ -1,5 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.LiteralT;
 
@@ -48,7 +49,7 @@ abstract class LiteralBase<T> implements LiteralT<T> {
 
     @Nonnull
     @Override
-    public Collection<BindVariable> getBinds() {
+    public Collection<BindName> getBinds() {
         return Collections.emptyList();
     }
 }

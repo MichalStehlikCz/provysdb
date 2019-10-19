@@ -19,6 +19,11 @@ public class SqlTypeAdapterByte extends SqlTypeAdapterBase<Byte> {
     }
 
     @Override
+    public Class<Byte> getType() {
+        return Byte.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.INTEGER;
     }

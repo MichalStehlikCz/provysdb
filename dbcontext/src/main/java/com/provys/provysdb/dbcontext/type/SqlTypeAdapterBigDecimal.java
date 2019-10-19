@@ -20,6 +20,11 @@ public class SqlTypeAdapterBigDecimal extends SqlTypeAdapterBase<BigDecimal> {
     }
 
     @Override
+    public Class<BigDecimal> getType() {
+        return BigDecimal.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.NUMERIC;
     }

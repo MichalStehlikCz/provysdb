@@ -19,6 +19,11 @@ public class SqlTypeAdapterInteger extends SqlTypeAdapterBase<Integer> {
     }
 
     @Override
+    public Class<Integer> getType() {
+        return Integer.class;
+    }
+
+    @Override
     public int getSqlType() {
         return Types.INTEGER;
     }

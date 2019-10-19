@@ -1,5 +1,7 @@
 package com.provys.provysdb.sqlbuilder;
 
+import com.provys.provysdb.dbcontext.DbPreparedStatement;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -30,4 +32,12 @@ public interface BindVariable extends BindName, Expression {
      */
     @Nonnull
     BindVariable combine(BindName other);
+
+    /**
+     * Bind this variable to specified position in prepared statement
+     *
+     * @param statement is prepared statement value should be bound to
+     * @param parameterIndex is index of parameter value should be bound to
+     */
+    void bind(DbPreparedStatement statement, int parameterIndex);
 }

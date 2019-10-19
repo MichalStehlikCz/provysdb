@@ -3,6 +3,8 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbContext;
+import com.provys.provysdb.dbcontext.type.SqlTypeFactory;
+import com.provys.provysdb.dbcontext.type.SqlTypeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Configuration;
@@ -33,6 +35,8 @@ public class ProvysDbContext implements DbContext {
     private final ProvysConnectionPoolDataSource provysDataSource;
     @Nonnull
     private final Configuration jooqConfiguration;
+    @Nonnull
+    private final SqlTypeMap sqlTypeMap;
 
     /**
      * Default creator for Provys database context.
@@ -44,6 +48,7 @@ public class ProvysDbContext implements DbContext {
     public ProvysDbContext() throws SQLException {
         provysDataSource = buildProvysDBDataSource();
         jooqConfiguration = buildJooqConfiguration();
+        sqlTypeMap = new SqlTypeFactory().getDefaultMap();
     }
 
     @Nonnull
@@ -97,7 +102,7 @@ public class ProvysDbContext implements DbContext {
     @Nonnull
     public DbConnection getConnection() {
         try {
-            return new ProvysConnectionImpl(provysDataSource.getConnection());
+            return new ProvysConnectionImpl(provysDataSource.getConnection(), sqlTypeMap);
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
         }
@@ -107,7 +112,8 @@ public class ProvysDbContext implements DbContext {
     @Nonnull
     public DbConnection getConnection(String dbToken) {
         try {
-            return new ProvysConnectionImpl(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)));
+            return new ProvysConnectionImpl(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)),
+                    sqlTypeMap);
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",
                     "Failed to initialize connection with token", e);

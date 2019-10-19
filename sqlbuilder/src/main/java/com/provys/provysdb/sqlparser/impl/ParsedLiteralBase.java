@@ -1,11 +1,12 @@
 package com.provys.provysdb.sqlparser.impl;
 
-import com.provys.provysdb.sqlbuilder.BindVariable;
+import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.LiteralT;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -31,8 +32,20 @@ abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<
         return SqlTokenType.LITERAL;
     }
 
+
     @Override
-    public boolean equals(Object o) {
+    public void addSql(CodeBuilder builder) {
+        value.addSql(builder);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<BindName> getBinds() {
+        return value.getBinds();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
@@ -54,16 +67,5 @@ abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<
         return "SqlLiteralBase{" +
                 "value=" + value +
                 "} " + super.toString();
-    }
-
-    @Override
-    public void addSql(CodeBuilder builder) {
-        value.addSql(builder);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return value.getBinds();
     }
 }

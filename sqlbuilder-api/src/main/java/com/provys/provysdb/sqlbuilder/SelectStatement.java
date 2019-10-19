@@ -19,16 +19,6 @@ public interface SelectStatement extends AutoCloseable {
      * @return self to allow chaining
      */
     @Nonnull
-    SelectStatement bindValue(SqlIdentifier bind, @Nullable Object value);
-
-    /**
-     * Bind value to variable with specified name; variant with name supplied as String
-     *
-     * @param bind is name of bind
-     * @param value is supplied value
-     * @return self to allow chaining
-     */
-    @Nonnull
     SelectStatement bindValue(String bind, @Nullable Object value);
 
     /**
