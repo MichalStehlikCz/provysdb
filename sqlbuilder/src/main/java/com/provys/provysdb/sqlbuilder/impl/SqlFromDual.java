@@ -1,5 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
@@ -22,11 +23,5 @@ class SqlFromDual extends SqlFromBase {
     @Override
     public void addSql(CodeBuilder builder) {
         builder.append("dual");
-    }
-
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return Collections.emptyList();
     }
 }

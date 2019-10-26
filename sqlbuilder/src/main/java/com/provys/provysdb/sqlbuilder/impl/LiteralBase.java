@@ -7,6 +7,7 @@ import com.provys.provysdb.sqlbuilder.LiteralT;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -45,11 +46,5 @@ abstract class LiteralBase<T> implements LiteralT<T> {
         return getClass().getSimpleName() + "{" +
                 "value=" + value +
                 '}';
-    }
-
-    @Nonnull
-    @Override
-    public Collection<BindName> getBinds() {
-        return Collections.emptyList();
     }
 }

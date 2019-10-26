@@ -1,10 +1,16 @@
 package com.provys.provysdb.sqlparser;
 
-import java.util.Collection;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+
+import java.util.List;
 import java.util.Scanner;
 
 public interface SqlTokenizer {
-    Collection<SqlParsedToken> tokenize(String source);
+    List<SqlParsedToken> tokenize(String source);
 
-    Collection<SqlParsedToken> tokenize(Scanner scanner);
+    List<SqlParsedToken> tokenize(Scanner scanner);
+
+    CodeBuilder getBinds(String source);
+
+    CodeBuilder getBinds(Scanner scanner);
 }

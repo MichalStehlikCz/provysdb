@@ -1,5 +1,8 @@
 package com.provys.provysdb.sqlparser.impl;
 
+import com.provys.common.datatype.DtDate;
+import com.provys.provysdb.sqlbuilder.impl.LiteralByte;
+import com.provys.provysdb.sqlbuilder.impl.LiteralDate;
 import com.provys.provysdb.sqlparser.SqlParsedToken;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -32,6 +35,30 @@ class DefaultSqlTokenizerTest {
                         , new ParsedSymbol(4, 8, ".")
                         , new ParsedIdentifier(4, 9, "\"Abc\"\"def\"")
                         , new ParsedSymbol(4, 19, "+")}}
+                , new Object[]{"a:=5;", new SqlParsedToken[]{
+                        new ParsedIdentifier(1, 1, "a")
+                        , new ParsedSymbol(1, 2, ":=")
+                        , new ParsedLiteral<>(1, 4, LiteralByte.of((byte) 5))
+                        , new ParsedSymbol(1, 5, ";")}}
+                , new Object[]{"arc.call(p_A => :a, p_B => :b2);", new SqlParsedToken[]{
+                        new ParsedIdentifier(1, 1, "arc")
+                        , new ParsedSymbol(1, 4, ".")
+                        , new ParsedIdentifier(1, 5, "call")
+                        , new ParsedSymbol(1, 9, "(")
+                        , new ParsedIdentifier(1, 10, "p_A")
+                        , new ParsedSymbol(1, 14, "=>")
+                        , new ParsedBind(1, 17, "a")
+                        , new ParsedSymbol(1, 19, ",")
+                        , new ParsedIdentifier(1, 21, "p_B")
+                        , new ParsedSymbol(1, 25, "=>")
+                        , new ParsedBind(1, 28, "b2")
+                        , new ParsedSymbol(1, 31, ")")
+                        , new ParsedSymbol(1, 32, ";")}}
+                , new Object[]{"SELECT\n    date '2018-01-12'\nFROM\n    dual", new SqlParsedToken[]{
+                        new ParsedIdentifier(1, 1, "SELECT")
+                        , new ParsedLiteral<>(2, 5, LiteralDate.of(DtDate.of(2018, 1, 12)))
+                        , new ParsedIdentifier(3, 1, "FROM")
+                        , new ParsedIdentifier(4, 5, "dual")}}
         );
     }
 

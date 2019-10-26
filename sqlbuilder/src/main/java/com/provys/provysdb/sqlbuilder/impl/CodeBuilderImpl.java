@@ -5,18 +5,20 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of code builder - tool to build SQL text with formatting.
  *
  * @author stehlik
  */
-class CodeBuilderImpl implements CodeBuilder {
+public class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     private final StringBuilder text;
     @Nonnull
-    private final List<BindVariable> binds = new ArrayList<>(1);
+    private final List<BindName> binds = new ArrayList<>(1);
     private boolean newLine = true;
     @Nonnull
     private CodeIdent ident = CodeIdentVoid.getInstance();
@@ -27,7 +29,7 @@ class CodeBuilderImpl implements CodeBuilder {
      * Default constructor for CodeBuilder.
      * Sets all fields to their default values.
      */
-    CodeBuilderImpl() {
+    public CodeBuilderImpl() {
         this.text = new StringBuilder(100);
     }
 
@@ -202,8 +204,24 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
-    public CodeBuilder addBind(BindVariable bind) {
+    public CodeBuilder addBind(BindName bind) {
         binds.add(Objects.requireNonNull(bind));
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder addBinds(List<BindName> binds) {
+        this.binds.addAll(binds);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder applyBindVariables(Collection<BindVariable> bindVariables) {
+        final var bindMap = binds.stream().collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
+        binds.replaceAll(bindName -> (bindMap.get(bindName.getName()) == null) ? bindName :
+                bindMap.get(bindName.getName()).combine(bindName));
         return this;
     }
 
@@ -215,7 +233,18 @@ class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
-    public List<BindVariable> getBinds() {
+    public List<BindName> getBinds() {
         return Collections.unmodifiableList(binds);
+    }
+
+    @Override
+    public String toString() {
+        return "CodeBuilderImpl{" +
+                "text=" + text +
+                ", binds=" + binds +
+                ", newLine=" + newLine +
+                ", ident=" + ident +
+                ", tempIdents=" + tempIdents +
+                '}';
     }
 }

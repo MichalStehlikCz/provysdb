@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import javax.annotation.Nonnull;
 
-class LiteralShort extends LiteralNumber<Short> {
+public class LiteralShort extends LiteralNumber<Short> {
 
     /**
      * Get literal corresponding to given Short value
@@ -10,7 +10,7 @@ class LiteralShort extends LiteralNumber<Short> {
      * @param value is short value this literal represents
      */
     @Nonnull
-    static LiteralShort of(short value) {
+    public static LiteralShort of(short value) {
         return new LiteralShort(value);
     }
 

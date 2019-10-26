@@ -1,11 +1,14 @@
 package com.provys.provysdb.sqlbuilder;
 
+import com.provys.common.datatype.DtDate;
+import com.provys.common.datatype.DtDateTime;
 import com.provys.provysdb.dbcontext.DbConnection;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Interface defining root factory class for all objects, used for building Sql statements
@@ -95,6 +98,20 @@ public interface Sql {
     LiteralT<BigDecimal> literal(BigDecimal value);
 
     /**
+     * @param value is value of literal
+     * @return date literal
+     */
+    @Nonnull
+    LiteralT<DtDate> literal(DtDate value);
+
+    /**
+     * @param value is value of literal
+     * @return datetime literal
+     */
+    @Nonnull
+    LiteralT<DtDateTime> literal(DtDateTime value);
+
+    /**
      * Create Sql name object based on supplied text. Validates name during creation.
      *
      * @param name to be created
@@ -180,7 +197,7 @@ public interface Sql {
     /**
      * Create column with given SQL text and alias
      *
-     * @param sql is text that will be used as column definition
+     * @param sql is text that will be used as column definition. Binds are parsed from text
      * @param alias is text that will be used as alias for new column
      * @return created column
      */
@@ -196,10 +213,42 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, BindVariable... binds);
+    SqlColumn columnSql(String sql, String alias, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
+     *             (e.g. using ? as placeholder)
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn columnSql(String sql, String alias, List<BindName> binds);
+
+    /**
+     * Create column with given SQL text and parse it for bind variables, expressed using :name notation
+     *
+     * @param columnSql is text that will be used as column definition
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn columnParse(String columnSql);
+
+    /**
+     * Create column with given SQL text and alias and parse it for bind variables, expressed using :name notation
+     *
+     * @param sql is text that will be used as column definition. Binds are parsed from text
+     * @param alias is text that will be used as alias for new column
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn columnParse(String sql, String alias);
+
+    /**
+     * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
+     * variables can be supplied to assign value and type to binds
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -207,7 +256,20 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, Collection<BindVariable> binds);
+    SqlColumn columnParse(String sql, String alias, BindVariable... binds);
+
+    /**
+     * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
+     * variables can be supplied to assign value and type to binds
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
+     *             (e.g. using ? as placeholder)
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn columnParse(String sql, String alias, Collection<BindVariable> binds);
 
     /**
      * Create Sql table alias object based on supplied text. Validates text during creation.
@@ -305,7 +367,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, BindVariable... binds);
+    SqlWhere whereSql(String conditionSql, BindName... binds);
 
     /**
      * Create where condition with binds
@@ -316,7 +378,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, Collection<BindVariable> binds);
+    SqlWhere whereSql(String conditionSql, List<BindName> binds);
 
     /**
      * Combine multiple conditions using AND

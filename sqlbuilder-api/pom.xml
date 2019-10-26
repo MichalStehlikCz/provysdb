@@ -17,6 +17,10 @@
             <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.provys.common</groupId>
+            <artifactId>common-datatype</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.provys.provysdb</groupId>
             <artifactId>dbcontext-api</artifactId>
             <version>${project.version}</version>

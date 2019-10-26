@@ -1,6 +1,7 @@
 package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
@@ -52,13 +53,26 @@ class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
     }
 
     @Override
+    public SpaceMode spaceBefore() {
+        if (symbol.equals("=>")) {
+            return SpaceMode.FORCE;
+        }
+        return SpaceMode.NONE;
+    }
+
+    @Override
+    public SpaceMode spaceAfter() {
+        return spaceBefore();
+    }
+
+    @Override
     @Nonnull
     public String getSymbol() {
         return symbol;
     }
 
     @Override
-    public void append(CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         builder.append(symbol);
     }
 

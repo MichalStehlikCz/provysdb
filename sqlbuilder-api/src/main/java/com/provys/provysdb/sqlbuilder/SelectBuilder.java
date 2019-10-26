@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Builder class used for construction of select statements.
@@ -113,7 +114,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias, BindVariable... binds);
+    SelectBuilder columnSql(String sql, String alias, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -123,7 +124,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias, Collection<BindVariable> binds);
+    SelectBuilder columnSql(String sql, String alias, List<BindName> binds);
 
     /**
      * Add table to from clause of the statement
@@ -230,7 +231,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(String conditionSql, BindVariable... binds);
+    SelectBuilder whereSql(String conditionSql, BindName... binds);
 
     /**
      * Add where condition with binds
@@ -241,7 +242,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(String conditionSql, Collection<BindVariable> binds);
+    SelectBuilder whereSql(String conditionSql, List<BindName> binds);
 
     /**
      * Add multiple conditions combined using AND

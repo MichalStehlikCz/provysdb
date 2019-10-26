@@ -1,8 +1,12 @@
 package com.provys.provysdb.sqlparser.impl;
 
+import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.StringParser;
 import com.provys.common.exception.InternalException;
 import com.provys.common.exception.RegularException;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.impl.*;
+import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlParsedToken;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +14,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
+
+import static com.provys.provysdb.sqlparser.SpaceMode.*;
 
 /**
  * Tokenizer is used to parse supplied text into tokens
@@ -21,7 +29,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
 
     private final int maxTokens;
 
-    DefaultSqlTokenizer() {
+    public DefaultSqlTokenizer() {
         maxTokens = 1000000;
     }
 
@@ -30,14 +38,14 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
     }
 
     @Override
-    public Collection<SqlParsedToken> tokenize(String source) {
+    public List<SqlParsedToken> tokenize(String source) {
         try (Scanner scanner = new Scanner(source)) {
             return tokenize(scanner);
         }
     }
 
     @Override
-    public Collection<SqlParsedToken> tokenize(Scanner scanner) {
+    public List<SqlParsedToken> tokenize(Scanner scanner) {
         var sqlScanner = new SqlScanner(scanner);
         var tokens = new ArrayList<SqlParsedToken>(50);
         while (sqlScanner.hasNext()) {
@@ -47,6 +55,31 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             }
         }
         return tokens;
+    }
+
+    @Override
+    public CodeBuilder getBinds(String source) {
+        try (Scanner scanner = new Scanner(source)) {
+            return getBinds(scanner);
+        }
+    }
+
+    @Override
+    public CodeBuilder getBinds(Scanner scanner) {
+        var builder = new CodeBuilderImpl();
+        var sqlScanner = new SqlScanner(scanner);
+        SpaceMode afterPrev = null;
+        while (sqlScanner.hasNext()) {
+            var token = sqlScanner.next();
+            if ((afterPrev != null) &&
+                    ((token.spaceBefore() == FORCE) || (afterPrev == FORCE) ||
+                            ((token.spaceBefore() == NORMAL) && (afterPrev == NORMAL)))) {
+                builder.append(' ');
+            }
+            token.addSql(builder);
+            afterPrev = token.spaceAfter();
+        }
+        return builder;
     }
 
     private static class SqlScanner implements Iterator<SqlParsedToken> {
@@ -163,6 +196,30 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         }
 
         /**
+         * Check if current position is before specified text, case ignored. Do not move current position.
+         *
+         * @return true if position is before specified text, false otherwise
+         */
+        private boolean isOnTextIgnoreCase(String text) {
+            if (currentLine == null) {
+                return false;
+            }
+            return currentLine.isOnTextIgnoreCase(text);
+        }
+
+        /**
+         * Check if current position is before specified text, case ignored. Skip given text if it was.
+         *
+         * @return true if position was before specified text, false otherwise
+         */
+        private boolean onTextIgnoreCase(String text) {
+            if (currentLine == null) {
+                return false;
+            }
+            return currentLine.onTextIgnoreCase(text);
+        }
+
+        /**
          * Read the rest of the line
          *
          * @return rest of current line, position wil be placed on end of line
@@ -249,6 +306,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             if (hasNextChar()) {
                 String twoChars = firstChar + peekChar();
                 if (ParsedSymbol.SYMBOLS.contains(twoChars)) {
+                    nextChar();
                     return new ParsedSymbol(line, pos, twoChars);
                 }
             }
@@ -259,22 +317,47 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                     + ", position " + pos);
         }
 
+        /**
+         * Reads value of date literal. Note that unlike most other methods, this one is invoked AFTER reading DATE from
+         * input
+         *
+         * @param pos is position of start of date literal (text DATE)
+         * @return new date literal
+         */
+        private SqlParsedToken readDateLiteral(int pos) {
+            skipWhiteSpace();
+            if (nextChar() != '\'') {
+                throw new RegularException(LOG, "SQLPARSER_MISSING_APOS_IN_DATE_LITERAL","' expected in date literal");
+            }
+            var startLine = line;
+            var text = new StringBuilder();
+            while (peekChar() != '\'') {
+                text.append(nextChar());
+            }
+            nextChar();
+            return new ParsedLiteral<>(startLine, pos, LiteralDate.of(DtDate.parseIso(text.toString())));
+        }
+
         @Nonnull
-        private SqlParsedToken readOrdinaryIdentifier() {
+        private SqlParsedToken readLetter() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
                 throw new IllegalStateException("Cannot read name at the end of file");
             }
             var pos = getPos();
-            var name = new StringBuilder();
+            var nameBuilder = new StringBuilder();
             while (hasNextChar() && (
                     ((peekChar() >= 'A') && (peekChar() <= 'Z')) ||
                             ((peekChar() >= 'a') && (peekChar() <= 'z')) ||
                             ((peekChar() >= '0') && (peekChar() <= '9')) ||
                             (peekChar() == '_') || (peekChar() == '$') ||
                             (peekChar() == '#'))) {
-                 name.append(nextChar());
+                 nameBuilder.append(nextChar());
             }
-            return new ParsedIdentifier(line, pos, name.toString());
+            var name = nameBuilder.toString();
+            if (name.equalsIgnoreCase("DATE")) {
+                return readDateLiteral(pos);
+            }
+            return new ParsedIdentifier(line, pos, nameBuilder.toString());
         }
 
         @Nonnull
@@ -308,6 +391,26 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         }
 
         @Nonnull
+        private SqlParsedToken readBind() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read name at the end of file");
+            }
+            var pos = getPos();
+            if (nextChar() != ':') {
+                throw new IllegalStateException("Bind variable must start with :");
+            }
+            var nameBuilder = new StringBuilder();
+            while (hasNextChar() && (
+                    ((peekChar() >= 'A') && (peekChar() <= 'Z')) ||
+                            ((peekChar() >= 'a') && (peekChar() <= 'z')) ||
+                            ((peekChar() >= '0') && (peekChar() <= '9')) ||
+                            (peekChar() == '_'))) {
+                nameBuilder.append(nextChar());
+            }
+            return new ParsedBind(line, pos, nameBuilder.toString());
+        }
+
+        @Nonnull
         private SqlParsedToken readStringLiteral() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
                 throw new IllegalStateException("Cannot read literal at the end of file");
@@ -321,7 +424,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 if (peekChar() == '\'') {
                     nextChar();
                     if (peekChar() != '\'') {
-                        return new ParsedVarchar(line, pos, value.toString());
+                        return new ParsedLiteral<>(line, pos, LiteralVarchar.of(value.toString()));
                     }
                     // two quotation marks are evaluated as single one
                 }
@@ -330,6 +433,50 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             throw new RegularException(LOG, "SQLPARSER_UNFINISHED_STRING_LITERAL",
                     "End of file encountered reading string literal at line <<LINE>>, position <<POS>>",
                     Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
+        }
+
+        @Nonnull
+        private SqlParsedToken createNumericLiteral(int pos, String literal, boolean dotEncountered) {
+            if (dotEncountered) {
+                if (literal.length() <= 16) {
+                    return new ParsedLiteral<>(line, pos, LiteralDouble.of(Double.parseDouble(literal)));
+                } else {
+                    return new ParsedLiteral<>(line, pos, LiteralBigDecimal.of(new BigDecimal(literal)));
+                }
+            } else {
+                if (literal.length() <= 2) {
+                    return new ParsedLiteral<>(line, pos, LiteralByte.of(Byte.parseByte(literal)));
+                } else if (literal.length() <= 4) {
+                    return new ParsedLiteral<>(line, pos, LiteralShort.of(Short.parseShort(literal)));
+                } else if (literal.length() <= 9) {
+                    return new ParsedLiteral<>(line, pos, LiteralInt.of(Integer.parseInt(literal)));
+                } else {
+                    return new ParsedLiteral<>(line, pos, LiteralBigInteger.of(new BigInteger(literal)));
+                }
+            }
+        }
+
+        @Nonnull
+        private SqlParsedToken readNumericLiteral() {
+            if (!hasNextChar()) { // caller ensures this method is not used on end of file
+                throw new IllegalStateException("Cannot read literal at the end of file");
+            }
+            var pos = getPos();
+            var literalBuilder = new StringBuilder();
+            boolean dotEncountered = false;
+            while (((peekChar() >= '0') && (peekChar() <= '9')) || (peekChar() == '.')) {
+                if (peekChar() == '.') {
+                    if (dotEncountered) {
+                        throw new RegularException(LOG, "SQLPARSER_DOUBLE_DOT_IN_NUMERIC_LITERAL",
+                                "Two dots encountered in numeric literal (line <<LINE>>, pos <<POS>>)",
+                                Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
+                    } else {
+                        dotEncountered = true;
+                    }
+                }
+                literalBuilder.append(nextChar());
+            }
+            return createNumericLiteral(pos, literalBuilder.toString(), dotEncountered);
         }
 
         @Nonnull
@@ -350,6 +497,26 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             }
         }
 
+        @Nonnull
+        private SqlParsedToken readDot() {
+            if (isOnText(".0") || isOnText(".1") || isOnText(".2") || isOnText(".3") || isOnText(".4") ||
+                    isOnText(".5") || isOnText(".6") || isOnText(".7") || isOnText(".8") || isOnText(".9")) {
+                return readNumericLiteral();
+            } else {
+                return readSymbol();
+            }
+
+        }
+
+        @Nonnull
+        private SqlParsedToken readColon() {
+            if (isOnText(":=")) {
+                return readSymbol();
+            } else {
+                return readBind();
+            }
+        }
+
         @Override
         public SqlParsedToken next() {
             if (!skipWhiteSpace() || (currentLine == null)) { // condition on currentLine is not necessary as
@@ -358,17 +525,32 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 throw new NoSuchElementException("Cannot read Sql token - end of code reached");
             }
             if (((peekChar() >= 'a') && (peekChar() <= 'z')) || ((peekChar() >= 'A') && (peekChar() <= 'Z'))) {
-                return readOrdinaryIdentifier();
+                return readLetter();
             } else {
                 switch (peekChar()) {
                     case '-':
                         return readMinus();
                     case '/':
                         return readSlash();
+                    case '.':
+                        return readDot();
+                    case ':':
+                        return readColon();
                     case '"':
                         return readDelimitedIdentifier();
                     case '\'':
                         return readStringLiteral();
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        return readNumericLiteral();
                     default:
                         // all other characters should be tried as symbols
                         return readSymbol();
@@ -376,127 +558,4 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             }
         }
     }
-
-
-    /*
-
-    PROCEDURE mpi_ReadDateLiteral
-    IS
-    l_Pos PLS_INTEGER;
-    BEGIN
-    l_Pos:=INSTR(l_Line, '''', 6);
-    IF (l_Pos=0) THEN
-      KER_Exception_EP.mp_Raise('Unfinished date literal on line '||l_Line_i);
-    END IF;
-    l_Token:=KER_GenToken_TO.mf_Create('LITERAL', 'DATE', SUBSTR(l_Line, 1, l_Pos));
-    l_Line:=SUBSTR(l_Line, l_Pos+1);
-    END;
-
-    PROCEDURE mpi_ReadNumericLiteral
-    IS
-    l_Pos PLS_INTEGER :=1;
-    l_Dot BOOLEAN :=FALSE; /* indicates we already found . /
-    BEGIN
-    WHILE (SUBSTR(l_Line, l_Pos, 1) BETWEEN '0' AND '9') OR (SUBSTR(l_Line, l_Pos, 1)='.') LOOP
-    IF (SUBSTR(l_Line, l_Pos, 1)='.') THEN
-    IF l_Dot THEN
-          KER_Exception_EP.mp_Raise('Cannot have . in number literal twice');
-    END IF;
-    l_Dot:=TRUE;
-    END IF;
-    l_Pos:=l_Pos+1;
-    END LOOP;
-    l_Token:=KER_GenToken_TO.mf_Create('LITERAL', 'NUMBER', SUBSTR(l_Line, 1, l_Pos-1));
-    l_Line:=SUBSTR(l_Line, l_Pos);
-    END;
-
-    PROCEDURE mpi_ReadName
-    IS
-    l_Pos PLS_INTEGER :=1;
-    BEGIN
-    WHILE (SUBSTR(l_Line, l_Pos, 1) BETWEEN 'A' AND 'Z')
-    OR  (SUBSTR(l_Line, l_Pos, 1) BETWEEN 'a' AND 'z')
-    OR  (SUBSTR(l_Line, l_Pos, 1) BETWEEN '0' AND '9')
-    OR  (SUBSTR(l_Line, l_Pos, 1) IN ('_', '$', '.', '%', '#'))
-    LOOP
-    l_Pos:=l_Pos+1;
-    END LOOP;
-    l_Token:=KER_GenToken_TO.mf_Create('NAME', SUBSTR(l_Line, 1, l_Pos-1));
-    l_Line:=SUBSTR(l_Line, l_Pos);
-    END;
-
-    PROCEDURE mpi_ReadAssignment
-    IS
-            BEGIN
-    l_Token:=KER_GenToken_TO.mf_Create('SYMBOL', ':=', ':=');
-    l_Line:=SUBSTR(l_Line, 3);
-    END;
-
-    PROCEDURE mpi_ReadParamRef
-    IS
-            BEGIN
-    l_Token:=KER_GenToken_TO.mf_Create('SYMBOL', '=>', '=>');
-    l_Line:=SUBSTR(l_Line, 3);
-    END;
-
-    PROCEDURE mpi_ReadSymbol
-    IS
-            BEGIN
-    l_Token:=KER_GenToken_TO.mf_Create('SYMBOL', SUBSTR(l_Line, 1, 1), SUBSTR(l_Line, 1, 1));
-    l_Line:=SUBSTR(l_Line, 2);
-    END;
-    BEGIN
-    ot_Token:=KER_GenToken_TT();
-    WHILE (l_Line_i<=pt_SrcLine.COUNT) LOOP
-    /* read line, right trim it (white space on start / end of line is ignored) /
-    l_Line:=RTRIM(pt_SrcLine(l_Line_i), ' '||CHR(9)||CHR(10)||CHR(13));
-    LOOP
-    /* left trim after each step /
-    l_Line:=LTRIM(l_Line, ' '||CHR(9));
-    EXIT WHEN (l_Line IS NULL);
-    IF (l_Line LIKE '--%') THEN
-    /* single line comment /
-    mpi_ReadSingleLineComment;
-    ELSIF (l_Line LIKE '/*%') THEN
-    /* Multi-line comment /
-    mpi_ReadMultiLineComment;
-    ELSIF (l_Line LIKE '''%') THEN
-    /* String literal (without special escaping) /
-    mpi_ReadStringLiteral;
-    ELSIF (UPPER(l_Line) LIKE 'Q''%') THEN
-    /* String literal with escaping /
-        KER_Exception_EP.mp_Raise('Escaped strings not supported at the moment');
-    ELSIF (UPPER(l_Line) LIKE 'DATE''%') THEN
-            /* Date literal /
-            mpi_ReadDateLiteral;
-    ELSIF (SUBSTR(l_Line, 1, 1) BETWEEN '0' AND '9') OR (SUBSTR(l_Line, 1, 1)='.') THEN
-            /* numeric literal; at the moment, we only support simple literals without exponent /
-            mpi_ReadNumericLiteral;
-    ELSIF (SUBSTR(l_Line, 1, 1) BETWEEN 'A' AND 'Z') OR (SUBSTR(l_Line, 1, 1) BETWEEN 'a' AND 'z') THEN
-            /* name /
-            mpi_ReadName;
-    ELSIF (l_Line LIKE ':=%') THEN
-    /* default value assignment /
-    mpi_ReadAssignment;
-    ELSIF (l_Line LIKE '=>%') THEN
-    /* named parameter /
-    mpi_ReadParamRef;
-    ELSIF (SUBSTR(l_Line, 1, 1) IN ('(', ')', ',', '+', '-', '/', '*', ';', '.', '%', '=', '>', '<')) THEN
-            /* characters acting as token on their own /
-                        mpi_ReadSymbol;
-    ELSE
-        KER_Exception_EP.mp_Raise('Unrecognised token on line '||l_Line_i||': "'||l_Line||'"');
-    END IF;
-    ot_Token.EXTEND;
-    ot_Token(ot_Token.COUNT):=l_Token;
-    IF (ot_Token.COUNT>SELF.MaxTokens) THEN
-        KER_Exception_EP.mp_Raise('Cannot parse package this big');
-    END IF;
-    END LOOP;
-    l_Line_i:=l_Line_i+1;
-    END LOOP;
-    END;
-
-    END;
-*/
 }

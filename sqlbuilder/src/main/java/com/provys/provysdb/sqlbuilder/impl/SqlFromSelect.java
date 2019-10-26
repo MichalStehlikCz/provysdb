@@ -25,10 +25,4 @@ public class SqlFromSelect extends SqlFromBase {
                 .append(") ")
                 .append(getAlias());
     }
-
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return select.getBinds();
-    }
 }

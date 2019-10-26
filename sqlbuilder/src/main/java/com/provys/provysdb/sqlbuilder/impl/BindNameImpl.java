@@ -3,11 +3,15 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindVariable;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -15,7 +19,7 @@ import java.util.regex.Pattern;
  * else in SQL, bind names are case insensitive. Bind name mus be string that starts with letter and contains only
  * letters, numbers and underscore.
  */
-class BindNameImpl implements BindName {
+public class BindNameImpl implements BindName {
 
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(BindNameImpl.class);
@@ -35,7 +39,7 @@ class BindNameImpl implements BindName {
     @Nonnull
     private final String name;
 
-    BindNameImpl(String name) {
+    public BindNameImpl(String name) {
         this.name = validateName(name);
     }
 
@@ -54,7 +58,23 @@ class BindNameImpl implements BindName {
     @Nonnull
     @Override
     public BindName combine(BindName other) {
-        return null;
+        if (other == this) {
+            return this;
+        }
+        if (!getName().equals(other.getName())) {
+            throw new InternalException(LOG,
+                    "Cannot combine bind variables with different names (" + getName() + "!=" + other.getName() + ")");
+        }
+        if ((other instanceof BindVariable)) {
+            return other.combine(this);
+        }
+        return this;
+    }
+
+    @Override
+    public void addSql(CodeBuilder builder) {
+        builder.append('?');
+        builder.addBind(this);
     }
 
     @Override

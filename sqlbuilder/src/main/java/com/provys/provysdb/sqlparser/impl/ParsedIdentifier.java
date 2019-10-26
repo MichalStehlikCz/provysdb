@@ -3,6 +3,7 @@ package com.provys.provysdb.sqlparser.impl;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.impl.SqlIdentifierImpl;
+import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,16 @@ class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
         return SqlTokenType.NAME;
     }
 
+    @Override
+    public SpaceMode spaceBefore() {
+        return SpaceMode.NORMAL;
+    }
+
+    @Override
+    public SpaceMode spaceAfter() {
+        return SpaceMode.NORMAL;
+    }
+
     @Nonnull
     @Override
     public String getText() {
@@ -45,7 +56,7 @@ class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
     }
 
     @Override
-    public void append(CodeBuilder builder) {
+    public void addSql(CodeBuilder builder) {
         builder.append(identifier.getText());
     }
 

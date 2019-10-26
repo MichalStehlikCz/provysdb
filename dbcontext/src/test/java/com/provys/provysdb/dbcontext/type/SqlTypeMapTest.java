@@ -2,6 +2,8 @@ package com.provys.provysdb.dbcontext.type;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -10,20 +12,17 @@ class SqlTypeMapTest {
 
     @Test
     void getAdapterTestSimple() {
-        var map = new SqlTypeMapImpl();
         var adapterInt = mock(SqlTypeAdapter.class);
-        map.addAdapter(Integer.class, adapterInt);
         var adapterNumber = mock(SqlTypeAdapter.class);
-        map.addAdapter(Number.class, adapterNumber);
+        var map = new SqlTypeMapImpl(List.of(adapterInt, adapterNumber));
         assertThat(map.getAdapter(Integer.class)).isEqualTo(adapterInt);
         assertThat(map.getAdapter(Number.class)).isEqualTo(adapterNumber);
     }
 
     @Test
     void getAdapterTestInterface() {
-        var map = new SqlTypeMapImpl();
         var adapterNumber = mock(SqlTypeAdapter.class);
-        map.addAdapter(Number.class, adapterNumber);
+        var map = new SqlTypeMapImpl(adapterNumber);
         assertThat(map.getAdapter(Integer.class)).isEqualTo(adapterNumber);
     }
 }

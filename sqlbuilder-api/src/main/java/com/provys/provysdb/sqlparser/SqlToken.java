@@ -1,13 +1,13 @@
 package com.provys.provysdb.sqlparser;
 
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.SqlElement;
 
 import javax.annotation.Nonnull;
 
 /**
  * Interface represents Sql token - name, symbol, ...
  */
-public interface SqlToken {
+public interface SqlToken extends SqlElement {
 
     /**
      * @return token type
@@ -16,9 +16,12 @@ public interface SqlToken {
     SqlTokenType getType();
 
     /**
-     * Append token to code builder
-     *
-     * @param builder is code builder token should be appended to
+     * @return if space before is needed
      */
-    void append(CodeBuilder builder);
+     SpaceMode spaceBefore();
+
+    /**
+     * @return if space after is needed
+     */
+    SpaceMode spaceAfter();
 }

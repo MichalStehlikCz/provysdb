@@ -47,12 +47,6 @@ public class SqlWhereJoined implements SqlWhere {
         return Collections.unmodifiableCollection(conditions);
     }
 
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return conditions.stream().map(SqlWhere::getBinds).flatMap(Collection::stream).collect(Collectors.toList());
-    }
-
     @Override
     public boolean isEmpty() {
         return conditions.isEmpty();

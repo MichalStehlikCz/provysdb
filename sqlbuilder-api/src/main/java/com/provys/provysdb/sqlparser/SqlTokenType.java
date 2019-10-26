@@ -4,5 +4,6 @@ public enum SqlTokenType {
     NAME,
     COMMENT,
     SYMBOL,
-    LITERAL;
+    LITERAL,
+    BIND;
 }

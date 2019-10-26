@@ -30,12 +30,6 @@ class SqlColumnSimple extends SqlColumnBase {
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
     }
 
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return Collections.emptyList();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

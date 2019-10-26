@@ -1,26 +1,36 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.common.datatype.DtDate;
+import com.provys.common.datatype.DtDateTime;
 import com.provys.provysdb.dbcontext.DbContext;
 import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlparser.SqlTokenizer;
+import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 abstract class SqlBase implements Sql {
 
     private final DbContext dbContext;
+    private final SqlTokenizer tokenizer;
+
+    SqlBase(DbContext dbContext, SqlTokenizer tokenizer) {
+        this.dbContext = Objects.requireNonNull(dbContext);
+        this.tokenizer = Objects.requireNonNull(tokenizer);
+    }
 
     SqlBase(DbContext dbContext) {
-        this.dbContext = Objects.requireNonNull(dbContext);
+        this(dbContext, new DefaultSqlTokenizer());
     }
 
     @Nonnull
-    protected DbContext getDbContext() {
+    DbContext getDbContext() {
         return dbContext;
     }
 
@@ -92,6 +102,18 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
+    public LiteralT<DtDate> literal(DtDate value) {
+        return LiteralDate.of(value);
+    }
+
+    @Nonnull
+    @Override
+    public LiteralT<DtDateTime> literal(DtDateTime value) {
+        return LiteralDateTime.of(value);
+    }
+
+    @Nonnull
+    @Override
     public SqlIdentifierImpl name(String name) {
         return SqlIdentifierImpl.parse(name);
     }
@@ -142,19 +164,44 @@ abstract class SqlBase implements Sql {
     @Nonnull
     @Override
     public SqlColumn columnSql(String columnSql, @Nullable String alias) {
-        return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias));
+        return columnSql(columnSql, alias, Collections.emptyList());
     }
 
     @Nonnull
     @Override
-    public SqlColumn columnSql(String columnSql, @Nullable String alias, BindVariable... binds) {
+    public SqlColumn columnSql(String columnSql, @Nullable String alias, BindName... binds) {
         return columnSql(columnSql, alias, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlColumn columnSql(String columnSql, @Nullable String alias, Collection<BindVariable> binds) {
+    public SqlColumn columnSql(String columnSql, @Nullable String alias, List<BindName> binds) {
         return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias), binds);
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnParse(String columnSql) {
+        return columnParse(columnSql, null);
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnParse(String sql, @Nullable String alias) {
+        return columnParse(sql, alias, Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnParse(String sql, @Nullable String alias, BindVariable... binds) {
+        return columnParse(sql, alias, Arrays.asList(binds));
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnParse(String sql, @Nullable String alias, Collection<BindVariable> binds) {
+        var builder = tokenizer.getBinds(sql).applyBindVariables(binds);
+        return columnSql(builder.build(), alias, builder.getBinds());
     }
 
     @Nonnull
@@ -213,13 +260,13 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, BindVariable... bindVariable) {
-        return whereSql(conditionSql, Arrays.asList(bindVariable));
+    public SqlWhere whereSql(String conditionSql, BindName... binds) {
+        return whereSql(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, Collection<BindVariable> binds) {
+    public SqlWhere whereSql(String conditionSql, List<BindName> binds) {
         return new SqlWhereSimpleWithBinds(conditionSql, binds);
     }
 

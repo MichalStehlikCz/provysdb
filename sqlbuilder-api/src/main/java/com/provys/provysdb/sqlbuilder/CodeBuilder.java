@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -216,7 +217,26 @@ public interface CodeBuilder {
      * @return self to support chaining
      */
     @Nonnull
-    CodeBuilder addBind(BindVariable bind);
+    CodeBuilder addBind(BindName bind);
+
+    /**
+     * Appends list of bind variables to end of binds collection
+     *
+     * @param binds are bind variables to be added to list of binds
+     * @return self to support chaining
+     */
+    @Nonnull
+    CodeBuilder addBinds(List<BindName> binds);
+
+    /**
+     * Go through existing binds and if bind variable with matching name is found in supplied collection, combine bind
+     * with supplied variable
+     *
+     * @param bindVariables are variables supplied to add type and value to binds
+     * @return self to support chaining
+     */
+    @Nonnull
+    CodeBuilder applyBindVariables(Collection<BindVariable> bindVariables);
 
     /**
      * Method retrieves code, produced by CodeBuilder.
@@ -230,5 +250,5 @@ public interface CodeBuilder {
      * @return list of binds, collected in builder
      */
     @Nonnull
-    List<BindVariable> getBinds();
+    List<BindName> getBinds();
 }

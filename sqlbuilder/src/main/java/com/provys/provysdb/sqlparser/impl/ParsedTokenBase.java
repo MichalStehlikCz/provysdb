@@ -28,11 +28,6 @@ public abstract class ParsedTokenBase implements SqlParsedToken {
         return pos;
     }
 
-    /**
-     * Accepts subclasses
-     * @param o
-     * @return
-     */
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;

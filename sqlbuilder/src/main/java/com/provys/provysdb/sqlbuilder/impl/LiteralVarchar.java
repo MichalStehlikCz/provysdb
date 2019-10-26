@@ -4,6 +4,9 @@ import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Class represents SQL string literal (VARCHAR2)
+ */
 public class LiteralVarchar extends LiteralBase<String> {
 
     /**

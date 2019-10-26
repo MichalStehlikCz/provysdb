@@ -115,13 +115,13 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
-    public SelectBuilder columnSql(String sqlColumn, String alias, BindVariable... binds) {
+    public SelectBuilder columnSql(String sqlColumn, String alias, BindName... binds) {
         return column(sql.columnSql(sqlColumn, alias, binds));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder columnSql(String sqlColumn, String alias, Collection<BindVariable> binds) {
+    public SelectBuilder columnSql(String sqlColumn, String alias, List<BindName> binds) {
         return column(sql.columnSql(sqlColumn, alias, binds));
     }
 
@@ -199,13 +199,13 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
-    public SelectBuilder whereSql(String conditionSql, BindVariable... binds) {
+    public SelectBuilder whereSql(String conditionSql, BindName... binds) {
         return whereSql(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereSql(String conditionSql, Collection<BindVariable> binds) {
+    public SelectBuilder whereSql(String conditionSql, List<BindName> binds) {
         return whereSql(sql.whereSql(conditionSql, binds));
     }
 

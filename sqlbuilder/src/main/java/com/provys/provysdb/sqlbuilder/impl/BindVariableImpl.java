@@ -190,16 +190,4 @@ public class BindVariableImpl<T> extends BindNameImpl implements BindVariableT<T
                 ", value=" + value +
                 "} " + super.toString();
     }
-
-    @Override
-    public void addSql(CodeBuilder builder) {
-        builder.append('?');
-        builder.addBind(this);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<BindName> getBinds() {
-        return Collections.singletonList(this);
-    }
 }

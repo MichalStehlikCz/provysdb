@@ -1,6 +1,7 @@
 package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,17 @@ class ParsedSingleLineComment extends ParsedTokenBase {
     }
 
     @Override
-    public void append(CodeBuilder builder) {
+    public SpaceMode spaceBefore() {
+        return SpaceMode.FORCE;
+    }
+
+    @Override
+    public SpaceMode spaceAfter() {
+        return SpaceMode.NONE;
+    }
+
+    @Override
+    public void addSql(CodeBuilder builder) {
         builder.append("--").appendLine(text);
     }
 

@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import javax.annotation.Nonnull;
 
-class LiteralByte extends LiteralNumber<Byte> {
+public class LiteralByte extends LiteralNumber<Byte> {
 
     /**
      * Get literal corresponding to given Byte value
@@ -10,7 +10,7 @@ class LiteralByte extends LiteralNumber<Byte> {
      * @param value is byte value this literal represents
      */
     @Nonnull
-    static LiteralByte of(byte value) {
+    public static LiteralByte of(byte value) {
         return new LiteralByte(value);
     }
 

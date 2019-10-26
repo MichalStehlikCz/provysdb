@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public interface BindVariable extends BindName, Expression {
+public interface BindVariable extends BindName {
 
     @Nonnull
     Class<?> getType();

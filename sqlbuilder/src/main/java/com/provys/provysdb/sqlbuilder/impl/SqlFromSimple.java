@@ -24,10 +24,4 @@ class SqlFromSimple extends SqlFromBase {
     public void addSql(CodeBuilder builder) {
         builder.append(tableName).append(' ').append(getAlias());
     }
-
-    @Nonnull
-    @Override
-    public Collection<BindVariable> getBinds() {
-        return Collections.emptyList();
-    }
 }

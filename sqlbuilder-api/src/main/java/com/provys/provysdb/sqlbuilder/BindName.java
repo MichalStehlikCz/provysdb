@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 /**
  * Single wrapper around String, represents name of bind variable and implements appropriate validation
  */
-public interface BindName {
+public interface BindName extends Expression {
 
     /**
      * @return bind name

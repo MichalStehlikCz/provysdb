@@ -3,19 +3,20 @@ package com.provys.provysdb.sqlparser.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.LiteralT;
+import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
-abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<T> {
+class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
 
     @Nonnull
     private final LiteralT<T> value;
 
-    ParsedLiteralBase(int line, int pos, LiteralT<T> value) {
+    ParsedLiteral(int line, int pos, LiteralT<T> value) {
         super(line, pos);
         this.value = Objects.requireNonNull(value);
     }
@@ -32,16 +33,19 @@ abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<
         return SqlTokenType.LITERAL;
     }
 
+    @Override
+    public SpaceMode spaceBefore() {
+        return SpaceMode.NORMAL;
+    }
+
+    @Override
+    public SpaceMode spaceAfter() {
+        return SpaceMode.NORMAL;
+    }
 
     @Override
     public void addSql(CodeBuilder builder) {
         value.addSql(builder);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<BindName> getBinds() {
-        return value.getBinds();
     }
 
     @Override
@@ -50,7 +54,7 @@ abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        ParsedLiteralBase<?> that = (ParsedLiteralBase<?>) o;
+        ParsedLiteral<?> that = (ParsedLiteral<?>) o;
 
         return value.equals(that.value);
     }
@@ -64,7 +68,7 @@ abstract class ParsedLiteralBase<T> extends ParsedTokenBase implements LiteralT<
 
     @Override
     public String toString() {
-        return "SqlLiteralBase{" +
+        return "SqlLiteral{" +
                 "value=" + value +
                 "} " + super.toString();
     }
