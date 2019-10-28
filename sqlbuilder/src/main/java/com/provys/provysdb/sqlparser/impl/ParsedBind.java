@@ -9,9 +9,8 @@ import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class ParsedBind extends ParsedTokenBase implements BindName {
+class ParsedBind extends ParsedTokenBase implements BindName {
 
     private final BindName name;
 

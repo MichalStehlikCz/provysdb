@@ -127,6 +127,47 @@ public interface SelectBuilder {
     SelectBuilder columnSql(String sql, String alias, List<BindName> binds);
 
     /**
+     * Add column with given SQL text, parse text for binds
+     *
+     * @param columnSql is text that will be used as column definition
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnParse(String columnSql);
+
+    /**
+     * Add column with given SQL text and alias, parse text for binds
+     *
+     * @param columnSql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnParse(String columnSql, String alias);
+
+    /**
+     * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
+     * values
+     *
+     * @param columnSql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnParse(String columnSql, String alias, BindVariable... binds);
+
+    /**
+     * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
+     * values
+     *
+     * @param columnSql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder columnParse(String columnSql, String alias, List<BindVariable> binds);
+
+    /**
      * Add table to from clause of the statement
      *
      * @param table is table definition (potentially with join condition)

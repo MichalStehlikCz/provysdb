@@ -1,6 +1,5 @@
 package com.provys.provysdb.sqlparser.impl;
 
-import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.LiteralT;
 import com.provys.provysdb.sqlparser.SpaceMode;
@@ -8,7 +7,6 @@ import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Objects;
 
 class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {

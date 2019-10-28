@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlparser.SpaceMode;
+import com.provys.provysdb.sqlparser.SqlSymbol;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
@@ -14,34 +15,10 @@ import java.util.Set;
  */
 class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
-    static final Set<String> SYMBOLS;
-    static {
-        SYMBOLS = new HashSet<>();
-        SYMBOLS.add("=>");
-        SYMBOLS.add(":=");
-        SYMBOLS.add("!=");
-        SYMBOLS.add("<=");
-        SYMBOLS.add(">=");
-        SYMBOLS.add("<>");
-        SYMBOLS.add("(");
-        SYMBOLS.add(")");
-        SYMBOLS.add(",");
-        SYMBOLS.add("+");
-        SYMBOLS.add("-");
-        SYMBOLS.add("/");
-        SYMBOLS.add("*");
-        SYMBOLS.add(";");
-        SYMBOLS.add(".");
-        SYMBOLS.add("%");
-        SYMBOLS.add("=");
-        SYMBOLS.add(">");
-        SYMBOLS.add("<");
-    }
-
     @Nonnull
-    private final String symbol;
+    private final SqlSymbol symbol;
 
-    ParsedSymbol(int line, int pos, String symbol) {
+    ParsedSymbol(int line, int pos, SqlSymbol symbol) {
         super(line, pos);
         this.symbol = Objects.requireNonNull(symbol);
     }
@@ -54,7 +31,7 @@ class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
     @Override
     public SpaceMode spaceBefore() {
-        if (symbol.equals("=>")) {
+        if (symbol == SqlSymbol.PARAM_VALUE) {
             return SpaceMode.FORCE;
         }
         return SpaceMode.NONE;
@@ -62,18 +39,21 @@ class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
     @Override
     public SpaceMode spaceAfter() {
-        return spaceBefore();
+        if ((symbol == SqlSymbol.PARAM_VALUE) || (symbol == SqlSymbol.COMMA)) {
+            return SpaceMode.FORCE;
+        }
+        return SpaceMode.NONE;
     }
 
     @Override
     @Nonnull
-    public String getSymbol() {
+    public SqlSymbol getSymbol() {
         return symbol;
     }
 
     @Override
     public void addSql(CodeBuilder builder) {
-        builder.append(symbol);
+        builder.append(symbol.getSymbol());
     }
 
     @Override
@@ -97,7 +77,7 @@ class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
     @Override
     public String toString() {
         return "SqlSymbol{" +
-                "symbol='" + symbol + '\'' +
+                "symbol='" + symbol.getSymbol() + '\'' +
                 "} " + super.toString();
     }
 }

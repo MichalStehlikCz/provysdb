@@ -125,6 +125,30 @@ class SelectBuilderImpl implements SelectBuilder {
         return column(sql.columnSql(sqlColumn, alias, binds));
     }
 
+    @Nonnull
+    @Override
+    public SelectBuilder columnParse(String columnSql) {
+        return column(sql.columnParse(columnSql));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnParse(String columnSql, String alias) {
+        return column(sql.columnParse(columnSql, alias));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnParse(String columnSql, String alias, BindVariable... binds) {
+        return column(sql.columnParse(columnSql, alias, binds));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnParse(String columnSql, String alias, List<BindVariable> binds) {
+        return column(sql.columnParse(columnSql, alias, binds));
+    }
+
     private void mapTable(SqlTableAlias alias, SqlFrom table) {
         if (tableByAlias.putIfAbsent(alias, table) != null) {
             throw new InternalException(LOG, "Attempt to insert duplicate table to from list (" + alias.getAlias() +

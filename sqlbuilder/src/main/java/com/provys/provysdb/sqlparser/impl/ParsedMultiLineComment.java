@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Instance represents multi-line comment
  */
-public class ParsedMultiLineComment extends ParsedTokenBase {
+class ParsedMultiLineComment extends ParsedTokenBase {
 
     @Nonnull
     private final String comment;

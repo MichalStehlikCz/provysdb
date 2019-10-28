@@ -6,9 +6,7 @@ import com.provys.common.exception.InternalException;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.impl.*;
-import com.provys.provysdb.sqlparser.SpaceMode;
-import com.provys.provysdb.sqlparser.SqlParsedToken;
-import com.provys.provysdb.sqlparser.SqlTokenizer;
+import com.provys.provysdb.sqlparser.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,7 +70,8 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         while (sqlScanner.hasNext()) {
             var token = sqlScanner.next();
             if ((afterPrev != null) &&
-                    ((token.spaceBefore() == FORCE) || (afterPrev == FORCE) ||
+                    (((token.spaceBefore() == FORCE) && (afterPrev != FORCE_NONE)) ||
+                            ((afterPrev == FORCE) && (token.spaceBefore() != FORCE_NONE)) ||
                             ((token.spaceBefore() == NORMAL) && (afterPrev == NORMAL)))) {
                 builder.append(' ');
             }
@@ -305,16 +304,14 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             String firstChar = Character.toString(nextChar());
             if (hasNextChar()) {
                 String twoChars = firstChar + peekChar();
-                if (ParsedSymbol.SYMBOLS.contains(twoChars)) {
+                if (SqlSymbol.getBySymbol(twoChars).isPresent()) {
                     nextChar();
-                    return new ParsedSymbol(line, pos, twoChars);
+                    return new ParsedSymbol(line, pos, SqlSymbol.getBySymbol(twoChars).get());
                 }
             }
-            if (ParsedSymbol.SYMBOLS.contains(firstChar)) {
-                return new ParsedSymbol(line, pos, firstChar);
-            }
-            throw new InternalException(LOG, "Invalid character '" + firstChar + "' found parsing SQL on line " + line
-                    + ", position " + pos);
+            return new ParsedSymbol(line, pos, SqlSymbol.getBySymbol(firstChar)
+                    .orElseThrow(() -> new InternalException(LOG, "Invalid character '" + firstChar +
+                            "' found parsing SQL on line " + line + ", position " + pos)));
         }
 
         /**
@@ -341,7 +338,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         @Nonnull
         private SqlParsedToken readLetter() {
             if (!hasNextChar()) { // caller ensures this method is not used on end of file
-                throw new IllegalStateException("Cannot read name at the end of file");
+                throw new IllegalStateException("Cannot read letter at the end of file");
             }
             var pos = getPos();
             var nameBuilder = new StringBuilder();
@@ -357,7 +354,13 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             if (name.equalsIgnoreCase("DATE")) {
                 return readDateLiteral(pos);
             }
-            return new ParsedIdentifier(line, pos, nameBuilder.toString());
+            SqlKeyword keyword;
+            try {
+                keyword = SqlKeyword.valueOf(name.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return new ParsedIdentifier(line, pos, nameBuilder.toString());
+            }
+            return new ParsedKeyword(line, pos, keyword);
         }
 
         @Nonnull

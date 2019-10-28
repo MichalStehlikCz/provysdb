@@ -17,7 +17,7 @@ class ParsedSingleLineComment extends ParsedTokenBase {
 
     ParsedSingleLineComment(int line, int pos, String text) {
         super(line, pos);
-        this.text = text;
+        this.text = text.stripTrailing();
     }
 
     @Nonnull
@@ -33,7 +33,7 @@ class ParsedSingleLineComment extends ParsedTokenBase {
 
     @Override
     public SpaceMode spaceAfter() {
-        return SpaceMode.NONE;
+        return SpaceMode.FORCE_NONE;
     }
 
     @Override
