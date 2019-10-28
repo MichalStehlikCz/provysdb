@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.SqlWhere;
-import com.provys.provysdb.sqlbuilder.SqlWhereJoiner;
+import com.provys.provysdb.sqlbuilder.Condition;
+import com.provys.provysdb.sqlbuilder.ConditionJoiner;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-class SqlWhereJoinerImpl implements SqlWhereJoiner {
+class ConditionJoinerImpl implements ConditionJoiner {
 
     @Nonnull
     private final SqlConditionOperator operator;
     @Nonnull
-    private final List<SqlWhere> conditions;
+    private final List<Condition> conditions;
 
-    SqlWhereJoinerImpl(SqlConditionOperator operator) {
+    ConditionJoinerImpl(SqlConditionOperator operator) {
         this.operator = Objects.requireNonNull(operator);
         this.conditions = new ArrayList<>(4);
     }
 
-    SqlWhereJoinerImpl(SqlConditionOperator operator, Collection<SqlWhere> conditions) {
+    ConditionJoinerImpl(SqlConditionOperator operator, Collection<Condition> conditions) {
         this.operator = Objects.requireNonNull(operator);
         if (operator == SqlConditionOperator.AND) {
             // in AND, we skip trivial condition
@@ -34,26 +34,26 @@ class SqlWhereJoinerImpl implements SqlWhereJoiner {
     }
 
     @Override
-    public SqlWhereJoiner add(SqlWhere sqlWhere) {
+    public ConditionJoiner add(Condition condition) {
         // in case of OR, trivial condition is handled in build; in AND, we can just skip it
-        if (!sqlWhere.isEmpty() || (operator == SqlConditionOperator.OR)) {
-            conditions.add(sqlWhere);
+        if (!condition.isEmpty() || (operator == SqlConditionOperator.OR)) {
+            conditions.add(condition);
         }
         return this;
     }
 
     @Override
-    public SqlWhere build() {
+    public Condition build() {
         if (conditions.isEmpty()) {
-            return SqlWhereEmpty.getInstance();
+            return ConditionEmpty.getInstance();
         }
         if (conditions.size() == 1) {
             return conditions.get(0);
         }
         // in case of OR, we handle trivial condition here...
-        if ((operator == SqlConditionOperator.OR) && (conditions.stream().anyMatch(SqlWhere::isEmpty))) {
-            return SqlWhereEmpty.getInstance();
+        if ((operator == SqlConditionOperator.OR) && (conditions.stream().anyMatch(Condition::isEmpty))) {
+            return ConditionEmpty.getInstance();
         }
-        return new SqlWhereJoined(operator, conditions);
+        return new ConditionJoined(operator, conditions);
     }
 }

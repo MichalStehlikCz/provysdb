@@ -94,7 +94,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String columnSql);
+    SelectBuilder columnDirect(String columnSql);
 
     /**
      * Add column with given SQL text and alias
@@ -104,7 +104,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias);
+    SelectBuilder columnDirect(String sql, String alias);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -114,7 +114,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias, BindName... binds);
+    SelectBuilder columnDirect(String sql, String alias, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -124,7 +124,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnSql(String sql, String alias, List<BindName> binds);
+    SelectBuilder columnDirect(String sql, String alias, List<BindName> binds);
 
     /**
      * Add column with given SQL text, parse text for binds
@@ -133,7 +133,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnParse(String columnSql);
+    SelectBuilder columnSql(String columnSql);
 
     /**
      * Add column with given SQL text and alias, parse text for binds
@@ -143,7 +143,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnParse(String columnSql, String alias);
+    SelectBuilder columnSql(String columnSql, String alias);
 
     /**
      * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
@@ -154,7 +154,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnParse(String columnSql, String alias, BindVariable... binds);
+    SelectBuilder columnSql(String columnSql, String alias, BindVariable... binds);
 
     /**
      * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
@@ -165,7 +165,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnParse(String columnSql, String alias, List<BindVariable> binds);
+    SelectBuilder columnSql(String columnSql, String alias, Iterable<BindVariable> binds);
 
     /**
      * Add table to from clause of the statement
@@ -195,6 +195,26 @@ public interface SelectBuilder {
      */
     @Nonnull
     SelectBuilder from(String tableName, String alias);
+
+    /**
+     * Create from clause based on Sql expression
+     *
+     * @param sqlSelect is SQL expression used as data source in SQL clause
+     * @param alias is alias new table will get
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder fromDirect(String sqlSelect, SqlTableAlias alias);
+
+    /**
+     * Create from clause based on Sql expression; String version
+     *
+     * @param sqlSelect is SQL expression used as data source in SQL clause
+     * @param alias is alias new table will get
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder fromDirect(String sqlSelect, String alias);
 
     /**
      * Create from clause based on Sql expression
@@ -251,7 +271,39 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(SqlWhere where);
+    SelectBuilder where(Condition where);
+
+    /**
+     * Add where condition
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereDirect(String conditionSql);
+
+    /**
+     * Add where condition with binds
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @param binds is list of bind variables, associated with condition
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereDirect(String conditionSql, BindName... binds);
+
+    /**
+     * Add where condition with binds
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @param binds is list of bind variables, associated with condition
+     * @return self to support fluent build
+     */
+    @Nonnull
+    SelectBuilder whereDirect(String conditionSql, List<BindName> binds);
 
     /**
      * Add where condition
@@ -272,7 +324,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(String conditionSql, BindName... binds);
+    SelectBuilder whereSql(String conditionSql, BindVariable... binds);
 
     /**
      * Add where condition with binds
@@ -283,7 +335,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereSql(String conditionSql, List<BindName> binds);
+    SelectBuilder whereSql(String conditionSql, Iterable<BindVariable> binds);
 
     /**
      * Add multiple conditions combined using AND
@@ -292,7 +344,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereAnd(SqlWhere... whereConditions);
+    SelectBuilder whereAnd(Condition... whereConditions);
 
     /**
      * Add multiple conditions combined using AND
@@ -301,7 +353,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereAnd(Collection<SqlWhere> whereConditions);
+    SelectBuilder whereAnd(Collection<Condition> whereConditions);
 
     /**
      * Add multiple conditions combined using OR
@@ -310,7 +362,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereOr(SqlWhere... whereConditions);
+    SelectBuilder whereOr(Condition... whereConditions);
 
     /**
      * Add multiple conditions combined using OR
@@ -319,26 +371,7 @@ public interface SelectBuilder {
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder whereOr(Collection<SqlWhere> whereConditions);
-
-    /**
-     * Add bind variable. If variable already exists, verifies that supplied value is compatible with existing one and
-     * throws and exception if it is not (different type or different values)
-     *
-     * @param bind is bind variable to be added
-     * @return self to allow fluent build
-     */
-    @Nonnull
-    SelectBuilder addBind(BindVariable bind);
-
-    /**
-     * Add bind variables
-     *
-     * @param binds is list of bind variables to be added
-     * @return self to allow fluent build
-     */
-    @Nonnull
-    SelectBuilder addBinds(Collection<BindVariable> binds);
+    SelectBuilder whereOr(Collection<Condition> whereConditions);
 
     /**
      * Build select statement from builder

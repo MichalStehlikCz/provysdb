@@ -376,7 +376,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereDirect(String conditionSql);
+    Condition conditionDirect(String conditionSql);
 
     /**
      * Create where condition with binds
@@ -387,7 +387,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereDirect(String conditionSql, BindName... binds);
+    Condition conditionDirect(String conditionSql, BindName... binds);
 
     /**
      * Create where condition with binds
@@ -398,7 +398,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereDirect(String conditionSql, List<BindName> binds);
+    Condition conditionDirect(String conditionSql, List<BindName> binds);
 
     /**
      * Create where condition; parse supplied string to retrieve bind variables
@@ -408,7 +408,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql);
+    Condition conditionSql(String conditionSql);
 
     /**
      * Create where condition with binds
@@ -419,7 +419,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, BindVariable... binds);
+    Condition conditionSql(String conditionSql, BindVariable... binds);
 
     /**
      * Create where condition with binds
@@ -430,7 +430,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, Iterable<BindVariable> binds);
+    Condition conditionSql(String conditionSql, Iterable<BindVariable> binds);
 
     /**
      * Combine multiple conditions using AND
@@ -439,7 +439,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereAnd(SqlWhere... whereConditions);
+    Condition conditionAnd(Condition... whereConditions);
 
     /**
      * Combine multiple conditions using AND
@@ -448,7 +448,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereAnd(Collection<SqlWhere> whereConditions);
+    Condition conditionAnd(Collection<Condition> whereConditions);
 
     /**
      * Create and return joiner, used to combine multiple conditions using AND operator
@@ -456,7 +456,7 @@ public interface Sql {
      * @return created joiner
      */
     @Nonnull
-    SqlWhereJoiner whereAndJoiner();
+    ConditionJoiner conditionAndJoiner();
 
     /**
      * Combine multiple conditions using OR
@@ -465,7 +465,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereOr(SqlWhere... whereConditions);
+    Condition conditionOr(Condition... whereConditions);
 
     /**
      * Combine multiple conditions using OR
@@ -474,7 +474,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereOr(Collection<SqlWhere> whereConditions);
+    Condition conditionOr(Collection<Condition> whereConditions);
 
     /**
      * Create and return joiner, used to combine multiple conditions using OR operator
@@ -482,5 +482,5 @@ public interface Sql {
      * @return created joiner
      */
     @Nonnull
-    SqlWhereJoiner whereOrJoiner();
+    ConditionJoiner conditionOrJoiner();
 }

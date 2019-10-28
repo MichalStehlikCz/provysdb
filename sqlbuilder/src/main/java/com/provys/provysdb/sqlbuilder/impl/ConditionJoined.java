@@ -1,24 +1,22 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlWhere;
+import com.provys.provysdb.sqlbuilder.Condition;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class SqlWhereJoined implements SqlWhere {
+public class ConditionJoined implements Condition {
 
     @Nonnull
     private final SqlConditionOperator operator;
     @Nonnull
-    private final List<SqlWhere> conditions;
+    private final List<Condition> conditions;
 
-    SqlWhereJoined(SqlConditionOperator operator, Collection<SqlWhere> conditions) {
+    ConditionJoined(SqlConditionOperator operator, Collection<Condition> conditions) {
         this.operator = operator;
         this.conditions = new ArrayList<>(conditions);
     }
@@ -43,7 +41,7 @@ public class SqlWhereJoined implements SqlWhere {
     }
 
     @Nonnull
-    Collection<SqlWhere> getConditions() {
+    Collection<Condition> getConditions() {
         return Collections.unmodifiableCollection(conditions);
     }
 

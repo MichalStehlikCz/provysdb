@@ -12,8 +12,6 @@ import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 abstract class SqlBase implements Sql {
 
@@ -267,76 +265,76 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlWhere whereDirect(String conditionSql) {
-        return new SqlWhereSimple(conditionSql);
+    public Condition conditionDirect(String conditionSql) {
+        return new ConditionSimple(conditionSql);
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereDirect(String conditionSql, BindName... binds) {
-        return whereDirect(conditionSql, Arrays.asList(binds));
+    public Condition conditionDirect(String conditionSql, BindName... binds) {
+        return conditionDirect(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereDirect(String conditionSql, List<BindName> binds) {
-        return new SqlWhereSimpleWithBinds(conditionSql, binds);
+    public Condition conditionDirect(String conditionSql, List<BindName> binds) {
+        return new ConditionSimpleWithBinds(conditionSql, binds);
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql) {
-        return whereSql(conditionSql, Collections.emptyList());
+    public Condition conditionSql(String conditionSql) {
+        return conditionSql(conditionSql, Collections.emptyList());
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, BindVariable... binds) {
-        return whereSql(conditionSql, Arrays.asList(binds));
+    public Condition conditionSql(String conditionSql, BindVariable... binds) {
+        return conditionSql(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, Iterable<BindVariable> binds) {
+    public Condition conditionSql(String conditionSql, Iterable<BindVariable> binds) {
         var builder = tokenizer.getBinds(conditionSql).applyBindVariables(binds);
-        return new SqlWhereSimpleWithBinds(builder.build(), builder.getBinds());
+        return new ConditionSimpleWithBinds(builder.build(), builder.getBinds());
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereAnd(SqlWhere... whereConditions) {
-        return whereAnd(Arrays.asList(whereConditions));
+    public Condition conditionAnd(Condition... whereConditions) {
+        return conditionAnd(Arrays.asList(whereConditions));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereAnd(Collection<SqlWhere> whereConditions) {
+    public Condition conditionAnd(Collection<Condition> whereConditions) {
         // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
-        return new SqlWhereJoinerImpl(SqlConditionOperator.AND, whereConditions).build();
+        return new ConditionJoinerImpl(SqlConditionOperator.AND, whereConditions).build();
     }
 
     @Nonnull
     @Override
-    public SqlWhereJoiner whereAndJoiner() {
-        return new SqlWhereJoinerImpl(SqlConditionOperator.AND);
+    public ConditionJoiner conditionAndJoiner() {
+        return new ConditionJoinerImpl(SqlConditionOperator.AND);
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereOr(SqlWhere... whereConditions) {
-        return whereOr(Arrays.asList(whereConditions));
+    public Condition conditionOr(Condition... whereConditions) {
+        return conditionOr(Arrays.asList(whereConditions));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereOr(Collection<SqlWhere> whereConditions) {
+    public Condition conditionOr(Collection<Condition> whereConditions) {
         // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
-        return new SqlWhereJoinerImpl(SqlConditionOperator.OR, whereConditions).build();
+        return new ConditionJoinerImpl(SqlConditionOperator.OR, whereConditions).build();
     }
 
     @Nonnull
     @Override
-    public SqlWhereJoiner whereOrJoiner() {
-        return new SqlWhereJoinerImpl(SqlConditionOperator.OR);
+    public ConditionJoiner conditionOrJoiner() {
+        return new ConditionJoinerImpl(SqlConditionOperator.OR);
     }
 }

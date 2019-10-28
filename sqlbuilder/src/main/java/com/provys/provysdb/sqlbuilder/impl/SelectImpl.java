@@ -1,5 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.Select;
 
@@ -11,14 +12,14 @@ class SelectImpl implements Select {
     @Nonnull
     private final String sql;
     @Nonnull
-    private final List<BindVariable> binds;
+    private final List<BindName> binds;
 
     SelectImpl(String sql) {
         this.sql = Objects.requireNonNull(sql);
         this.binds = Collections.emptyList();
     }
 
-    SelectImpl(String sql, Collection<BindVariable> binds) {
+    SelectImpl(String sql, List<BindName> binds) {
         this.sql = Objects.requireNonNull(sql);
         this.binds = new ArrayList<>(binds);
     }
@@ -31,18 +32,8 @@ class SelectImpl implements Select {
 
     @Nonnull
     @Override
-    public Collection<BindVariable> getBinds() {
+    public List<BindName> getBinds() {
         return Collections.unmodifiableList(binds);
-    }
-
-    @Override
-    public int getPositions() {
-        return 0;
-    }
-
-    @Override
-    public Map<BindVariable, List<Integer>> getBindPositions() {
-        return null;
     }
 
     @Override

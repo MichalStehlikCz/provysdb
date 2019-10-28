@@ -20,8 +20,7 @@ class SelectBuilderImpl implements SelectBuilder {
     private final Map<SqlIdentifier, SqlColumn> columnByName;
     private final List<SqlFrom> tables;
     private final Map<SqlTableAlias, SqlFrom> tableByAlias;
-    private final List<SqlWhere> conditions;
-    private final Map<String, BindVariable> bindByName;
+    private final List<Condition> conditions;
 
     SelectBuilderImpl(Sql sql) {
         this.sql = Objects.requireNonNull(sql);
@@ -30,11 +29,10 @@ class SelectBuilderImpl implements SelectBuilder {
         tables = new ArrayList<>(2);
         tableByAlias = new ConcurrentHashMap<>(2);
         conditions = new ArrayList<>(5);
-        bindByName = new ConcurrentHashMap<>(5);
     }
 
     private SelectBuilderImpl(Sql sql, Collection<SqlColumn> columns, Collection<SqlFrom> tables,
-                      Collection<SqlWhere> conditions, Collection<BindVariable> binds) {
+                              Collection<Condition> conditions) {
         this.sql = sql;
         this.columns = new ArrayList<>(columns);
         this.columnByName = columns.stream().filter(column -> column.getAlias().isPresent()).collect(
@@ -42,8 +40,6 @@ class SelectBuilderImpl implements SelectBuilder {
         this.tables = new ArrayList<>(tables);
         this.tableByAlias = tables.stream().collect(Collectors.toConcurrentMap(SqlFrom::getAlias, Function.identity()));
         this.conditions = new ArrayList<>(conditions);
-        this.bindByName = binds.stream().collect(Collectors.toConcurrentMap(BindVariable::getName, Function.identity(),
-                BindVariable::combine));
     }
 
     private void mapColumn(SqlIdentifier alias, SqlColumn column) {
@@ -103,50 +99,50 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
+    public SelectBuilder columnDirect(String columnSql) {
+        return column(sql.columnDirect(columnSql));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnDirect(String sqlColumn, String alias) {
+        return column(sql.columnDirect(sqlColumn, alias));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnDirect(String sqlColumn, String alias, BindName... binds) {
+        return column(sql.columnDirect(sqlColumn, alias, binds));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder columnDirect(String sqlColumn, String alias, List<BindName> binds) {
+        return column(sql.columnDirect(sqlColumn, alias, binds));
+    }
+
+    @Nonnull
+    @Override
     public SelectBuilder columnSql(String columnSql) {
         return column(sql.columnSql(columnSql));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder columnSql(String sqlColumn, String alias) {
-        return column(sql.columnSql(sqlColumn, alias));
+    public SelectBuilder columnSql(String columnSql, String alias) {
+        return column(sql.columnSql(columnSql, alias));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder columnSql(String sqlColumn, String alias, BindName... binds) {
-        return column(sql.columnSql(sqlColumn, alias, binds));
+    public SelectBuilder columnSql(String columnSql, String alias, BindVariable... binds) {
+        return column(sql.columnSql(columnSql, alias, binds));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder columnSql(String sqlColumn, String alias, List<BindName> binds) {
-        return column(sql.columnSql(sqlColumn, alias, binds));
-    }
-
-    @Nonnull
-    @Override
-    public SelectBuilder columnParse(String columnSql) {
-        return column(sql.columnParse(columnSql));
-    }
-
-    @Nonnull
-    @Override
-    public SelectBuilder columnParse(String columnSql, String alias) {
-        return column(sql.columnParse(columnSql, alias));
-    }
-
-    @Nonnull
-    @Override
-    public SelectBuilder columnParse(String columnSql, String alias, BindVariable... binds) {
-        return column(sql.columnParse(columnSql, alias, binds));
-    }
-
-    @Nonnull
-    @Override
-    public SelectBuilder columnParse(String columnSql, String alias, List<BindVariable> binds) {
-        return column(sql.columnParse(columnSql, alias, binds));
+    public SelectBuilder columnSql(String columnSql, String alias, Iterable<BindVariable> binds) {
+        return column(sql.columnSql(columnSql, alias, binds));
     }
 
     private void mapTable(SqlTableAlias alias, SqlFrom table) {
@@ -174,6 +170,18 @@ class SelectBuilderImpl implements SelectBuilder {
     @Override
     public SelectBuilder from(String tableName, String alias) {
         return from(sql.from(tableName, alias));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder fromDirect(String sqlSelect, SqlTableAlias alias) {
+        return from(sql.fromDirect(sqlSelect, alias));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder fromDirect(String sqlSelect, String alias) {
+        return from(sql.fromDirect(sqlSelect, alias));
     }
 
     @Nonnull
@@ -208,7 +216,7 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
-    public SelectBuilder whereSql(SqlWhere where) {
+    public SelectBuilder where(Condition where) {
         if (!where.isEmpty()) {
             conditions.add(where);
         }
@@ -217,66 +225,68 @@ class SelectBuilderImpl implements SelectBuilder {
 
     @Nonnull
     @Override
+    public SelectBuilder whereDirect(String conditionSql) {
+        return where(sql.conditionDirect(conditionSql));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder whereDirect(String conditionSql, BindName... binds) {
+        return where(sql.conditionDirect(conditionSql, binds));
+    }
+
+    @Nonnull
+    @Override
+    public SelectBuilder whereDirect(String conditionSql, List<BindName> binds) {
+        return where(sql.conditionDirect(conditionSql, binds));
+    }
+
+    @Nonnull
+    @Override
     public SelectBuilder whereSql(String conditionSql) {
-        return whereSql(sql.whereSql(conditionSql));
+        return where(sql.conditionSql(conditionSql));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereSql(String conditionSql, BindName... binds) {
-        return whereSql(conditionSql, Arrays.asList(binds));
+    public SelectBuilder whereSql(String conditionSql, BindVariable... binds) {
+        return where(sql.conditionSql(conditionSql, binds));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereSql(String conditionSql, List<BindName> binds) {
-        return whereSql(sql.whereSql(conditionSql, binds));
+    public SelectBuilder whereSql(String conditionSql, Iterable<BindVariable> binds) {
+        return where(sql.conditionSql(conditionSql, binds));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereAnd(SqlWhere... whereConditions) {
-        return whereSql(sql.whereAnd(whereConditions));
+    public SelectBuilder whereAnd(Condition... whereConditions) {
+        return where(sql.conditionAnd(whereConditions));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereAnd(Collection<SqlWhere> whereConditions) {
-        return whereSql(sql.whereAnd(whereConditions));
+    public SelectBuilder whereAnd(Collection<Condition> whereConditions) {
+        return where(sql.conditionAnd(whereConditions));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereOr(SqlWhere... whereConditions) {
-        return whereSql(sql.whereOr(whereConditions));
+    public SelectBuilder whereOr(Condition... whereConditions) {
+        return where(sql.conditionOr(whereConditions));
     }
 
     @Nonnull
     @Override
-    public SelectBuilder whereOr(Collection<SqlWhere> whereConditions) {
-        return whereSql(sql.whereOr(whereConditions));
+    public SelectBuilder whereOr(Collection<Condition> whereConditions) {
+        return where(sql.conditionOr(whereConditions));
     }
 
-    @Nonnull
-    @Override
-    public SelectBuilder addBind(BindVariable bind) {
-        bindByName.compute(bind.getName(), (key, oldBind) -> (oldBind==null) ? bind : bind.combine(oldBind));
-        return this;
-    }
-
-    @Nonnull
-    @Override
-    public SelectBuilder addBinds(Collection<BindVariable> binds) {
-        for (var bind : binds) {
-            addBind(bind);
-        }
-        return this;
-    }
-
-    private void addConditions(Collection<SqlWhere> conditions, CodeBuilder builder) {
+    private void addConditions(Collection<Condition> conditions, CodeBuilder builder) {
         for (var condition : conditions) {
-            if ((condition instanceof SqlWhereJoined) && ((SqlWhereJoined) condition).getOperator().equals(SqlConditionOperator.AND)) {
-                addConditions(((SqlWhereJoined) condition).getConditions(), builder);
+            if ((condition instanceof ConditionJoined) && ((ConditionJoined) condition).getOperator().equals(SqlConditionOperator.AND)) {
+                addConditions(((ConditionJoined) condition).getConditions(), builder);
             } else {
                 condition.addSql(builder);
             }
@@ -307,12 +317,12 @@ class SelectBuilderImpl implements SelectBuilder {
             addConditions(conditions, builder);
             builder.popIdent();
         }
-        return new SelectImpl(builder.build(), Collections.unmodifiableCollection(bindByName.values()));
+        return new SelectImpl(builder.build(), builder.getBinds());
     }
 
     @Nonnull
     @Override
     public SelectBuilder copy() {
-        return new SelectBuilderImpl(sql, columns, tables, conditions, bindByName.values());
+        return new SelectBuilderImpl(sql, columns, tables, conditions);
     }
 }

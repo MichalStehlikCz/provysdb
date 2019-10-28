@@ -1,17 +1,17 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlWhere;
+import com.provys.provysdb.sqlbuilder.Condition;
 
-class SqlWhereEmpty implements SqlWhere {
+class ConditionEmpty implements Condition {
 
-    private static final SqlWhereEmpty INSTANCE = new SqlWhereEmpty();
+    private static final ConditionEmpty INSTANCE = new ConditionEmpty();
 
-    static SqlWhereEmpty getInstance() {
+    static ConditionEmpty getInstance() {
         return INSTANCE;
     }
 
-    private SqlWhereEmpty() {}
+    private ConditionEmpty() {}
 
     @Override
     public void addSql(CodeBuilder builder) {

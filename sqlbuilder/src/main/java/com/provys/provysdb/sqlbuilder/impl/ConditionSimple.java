@@ -1,16 +1,16 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlWhere;
+import com.provys.provysdb.sqlbuilder.Condition;
 
 import javax.annotation.Nonnull;
 
-class SqlWhereSimple implements SqlWhere {
+class ConditionSimple implements Condition {
 
     @Nonnull
     private final String sql;
 
-    SqlWhereSimple(String sql) {
+    ConditionSimple(String sql) {
         this.sql = sql;
     }
 
