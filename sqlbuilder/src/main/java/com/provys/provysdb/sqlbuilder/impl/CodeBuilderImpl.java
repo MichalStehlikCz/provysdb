@@ -218,7 +218,7 @@ public class CodeBuilderImpl implements CodeBuilder {
 
     @Nonnull
     @Override
-    public CodeBuilder applyBindVariables(Collection<BindVariable> bindVariables) {
+    public CodeBuilder applyBindVariables(Iterable<BindVariable> bindVariables) {
         final var bindMap = binds.stream().collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
         binds.replaceAll(bindName -> (bindMap.get(bindName.getName()) == null) ? bindName :
                 bindMap.get(bindName.getName()).combine(bindName));

@@ -157,51 +157,51 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
+    public SqlColumn columnDirect(String columnSql) {
+        return columnDirect(columnSql, null);
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnDirect(String columnSql, @Nullable String alias) {
+        return columnDirect(columnSql, alias, Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnDirect(String columnSql, @Nullable String alias, BindName... binds) {
+        return columnDirect(columnSql, alias, Arrays.asList(binds));
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn columnDirect(String columnSql, @Nullable String alias, List<BindName> binds) {
+        return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias), binds);
+    }
+
+    @Nonnull
+    @Override
     public SqlColumn columnSql(String columnSql) {
         return columnSql(columnSql, null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn columnSql(String columnSql, @Nullable String alias) {
-        return columnSql(columnSql, alias, Collections.emptyList());
+    public SqlColumn columnSql(String sql, @Nullable String alias) {
+        return columnSql(sql, alias, Collections.emptyList());
     }
 
     @Nonnull
     @Override
-    public SqlColumn columnSql(String columnSql, @Nullable String alias, BindName... binds) {
-        return columnSql(columnSql, alias, Arrays.asList(binds));
+    public SqlColumn columnSql(String sql, @Nullable String alias, BindVariable... binds) {
+        return columnSql(sql, alias, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlColumn columnSql(String columnSql, @Nullable String alias, List<BindName> binds) {
-        return new SqlColumnSql(columnSql, (alias == null) ? null : name(alias), binds);
-    }
-
-    @Nonnull
-    @Override
-    public SqlColumn columnParse(String columnSql) {
-        return columnParse(columnSql, null);
-    }
-
-    @Nonnull
-    @Override
-    public SqlColumn columnParse(String sql, @Nullable String alias) {
-        return columnParse(sql, alias, Collections.emptyList());
-    }
-
-    @Nonnull
-    @Override
-    public SqlColumn columnParse(String sql, @Nullable String alias, BindVariable... binds) {
-        return columnParse(sql, alias, Arrays.asList(binds));
-    }
-
-    @Nonnull
-    @Override
-    public SqlColumn columnParse(String sql, @Nullable String alias, Collection<BindVariable> binds) {
+    public SqlColumn columnSql(String sql, @Nullable String alias, Iterable<BindVariable> binds) {
         var builder = tokenizer.getBinds(sql).applyBindVariables(binds);
-        return columnSql(builder.build(), alias, builder.getBinds());
+        return columnDirect(builder.build(), alias, builder.getBinds());
     }
 
     @Nonnull
@@ -224,8 +224,21 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
+    public SqlFrom fromDirect(String sqlSelect, SqlTableAlias alias) {
         return new SqlFromSql(sqlSelect, alias);
+    }
+
+    @Nonnull
+    @Override
+    public SqlFrom fromDirect(String sqlSelect, String alias) {
+        return fromDirect(sqlSelect, tableAlias(alias));
+    }
+
+    @Nonnull
+    @Override
+    public SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
+        var builder = tokenizer.getBinds(sqlSelect);
+        return new SqlFromSql(builder.build(), alias, builder.getBinds());
     }
 
     @Nonnull
@@ -254,20 +267,39 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql) {
+    public SqlWhere whereDirect(String conditionSql) {
         return new SqlWhereSimple(conditionSql);
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, BindName... binds) {
+    public SqlWhere whereDirect(String conditionSql, BindName... binds) {
+        return whereDirect(conditionSql, Arrays.asList(binds));
+    }
+
+    @Nonnull
+    @Override
+    public SqlWhere whereDirect(String conditionSql, List<BindName> binds) {
+        return new SqlWhereSimpleWithBinds(conditionSql, binds);
+    }
+
+    @Nonnull
+    @Override
+    public SqlWhere whereSql(String conditionSql) {
+        return whereSql(conditionSql, Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    public SqlWhere whereSql(String conditionSql, BindVariable... binds) {
         return whereSql(conditionSql, Arrays.asList(binds));
     }
 
     @Nonnull
     @Override
-    public SqlWhere whereSql(String conditionSql, List<BindName> binds) {
-        return new SqlWhereSimpleWithBinds(conditionSql, binds);
+    public SqlWhere whereSql(String conditionSql, Iterable<BindVariable> binds) {
+        var builder = tokenizer.getBinds(conditionSql).applyBindVariables(binds);
+        return new SqlWhereSimpleWithBinds(builder.build(), builder.getBinds());
     }
 
     @Nonnull

@@ -192,17 +192,17 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String columnSql);
+    SqlColumn columnDirect(String columnSql);
 
     /**
      * Create column with given SQL text and alias
      *
-     * @param sql is text that will be used as column definition. Binds are parsed from text
+     * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias);
+    SqlColumn columnDirect(String sql, String alias);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -213,7 +213,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, BindName... binds);
+    SqlColumn columnDirect(String sql, String alias, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -225,7 +225,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, List<BindName> binds);
+    SqlColumn columnDirect(String sql, String alias, List<BindName> binds);
 
     /**
      * Create column with given SQL text and parse it for bind variables, expressed using :name notation
@@ -234,7 +234,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnParse(String columnSql);
+    SqlColumn columnSql(String columnSql);
 
     /**
      * Create column with given SQL text and alias and parse it for bind variables, expressed using :name notation
@@ -244,7 +244,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnParse(String sql, String alias);
+    SqlColumn columnSql(String sql, String alias);
 
     /**
      * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
@@ -256,7 +256,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnParse(String sql, String alias, BindVariable... binds);
+    SqlColumn columnSql(String sql, String alias, BindVariable... binds);
 
     /**
      * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
@@ -269,7 +269,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnParse(String sql, String alias, Collection<BindVariable> binds);
+    SqlColumn columnSql(String sql, String alias, Iterable<BindVariable> binds);
 
     /**
      * Create Sql table alias object based on supplied text. Validates text during creation.
@@ -301,7 +301,27 @@ public interface Sql {
     SqlFrom from(String tableName, String alias);
 
     /**
-     * Create from clause based on Sql expression
+     * Create from clause based on Sql expression, directly passed to evaluation without parsing
+     *
+     * @param sqlSelect is SQL expression used as data source in SQL clause
+     * @param alias is alias new table will get
+     * @return created from clause
+     */
+    @Nonnull
+    SqlFrom fromDirect(String sqlSelect, SqlTableAlias alias);
+
+    /**
+     * Create from clause based on Sql expression, directly pass to evaluation without parsing; alias as String version
+     *
+     * @param sqlSelect is SQL expression used as data source in SQL clause
+     * @param alias is alias new table will get
+     * @return created from clause
+     */
+    @Nonnull
+    SqlFrom fromDirect(String sqlSelect, String alias);
+
+    /**
+     * Create from clause based on Sql expression; parse expression to retrieve binds
      *
      * @param sqlSelect is SQL expression used as data source in SQL clause
      * @param alias is alias new table will get
@@ -311,7 +331,7 @@ public interface Sql {
     SqlFrom fromSql(String sqlSelect, SqlTableAlias alias);
 
     /**
-     * Create from clause based on Sql expression; String version
+     * Create from clause based on Sql expression; parse expression to retrieve binds
      *
      * @param sqlSelect is SQL expression used as data source in SQL clause
      * @param alias is alias new table will get
@@ -356,29 +376,61 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
+    SqlWhere whereDirect(String conditionSql);
+
+    /**
+     * Create where condition with binds
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @param binds is list of bind variables, associated with condition
+     * @return created where condition
+     */
+    @Nonnull
+    SqlWhere whereDirect(String conditionSql, BindName... binds);
+
+    /**
+     * Create where condition with binds
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @param binds is list of bind variables, associated with condition
+     * @return created where condition
+     */
+    @Nonnull
+    SqlWhere whereDirect(String conditionSql, List<BindName> binds);
+
+    /**
+     * Create where condition; parse supplied string to retrieve bind variables
+     *
+     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
+     *                    statement
+     * @return created where condition
+     */
+    @Nonnull
     SqlWhere whereSql(String conditionSql);
 
     /**
      * Create where condition with binds
      *
-     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
-     *                    statement
+     * @param conditionSql is text of condition to be added; parse supplied string to retrieve bind variables. Condition
+     *                    will be surrounded by brackets before adding to statement
      * @param binds is list of bind variables, associated with condition
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, BindName... binds);
+    SqlWhere whereSql(String conditionSql, BindVariable... binds);
 
     /**
      * Create where condition with binds
      *
-     * @param conditionSql is text of condition to be added. Condition will be surrounded by brackets before adding to
-     *                    statement
+     * @param conditionSql is text of condition to be added; parse supplied string to retrieve bind variables. Condition
+     *                    will be surrounded by brackets before adding to statement
      * @param binds is list of bind variables, associated with condition
      * @return created where condition
      */
     @Nonnull
-    SqlWhere whereSql(String conditionSql, List<BindName> binds);
+    SqlWhere whereSql(String conditionSql, Iterable<BindVariable> binds);
 
     /**
      * Combine multiple conditions using AND

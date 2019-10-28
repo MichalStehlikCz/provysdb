@@ -236,7 +236,7 @@ public interface CodeBuilder {
      * @return self to support chaining
      */
     @Nonnull
-    CodeBuilder applyBindVariables(Collection<BindVariable> bindVariables);
+    CodeBuilder applyBindVariables(Iterable<BindVariable> bindVariables);
 
     /**
      * Method retrieves code, produced by CodeBuilder.
