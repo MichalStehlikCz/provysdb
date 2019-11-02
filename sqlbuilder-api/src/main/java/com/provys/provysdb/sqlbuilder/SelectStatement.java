@@ -4,6 +4,7 @@ import com.provys.provysdb.dbcontext.DbResultSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * Class corresponds to PreparedStatement, built from Statement. It allows to bind values to variables, execute
@@ -12,12 +13,18 @@ import javax.annotation.Nullable;
 public interface SelectStatement extends AutoCloseable {
 
     /**
-     * Bind value to variable with specified name
      *
-     * @param bind is name of bind
-     * @param value is supplied value
-     * @return self to allow chaining
+     * @return collection of bind variables, associated with this statement (and available for binding)
      */
+    Collection<BindName> getBinds();
+
+        /**
+         * Bind value to variable with specified name
+         *
+         * @param bind is name of bind
+         * @param value is supplied value
+         * @return self to allow chaining
+         */
     @Nonnull
     SelectStatement bindValue(String bind, @Nullable Object value);
 

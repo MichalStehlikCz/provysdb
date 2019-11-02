@@ -2,15 +2,21 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbContext;
+import com.provys.provysdb.sqlbuilder.SqlAdmin;
 
 import javax.annotation.Nonnull;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  * Sql builder using admin connection to database (without switching Provys user context)
  */
-class SqlAdmin extends SqlBase {
+@ApplicationScoped
+class SqlAdminImpl extends SqlBase implements SqlAdmin {
 
-    SqlAdmin(DbContext dbContext) {
+    @SuppressWarnings("CdiInjectionPointsInspection")
+    @Inject
+    SqlAdminImpl(DbContext dbContext) {
         super(dbContext);
     }
 

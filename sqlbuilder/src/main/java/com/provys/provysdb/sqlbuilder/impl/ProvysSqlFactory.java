@@ -25,7 +25,7 @@ public class ProvysSqlFactory implements SqlFactory {
     @Nonnull
     @Override
     public Sql getSql() {
-        return new SqlAdmin(dbContext);
+        return new SqlAdminImpl(dbContext);
     }
 
     @Nonnull

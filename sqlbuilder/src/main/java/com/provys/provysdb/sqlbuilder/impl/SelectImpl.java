@@ -1,12 +1,14 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.Select;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
+/**
+ * Select statement together with associated bind variables, as created from select builder
+ */
 class SelectImpl implements Select {
 
     @Nonnull
@@ -21,7 +23,7 @@ class SelectImpl implements Select {
 
     SelectImpl(String sql, List<BindName> binds) {
         this.sql = Objects.requireNonNull(sql);
-        this.binds = new ArrayList<>(binds);
+        this.binds = List.copyOf(binds);
     }
 
     @Nonnull
@@ -33,7 +35,7 @@ class SelectImpl implements Select {
     @Nonnull
     @Override
     public List<BindName> getBinds() {
-        return Collections.unmodifiableList(binds);
+        return binds;
     }
 
     @Override

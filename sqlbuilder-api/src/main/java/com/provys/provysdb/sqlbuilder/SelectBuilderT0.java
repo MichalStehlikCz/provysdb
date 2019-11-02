@@ -3,20 +3,7 @@ package com.provys.provysdb.sqlbuilder;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-/**
- * Builder class used for construction of select statements.
- */
-@SuppressWarnings("UnusedReturnValue")
-public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
-
-    /**
-     * Add predefined column to list of columns
-     *
-     * @param column is definition of column to be added to statement
-     * @return self to support fluent build
-     */
-    @Nonnull
-    SelectBuilder column(SqlColumn column);
+public interface SelectBuilderT0 extends SelectBuilderT<SelectBuilderT0> {
 
     /**
      * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
@@ -27,7 +14,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(SqlIdentifier column, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(SqlIdentifier column, Class<T> clazz);
 
     /**
      * Add column with given name and alias
@@ -38,7 +25,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
      * Add column with given table alias, name and alias
@@ -50,7 +37,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
      * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
@@ -63,7 +50,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(String columnName, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(String columnName, Class<T> clazz);
 
     /**
      * Add new column; no alias is created, meaning column name will be used instead
@@ -76,7 +63,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(String tableAlias, String columnName, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(String tableAlias, String columnName, Class<T> clazz);
 
     /**
      * Add column with table alias, column name and alias
@@ -90,7 +77,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder column(String tableAlias, String columnName, String alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
 
     /**
      * Add column with given SQL text
@@ -100,7 +87,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnDirect(String columnSql, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnDirect(String columnSql, Class<T> clazz);
 
     /**
      * Add column with given SQL text and alias
@@ -111,7 +98,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnDirect(String sql, String alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -122,7 +109,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
+    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
@@ -133,7 +120,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
 
     /**
      * Add column with given SQL text, parse text for binds
@@ -143,7 +130,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnSql(String columnSql, Class<T> clazz);
 
     /**
      * Add column with given SQL text and alias, parse text for binds
@@ -154,7 +141,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Class<T> clazz);
 
     /**
      * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
@@ -166,7 +153,7 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds);
+    <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds);
 
     /**
      * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
@@ -178,5 +165,5 @@ public interface SelectBuilder extends SelectBuilderT<SelectBuilder> {
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
 }

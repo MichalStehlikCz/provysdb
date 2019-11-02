@@ -4,8 +4,6 @@ import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 class SqlColumnSimple extends SqlColumnBase {

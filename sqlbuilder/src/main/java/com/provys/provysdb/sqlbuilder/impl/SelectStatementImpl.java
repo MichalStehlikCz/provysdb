@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,37 +19,58 @@ public class SelectStatementImpl implements SelectStatement {
 
     private static final Logger LOG = LogManager.getLogger(SelectStatementImpl.class);
 
-    private final Select select;
-    private final DbConnection connection;
-    private final boolean closeConnection;
+    @Nonnull
+    private final String sqlText;
+    /** If selectStatement retrieved connection from context, it will be kept here and returned to pool on close;
+     * when connection is passed to constructor, it is not held here and thus not closed */
+    @Nullable
+    private DbConnection connection;
+    @Nonnull
     private final DbPreparedStatement statement;
-    private final Map<String, BindName> bindValues;
+    private final Map<String, BindWithPos> binds;
     private boolean closed = false;
 
-    SelectStatementImpl(Select select, Sql sqlContext) {
-        this.select = select;
-        this.connection = sqlContext.getConnection();
-        this.closeConnection = true;
-        try {
-            this.statement = this.connection.prepareStatement(select.getSqlText());
-        } catch (SQLException e) {
-            throw new InternalException(LOG, "Failed to parse statement " + select, e);
+    @Nonnull
+    private static Map<String, BindWithPos> getBinds(List<BindName> binds) {
+        // first construct list of positions for each supplied bind name
+        int pos = 0;
+        Map<BindName, List<Integer>> bindPosMap = new HashMap<>(binds.size());
+        for (var bind : binds) {
+            var posList = bindPosMap.computeIfAbsent(bind, val -> new ArrayList<>(3));
+            posList.add(pos++);
         }
-        this.bindValues = select.getBinds().stream()
-                .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
+        // and then convert bind + list of positions to BindWithPos
+        Map<String, BindWithPos> result = new HashMap<>(bindPosMap.size());
+        for (var bindWithPos : bindPosMap.entrySet()) {
+            result.put(bindWithPos.getKey().getName(), new BindWithPos(bindWithPos.getKey(), bindWithPos.getValue()));
+        }
+        return result;
+    }
+
+    SelectStatementImpl(String sqlText, List<BindName> binds, Sql sqlContext) {
+        this.sqlText = sqlText;
+        this.connection = sqlContext.getConnection();
+        try {
+            this.statement = this.connection.prepareStatement(sqlText);
+        } catch (SQLException e) {
+            throw new InternalException(LOG, "Failed to parse statement " + sqlText, e);
+        }
+        this.binds = getBinds(binds);
+    }
+
+    SelectStatementImpl(Select select, Sql sqlContext) {
+        this(select.getSqlText(), select.getBinds(), sqlContext);
     }
 
     SelectStatementImpl(Select select, DbConnection connection) {
-        this.select = select;
-        this.connection = connection;
-        this.closeConnection = false;
+        this.sqlText = select.getSqlText();
+        this.connection = null;
         try {
-            this.statement = this.connection.prepareStatement(select.getSqlText());
+            this.statement = connection.prepareStatement(select.getSqlText());
         } catch (SQLException e) {
             throw new InternalException(LOG, "Failed to parse statement " + select, e);
         }
-        this.bindValues = select.getBinds().stream()
-                .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
+        this.binds = getBinds(select.getBinds());
     }
 
     @Nonnull
@@ -58,11 +79,11 @@ public class SelectStatementImpl implements SelectStatement {
         if (closed) {
             throw new InternalException(LOG, "Attempt to bind value in closed statement " + this);
         }
-        var oldValue = bindValues.get(bind);
+        var oldValue = binds.get(bind);
         if (oldValue == null) {
             throw new InternalException(LOG, "Bind variable with name " + bind + " not found in statement " + this);
         }
-        bindValues.put(oldValue.getName(), oldValue.withValue(value));
+        oldValue.setValue(value);
         return this;
     }
 
@@ -72,16 +93,15 @@ public class SelectStatementImpl implements SelectStatement {
         return bindValue(bind.getName(), value);
     }
 
+    @Nonnull
+    @Override
+    public Collection<BindName> getBinds() {
+        return binds.values().stream().map(BindWithPos::getBind).collect(Collectors.toUnmodifiableList());
+    }
+
     private void bindValues() {
-        var bindPositions = select.getBindPositions();
-        for (var bindPosition : bindPositions.keySet()) {
-            var bindValue = bindValues.get(bindPosition.getName());
-            for (var position : bindPositions.get(bindPosition)) {
-                if (!(bindValue instanceof BindVariable)) {
-                    throw new InternalException(LOG, "Value not assigned to bind variable " + bindValue.getName());
-                }
-                ((BindVariable) bindValue).bind(statement, position);
-            }
+        for (var bind : binds.values()) {
+            bind.bindValue(statement);
         }
     }
 
@@ -112,7 +132,7 @@ public class SelectStatementImpl implements SelectStatement {
             // even if closing prepared statement failed, we will still try to close connection
             exception = e;
         }
-        if (closeConnection) {
+        if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
@@ -120,9 +140,72 @@ public class SelectStatementImpl implements SelectStatement {
                     throw new InternalException(LOG, "Error closing connection", e);
                 }
             }
+            connection = null;
         }
         if (exception != null) {
             throw new InternalException(LOG, "Error closing prepared statement", exception);
+        }
+    }
+
+    private static class BindWithPos {
+        private BindName bind;
+        private final List<Integer> positions;
+        /** indicates if bind value has been modified after last time it has been bound to prepared statement */
+        private boolean modified = true;
+
+        BindWithPos(BindName bind, List<Integer> positions) {
+            this.bind = bind;
+            this.positions = List.copyOf(positions);
+        }
+
+        /**
+         * @return value of field bind
+         */
+        BindName getBind() {
+            return bind;
+        }
+
+        /**
+         * Set value to given bind
+         *
+         * @param value is new value to be set
+         */
+        public void setValue(@Nullable Object value) {
+            var combinedBind = bind.withValue(value);
+            if (combinedBind == bind) {
+                return;
+            }
+            bind = combinedBind;
+            modified = true;
+        }
+
+        /**
+         * Set value to given bind
+         *
+         * @param bind is new value to be set
+         */
+        public void setBind(BindName bind) {
+            var combinedBind = this.bind.combine(bind);
+            if (combinedBind == this.bind) {
+                return;
+            }
+            this.bind = combinedBind;
+            modified = true;
+        }
+
+        void bindValue(DbPreparedStatement statement) {
+            if (!modified) {
+                // if value has not been modified, we do not have to rebind it
+                return;
+            }
+            if (!(bind instanceof BindVariable)) {
+                throw new InternalException(LOG, "Value not assigned to bind variable " + bind.getName());
+            }
+            BindVariable bindValue = (BindVariable) bind;
+            for (var position : positions) {
+                bindValue.bind(statement, position);
+            }
+            modified = false;
         }
     }
 }
