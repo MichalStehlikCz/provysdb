@@ -161,17 +161,16 @@ public interface Sql {
     SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
 
     /**
-     * Create new column
+     * Create new column; no alias is created, meaning column name will be sued instead and no table spec risking
+     * ambiguity if more tables are joined
      *
-     * @param tableAlias is alias of table column is in
      * @param columnName is name of column. It must be valid
      *                   column name (in "" or first character letter and remaining letters, numbers and characters $
      *                   and #). Use columnSql to add columns based on sql expressions
-     * @param alias is alias to be used for column
      * @return created column
      */
     @Nonnull
-    SqlColumn column(String tableAlias, String columnName, String alias);
+    SqlColumn column(String columnName);
 
     /**
      * Create new column; no alias is created, meaning column name will be sued instead
@@ -184,6 +183,19 @@ public interface Sql {
      */
     @Nonnull
     SqlColumn column(String tableAlias, String columnName);
+
+    /**
+     * Create new column
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param alias is alias to be used for column
+     * @return created column
+     */
+    @Nonnull
+    SqlColumn column(String tableAlias, String columnName, String alias);
 
     /**
      * Create column with given SQL text
@@ -316,18 +328,15 @@ public interface Sql {
     <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
-     * Create new column
+     * Create new column;it is created without table alias, risking ambiguity
      *
-     * @param tableAlias is alias of table column is in
-     * @param columnName is name of column. It must be valid
-     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
-     *                   and #). Use columnSql to add columns based on sql expressions
-     * @param alias is alias to be used for column
+     * @param columnName is name of column. It must be valid column name (in "" or first character letter and remaining
+     *                  letters, numbers and characters $ and #). Use columnSql to add columns based on sql expressions
      * @param clazz is type of return value of column
      * @return created column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
+    <T> SqlColumnT<T> column(String columnName, Class<T> clazz);
 
     /**
      * Create new column; no alias is created, meaning column name will be sued instead
@@ -341,6 +350,20 @@ public interface Sql {
      */
     @Nonnull
     <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
+
+    /**
+     * Create new column
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param alias is alias to be used for column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
 
     /**
      * Create column with given SQL text

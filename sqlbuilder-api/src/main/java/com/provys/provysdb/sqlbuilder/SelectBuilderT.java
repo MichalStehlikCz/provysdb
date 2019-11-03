@@ -92,32 +92,32 @@ public interface SelectBuilderT<T extends SelectBuilderT> {
     /**
      * Add column with given SQL text and alias
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnDirect(String sql, String alias);
+    SelectBuilder columnDirect(String columnSql, String alias);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnDirect(String sql, String alias, BindName... binds);
+    SelectBuilder columnDirect(String columnSql, String alias, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @return self to support fluent build
      */
     @Nonnull
-    SelectBuilder columnDirect(String sql, String alias, List<BindName> binds);
+    SelectBuilder columnDirect(String columnSql, String alias, List<BindName> binds);
 
     /**
      * Add column with given SQL text, parse text for binds

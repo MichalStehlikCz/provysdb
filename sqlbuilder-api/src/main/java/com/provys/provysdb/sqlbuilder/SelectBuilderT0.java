@@ -92,35 +92,35 @@ public interface SelectBuilderT0 extends SelectBuilderT<SelectBuilderT0> {
     /**
      * Add column with given SQL text and alias
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, Class<T> clazz);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
+    <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, Class<T> clazz, BindName... binds);
 
     /**
      * Add column with given SQL text, alias and binds to list of columns
      *
-     * @param sql is text that will be used as column definition
+     * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
      * @return self to support fluent build
      */
     @Nonnull
-    <T> SelectBuilderT1<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
+    <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, List<BindName> binds, Class<T> clazz);
 
     /**
      * Add column with given SQL text, parse text for binds

@@ -7,54 +7,57 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1Impl<T1>>
-        implements SelectBuilderT1<T1> {
+public class SelectBuilderT2Impl<T1, T2> extends SelectBuilderTImpl<SelectBuilderT2Impl<T1, T2>>
+        implements SelectBuilderT2<T1, T2> {
 
-    @Nonnull
     private final SqlColumnT<T1> column1;
+    private final SqlColumnT<T2> column2;
 
-    SelectBuilderT1Impl(Sql sql, SqlColumnT<T1> column1) {
+    SelectBuilderT2Impl(Sql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
         super(sql);
         this.column1 = Objects.requireNonNull(column1);
+        this.column2 = Objects.requireNonNull(column2);
     }
 
-    SelectBuilderT1Impl(Sql sql, SqlColumnT<T1> column1, List<SqlFrom> tables, Collection<Condition> conditions) {
+    SelectBuilderT2Impl(Sql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2, List<SqlFrom> tables,
+                        Collection<Condition> conditions) {
         super(sql, List.of(column1), tables, conditions);
         this.column1 = Objects.requireNonNull(column1);
+        this.column2 = Objects.requireNonNull(column2);
     }
 
     @Nonnull
     @Override
-    SelectBuilderT1Impl<T1> self() {
+    SelectBuilderT2Impl<T1, T2> self() {
         return this;
     }
 
     @Nonnull
     @Override
     public List<SqlColumn> getColumns() {
-        return List.of(column1);
+        return List.of(column1, column2);
     }
 
     @Nonnull
     @Override
     protected List<SqlColumn> getModifiableColumns() {
-        return List.of(column1);
+        return List.of(column1, column2);
     }
 
     @Nonnull
     @Override
-    public SelectBuilderT1Impl<T1> copy() {
-        return new SelectBuilderT1Impl<>(sql, column1, tables, conditions);
+    public SelectBuilderT2Impl<T1, T2> copy() {
+        return new SelectBuilderT2Impl<>(sql, column1, column2, tables, conditions);
     }
 
     @Nonnull
-    private <T> SelectBuilderT2<T1, T> column(SqlColumnT<T> column) {
-        return new SelectBuilderT2Impl<>(sql, column1, column, tables, conditions);
+    private <T> SelectBuilder column(SqlColumnT<T> column) {
+        return new SelectBuilderImpl(sql, List.of(column1, column2, column), tables, conditions);
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(SqlIdentifier column, Class<T> clazz) {
+    public <T> SelectBuilder column(SqlIdentifier column, Class<T> clazz) {
         if (tables.isEmpty()) {
             return column(sql.column(column, clazz));
         }
@@ -63,7 +66,7 @@ public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1I
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+    public <T> SelectBuilder column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         if (tables.isEmpty()) {
             return column(sql.column(column, alias, clazz));
         }
@@ -72,14 +75,14 @@ public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1I
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+    public <T> SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
                                          Class<T> clazz) {
         return column(sql.column(tableAlias, column, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(String columnName, Class<T> clazz) {
+    public <T> SelectBuilder column(String columnName, Class<T> clazz) {
         if (tables.isEmpty()) {
             return column(sql.column(columnName, clazz));
         }
@@ -88,61 +91,61 @@ public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1I
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(String tableAlias, String columnName, Class<T> clazz) {
+    public <T> SelectBuilder column(String tableAlias, String columnName, Class<T> clazz) {
         return column(sql.column(tableAlias, columnName, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
+    public <T> SelectBuilder column(String tableAlias, String columnName, String alias, Class<T> clazz) {
         return column(sql.column(tableAlias, columnName, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnDirect(String columnSql, Class<T> clazz) {
+    public <T> SelectBuilder columnDirect(String columnSql, Class<T> clazz) {
         return column(sql.columnDirect(columnSql, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnDirect(String columnSql, String alias, Class<T> clazz) {
+    public <T> SelectBuilder columnDirect(String columnSql, String alias, Class<T> clazz) {
         return column(sql.columnDirect(columnSql, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnDirect(String columnSql, String alias, Class<T> clazz, BindName... binds) {
+    public <T> SelectBuilder columnDirect(String columnSql, String alias, Class<T> clazz, BindName... binds) {
         return column(sql.columnDirect(columnSql, alias, clazz, binds));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnDirect(String columnSql, String alias, List<BindName> binds, Class<T> clazz) {
+    public <T> SelectBuilder columnDirect(String columnSql, String alias, List<BindName> binds, Class<T> clazz) {
         return column(sql.columnDirect(columnSql, alias, binds, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, Class<T> clazz) {
+    public <T> SelectBuilder columnSql(String columnSql, Class<T> clazz) {
         return column(sql.columnSql(columnSql, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Class<T> clazz) {
+    public <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz) {
         return column(sql.columnSql(columnSql, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds) {
+    public <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds) {
         return column(sql.columnSql(columnSql, alias, clazz, binds));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
+    public <T> SelectBuilder columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
         return column(sql.columnSql(columnSql, alias, binds, clazz));
     }
 }

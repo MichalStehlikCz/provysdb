@@ -3,6 +3,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +43,7 @@ public class SelectBuilderT0Impl extends SelectBuilderTImpl<SelectBuilderT0Impl>
         return new SelectBuilderT0Impl(sql, tables, conditions);
     }
 
+    @Nonnull
     private <T> SelectBuilderT1<T> column(SqlColumnT<T> column) {
         return new SelectBuilderT1Impl<>(sql, column, tables, conditions);
     }
@@ -49,84 +51,94 @@ public class SelectBuilderT0Impl extends SelectBuilderTImpl<SelectBuilderT0Impl>
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> column(SqlIdentifier column, Class<T> clazz) {
-        return null;
+        if (tables.isEmpty()) {
+            return column(sql.column(column, clazz));
+        }
+        return column(sql.column(tables.get(tables.size() - 1).getAlias(), column, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
-        return null;
+        if (tables.isEmpty()) {
+            return column(sql.column(column, alias, clazz));
+        }
+        return column(sql.column(tables.get(tables.size() - 1).getAlias(), column, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT1<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
-        return null;
+    public <T> SelectBuilderT1<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+                                         Class<T> clazz) {
+        return column(sql.column(tableAlias, column, alias, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> column(String columnName, Class<T> clazz) {
-        return null;
+        if (tables.isEmpty()) {
+            return column(sql.column(columnName, clazz));
+        }
+        return column(sql.column(tables.get(tables.size()-1).getAlias(), sql.name(columnName), clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> column(String tableAlias, String columnName, Class<T> clazz) {
-        return null;
+        return column(sql.column(tableAlias, columnName, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
-        return null;
+        return column(sql.column(tableAlias, columnName, alias, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> columnDirect(String columnSql, Class<T> clazz) {
-        return null;
+        return column(sql.columnDirect(columnSql, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz) {
-        return null;
+    public <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, Class<T> clazz) {
+        return column(sql.columnDirect(columnSql, alias, clazz));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT1<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds) {
-        return null;
+    public <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, Class<T> clazz, BindName... binds) {
+        return column(sql.columnDirect(columnSql, alias, clazz, binds));
     }
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT1<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz) {
-        return null;
+    public <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias, List<BindName> binds, Class<T> clazz) {
+        return column(sql.columnDirect(columnSql, alias, binds, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> columnSql(String columnSql, Class<T> clazz) {
-        return null;
+        return column(sql.columnSql(columnSql, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Class<T> clazz) {
-        return null;
+        return column(sql.columnSql(columnSql, alias, clazz));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds) {
-        return null;
+        return column(sql.columnSql(columnSql, alias, clazz, binds));
     }
 
     @Nonnull
     @Override
     public <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
-        return null;
+        return column(sql.columnSql(columnSql, alias, binds, clazz));
     }
 }

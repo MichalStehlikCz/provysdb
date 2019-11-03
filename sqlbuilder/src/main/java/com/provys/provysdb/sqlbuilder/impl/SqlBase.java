@@ -142,14 +142,20 @@ abstract class SqlBase implements Sql {
 
     @Nonnull
     @Override
-    public SqlColumn column(@Nullable String tableAlias, String columnName, String alias) {
-        return column((tableAlias == null) ? null : tableAlias(tableAlias), name(columnName), name(alias));
+    public SqlColumn column(String columnName) {
+        return new SqlColumnSimple(null, name(columnName), null);
     }
 
     @Nonnull
     @Override
     public SqlColumn column(String tableAlias, String columnName) {
         return new SqlColumnSimple(tableAlias(tableAlias), name(columnName), null);
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn column(String tableAlias, String columnName, String alias) {
+        return column(tableAlias(tableAlias), name(columnName), name(alias));
     }
 
     @Nonnull
@@ -224,6 +230,13 @@ abstract class SqlBase implements Sql {
     @Override
     public <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         return new SqlColumnTSimple<>(tableAlias, column, alias);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<T> column(String columnName, Class<T> clazz) {
+
+        return new SqlColumnTSimple<>(null, name(columnName), null);
     }
 
     @Nonnull
