@@ -4,7 +4,7 @@ import com.provys.common.exception.RegularException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbContext;
 import com.provys.provysdb.dbcontext.type.SqlTypeFactory;
-import com.provys.provysdb.dbcontext.type.SqlTypeMap;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Configuration;

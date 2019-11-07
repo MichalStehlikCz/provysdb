@@ -1,6 +1,8 @@
 package com.provys.provysdb.dbcontext.type;
 
 import com.provys.common.exception.InternalException;
+import com.provys.provysdb.dbcontext.SqlTypeAdapter;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

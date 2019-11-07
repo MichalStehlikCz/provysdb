@@ -1,5 +1,6 @@
 package com.provys.provysdb.dbcontext.type;
 
+import com.provys.provysdb.dbcontext.SqlTypeAdapter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

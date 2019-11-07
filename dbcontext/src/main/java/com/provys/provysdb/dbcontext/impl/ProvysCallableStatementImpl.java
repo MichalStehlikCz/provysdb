@@ -1,7 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.provysdb.dbcontext.DbCallableStatement;
-import com.provys.provysdb.dbcontext.type.SqlTypeMap;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 
 import java.io.InputStream;
 import java.io.Reader;

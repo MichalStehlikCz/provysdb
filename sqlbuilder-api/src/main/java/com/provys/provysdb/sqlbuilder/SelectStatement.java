@@ -1,10 +1,12 @@
 package com.provys.provysdb.sqlbuilder;
 
 import com.provys.provysdb.dbcontext.DbResultSet;
+import com.provys.provysdb.dbcontext.DbRowMapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Class corresponds to PreparedStatement, built from Statement. It allows to bind values to variables, execute
@@ -44,6 +46,26 @@ public interface SelectStatement extends AutoCloseable {
      * @return ResultSet containing data, retrieved by query
      */
     DbResultSet execute();
+
+    /**
+     * Execute associated statement (using connection fetched from underlying DataSource), fetch single row and return
+     * it. Throw exception if statement returns no or more than one row
+     *
+     * @param rowMapper is mapper used to translate fetched values to target type
+     * @param <T> is type of value to be returned
+     * @return fetched value
+     */
+    <T> T fetchOne(DbRowMapper<T> rowMapper);
+
+    /**
+     * Execute associated statement (using connection fetched from underlying DataSource), fetch all rows and return
+     * them
+     *
+     * @param rowMapper is mapper used to translate fetched values to target type
+     * @param <T> is type of value to be returned
+     * @return fetched value
+     */
+    <T> List<T> fetch(DbRowMapper<T> rowMapper);
 
     /**
      * Close statement. Will close underlying connection if it was initialized internally and not supplied to

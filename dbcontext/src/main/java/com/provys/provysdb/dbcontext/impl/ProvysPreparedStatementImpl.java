@@ -3,7 +3,7 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
-import com.provys.provysdb.dbcontext.type.SqlTypeMap;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -355,8 +355,14 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
         }
     }
 
+
     @Override
-    public <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException {
+    public <V> void setValue(int parameterIndex, Class<V> type, @Nullable V value) throws SQLException {
         sqlTypeMap.getAdapter(type).bindValue(statement, parameterIndex, value);
+    }
+
+    @Override
+    public SqlTypeMap getAdapterMap() {
+        return sqlTypeMap;
     }
 }

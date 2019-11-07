@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext.type;
 
+import com.provys.provysdb.dbcontext.SqlTypeMap;
+
 /**
  * Class given access to sql type adapter maps
  */

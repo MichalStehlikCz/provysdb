@@ -1,15 +1,19 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class SelectBuilderT0Impl extends SelectBuilderTImpl<SelectBuilderT0Impl>
         implements SelectBuilderT0 {
+
+    private static final Logger LOG = LogManager.getLogger(SelectBuilderT0Impl.class);
 
     SelectBuilderT0Impl(Sql sql) {
         super(sql);
@@ -140,5 +144,15 @@ public class SelectBuilderT0Impl extends SelectBuilderTImpl<SelectBuilderT0Impl>
     @Override
     public <T> SelectBuilderT1<T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
         return column(sql.columnSql(columnSql, alias, binds, clazz));
+    }
+
+    @Nonnull
+    public Select build() {
+        throw new InternalException(LOG, "Cannot build select statement with no columns " + this);
+    }
+
+    @Nonnull
+    public SelectStatement prepare() {
+        throw new InternalException(LOG, "Cannot build select statement with no columns " + this);
     }
 }

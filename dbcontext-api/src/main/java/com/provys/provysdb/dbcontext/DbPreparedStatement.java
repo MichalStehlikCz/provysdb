@@ -55,4 +55,11 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @throws SQLException when any problem is encountered on JDBC level
      */
     <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException;
+
+    /**
+     * Get type adapter map usable for given statement
+     *
+     * @return type adapter map associated with context this statement belongs to
+     */
+    SqlTypeMap getAdapterMap();
 }

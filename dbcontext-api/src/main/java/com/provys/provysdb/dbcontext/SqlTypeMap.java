@@ -1,4 +1,6 @@
-package com.provys.provysdb.dbcontext.type;
+package com.provys.provysdb.dbcontext;
+
+import com.provys.provysdb.dbcontext.SqlTypeAdapter;
 
 import javax.annotation.Nonnull;
 

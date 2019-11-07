@@ -142,7 +142,14 @@ public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1I
 
     @Nonnull
     @Override
-    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
+    public <T> SelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Iterable<BindVariable> binds,
+                                                Class<T> clazz) {
         return column(sql.columnSql(columnSql, alias, binds, clazz));
+    }
+
+    @Nonnull
+    public SelectStatementT1Impl<T1> prepare() {
+        var builder = builder();
+        return new SelectStatementT1Impl<>(builder.build(), builder.getBinds(), sql, column1);
     }
 }

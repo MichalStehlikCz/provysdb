@@ -211,82 +211,82 @@ abstract class SqlBase implements Sql {
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
-        return new SqlColumnTSimple<>(null, column, null);
+        return new SqlColumnTSimple<>(null, column, null, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
-        return new SqlColumnTSimple<>(null, column, alias);
+        return new SqlColumnTSimple<>(null, column, alias, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
-        return new SqlColumnTSimple<>(tableAlias, column, null);
+        return new SqlColumnTSimple<>(tableAlias, column, null, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
-        return new SqlColumnTSimple<>(tableAlias, column, alias);
+        return new SqlColumnTSimple<>(tableAlias, column, alias, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(String columnName, Class<T> clazz) {
 
-        return new SqlColumnTSimple<>(null, name(columnName), null);
+        return new SqlColumnTSimple<>(null, name(columnName), null, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz) {
-        return new SqlColumnTSimple<>(tableAlias(tableAlias), name(columnName), null);
+        return new SqlColumnTSimple<>(tableAlias(tableAlias), name(columnName), null, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
-        return new SqlColumnTSimple<>(tableAlias(tableAlias), name(columnName), name(alias));
+        return new SqlColumnTSimple<>(tableAlias(tableAlias), name(columnName), name(alias), clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnDirect(String sql, Class<T> clazz) {
-        return new SqlColumnTSql<>(sql, null);
+        return new SqlColumnTSql<>(sql, null, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz) {
-        return new SqlColumnTSql<>(sql, name(alias));
+        return new SqlColumnTSql<>(sql, name(alias), clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds) {
-        return new SqlColumnTSql<>(sql, name(alias), Arrays.asList(binds));
+        return new SqlColumnTSql<>(sql, name(alias), Arrays.asList(binds), clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz) {
-        return new SqlColumnTSql<>(sql, name(alias), binds);
+        return new SqlColumnTSql<>(sql, name(alias), binds, clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnSql(String sql, Class<T> clazz) {
         var builder = tokenizer.getBinds(sql);
-        return new SqlColumnTSql<>(builder.build(), null, builder.getBinds());
+        return new SqlColumnTSql<>(builder.build(), null, builder.getBinds(), clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz) {
         var builder = tokenizer.getBinds(sql);
-        return new SqlColumnTSql<>(builder.build(), name(alias), builder.getBinds());
+        return new SqlColumnTSql<>(builder.build(), name(alias), builder.getBinds(), clazz);
     }
 
     @Nonnull
@@ -299,7 +299,7 @@ abstract class SqlBase implements Sql {
     @Override
     public <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
         var builder = tokenizer.getBinds(sql).applyBindVariables(binds);
-        return new SqlColumnTSql<>(builder.build(), name(alias), builder.getBinds());
+        return new SqlColumnTSql<>(builder.build(), name(alias), builder.getBinds(), clazz);
     }
 
     @Nonnull

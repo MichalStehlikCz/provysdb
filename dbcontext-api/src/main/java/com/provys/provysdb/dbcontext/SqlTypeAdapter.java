@@ -1,4 +1,4 @@
-package com.provys.provysdb.dbcontext.type;
+package com.provys.provysdb.dbcontext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
