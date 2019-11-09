@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface defining root factory class for all objects, used for building Sql statements
@@ -284,7 +285,7 @@ public interface Sql {
     SqlColumn columnSql(String sql, String alias, Iterable<BindVariable> binds);
 
     /**
-     * Create column with given name
+     * Create mandatory column with given name
      *
      * @param column is name of table column to be assigned to column
      * @param clazz is type of return value of column
@@ -294,7 +295,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz);
 
     /**
-     * Create column with given name and alias
+     * Create mandatory column with given name and alias
      *
      * @param column is name of table column to be assigned to column
      * @param alias is alias to be sued for column
@@ -305,7 +306,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
-     * Create column with given table alias, name and alias
+     * Create mandatory column with given table alias, name and alias
      *
      * @param tableAlias is alias of table column is in
      * @param column is name of table column to be assigned to column
@@ -316,7 +317,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
 
     /**
-     * Create column with given table alias, name and alias
+     * Create mandatory column with given table alias, name and alias
      *
      * @param tableAlias is alias of table column is in
      * @param column is name of table column to be assigned to column
@@ -328,7 +329,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
-     * Create new column;it is created without table alias, risking ambiguity
+     * Create new mandatory column; it is created without table alias, risking ambiguity
      *
      * @param columnName is name of column. It must be valid column name (in "" or first character letter and remaining
      *                  letters, numbers and characters $ and #). Use columnSql to add columns based on sql expressions
@@ -339,7 +340,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(String columnName, Class<T> clazz);
 
     /**
-     * Create new column; no alias is created, meaning column name will be sued instead
+     * Create new mandatory column; no alias is created, meaning column name will be sued instead
      *
      * @param tableAlias is alias of table column is in
      * @param columnName is name of column. It must be valid
@@ -352,7 +353,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
 
     /**
-     * Create new column
+     * Create new mandatory column
      *
      * @param tableAlias is alias of table column is in
      * @param columnName is name of column. It must be valid
@@ -366,7 +367,7 @@ public interface Sql {
     <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
 
     /**
-     * Create column with given SQL text
+     * Create mandatory column with given SQL text
      *
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
@@ -376,7 +377,7 @@ public interface Sql {
     <T> SqlColumnT<T> columnDirect(String columnSql, Class<T> clazz);
 
     /**
-     * Create column with given SQL text and alias
+     * Create mandatory column with given SQL text and alias
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -387,7 +388,7 @@ public interface Sql {
     <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz);
 
     /**
-     * Add column with given SQL text, alias and binds to list of columns
+     * Add mandatory column with given SQL text, alias and binds to list of columns
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -399,7 +400,7 @@ public interface Sql {
     <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
 
     /**
-     * Add column with given SQL text, alias and binds to list of columns
+     * Add mandatory column with given SQL text, alias and binds to list of columns
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -412,7 +413,7 @@ public interface Sql {
     <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
 
     /**
-     * Create column with given SQL text and parse it for bind variables, expressed using :name notation
+     * Create mandatory column with given SQL text and parse it for bind variables, expressed using :name notation
      *
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
@@ -422,7 +423,8 @@ public interface Sql {
     <T> SqlColumnT<T> columnSql(String columnSql, Class<T> clazz);
 
     /**
-     * Create column with given SQL text and alias and parse it for bind variables, expressed using :name notation
+     * Create mandatory column with given SQL text and alias and parse it for bind variables, expressed using :name
+     * notation
      *
      * @param sql is text that will be used as column definition. Binds are parsed from text
      * @param alias is text that will be used as alias for new column
@@ -433,8 +435,8 @@ public interface Sql {
     <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz);
 
     /**
-     * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
-     * variables can be supplied to assign value and type to binds
+     * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
+     * bind variables can be supplied to assign value and type to binds
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -446,8 +448,8 @@ public interface Sql {
     <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz, BindVariable... binds);
 
     /**
-     * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
-     * variables can be supplied to assign value and type to binds
+     * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
+     * bind variables can be supplied to assign value and type to binds
      *
      * @param sql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
@@ -458,6 +460,191 @@ public interface Sql {
      */
     @Nonnull
     <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
+
+    /**
+     * Convert mandatory column to optional column of the same type
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(SqlColumnT<T> column);
+
+    /**
+     * Create optional column with given name
+     *
+     * @param column is name of table column to be assigned to column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, Class<T> clazz);
+
+    /**
+     * Create optional column with given name and alias
+     *
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+
+    /**
+     * Create optional column with given table alias, name and alias
+     *
+     * @param tableAlias is alias of table column is in
+     * @param column is name of table column to be assigned to column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
+
+    /**
+     * Create column with given table alias, name and alias
+     *
+     * @param tableAlias is alias of table column is in
+     * @param column is name of table column to be assigned to column
+     * @param alias is alias to be sued for column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+                                               Class<T> clazz);
+
+    /**
+     * Create new column;it is created without table alias, risking ambiguity
+     *
+     * @param columnName is name of column. It must be valid column name (in "" or first character letter and remaining
+     *                  letters, numbers and characters $ and #). Use columnSql to add columns based on sql expressions
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(String columnName, Class<T> clazz);
+
+    /**
+     * Create new column; no alias is created, meaning column name will be sued instead
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, Class<T> clazz);
+
+    /**
+     * Create new column
+     *
+     * @param tableAlias is alias of table column is in
+     * @param columnName is name of column. It must be valid
+     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
+     *                   and #). Use columnSql to add columns based on sql expressions
+     * @param alias is alias to be used for column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, String alias, Class<T> clazz);
+
+    /**
+     * Create optional column with given SQL text
+     *
+     * @param columnSql is text that will be used as column definition
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String columnSql, Class<T> clazz);
+
+    /**
+     * Create optional column with given SQL text and alias
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz);
+
+    /**
+     * Add optional column with given SQL text, alias and binds to list of columns
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param clazz is type of return value of column
+     * @param binds is list of binds used in column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz, BindName... binds);
+
+    /**
+     * Add optional column with given SQL text, alias and binds to list of columns
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
+     *             (e.g. using ? as placeholder)
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
+
+    /**
+     * Create optional column with given SQL text and parse it for bind variables, expressed using :name notation
+     *
+     * @param columnSql is text that will be used as column definition
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalSql(String columnSql, Class<T> clazz);
+
+    /**
+     * Create optional column with given SQL text and alias and parse it for bind variables, expressed using :name
+     * notation
+     *
+     * @param sql is text that will be used as column definition. Binds are parsed from text
+     * @param alias is text that will be used as alias for new column
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz);
+
+    /**
+     * Add optional column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
+     * bind variables can be supplied to assign value and type to binds
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param clazz is type of return value of column
+     * @param binds is list of binds used in column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz, BindVariable... binds);
+
+    /**
+     * Add optional column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
+     * bind variables can be supplied to assign value and type to binds
+     *
+     * @param sql is text that will be used as column definition
+     * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
+     *             (e.g. using ? as placeholder)
+     * @param clazz is type of return value of column
+     * @return created column
+     */
+    @Nonnull
+    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Iterable<BindVariable> binds,
+                                                  Class<T> clazz);
 
     /**
      * Create Sql table alias object based on supplied text. Validates text during creation.

@@ -218,7 +218,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
     }
 
     @Nonnull
-    public <T> T fetchOne(DbRowMapper<T> rowMapper) {
+    public <T> T fetchOneNoClose(DbRowMapper<T> rowMapper) {
         T result;
         try (var resultSet = execute()) {
             if (!resultSet.next()) {
@@ -235,7 +235,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
     }
 
     @Nonnull
-    public <T> List<T> fetch(DbRowMapper<T> rowMapper) {
+    public <T> List<T> fetchNoClose(DbRowMapper<T> rowMapper) {
         List<T> result = new ArrayList<>();
         try (var resultSet = execute()) {
             long row = 0;
@@ -249,18 +249,54 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
     }
 
     @Nonnull
-    public <T> Stream<T> stream(DbRowMapper<T> rowMapper) {
+    private <T> Stream<T> stream(DbRowMapper<T> rowMapper, boolean close) {
         var resultSet = execute();
         return StreamSupport
                 .stream(Spliterators.spliteratorUnknownSize(new DbResultSetIterator<>(rowMapper, resultSet),
                         Spliterator.ORDERED), false)
                 .onClose(() -> {
+                    // close both result and this statement
+                    Exception exception = null;
                     try {
                         resultSet.close();
                     } catch (SQLException e) {
-                        throw new InternalException(LOG, "Error fetching data from statement " + this, e);
+                        exception = e;
+                    }
+                    if (close) {
+                        this.close();
+                    }
+                    if (exception != null) {
+                        throw new InternalException(LOG, "Error fetching data from statement " + this, exception);
                     }
                 });
+    }
+
+    @Nonnull
+    public <T> T fetchOne(DbRowMapper<T> rowMapper) {
+        try {
+            return fetchOneNoClose(rowMapper);
+        } finally {
+            close();
+        }
+    }
+
+    @Nonnull
+    public <T> List<T> fetch(DbRowMapper<T> rowMapper) {
+        try {
+            return fetchNoClose(rowMapper);
+        } finally {
+            close();
+        }
+    }
+
+    @Nonnull
+    public <T> Stream<T> stream(DbRowMapper<T> rowMapper) {
+        return stream(rowMapper, true);
+    }
+
+    @Nonnull
+    public <T> Stream<T> streamNoClose(DbRowMapper<T> rowMapper) {
+        return stream(rowMapper, false);
     }
 
     private static class DbResultSetIterator<T> implements Iterator<T> {

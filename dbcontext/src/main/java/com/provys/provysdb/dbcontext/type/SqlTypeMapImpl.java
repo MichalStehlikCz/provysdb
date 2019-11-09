@@ -16,35 +16,31 @@ class SqlTypeMapImpl implements SqlTypeMap {
     private static final Logger LOG = LogManager.getLogger(SqlTypeMapImpl.class);
 
     private final Map<Class<?>, SqlTypeAdapter<?>> adaptersByClass;
+    private final Map<Class<?>, SqlTypeAdapter<?>> optionalAdaptersByClass;
 
     SqlTypeMapImpl(Collection<SqlTypeAdapter<?>> adapters) {
         adaptersByClass = new ConcurrentHashMap<>(adapters.size());
+        optionalAdaptersByClass = new ConcurrentHashMap<>(adapters.size());
         for (var adapter : adapters) {
             var old = adaptersByClass.put(adapter.getType(), Objects.requireNonNull(adapter));
             if ((old!=null) && (!adapter.equals(old))) {
                 LOG.warn("Replaced mapping of Sql type adapter for class {}; old {}, new {}", adapter::getType,
                         old::toString, adapter::toString);
             }
+            optionalAdaptersByClass.put(adapter.getType(), new SqlAdapterToOptional<>(adapter));
         }
     }
 
     SqlTypeMapImpl(SqlTypeAdapter<?>... adapters) {
-        adaptersByClass = new ConcurrentHashMap<>(adapters.length);
-        for (var adapter : adapters) {
-            var old = adaptersByClass.put(adapter.getType(), Objects.requireNonNull(adapter));
-            if ((old!=null) && (!adapter.equals(old))) {
-                LOG.warn("Replaced mapping of Sql type adapter for class {}; old {}, new {}", adapter::getType,
-                        old::toString, adapter::toString);
-            }
-        }
+        this(Arrays.asList(adapters));
     }
 
     @Nullable
-    private SqlTypeAdapter getAdapterSuper(Class<?> type) {
+    private static SqlTypeAdapter getAdapterSuper(Class<?> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
         Class currentType = type;
         // first try to find adapter for type in superclasses
         while (currentType != null) {
-            var result = adaptersByClass.get(currentType);
+            var result = adapterMap.get(currentType);
             if (result != null) {
                 return result;
             }
@@ -54,7 +50,7 @@ class SqlTypeMapImpl implements SqlTypeMap {
     }
 
     @Nullable
-    private SqlTypeAdapter getAdapterInterface(Class<?> type) {
+    private static SqlTypeAdapter getAdapterInterface(Class<?> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
         Deque<Class> classes = new ArrayDeque<>();
         Class currentType = type;
         // first put superclasses in queue
@@ -65,7 +61,7 @@ class SqlTypeMapImpl implements SqlTypeMap {
         // next go through queue, check if there is adapter for it and register its superinterfaces
         while (!classes.isEmpty()) {
             currentType = classes.pollFirst();
-            var result = adaptersByClass.get(currentType);
+            var result = adapterMap.get(currentType);
             if (result != null) {
                 return result;
             }
@@ -80,15 +76,31 @@ class SqlTypeMapImpl implements SqlTypeMap {
     @Nonnull
     public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
         // first try to find in supertype... mostly successful so better to try it before heavy weight search
-        SqlTypeAdapter result = getAdapterSuper(type);
+        SqlTypeAdapter result = getAdapterSuper(type, adaptersByClass);
         // next go through class hierarchy once more, but this time use interfaces
         if (result == null) {
-            result = getAdapterInterface(type);
+            result = getAdapterInterface(type, adaptersByClass);
             if (result == null) {
                 throw new InternalException(LOG, "No sql type adapter found for class " + type);
             }
         }
         //noinspection unchecked
         return  (SqlTypeAdapter<T>) result;
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlTypeAdapter<Optional<T>> getOptionalAdapter(Class<T> type) {
+        // first try to find in supertype... mostly successful so better to try it before heavy weight search
+        SqlTypeAdapter result = getAdapterSuper(type, optionalAdaptersByClass);
+        // next go through class hierarchy once more, but this time use interfaces
+        if (result == null) {
+            result = getAdapterInterface(type, optionalAdaptersByClass);
+            if (result == null) {
+                throw new InternalException(LOG, "No sql type adapter found for class " + type);
+            }
+        }
+        //noinspection unchecked
+        return  (SqlTypeAdapter<Optional<T>>) result;
     }
 }

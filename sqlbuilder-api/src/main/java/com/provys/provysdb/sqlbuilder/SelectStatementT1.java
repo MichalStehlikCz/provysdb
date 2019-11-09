@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -14,7 +13,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
 
     /**
      * Execute associated statement (using connection fetched from underlying DataSource) and return fetched value. Can
-     * only be used on non-null value and for query returning exactly one line
+     * only be used for query returning exactly one line. Close this statement after fetch.
      *
      * @return value, retrieved by query
      */
@@ -22,17 +21,8 @@ public interface SelectStatementT1<T1> extends SelectStatement {
     T1 fetchOne();
 
     /**
-     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched value. Can
-     * only be used even for null values and for query returning exactly one line
-     *
-     * @return value, retrieved by query
-     */
-    @Nonnull
-    Optional<T1> fetchOneOptional();
-
-    /**
-     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched values. Can
-     * only be used on non-null value columns
+     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched values.
+     * Close this statement after fetch.
      *
      * @return list of fetched values
      */
@@ -40,18 +30,9 @@ public interface SelectStatementT1<T1> extends SelectStatement {
     List<T1> fetch();
 
     /**
-     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched values. Can
-     * be used even on null value columns
-     *
-     * @return list of fetched values
-     */
-    @Nonnull
-    List<Optional<T1>> fetchOptional();
-
-    /**
      * Execute associated statement (using connection, fetched from underlying DataSource) and return stream of fetched
-     * values. Can only be used on non-null value columns. Returned stream holds underlying statement opened and should
-     * be closed explicitly
+     * values. Returned stream holds underlying statement opened and should be closed explicitly. Close both resultset
+     * and this statement when stream is closed
      *
      * @return stream with returned values
      */
@@ -59,12 +40,29 @@ public interface SelectStatementT1<T1> extends SelectStatement {
     Stream<T1> stream();
 
     /**
+     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched value. Can
+     * only be used for query returning exactly one line
+     *
+     * @return value, retrieved by query
+     */
+    @Nonnull
+    T1 fetchOneNoClose();
+
+    /**
+     * Execute associated statement (using connection fetched from underlying DataSource) and return fetched values.
+     *
+     * @return list of fetched values
+     */
+    @Nonnull
+    List<T1> fetchNoClose();
+
+    /**
      * Execute associated statement (using connection, fetched from underlying DataSource) and return stream of fetched
-     * values. Can be used even on null value columns. Returned stream holds underlying statement opened and should
-     * be closed explicitly
+     * values. Returned stream holds underlying resultset opened and should be closed explicitly. Note that no further
+     * fetch / stream operations should be performed on this statement until stream is closed
      *
      * @return stream with returned values
      */
     @Nonnull
-    Stream<Optional<T1>> streamOptional();
+    Stream<T1> streamNoClose();
 }

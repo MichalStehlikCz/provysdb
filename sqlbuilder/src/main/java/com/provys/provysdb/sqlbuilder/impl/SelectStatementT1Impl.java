@@ -6,7 +6,6 @@ import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Impl<T1>>
@@ -39,14 +38,7 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
     @Nonnull
     private DbRowMapper<T1> getRowMapper() {
         return ((resultSet, rowNumber)
-                -> getStatement().getAdapterMap().getAdapter(column1.getType()).readValue(resultSet, 1));
-    }
-
-    @Nonnull
-    private DbRowMapper<Optional<T1>> getOptionalRowMapper() {
-        return ((resultSet, rowNumber)
-                -> getStatement().getAdapterMap().getAdapter(column1.getType())
-                .readOptionalValue(resultSet, 1));
+                -> column1.getAdapter(getStatement().getAdapterMap()).readValue(resultSet, 1));
     }
 
     @Nonnull
@@ -57,20 +49,8 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
 
     @Nonnull
     @Override
-    public Optional<T1> fetchOneOptional() {
-        return fetchOne(getOptionalRowMapper());
-    }
-
-    @Nonnull
-    @Override
     public List<T1> fetch() {
         return fetch(getRowMapper());
-    }
-
-    @Nonnull
-    @Override
-    public List<Optional<T1>> fetchOptional() {
-        return fetch(getOptionalRowMapper());
     }
 
     @Nonnull
@@ -81,7 +61,19 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
 
     @Nonnull
     @Override
-    public Stream<Optional<T1>> streamOptional() {
-        return stream(getOptionalRowMapper());
+    public T1 fetchOneNoClose() {
+        return fetchOneNoClose(getRowMapper());
+    }
+
+    @Nonnull
+    @Override
+    public List<T1> fetchNoClose() {
+        return fetchNoClose(getRowMapper());
+    }
+
+    @Nonnull
+    @Override
+    public Stream<T1> streamNoClose() {
+        return streamNoClose(getRowMapper());
     }
 }
