@@ -462,12 +462,6 @@ public interface Sql {
     <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
 
     /**
-     * Convert mandatory column to optional column of the same type
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(SqlColumnT<T> column);
-
-    /**
      * Create optional column with given name
      *
      * @param column is name of table column to be assigned to column

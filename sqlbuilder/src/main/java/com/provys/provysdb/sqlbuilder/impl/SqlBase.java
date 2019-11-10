@@ -293,14 +293,109 @@ abstract class SqlBase implements Sql {
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz, BindVariable... binds) {
-        return columnSql(sql, alias, Arrays.asList(binds), clazz);
+        return column(columnSql(sql, alias, binds), clazz);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
-        var builder = tokenizer.getBinds(sql).applyBindVariables(binds);
-        return new SqlColumnTImpl<>(builder.build(), name(alias), builder.getBinds(), clazz);
+        return column(columnSql(sql, alias, binds), clazz);
+    }
+
+    @Nonnull
+    private <T> SqlColumnT<Optional<T>> columnOptional(SqlColumn column, Class<T> clazz) {
+        return new SqlColumnOptionalT<>(column, clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, Class<T> clazz) {
+        return columnOptional(column(column), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+        return columnOptional(column(column, alias), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
+        return columnOptional(column(tableAlias, column), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column,
+                                                      SqlIdentifier alias, Class<T> clazz) {
+        return columnOptional(column(tableAlias, column, alias), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(String columnName, Class<T> clazz) {
+        return columnOptional(column(columnName), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, Class<T> clazz) {
+        return columnOptional(column(tableAlias, columnName), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, String alias, Class<T> clazz) {
+        return columnOptional(column(tableAlias, columnName, alias), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalDirect(String columnSql, Class<T> clazz) {
+        return columnOptional(columnDirect(columnSql), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz) {
+        return columnOptional(columnDirect(sql, alias), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz, BindName... binds) {
+        return columnOptional(columnDirect(sql, alias, binds), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, List<BindName> binds, Class<T> clazz) {
+        return columnOptional(columnDirect(sql, alias, binds), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalSql(String columnSql, Class<T> clazz) {
+        return columnOptional(columnSql(columnSql), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz) {
+        return columnOptional(columnSql(sql, alias), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz, BindVariable... binds) {
+        return columnOptional(columnSql(sql, alias, binds), clazz);
+    }
+
+    @Nonnull
+    @Override
+    public <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz) {
+        return columnOptional(columnSql(sql, alias, binds), clazz);
     }
 
     @Nonnull
