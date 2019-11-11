@@ -12,17 +12,17 @@ import static org.mockito.Mockito.*;
  * Implementation of Sql interface using SqlBase, that mocks database connection; calls to retrieve connection will fail
  * unless (likely mocked) connection is supplied during construction
  */
-public class SqlTest extends SqlBase {
+public class TestSql extends SqlBase {
 
     @Nullable
     private final DbConnection connection;
 
-    SqlTest() {
+    TestSql() {
         super(mock(DbContext.class));
         connection = null;
     }
 
-    SqlTest(DbConnection connection) {
+    TestSql(DbConnection connection) {
         super(mock(DbContext.class));
         this.connection = connection;
     }

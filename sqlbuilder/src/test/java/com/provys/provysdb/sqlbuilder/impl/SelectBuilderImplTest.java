@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class SelectBuilderImplTest {
 
-    private static final Sql sql = new SqlTest();
+    private static final Sql sql = new TestSql();
 
     @Test
     void select1FromDualTest() {

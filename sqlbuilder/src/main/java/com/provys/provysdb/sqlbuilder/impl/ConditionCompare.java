@@ -34,7 +34,7 @@ class ConditionCompare implements Condition {
 
     @Override
     public boolean isEmpty() {
-        return first.equals(second);
+        return (comparison == SqlSymbol.EQUAL) && first.equals(second);
     }
 
     @Override
