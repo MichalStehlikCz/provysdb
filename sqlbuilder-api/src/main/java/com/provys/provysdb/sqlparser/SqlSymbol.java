@@ -8,25 +8,25 @@ import java.util.Optional;
 
 public enum SqlSymbol {
 
-    PARAM_VALUE("=>"),
-    ASSIGNMENT(":="),
-    NOT_EQUAL("!="),
-    LESS_OR_EQUAL("<="),
-    GREATER_OR_EQUAL(">="),
-    INEQUAL("<>"),
-    OPENING_BRACKET("("),
-    CLOSING_BRACKET(")"),
-    COMMA(","),
-    PLUS("+"),
-    MINUS("-"),
-    SLASH("/"),
-    STAR("*"),
-    SEMICOLON(";"),
-    DOT("."),
-    PERCENTAGE("%"),
-    EQUAL("="),
-    GRATER_THAN(">"),
-    LESS_THAN("<");
+    PARAM_VALUE("=>", false),
+    ASSIGNMENT(":=", false),
+    NOT_EQUAL("!=", true),
+    LESS_OR_EQUAL("<=", true),
+    GREATER_OR_EQUAL(">=", true),
+    INEQUAL("<>", true),
+    OPENING_BRACKET("(", false),
+    CLOSING_BRACKET(")", false),
+    COMMA(",", false),
+    PLUS("+", false),
+    MINUS("-", false),
+    SLASH("/", false),
+    STAR("*", false),
+    SEMICOLON(";", false),
+    DOT(".", false),
+    PERCENTAGE("%", false),
+    EQUAL("=", true),
+    GRATER_THAN(">", true),
+    LESS_THAN("<", true);
 
     @Nonnull
     private static final Map<String, SqlSymbol> valueBySymbol = new HashMap<>();
@@ -43,13 +43,22 @@ public enum SqlSymbol {
 
     @Nonnull
     private final String symbol;
+    boolean comparison;
 
-    SqlSymbol(String symbol) {
+    SqlSymbol(String symbol, boolean comparison) {
         this.symbol = Objects.requireNonNull(symbol);
+        this.comparison = comparison;
     }
 
     @Nonnull
     public String getSymbol() {
         return symbol;
+    }
+
+    /**
+     * @return value of field comparison
+     */
+    public boolean isComparison() {
+        return comparison;
     }
 }

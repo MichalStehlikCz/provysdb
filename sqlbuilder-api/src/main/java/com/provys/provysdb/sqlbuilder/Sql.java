@@ -852,4 +852,46 @@ public interface Sql {
      */
     @Nonnull
     ConditionJoiner conditionOrJoiner();
+
+    /**
+     * @return create and return equals comparison
+     */
+    @Nonnull
+    <T> Condition eq(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return not equals comparison
+     */
+    @Nonnull
+    <T> Condition notEq(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return less than comparison
+     */
+    @Nonnull
+    <T> Condition lessThan(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return less or equal comparison
+     */
+    @Nonnull
+    <T> Condition lessOrEqual(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return greater than comparison
+     */
+    @Nonnull
+    <T> Condition greaterThan(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return greater or equal comparison
+     */
+    @Nonnull
+    <T> Condition greaterOrEqual(ExpressionT<T> first, ExpressionT<T> second);
+
+    /**
+     * @return create and return is null expression
+     */
+    @Nonnull
+    <T> Condition isNull(ExpressionT<T> first);
 }

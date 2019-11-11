@@ -4,6 +4,7 @@ import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.provysdb.dbcontext.DbContext;
 import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlparser.SqlSymbol;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
 import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
 
@@ -532,5 +533,52 @@ abstract class SqlBase implements Sql {
     @Override
     public ConditionJoiner conditionOrJoiner() {
         return new ConditionJoinerImpl(SqlConditionOperator.OR);
+    }
+
+    @Nonnull
+    private <T> Condition compare(ExpressionT<T> first, ExpressionT<T> second, SqlSymbol comparison) {
+        return new ConditionCompare(first, second, comparison);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition eq(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.EQUAL);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition notEq(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.NOT_EQUAL);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition lessThan(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.LESS_THAN);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition lessOrEqual(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.LESS_OR_EQUAL);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition greaterThan(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.GRATER_THAN);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition greaterOrEqual(ExpressionT<T> first, ExpressionT<T> second) {
+        return compare(first, second, SqlSymbol.GREATER_OR_EQUAL);
+    }
+
+    @Nonnull
+    @Override
+    public <T> Condition isNull(ExpressionT<T> first) {
+        return new ConditionIsNull(first);
     }
 }
