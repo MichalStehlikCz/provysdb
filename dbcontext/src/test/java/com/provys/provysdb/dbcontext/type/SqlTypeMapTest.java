@@ -14,7 +14,9 @@ class SqlTypeMapTest {
     @Test
     void getAdapterTestSimple() {
         var adapterInt = mock(SqlTypeAdapter.class);
+        when(adapterInt.getType()).thenReturn(Integer.class);
         var adapterNumber = mock(SqlTypeAdapter.class);
+        when(adapterNumber.getType()).thenReturn(Number.class);
         var map = new SqlTypeMapImpl(List.of(adapterInt, adapterNumber));
         assertThat(map.getAdapter(Integer.class)).isEqualTo(adapterInt);
         assertThat(map.getAdapter(Number.class)).isEqualTo(adapterNumber);
@@ -23,6 +25,7 @@ class SqlTypeMapTest {
     @Test
     void getAdapterTestInterface() {
         var adapterNumber = mock(SqlTypeAdapter.class);
+        when(adapterNumber.getType()).thenReturn(Number.class);
         var map = new SqlTypeMapImpl(adapterNumber);
         assertThat(map.getAdapter(Integer.class)).isEqualTo(adapterNumber);
     }
