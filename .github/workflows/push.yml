@@ -24,6 +24,8 @@ jobs:
       with:
         java-version: 11
     - name: Set up settings.xml
+      env:
+        TOKEN: ${{secrets.GPA}}
       run: |
         mkdir ~/.m2
         echo '<settings><servers><server><id>github</id><username>MichalStehlikCz</username><password>${env.TOKEN}</password></server></servers></settings>' > ~/.m2/settings.xml
