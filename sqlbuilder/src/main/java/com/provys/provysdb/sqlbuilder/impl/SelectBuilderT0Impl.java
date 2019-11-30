@@ -16,11 +16,11 @@ public class SelectBuilderT0Impl extends SelectBuilderTImpl<SelectBuilderT0Impl>
 
     private static final Logger LOG = LogManager.getLogger(SelectBuilderT0Impl.class);
 
-    SelectBuilderT0Impl(Sql sql) {
+    SelectBuilderT0Impl(DbSql sql) {
         super(sql);
     }
 
-    SelectBuilderT0Impl(Sql sql, List<SqlFrom> tables, Collection<Condition> conditions) {
+    SelectBuilderT0Impl(DbSql sql, List<SqlFrom> tables, Collection<Condition> conditions) {
         super(sql, List.of(), tables, conditions);
     }
 

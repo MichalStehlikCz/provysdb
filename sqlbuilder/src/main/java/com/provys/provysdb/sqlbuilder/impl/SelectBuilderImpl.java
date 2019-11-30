@@ -9,12 +9,12 @@ class SelectBuilderImpl extends SelectBuilderTImpl<SelectBuilderImpl> implements
 
     private final List<SqlColumn> columns;
 
-    SelectBuilderImpl(Sql sql) {
+    SelectBuilderImpl(DbSql sql) {
         super(sql);
         columns = new ArrayList<>(5);
     }
 
-    SelectBuilderImpl(Sql sql, List<SqlColumn> columns, List<SqlFrom> tables, Collection<Condition> conditions) {
+    SelectBuilderImpl(DbSql sql, List<SqlColumn> columns, List<SqlFrom> tables, Collection<Condition> conditions) {
         super(sql, columns, tables, conditions);
         this.columns = new ArrayList<>(columns);
     }

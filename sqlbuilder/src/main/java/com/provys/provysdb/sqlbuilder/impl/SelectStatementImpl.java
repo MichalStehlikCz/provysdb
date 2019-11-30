@@ -1,6 +1,5 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.sqlbuilder.*;
 
@@ -9,11 +8,11 @@ import java.util.List;
 
 class SelectStatementImpl extends SelectStatementTImpl<SelectStatementImpl> implements SelectStatement {
 
-    SelectStatementImpl(String sqlText, List<BindName> binds, Sql sqlContext) {
+    SelectStatementImpl(String sqlText, List<BindName> binds, DbSql sqlContext) {
         super(sqlText, binds, sqlContext);
     }
 
-    SelectStatementImpl(Select select, Sql sqlContext) {
+    SelectStatementImpl(Select select, DbSql sqlContext) {
         super(select, sqlContext);
     }
 

@@ -14,12 +14,12 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
     @Nonnull
     private final SqlColumnT<T1> column1;
 
-    SelectStatementT1Impl(String sqlText, List<BindName> binds, Sql sqlContext, SqlColumnT<T1> column1) {
+    SelectStatementT1Impl(String sqlText, List<BindName> binds, DbSql sqlContext, SqlColumnT<T1> column1) {
         super(sqlText, binds, sqlContext);
         this.column1 = column1;
     }
 
-    SelectStatementT1Impl(Select select, Sql sqlContext, SqlColumnT<T1> column1) {
+    SelectStatementT1Impl(Select select, DbSql sqlContext, SqlColumnT<T1> column1) {
         super(select, sqlContext);
         this.column1 = column1;
     }

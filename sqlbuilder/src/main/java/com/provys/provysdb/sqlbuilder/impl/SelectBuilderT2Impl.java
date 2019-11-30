@@ -13,13 +13,13 @@ public class SelectBuilderT2Impl<T1, T2> extends SelectBuilderTImpl<SelectBuilde
     private final SqlColumnT<T1> column1;
     private final SqlColumnT<T2> column2;
 
-    SelectBuilderT2Impl(Sql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
+    SelectBuilderT2Impl(DbSql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
         super(sql);
         this.column1 = Objects.requireNonNull(column1);
         this.column2 = Objects.requireNonNull(column2);
     }
 
-    SelectBuilderT2Impl(Sql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2, List<SqlFrom> tables,
+    SelectBuilderT2Impl(DbSql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2, List<SqlFrom> tables,
                         Collection<Condition> conditions) {
         super(sql, List.of(column1), tables, conditions);
         this.column1 = Objects.requireNonNull(column1);

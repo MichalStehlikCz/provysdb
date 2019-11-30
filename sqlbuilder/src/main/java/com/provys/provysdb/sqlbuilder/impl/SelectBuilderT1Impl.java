@@ -13,12 +13,12 @@ public class SelectBuilderT1Impl<T1> extends SelectBuilderTImpl<SelectBuilderT1I
     @Nonnull
     private final SqlColumnT<T1> column1;
 
-    SelectBuilderT1Impl(Sql sql, SqlColumnT<T1> column1) {
+    SelectBuilderT1Impl(DbSql sql, SqlColumnT<T1> column1) {
         super(sql);
         this.column1 = Objects.requireNonNull(column1);
     }
 
-    SelectBuilderT1Impl(Sql sql, SqlColumnT<T1> column1, List<SqlFrom> tables, Collection<Condition> conditions) {
+    SelectBuilderT1Impl(DbSql sql, SqlColumnT<T1> column1, List<SqlFrom> tables, Collection<Condition> conditions) {
         super(sql, List.of(column1), tables, conditions);
         this.column1 = Objects.requireNonNull(column1);
     }

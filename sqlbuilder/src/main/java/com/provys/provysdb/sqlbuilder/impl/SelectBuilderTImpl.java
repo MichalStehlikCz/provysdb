@@ -15,13 +15,13 @@ abstract class SelectBuilderTImpl<T extends SelectBuilderTImpl<T>> {
 
     private static final Logger LOG = LogManager.getLogger(SelectBuilderTImpl.class);
 
-    protected final Sql sql;
+    protected final DbSql sql;
     protected final Map<SqlIdentifier, SqlColumn> columnByName;
     protected final List<SqlFrom> tables;
     protected final Map<SqlTableAlias, SqlFrom> tableByAlias;
     protected final List<Condition> conditions;
 
-    SelectBuilderTImpl(Sql sql) {
+    SelectBuilderTImpl(DbSql sql) {
         this.sql = Objects.requireNonNull(sql);
         columnByName = new ConcurrentHashMap<>(5);
         tables = new ArrayList<>(2);
@@ -29,7 +29,7 @@ abstract class SelectBuilderTImpl<T extends SelectBuilderTImpl<T>> {
         conditions = new ArrayList<>(5);
     }
 
-    SelectBuilderTImpl(Sql sql, List<SqlColumn> columns, List<SqlFrom> tables, Collection<Condition> conditions) {
+    SelectBuilderTImpl(DbSql sql, List<SqlColumn> columns, List<SqlFrom> tables, Collection<Condition> conditions) {
         this.sql = Objects.requireNonNull(sql);
         this.columnByName = columns.stream().filter(column -> column.getAlias().isPresent()).collect(
                 Collectors.toConcurrentMap(column -> column.getAlias().orElse(null), Function.identity()));

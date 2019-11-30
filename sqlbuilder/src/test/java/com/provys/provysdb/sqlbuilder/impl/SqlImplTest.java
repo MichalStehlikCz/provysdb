@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class SqlBaseTest {
+class SqlImplTest {
 
     @Test
     void eq() {
         var builder = new CodeBuilderImpl();
-        var sql = new TestSql();
+        var sql = new SqlImpl();
         var first = sql.literal(100);
         var second = sql.literal(200);
         var condition = sql.eq(first, second);
@@ -21,7 +21,7 @@ class SqlBaseTest {
 
     @Test
     void eqSame() {
-        var sql = new TestSql();
+        var sql = new SqlImpl();
         var first = sql.literal(100);
         var second = sql.literal(100);
         var condition = sql.eq(first, second);
@@ -31,7 +31,7 @@ class SqlBaseTest {
     @Test
     void isNull() {
         var builder = new CodeBuilderImpl();
-        var sql = new TestSql();
+        var sql = new SqlImpl();
         var expression = sql.literal(100);
         var condition = sql.isNull(expression);
         assertThat(condition.isEmpty()).isFalse();

@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder;
 
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
-import com.provys.provysdb.dbcontext.DbConnection;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -11,23 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Interface defining root factory class for all objects, used for building Sql statements
- */
 public interface Sql {
-
-    /**
-     * @return connection to underlying datasource
-     */
-    @Nonnull
-    DbConnection getConnection();
-
-    /**
-     * @return select statement builder
-     */
-    @Nonnull
-    SelectBuilder select();
-
     /**
      * @param value is value of literal
      * @return varchar literal

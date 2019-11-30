@@ -19,6 +19,25 @@
         <developerConnection>scm:git:https://github.com/MichalStehlikCz/provysdb.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/MichalStehlikCz/Maven</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub MichalStehlikCz Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/MichalStehlikCz/Maven</url>
+        </repository>
+    </distributionManagement>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -109,12 +128,12 @@
             <dependency>
                 <groupId>com.provys.common</groupId>
                 <artifactId>common-exception</artifactId>
-                <version>1.0.8-SNAPSHOT</version>
+                <version>1.0.17</version>
             </dependency>
             <dependency>
                 <groupId>com.provys.common</groupId>
                 <artifactId>common-datatype</artifactId>
-                <version>1.0.8-SNAPSHOT</version>
+                <version>1.0.17</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -204,9 +223,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>3.0.0-M1</version>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jooq.pro</groupId>

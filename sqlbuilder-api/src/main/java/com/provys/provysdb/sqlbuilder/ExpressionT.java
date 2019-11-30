@@ -1,5 +1,6 @@
 package com.provys.provysdb.sqlbuilder;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -10,6 +11,7 @@ import java.util.Optional;
  */
 public interface ExpressionT<T> extends Expression {
 
+    @Nonnull
     default ExpressionT<Optional<T>> asNullable() {
         //noinspection unchecked - in sql, non-null expression can be used in any place nullable expression of the same type can be used
         return (ExpressionT<Optional<T>>) this;

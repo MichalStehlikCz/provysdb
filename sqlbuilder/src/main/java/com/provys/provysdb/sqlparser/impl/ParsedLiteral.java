@@ -2,12 +2,14 @@ package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.LiteralT;
+import com.provys.provysdb.sqlbuilder.impl.LiteralOptional;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
 
@@ -44,6 +46,12 @@ class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
     @Override
     public void addSql(CodeBuilder builder) {
         value.addSql(builder);
+    }
+
+    @Nonnull
+    @Override
+    public LiteralT<Optional<T>> asNullable() {
+        return new LiteralOptional<>(this);
     }
 
     @Override

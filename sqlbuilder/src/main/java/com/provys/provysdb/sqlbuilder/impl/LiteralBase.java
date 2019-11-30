@@ -5,10 +5,7 @@ import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.LiteralT;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Common ancestor for literal classes
@@ -25,6 +22,12 @@ abstract class LiteralBase<T> implements LiteralT<T> {
     @Nonnull
     public T getValue() {
         return value;
+    }
+
+    @Nonnull
+    @Override
+    public LiteralT<Optional<T>> asNullable() {
+        return new LiteralOptional<>(this);
     }
 
     @Override

@@ -49,7 +49,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
         return result;
     }
 
-    SelectStatementTImpl(String sqlText, List<BindName> binds, Sql sqlContext) {
+    SelectStatementTImpl(String sqlText, List<BindName> binds, DbSql sqlContext) {
         this.sqlText = sqlText;
         this.connection = sqlContext.getConnection();
         try {
@@ -60,7 +60,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
         this.binds = getBinds(binds);
     }
 
-    SelectStatementTImpl(Select select, Sql sqlContext) {
+    SelectStatementTImpl(Select select, DbSql sqlContext) {
         this(select.getSqlText(), select.getBinds(), sqlContext);
     }
 

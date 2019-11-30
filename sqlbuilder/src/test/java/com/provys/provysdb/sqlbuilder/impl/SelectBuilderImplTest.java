@@ -1,5 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
+import com.provys.provysdb.sqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.Sql;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class SelectBuilderImplTest {
 
-    private static final Sql sql = new TestSql();
+    private static final DbSql sql = new TestSql();
 
     @Test
     void select1FromDualTest() {
