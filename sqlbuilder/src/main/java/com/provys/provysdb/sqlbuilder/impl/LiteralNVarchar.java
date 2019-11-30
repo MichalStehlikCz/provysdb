@@ -10,6 +10,7 @@ class LiteralNVarchar extends LiteralBase<String> {
      * Get NVARCHAR2 literal corresponding to given String value
      *
      * @param value is string value this literal represents
+     * @return new literal, representing supplied value
      */
     @Nonnull
     static LiteralNVarchar of(String value) {

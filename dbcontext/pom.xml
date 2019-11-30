@@ -19,16 +19,12 @@
             <artifactId>cdi-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc8</artifactId>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc10</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ucp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq.pro</groupId>
-            <artifactId>jooq</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

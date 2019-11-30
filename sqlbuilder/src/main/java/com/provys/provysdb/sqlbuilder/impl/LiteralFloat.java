@@ -8,6 +8,7 @@ class LiteralFloat extends LiteralNumber<Float> {
      * Get literal corresponding to given Float value
      *
      * @param value is float value this literal represents
+     * @return new literal, representing supplied value
      */
     @Nonnull
     static LiteralFloat of(float value) {

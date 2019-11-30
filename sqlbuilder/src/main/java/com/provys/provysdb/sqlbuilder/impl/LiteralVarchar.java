@@ -13,6 +13,7 @@ public class LiteralVarchar extends LiteralBase<String> {
      * Get literal corresponding to given String value
      *
      * @param value is string value this literal represents
+     * @return new literal, representing supplied value
      */
     @Nonnull
     public static LiteralVarchar of(String value) {

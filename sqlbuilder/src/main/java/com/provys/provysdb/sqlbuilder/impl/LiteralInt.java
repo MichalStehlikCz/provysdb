@@ -8,6 +8,7 @@ public class LiteralInt extends LiteralNumber<Integer> {
      * Get literal corresponding to given Integer value
      *
      * @param value is integer value this literal represents
+     * @return new literal, representing supplied value
      */
     @Nonnull
     public static LiteralInt of(int value) {

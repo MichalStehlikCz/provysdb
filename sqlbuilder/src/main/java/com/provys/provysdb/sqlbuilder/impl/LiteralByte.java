@@ -8,6 +8,7 @@ public class LiteralByte extends LiteralNumber<Byte> {
      * Get literal corresponding to given Byte value
      *
      * @param value is byte value this literal represents
+     * @return new literal, representing supplied value
      */
     @Nonnull
     public static LiteralByte of(byte value) {
