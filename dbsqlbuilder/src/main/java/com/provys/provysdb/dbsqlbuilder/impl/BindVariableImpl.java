@@ -81,11 +81,6 @@ class BindVariableImpl<T> implements BindVariableT<T> {
     @Override
     public void bind(DbPreparedStatement statement, int parameterIndex) {
         var value = getValue().orElse(null);
-        try {
-            statement.setValue(parameterIndex, getType(), value);
-        } catch (SQLException e) {
-            throw new InternalException(LOG, "Error binding value " + value + '(' + getType() + ") to statement " +
-                    statement, e);
-        }
+        statement.setValue(parameterIndex, getType(), value);
     }
 }
