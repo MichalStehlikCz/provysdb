@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -226,8 +227,8 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     }
 
     @Nonnull
-    public T where(Condition where) {
-        if (!where.isEmpty()) {
+    public T where(@Nullable Condition where) {
+        if ((where != null) && (!where.isEmpty())) {
             conditions.add(where);
         }
         return self();

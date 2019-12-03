@@ -6,6 +6,7 @@ import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderBaseImpl;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -181,7 +182,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
     }
 
     @Nonnull
-    public D where(Condition where) {
+    public D where(@Nullable Condition where) {
         selectBuilder.where(where);
         return self();
     }

@@ -1,6 +1,7 @@
 package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -264,11 +265,11 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
     /**
      * Add where condition
      *
-     * @param where is sql where condition to be added
+     * @param where is sql where condition to be added (or null, in tht case nothing is added)
      * @return self to support fluent build
      */
     @Nonnull
-    T where(Condition where);
+    T where(@Nullable Condition where);
 
     /**
      * Add where condition
