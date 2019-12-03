@@ -4,7 +4,7 @@
     <groupId>com.provys.provysdb</groupId>
     <artifactId>provysdb</artifactId>
     <name>ProvysDB</name>
-    <version>1.3.3</version>
+    <version>1.3.4-SNAPSHOT</version>
     <modules>
         <module>dbcontext-api</module>
         <module>sqlbuilder-api</module>
@@ -19,7 +19,7 @@
     </properties>
     <scm>
         <developerConnection>scm:git:https://github.com/MichalStehlikCz/provysdb.git</developerConnection>
-        <tag>v1.3.3</tag>
+        <tag>HEAD</tag>
     </scm>
     <repositories>
         <repository>
