@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindVariable;
+import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.impl.BindNameImpl;
 import com.provys.provysdb.sqlparser.SpaceMode;
@@ -27,7 +27,7 @@ class ParsedBind extends ParsedTokenBase implements BindName {
 
     @Nonnull
     @Override
-    public BindVariable withValue(@Nullable Object value) {
+    public BindValue withValue(@Nullable Object value) {
         return name.withValue(value);
     }
 

@@ -3,7 +3,17 @@ package com.provys.provysdb.sqlbuilder;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<T1, T2>> {
+public interface SelectBuilderT2<T1, T2> extends SelectBuilderBase<SelectBuilderT2<T1, T2>, SelectBuilder> {
+
+    /**
+     * Add column to list of columns
+     *
+     * @param column is definition f column to be added
+     * @return resulting select builder
+     * @param <T> is type of column being added
+     */
+    @Nonnull
+    <T> SelectBuilder column(SqlColumnT<T> column);
 
     /**
      * Add column to list of columns; it is expected to come from last item, added to from clause. If no items were
@@ -11,7 +21,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *
      * @param column is name of table column to be assigned to column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(SqlIdentifier column, Class<T> clazz);
@@ -22,7 +33,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param column is name of table column to be assigned to column
      * @param alias is alias to be sued for column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
@@ -34,7 +46,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param column is name of table column to be assigned to column
      * @param alias is alias to be sued for column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
@@ -47,7 +60,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *                   column name (in "" or first character letter and remaining letters, numbers and characters $
      *                   and #). Use columnSql to add columns based on sql expressions
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(String columnName, Class<T> clazz);
@@ -60,7 +74,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *                   column name (in "" or first character letter and remaining letters, numbers and characters $
      *                   and #). Use columnSql to add columns based on sql expressions
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(String tableAlias, String columnName, Class<T> clazz);
@@ -74,7 +89,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *                   and #). Use columnSql to add columns based on sql expressions
      * @param alias is alias to be used for column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder column(String tableAlias, String columnName, String alias, Class<T> clazz);
@@ -84,7 +100,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnDirect(String columnSql, Class<T> clazz);
@@ -95,7 +112,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnDirect(String columnSql, String alias, Class<T> clazz);
@@ -106,7 +124,9 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @param binds is list of binds, associated with given column
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnDirect(String columnSql, String alias, Class<T> clazz, BindName... binds);
@@ -116,8 +136,10 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds, associated with given column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnDirect(String columnSql, String alias, List<BindName> binds, Class<T> clazz);
@@ -127,7 +149,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnSql(String columnSql, Class<T> clazz);
@@ -138,7 +161,8 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
     <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz);
@@ -150,10 +174,12 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @param binds is list of binds, associated with given column
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz, BindVariable... binds);
+    <T> SelectBuilder columnSql(String columnSql, String alias, Class<T> clazz, BindValue... binds);
 
     /**
      * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to specify types and
@@ -161,10 +187,11 @@ public interface SelectBuilderT2<T1, T2> extends SelectBuilderT<SelectBuilderT2<
      *
      * @param columnSql is text that will be used as column definition
      * @param alias is text that will be used as alias for new column
+     * @param binds is list of binds, associated with given column
      * @param clazz is type of return value of column
-     * @return self to support fluent build
+     * @return resulting select builder
+     * @param <T> is type of column being added
      */
     @Nonnull
-    <T> SelectBuilder columnSql(String columnSql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
+    <T> SelectBuilder columnSql(String columnSql, String alias, Iterable<BindValue> binds, Class<T> clazz);
 }
-

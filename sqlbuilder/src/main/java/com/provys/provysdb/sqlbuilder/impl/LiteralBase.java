@@ -1,7 +1,5 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.LiteralT;
 
 import javax.annotation.Nonnull;
@@ -22,12 +20,6 @@ abstract class LiteralBase<T> implements LiteralT<T> {
     @Nonnull
     public T getValue() {
         return value;
-    }
-
-    @Nonnull
-    @Override
-    public LiteralT<Optional<T>> asNullable() {
-        return new LiteralOptional<>(this);
     }
 
     @Override

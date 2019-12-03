@@ -22,7 +22,7 @@ public interface BindName extends Expression {
      * @return bind variable with the same name as old one, but with the new value
      */
     @Nonnull
-    BindVariable withValue(@Nullable Object value);
+    BindValue withValue(@Nullable Object value);
 
     /**
      * Method can be used when constructing statement and merging its parts. It combines two bind values; they should

@@ -15,11 +15,13 @@ public interface CodeIdent {
 
     /**
      * Append current ident to supplied builder and mark it as used (e.g. deactivate first ident)
+     *
+     * @param builder is builder in which this ident is to be used
      */
     void use(StringBuilder builder);
 
     /**
-     * Create clone of this ident; can return self if given ident is not mutable
+     * @return clone of this ident; can return self if given ident is not mutable
      */
     @Nonnull
     CodeIdent copy();

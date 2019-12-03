@@ -1,7 +1,5 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.dbcontext.SqlTypeAdapter;
-import com.provys.provysdb.dbcontext.SqlTypeMap;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlColumnT;
@@ -24,6 +22,11 @@ class SqlColumnTImpl<T> implements SqlColumnT<T> {
     }
 
     @Override
+    public Class<T> getType() {
+        return type;
+    }
+
+    @Override
     @Nonnull
     public Optional<SqlIdentifier> getAlias() {
         return column.getAlias();
@@ -32,10 +35,5 @@ class SqlColumnTImpl<T> implements SqlColumnT<T> {
     @Override
     public void addSql(CodeBuilder builder) {
         column.addSql(builder);
-    }
-
-    @Override
-    public SqlTypeAdapter<T> getAdapter(SqlTypeMap typeMap) {
-        return typeMap.getAdapter(type);
     }
 }

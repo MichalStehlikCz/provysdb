@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -111,7 +110,7 @@ public interface CodeBuilder {
     CodeBuilder appendLine(String line);
 
     /**
-     * Retrieve ident builder, that allows to build more complex ident rules
+     * @return ident builder, that allows to build more complex ident rules
      */
     @Nonnull
     CodeIdentBuilder identBuilder();
@@ -236,7 +235,7 @@ public interface CodeBuilder {
      * @return self to support chaining
      */
     @Nonnull
-    CodeBuilder applyBindVariables(Iterable<BindVariable> bindVariables);
+    CodeBuilder applyBindVariables(Iterable<BindValue> bindVariables);
 
     /**
      * Method retrieves code, produced by CodeBuilder.

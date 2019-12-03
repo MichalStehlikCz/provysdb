@@ -50,25 +50,25 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
         }
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public Optional<T> readOptionalValue(ResultSet resultSet, int columnIndex) {
+    public T readNullableValue(ResultSet resultSet, int columnIndex) {
         try {
             var value = readValueInternal(resultSet, columnIndex);
             if (resultSet.wasNull()) {
-                return Optional.empty();
+                return null;
             }
-            return Optional.of(value);
+            return value;
         } catch (SQLException e) {
             throw new InternalException(LOG, "Exception reading from result set", e);
         }
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public Optional<T> readOptionalValue(ResultSet resultSet, String columnLabel) {
+    public T readNullableValue(ResultSet resultSet, String columnLabel) {
         try {
-            return readOptionalValue(resultSet, resultSet.findColumn(columnLabel));
+            return readNullableValue(resultSet, resultSet.findColumn(columnLabel));
         } catch (SQLException e) {
             throw new InternalException(LOG, "Column " + columnLabel + " not found");
         }

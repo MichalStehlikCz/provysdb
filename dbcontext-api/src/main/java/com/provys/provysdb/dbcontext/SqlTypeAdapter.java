@@ -57,8 +57,30 @@ public interface SqlTypeAdapter<T> {
      * @param columnIndex is column value should be read from
      * @return read column value
      */
+    @Nullable
+    T readNullableValue(ResultSet resultSet, int columnIndex);
+
+    /**
+     * Read value from result set, allow reading null values
+     *
+     * @param resultSet is result set value should be read from
+     * @param columnLabel is name of column value should be read from
+     * @return read column value
+     */
+    @Nullable
+    T readNullableValue(ResultSet resultSet, String columnLabel);
+
+    /**
+     * Read value from result set, allow reading null values
+     *
+     * @param resultSet is result set value should be read from
+     * @param columnIndex is column value should be read from
+     * @return read column value
+     */
     @Nonnull
-    Optional<T> readOptionalValue(ResultSet resultSet, int columnIndex);
+    default Optional<T> readOptionalValue(ResultSet resultSet, int columnIndex) {
+        return Optional.ofNullable(readNullableValue(resultSet, columnIndex));
+    }
 
     /**
      * Read value from result set, allow reading null values
@@ -68,7 +90,9 @@ public interface SqlTypeAdapter<T> {
      * @return read column value
      */
     @Nonnull
-    Optional<T> readOptionalValue(ResultSet resultSet, String columnLabel);
+    default Optional<T> readOptionalValue(ResultSet resultSet, String columnLabel) {
+        return Optional.ofNullable(readNullableValue(resultSet, columnLabel));
+    }
 
     /**
      * Bind value to variable

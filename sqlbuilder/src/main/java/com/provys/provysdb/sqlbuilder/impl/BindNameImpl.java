@@ -2,16 +2,13 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindVariable;
+import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -51,8 +48,8 @@ public class BindNameImpl implements BindName {
 
     @Nonnull
     @Override
-    public BindVariable withValue(@Nullable Object value) {
-        return BindVariableImpl.ofObject(getName(), value);
+    public BindValue withValue(@Nullable Object value) {
+        return BindValueImpl.ofObject(getName(), value);
     }
 
     @Nonnull
@@ -65,7 +62,7 @@ public class BindNameImpl implements BindName {
             throw new InternalException(LOG,
                     "Cannot combine bind variables with different names (" + getName() + "!=" + other.getName() + ")");
         }
-        if ((other instanceof BindVariable)) {
+        if (other instanceof BindValue) {
             return other.combine(this);
         }
         return this;
@@ -78,7 +75,7 @@ public class BindNameImpl implements BindName {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

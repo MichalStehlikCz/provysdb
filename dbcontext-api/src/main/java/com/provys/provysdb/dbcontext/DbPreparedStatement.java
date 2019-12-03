@@ -5,6 +5,10 @@ import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Provys extension of JDBC's prepared statement.
+ * Built on Provys connection, adds support for work with Provys specific data-types via parametrised setValue method
+ */
 public interface DbPreparedStatement extends PreparedStatement, DbStatement {
 
     @Override
@@ -52,6 +56,7 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @param parameterIndex is index of bind value in statement
      * @param type is type of supplied value
      * @param value is value to be bound
+     * @param <T> is (Java) type of value to be bound
      * @throws SQLException when any problem is encountered on JDBC level
      */
     <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException;

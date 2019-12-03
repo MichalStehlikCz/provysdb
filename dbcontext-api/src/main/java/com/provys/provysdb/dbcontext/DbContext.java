@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public interface DbContext {
 
     @Nonnull
-    public DbConnection getConnection();
+    DbConnection getConnection();
 
     /**
      * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper that provides
@@ -19,7 +19,7 @@ public interface DbContext {
      * @return retrieved connection
      */
     @Nonnull
-    public DbConnection getConnection(String dbToken);
+    DbConnection getConnection(String dbToken);
 
     /**
      * @return username used to open connection to Provys database
@@ -32,4 +32,10 @@ public interface DbContext {
      */
     @Nonnull
     String getUrl();
+
+    /**
+     * @return sql type adapter map used in given database context
+     */
+    @Nonnull
+    SqlTypeMap getSqlTypeMap();
 }

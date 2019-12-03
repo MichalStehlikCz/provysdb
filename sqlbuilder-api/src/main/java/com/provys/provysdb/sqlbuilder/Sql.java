@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Common ancestor for database contexts, used for building statements and their parts.
+ * Child interfaces add option to build whole statement, either database connected or disconnected
+ */
 public interface Sql {
     /**
      * @param value is value of literal
@@ -252,7 +256,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, BindVariable... binds);
+    SqlColumn columnSql(String sql, String alias, BindValue... binds);
 
     /**
      * Add column with given SQL text, alias and parse it for bind variables, expressed using :name notation; bind
@@ -265,7 +269,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn columnSql(String sql, String alias, Iterable<BindVariable> binds);
+    SqlColumn columnSql(String sql, String alias, Iterable<BindValue> binds);
 
     /**
      * Create mandatory column with given name
@@ -273,6 +277,7 @@ public interface Sql {
      * @param column is name of table column to be assigned to column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz);
@@ -284,6 +289,7 @@ public interface Sql {
      * @param alias is alias to be sued for column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
@@ -295,6 +301,7 @@ public interface Sql {
      * @param column is name of table column to be assigned to column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
@@ -307,6 +314,7 @@ public interface Sql {
      * @param alias is alias to be sued for column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
@@ -318,6 +326,7 @@ public interface Sql {
      *                  letters, numbers and characters $ and #). Use columnSql to add columns based on sql expressions
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(String columnName, Class<T> clazz);
@@ -331,6 +340,7 @@ public interface Sql {
      *                   and #). Use columnSql to add columns based on sql expressions
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
@@ -345,6 +355,7 @@ public interface Sql {
      * @param alias is alias to be used for column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
@@ -355,6 +366,7 @@ public interface Sql {
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnDirect(String columnSql, Class<T> clazz);
@@ -366,6 +378,7 @@ public interface Sql {
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz);
@@ -378,6 +391,7 @@ public interface Sql {
      * @param clazz is type of return value of column
      * @param binds is list of binds used in column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
@@ -391,6 +405,7 @@ public interface Sql {
      *             (e.g. using ? as placeholder)
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
@@ -401,6 +416,7 @@ public interface Sql {
      * @param columnSql is text that will be used as column definition
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnSql(String columnSql, Class<T> clazz);
@@ -413,6 +429,7 @@ public interface Sql {
      * @param alias is text that will be used as alias for new column
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
     <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz);
@@ -426,9 +443,10 @@ public interface Sql {
      * @param clazz is type of return value of column
      * @param binds is list of binds used in column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz, BindVariable... binds);
+    <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz, BindValue... binds);
 
     /**
      * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
@@ -440,188 +458,10 @@ public interface Sql {
      *             (e.g. using ? as placeholder)
      * @param clazz is type of return value of column
      * @return created column
+     * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindVariable> binds, Class<T> clazz);
-
-    /**
-     * Create optional column with given name
-     *
-     * @param column is name of table column to be assigned to column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, Class<T> clazz);
-
-    /**
-     * Create optional column with given name and alias
-     *
-     * @param column is name of table column to be assigned to column
-     * @param alias is alias to be sued for column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
-
-    /**
-     * Create optional column with given table alias, name and alias
-     *
-     * @param tableAlias is alias of table column is in
-     * @param column is name of table column to be assigned to column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
-
-    /**
-     * Create column with given table alias, name and alias
-     *
-     * @param tableAlias is alias of table column is in
-     * @param column is name of table column to be assigned to column
-     * @param alias is alias to be sued for column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
-                                               Class<T> clazz);
-
-    /**
-     * Create new column;it is created without table alias, risking ambiguity
-     *
-     * @param columnName is name of column. It must be valid column name (in "" or first character letter and remaining
-     *                  letters, numbers and characters $ and #). Use columnSql to add columns based on sql expressions
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(String columnName, Class<T> clazz);
-
-    /**
-     * Create new column; no alias is created, meaning column name will be sued instead
-     *
-     * @param tableAlias is alias of table column is in
-     * @param columnName is name of column. It must be valid
-     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
-     *                   and #). Use columnSql to add columns based on sql expressions
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, Class<T> clazz);
-
-    /**
-     * Create new column
-     *
-     * @param tableAlias is alias of table column is in
-     * @param columnName is name of column. It must be valid
-     *                   column name (in "" or first character letter and remaining letters, numbers and characters $
-     *                   and #). Use columnSql to add columns based on sql expressions
-     * @param alias is alias to be used for column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptional(String tableAlias, String columnName, String alias, Class<T> clazz);
-
-    /**
-     * Create optional column with given SQL text
-     *
-     * @param columnSql is text that will be used as column definition
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String columnSql, Class<T> clazz);
-
-    /**
-     * Create optional column with given SQL text and alias
-     *
-     * @param sql is text that will be used as column definition
-     * @param alias is text that will be used as alias for new column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz);
-
-    /**
-     * Add optional column with given SQL text, alias and binds to list of columns
-     *
-     * @param sql is text that will be used as column definition
-     * @param alias is text that will be used as alias for new column
-     * @param clazz is type of return value of column
-     * @param binds is list of binds used in column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, Class<T> clazz, BindName... binds);
-
-    /**
-     * Add optional column with given SQL text, alias and binds to list of columns
-     *
-     * @param sql is text that will be used as column definition
-     * @param alias is text that will be used as alias for new column
-     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
-     *             (e.g. using ? as placeholder)
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
-
-    /**
-     * Create optional column with given SQL text and parse it for bind variables, expressed using :name notation
-     *
-     * @param columnSql is text that will be used as column definition
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalSql(String columnSql, Class<T> clazz);
-
-    /**
-     * Create optional column with given SQL text and alias and parse it for bind variables, expressed using :name
-     * notation
-     *
-     * @param sql is text that will be used as column definition. Binds are parsed from text
-     * @param alias is text that will be used as alias for new column
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz);
-
-    /**
-     * Add optional column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
-     * bind variables can be supplied to assign value and type to binds
-     *
-     * @param sql is text that will be used as column definition
-     * @param alias is text that will be used as alias for new column
-     * @param clazz is type of return value of column
-     * @param binds is list of binds used in column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Class<T> clazz, BindVariable... binds);
-
-    /**
-     * Add optional column with given SQL text, alias and parse it for bind variables, expressed using :name notation;
-     * bind variables can be supplied to assign value and type to binds
-     *
-     * @param sql is text that will be used as column definition
-     * @param alias is text that will be used as alias for new column
-     * @param binds is list of binds used in column, in proper oder, binds should be referenced using Java conventions
-     *             (e.g. using ? as placeholder)
-     * @param clazz is type of return value of column
-     * @return created column
-     */
-    @Nonnull
-    <T> SqlColumnT<Optional<T>> columnOptionalSql(String sql, String alias, Iterable<BindVariable> binds,
-                                                  Class<T> clazz);
+    <T> SqlColumnT<T> columnSql(String sql, String alias, Iterable<BindValue> binds, Class<T> clazz);
 
     /**
      * Create Sql table alias object based on supplied text. Validates text during creation.
@@ -771,7 +611,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    Condition conditionSql(String conditionSql, BindVariable... binds);
+    Condition conditionSql(String conditionSql, BindValue... binds);
 
     /**
      * Create where condition with binds
@@ -782,7 +622,7 @@ public interface Sql {
      * @return created where condition
      */
     @Nonnull
-    Condition conditionSql(String conditionSql, Iterable<BindVariable> binds);
+    Condition conditionSql(String conditionSql, Iterable<BindValue> binds);
 
     /**
      * Combine multiple conditions using AND
@@ -837,43 +677,77 @@ public interface Sql {
     ConditionJoiner conditionOrJoiner();
 
     /**
-     * @return create and return equals comparison
+     * Create equals comparison {@code (first = second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition eq(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return not equals comparison
+     * Create not-equal comparison {@code (first != second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition notEq(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return less than comparison
+     * Create less than comparison {@code (first < second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition lessThan(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return less or equal comparison
+     * Create less or equal comparison {@code (first <= second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition lessOrEqual(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return greater than comparison
+     * Create greater than comparison {@code (first > second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition greaterThan(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return greater or equal comparison
+     * Create greater or equal comparison {@code (first >= second)}
+     *
+     * @param first is first operand
+     * @param second is second operand in comparison
+     * @return created comparison (boolean expression / condition)
+     * @param <T> is type of operands in comparison
      */
     @Nonnull
     <T> Condition greaterOrEqual(ExpressionT<T> first, ExpressionT<T> second);
 
     /**
-     * @return create and return is null expression
+     * Create is null expression {@code (first IS NULL)}
+     *
+     * @param first is parameter of IS NULL expression
+     * @return created expression (boolean expression / condition)
+     * @param <T> is type of operand in expression
      */
     @Nonnull
     <T> Condition isNull(ExpressionT<T> first);

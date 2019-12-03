@@ -1,12 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-
-import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
 
 class SqlFromDual extends SqlFromBase {
 

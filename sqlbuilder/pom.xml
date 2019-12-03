@@ -57,11 +57,6 @@
         </dependency>
         <dependency>
             <groupId>com.provys.provysdb</groupId>
-            <artifactId>dbcontext-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.provys.provysdb</groupId>
             <artifactId>sqlbuilder-api</artifactId>
             <version>${project.version}</version>
         </dependency>

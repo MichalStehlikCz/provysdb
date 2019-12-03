@@ -9,7 +9,7 @@ class SqlImplTest {
     @Test
     void eq() {
         var builder = new CodeBuilderImpl();
-        var sql = new SqlImpl();
+        var sql = new NoDbSqlImpl();
         var first = sql.literal(100);
         var second = sql.literal(200);
         var condition = sql.eq(first, second);
@@ -21,7 +21,7 @@ class SqlImplTest {
 
     @Test
     void eqSame() {
-        var sql = new SqlImpl();
+        var sql = new NoDbSqlImpl();
         var first = sql.literal(100);
         var second = sql.literal(100);
         var condition = sql.eq(first, second);
@@ -31,7 +31,7 @@ class SqlImplTest {
     @Test
     void isNull() {
         var builder = new CodeBuilderImpl();
-        var sql = new SqlImpl();
+        var sql = new NoDbSqlImpl();
         var expression = sql.literal(100);
         var condition = sql.isNull(expression);
         assertThat(condition.isEmpty()).isFalse();

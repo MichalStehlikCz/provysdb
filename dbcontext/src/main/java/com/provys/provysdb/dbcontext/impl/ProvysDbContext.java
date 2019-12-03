@@ -33,8 +33,7 @@ public class ProvysDbContext implements DbContext {
 
     /**
      * Default creator for Provys database context.
-     * Initializes provys database datasource and builds default JOOQ configuration, that will be used when accessing
-     * this database
+     * Initializes provys database connection pool
      *
      * @throws SQLException when initialisation of session pool for connection to PROVYS database fails
      */
@@ -80,5 +79,11 @@ public class ProvysDbContext implements DbContext {
     @Nonnull
     public String getUrl() {
         return provysDataSource.getUrl();
+    }
+
+    @Nonnull
+    @Override
+    public SqlTypeMap getSqlTypeMap() {
+        return sqlTypeMap;
     }
 }

@@ -1,12 +1,9 @@
 package com.provys.provysdb.sqlbuilder;
 
-import com.provys.provysdb.dbcontext.SqlTypeAdapter;
-import com.provys.provysdb.dbcontext.SqlTypeMap;
-
 public interface SqlColumnT<T> extends SqlColumn, ExpressionT<T> {
 
     /**
-     * Retrieve adapter for given class from adapter map
+     * @return Java type this column should be mapped to. Used to find proper adapter for value retrieval
      */
-    SqlTypeAdapter<T> getAdapter(SqlTypeMap typeMap);
+    Class<T> getType();
 }
