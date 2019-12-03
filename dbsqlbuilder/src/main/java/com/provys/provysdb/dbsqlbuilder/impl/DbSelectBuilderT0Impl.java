@@ -3,7 +3,6 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbsqlbuilder.DbSelectBuilderT0;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
-import com.provys.provysdb.dbsqlbuilder.SelectStatement;
 import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderT0Impl;
 import org.apache.logging.log4j.LogManager;

@@ -1,7 +1,6 @@
 package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Single wrapper around String, represents name of bind variable and implements appropriate validation
@@ -22,7 +21,7 @@ public interface BindName extends Expression {
      * @return bind variable with the same name as old one, but with the new value
      */
     @Nonnull
-    BindValue withValue(@Nullable Object value);
+    BindValue withValue(Object value);
 
     /**
      * Method can be used when constructing statement and merging its parts. It combines two bind values; they should

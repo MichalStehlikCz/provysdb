@@ -6,7 +6,6 @@ import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
 
 import javax.annotation.Nonnull;
 import javax.enterprise.context.ApplicationScoped;
-import java.util.*;
 
 @ApplicationScoped
 public class NoDbSqlImpl extends SqlImpl implements NoDbSql {

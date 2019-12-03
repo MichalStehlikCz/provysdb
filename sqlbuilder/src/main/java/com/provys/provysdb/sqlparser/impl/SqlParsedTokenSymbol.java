@@ -5,7 +5,7 @@ import com.provys.provysdb.sqlparser.SqlSymbol;
 
 import javax.annotation.Nonnull;
 
-public interface SqlParsedTokenSymbol extends SqlParsedToken {
+interface SqlParsedTokenSymbol extends SqlParsedToken {
 
     /**
      * @return symbol this token represents

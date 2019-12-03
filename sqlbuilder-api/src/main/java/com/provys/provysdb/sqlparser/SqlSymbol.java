@@ -43,7 +43,7 @@ public enum SqlSymbol {
 
     @Nonnull
     private final String symbol;
-    boolean comparison;
+    private final boolean comparison;
 
     SqlSymbol(String symbol, boolean comparison) {
         this.symbol = Objects.requireNonNull(symbol);

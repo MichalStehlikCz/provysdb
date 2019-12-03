@@ -1,11 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.CodeIdent;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.*;
 
 class CodeIdentLinkedTest {

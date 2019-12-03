@@ -33,7 +33,7 @@ public class SelectBuilderImpl<S extends Sql> extends SelectBuilderBaseImpl<Sele
 
     @Nonnull
     @Override
-    public SelectBuilderImpl<S> columnUntyped(SqlColumn column) {
+    SelectBuilderImpl<S> columnUntyped(SqlColumn column) {
         column.getAlias().ifPresent(alias -> mapColumn(alias, column));
         columns.add(column);
         return this;

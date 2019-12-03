@@ -25,7 +25,8 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
         this.selectBuilder = selectBuilder;
     }
 
-    protected S getSelectBuilder() {
+    @Nonnull
+    S getSelectBuilder() {
         return selectBuilder;
     }
 
@@ -248,7 +249,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
     }
 
     @Nonnull
-    public CodeBuilder builder() {
+    CodeBuilder builder() {
         return selectBuilder.builder();
     }
 

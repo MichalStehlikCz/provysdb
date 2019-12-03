@@ -3,8 +3,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 /**

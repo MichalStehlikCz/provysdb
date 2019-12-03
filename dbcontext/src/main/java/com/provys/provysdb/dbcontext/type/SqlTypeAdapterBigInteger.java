@@ -1,8 +1,6 @@
 package com.provys.provysdb.dbcontext.type;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.DbResultSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

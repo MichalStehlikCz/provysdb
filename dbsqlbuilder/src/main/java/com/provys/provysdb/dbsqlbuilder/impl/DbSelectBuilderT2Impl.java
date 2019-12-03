@@ -2,7 +2,6 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.provysdb.dbsqlbuilder.DbSelectBuilderT2;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
-import com.provys.provysdb.dbsqlbuilder.SelectStatement;
 import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderT2Impl;
 

@@ -6,9 +6,7 @@ import com.provys.provysdb.sqlparser.SqlSymbol;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Instance represents valid SQL symbol

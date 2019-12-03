@@ -40,7 +40,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
         this.conditions = new ArrayList<>(conditions);
     }
 
-    protected void mapColumn(SqlIdentifier alias, SqlColumn column) {
+    void mapColumn(SqlIdentifier alias, SqlColumn column) {
         if (columnByName.putIfAbsent(alias, column) != null) {
             throw new InternalException(LOG, "Attempt to insert duplicate column to column list (" + alias.getText() +
                     " , " + this.toString() + ")");
@@ -72,7 +72,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     abstract T self();
 
     @Nonnull
-    protected Optional<SqlTableAlias> getLastTableAlias() {
+    Optional<SqlTableAlias> getLastTableAlias() {
         if (getTables().isEmpty()) {
             return Optional.empty();
         }
@@ -83,12 +83,12 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     public abstract List<SqlColumn> getColumns();
 
     @Nonnull
-    protected List<SqlColumn> getModifiableColumns() {
+    List<SqlColumn> getModifiableColumns() {
         return new ArrayList<>(getColumns());
     }
 
     @Nonnull
-    protected SelectBuilderImpl<S> columnUntyped(SqlColumn column) {
+    SelectBuilderImpl<S> columnUntyped(SqlColumn column) {
         var columns = getModifiableColumns();
         columns.add(column);
         return new SelectBuilderImpl<>(sql, columns, Collections.unmodifiableList(tables),

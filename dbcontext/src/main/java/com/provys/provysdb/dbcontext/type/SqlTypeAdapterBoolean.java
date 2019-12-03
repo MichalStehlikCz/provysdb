@@ -1,8 +1,6 @@
 package com.provys.provysdb.dbcontext.type;
 
 import com.provys.common.datatype.DtBoolean;
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.DbResultSet;
 
 import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;

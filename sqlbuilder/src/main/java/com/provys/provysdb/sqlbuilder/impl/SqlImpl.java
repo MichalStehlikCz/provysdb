@@ -16,7 +16,7 @@ public abstract class SqlImpl implements Sql {
 
     private final SqlTokenizer tokenizer;
 
-    public SqlImpl(SqlTokenizer tokenizer) {
+    protected SqlImpl(SqlTokenizer tokenizer) {
         this.tokenizer = Objects.requireNonNull(tokenizer);
     }
 

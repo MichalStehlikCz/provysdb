@@ -62,7 +62,7 @@ public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIden
 
     @Nonnull
     private final String name;
-    private boolean delimited;
+    private final boolean delimited;
 
     private SqlIdentifierImpl(String name) {
         this.name = validate(name);

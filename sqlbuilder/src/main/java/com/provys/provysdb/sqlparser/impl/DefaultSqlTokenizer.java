@@ -31,7 +31,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         maxTokens = 1000000;
     }
 
-    DefaultSqlTokenizer(int maxTokens) {
+    public DefaultSqlTokenizer(int maxTokens) {
         this.maxTokens = maxTokens;
     }
 

@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Common ancestor for database contexts, used for building statements and their parts.

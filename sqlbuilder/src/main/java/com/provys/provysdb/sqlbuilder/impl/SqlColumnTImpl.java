@@ -21,6 +21,7 @@ class SqlColumnTImpl<T> implements SqlColumnT<T> {
         this.type = Objects.requireNonNull(type);
     }
 
+    @Nonnull
     @Override
     public Class<T> getType() {
         return type;

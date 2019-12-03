@@ -17,7 +17,7 @@ class BindVariableImpl<T> implements BindVariableT<T> {
     private static final Logger LOG = LogManager.getLogger(BindVariableImpl.class);
 
     @Nonnull
-    private BindValueT<T> bindValue;
+    private final BindValueT<T> bindValue;
 
     BindVariableImpl(BindValueT<T> bindValue) {
         this.bindValue = bindValue;

@@ -188,7 +188,17 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
          * @param value is new value to be set
          */
         public void setValue(@Nullable Object value) {
-            var combinedBind = bind.withValue(value);
+            BindName combinedBind;
+            if (value == null) {
+                if (bind instanceof BindValueT) {
+                    combinedBind = ((BindValueT<?>) bind).withValue(null);
+                } else {
+                    throw new InternalException(LOG,
+                            "Cannot bind null value to bind variable with unknown type " + bind);
+                }
+            } else {
+                combinedBind = bind.withValue(value);
+            }
             if (combinedBind == bind) {
                 return;
             }

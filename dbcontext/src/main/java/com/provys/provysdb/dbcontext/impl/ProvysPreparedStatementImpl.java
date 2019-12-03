@@ -357,7 +357,7 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
 
 
     @Override
-    public <V> void setValue(int parameterIndex, Class<V> type, @Nullable V value) throws SQLException {
+    public <V> void setValue(int parameterIndex, Class<V> type, @Nullable V value) {
         sqlTypeMap.getAdapter(type).bindValue(statement, parameterIndex, value);
     }
 

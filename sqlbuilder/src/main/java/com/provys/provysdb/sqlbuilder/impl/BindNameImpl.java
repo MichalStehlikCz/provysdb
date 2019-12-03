@@ -48,7 +48,7 @@ public class BindNameImpl implements BindName {
 
     @Nonnull
     @Override
-    public BindValue withValue(@Nullable Object value) {
+    public BindValue withValue(Object value) {
         return BindValueImpl.ofObject(getName(), value);
     }
 

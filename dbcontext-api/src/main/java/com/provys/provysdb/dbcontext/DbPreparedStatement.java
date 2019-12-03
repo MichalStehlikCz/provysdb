@@ -57,9 +57,8 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @param type is type of supplied value
      * @param value is value to be bound
      * @param <T> is (Java) type of value to be bound
-     * @throws SQLException when any problem is encountered on JDBC level
      */
-    <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value) throws SQLException;
+    <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value);
 
     /**
      * Get type adapter map usable for given statement

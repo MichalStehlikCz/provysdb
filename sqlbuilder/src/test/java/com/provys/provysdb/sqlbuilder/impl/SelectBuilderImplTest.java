@@ -1,6 +1,5 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.NoDbSql;
 import com.provys.provysdb.sqlbuilder.Sql;
 import org.junit.jupiter.api.Test;
 

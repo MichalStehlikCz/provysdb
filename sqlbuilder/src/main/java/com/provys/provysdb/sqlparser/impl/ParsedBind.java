@@ -8,7 +8,7 @@ import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 class ParsedBind extends ParsedTokenBase implements BindName {
 
@@ -27,7 +27,7 @@ class ParsedBind extends ParsedTokenBase implements BindName {
 
     @Nonnull
     @Override
-    public BindValue withValue(@Nullable Object value) {
+    public BindValue withValue(Object value) {
         return name.withValue(value);
     }
 
@@ -66,7 +66,7 @@ class ParsedBind extends ParsedTokenBase implements BindName {
 
         ParsedBind that = (ParsedBind) o;
 
-        return name != null ? name.equals(that.name) : that.name == null;
+        return Objects.equals(name, that.name);
     }
 
     @Override

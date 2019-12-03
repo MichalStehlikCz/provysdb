@@ -6,5 +6,5 @@ public enum SqlTokenType {
     KEYWORD,
     SYMBOL,
     LITERAL,
-    BIND;
+    BIND
 }

@@ -164,7 +164,7 @@ public class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
         BindValueImpl<?> that = (BindValueImpl<?>) o;
 
         if (!type.equals(that.type)) return false;
-        return value != null ? value.equals(that.value) : that.value == null;
+        return Objects.equals(value, that.value);
     }
 
     @Override
