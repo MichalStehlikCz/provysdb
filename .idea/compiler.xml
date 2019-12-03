@@ -7,17 +7,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="sqlbuilder-api" />
-        <module name="DbSqlBuilder" />
+        <module name="dbsqlbuilder" />
+        <module name="dbsqlbuilder-api" />
         <module name="dbcontext" />
         <module name="dbcontext-api" />
-        <module name="DbSqlBuilderApi" />
         <module name="sqlbuilder" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="dbcontext" target="11" />
       <module name="dbcontext-api" target="11" />
-      <module name="DbSqlBuilder" target="11" />
+      <module name="dbsqlbuilder" target="11" />
+      <module name="dbsqlbuilder-api" target="11" />
       <module name="DbSqlBuilderApi" target="11" />
       <module name="provysdb" target="1.5" />
       <module name="sqlbuilder" target="11" />

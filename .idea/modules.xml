@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/dbsqlbuilder/DbSqlBuilder.iml" filepath="$PROJECT_DIR$/dbsqlbuilder/DbSqlBuilder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dbsqlbuilder-api/DbSqlBuilderApi.iml" filepath="$PROJECT_DIR$/dbsqlbuilder-api/DbSqlBuilderApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbcontext/dbcontext.iml" filepath="$PROJECT_DIR$/dbcontext/dbcontext.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbcontext-api/dbcontext-api.iml" filepath="$PROJECT_DIR$/dbcontext-api/dbcontext-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbsqlbuilder/dbsqlbuilder.iml" filepath="$PROJECT_DIR$/dbsqlbuilder/dbsqlbuilder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbsqlbuilder-api/dbsqlbuilder-api.iml" filepath="$PROJECT_DIR$/dbsqlbuilder-api/dbsqlbuilder-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/provysdb.iml" filepath="$PROJECT_DIR$/provysdb.iml" />
       <module fileurl="file://$PROJECT_DIR$/sqlbuilder/sqlbuilder.iml" filepath="$PROJECT_DIR$/sqlbuilder/sqlbuilder.iml" />
       <module fileurl="file://$PROJECT_DIR$/sqlbuilder-api/sqlbuilder-api.iml" filepath="$PROJECT_DIR$/sqlbuilder-api/sqlbuilder-api.iml" />
