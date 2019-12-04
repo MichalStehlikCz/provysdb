@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Represents variable connected with select statement, its type and value.
  */
-public class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
+class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
 
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(BindValueImpl.class);
@@ -26,7 +26,7 @@ public class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
      * @param <T> is type of value held by this variable
      */
     @Nonnull
-    public static <T> BindValueImpl<T> ofObject(String name, T value) {
+    static <T> BindValueImpl<T> ofObject(String name, T value) {
         return new BindValueImpl<>(name, value);
     }
 
@@ -40,21 +40,8 @@ public class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
      * @param <T> is type of value held by this variable
      */
     @Nonnull
-    public static <T> BindValueImpl ofType(String name, Class<T> type, @Nullable T value) {
+    static <T> BindValueImpl<T> ofType(String name, @Nullable T value, Class<T> type) {
         return new BindValueImpl<>(name, type, value);
-    }
-
-    /**
-     * Get bind variable with specified name, type and no value (aka null)
-     *
-     * @param name is name of bind
-     * @param type is type new bind variable should get
-     * @return bind variable with given name, type and no value
-     * @param <T> is type of value held by this variable
-     */
-    @Nonnull
-    public static <T> BindValueImpl ofType(String name, Class<T> type) {
-        return new BindValueImpl<>(name, type, null);
     }
 
     @Nonnull

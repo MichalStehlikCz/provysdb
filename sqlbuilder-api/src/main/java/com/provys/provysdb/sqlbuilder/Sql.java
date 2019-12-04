@@ -4,6 +4,7 @@ import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -97,6 +98,41 @@ public interface Sql {
      */
     @Nonnull
     LiteralT<DtDateTime> literal(DtDateTime value);
+
+    /**
+     * Create bind value based on supplied (non-null) value. Note that bind will take type from supplied value. This is
+     * convenient if you control type of supplied value or you do not want to bind different value to the same statement
+     * in future, but in many situations, you might want to consider variant with explicit specification of bind type
+     *
+     * @param name is name of bind value, case insensitive
+     * @param value is value bind will get assigned; it is also used to infer type
+     * @param <T> is type of bind value
+     * @return bind value with supplied name and value
+     */
+    <T> BindValueT<T> bind(String name, T value);
+
+    /**
+     * Create bind value of supplied type based on supplied value; value might be null
+     *
+     * @param name is name of bind value, case insensitive
+     * @param value is value bind will get assigned
+     * @param clazz defines type of bind value
+     * @param <T> is type of bind value
+     * @return bind value of given type with supplied name and value
+     */
+    <T> BindValueT<T> bind(String name, @Nullable T value, Class<T> clazz);
+
+    /**
+     * Create bind value based on supplied type, without value; value is set to null and should be specified later.
+     *
+     * @param name is name of bind value, case insensitive
+     * @param clazz is type of bind value
+     * @param <T> is type of bind value
+     * @return bind value with supplied name and type
+     */
+    default <T> BindValueT<T> bindEmpty(String name, Class<T> clazz) {
+        return bind(name, null, clazz);
+    }
 
     /**
      * Create Sql name object based on supplied text. Validates name during creation.
