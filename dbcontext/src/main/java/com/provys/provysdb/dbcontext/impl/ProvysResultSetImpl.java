@@ -3,10 +3,12 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbResultSet;
+import com.provys.provysdb.dbcontext.SqlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -1021,311 +1023,459 @@ class ProvysResultSetImpl implements DbResultSet {
         return resultSet.isWrapperFor(iface);
     }
 
-    @Override
-    public boolean getNonnullDtBoolean(int columnIndex) throws SQLException {
-        String dbValue = resultSet.getString(columnIndex);
+    @Nonnull
+    private SqlException getNullException(int columnIndex) {
+        return new SqlException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
+    }
+
+    @Nonnull
+    private SqlException getNullException(String columnLabel) {
+        return new SqlException(LOG, "Unexpected null value in ResultSet, column label " + columnLabel);
+    }
+
+    private void checkWasNotNull(int columnIndex) throws SQLException {
         if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
+            throw getNullException(columnIndex);
         }
+    }
+
+    private void checkWasNotNull(String columnLabel) throws SQLException {
+        if (resultSet.wasNull()) {
+            throw getNullException(columnLabel);
+        }
+    }
+
+    @Nonnull
+    private SqlException getGetSqlException(int columnIndex, Class<?> type, SQLException e) {
+        return new SqlException(LOG, "Error reading " + type.getSimpleName() + " value from ResultSet, column "
+                + columnIndex, e);
+    }
+
+    @Nonnull
+    private SqlException getGetSqlException(String columnLabel, Class<?> type, SQLException e) {
+        return new SqlException(LOG, "Error reading " + type.getSimpleName() + " value from ResultSet, column "
+                + columnLabel, e);
+    }
+
+    @Override
+    public boolean getNonnullBoolean(int columnIndex) {
+        var result = getNullableBoolean(columnIndex);
+        if (result == null) {
+            throw getNullException(columnIndex);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean getNonnullBoolean(String columnLabel) {
+        var result = getNullableBoolean(columnLabel);
+        if (result == null) {
+            throw getNullException(columnLabel);
+        }
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public Boolean getNullableBoolean(int columnIndex) {
         try {
+            String dbValue = resultSet.getString(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
             return DtBoolean.ofProvysDb(dbValue);
         } catch (InternalException e) {
-            throw new InternalException(LOG, "Incorrect Provys boolean value retrieved from column index "
-                    + columnIndex, e);
+            throw new SqlException(LOG, "Incorrect Provys boolean value retrieved from column index " + columnIndex, e);
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, Boolean.class, e);
         }
     }
 
+    @Nullable
     @Override
-    public boolean getNonnullDtBoolean(String columnLabel) throws SQLException {
-        String dbValue = resultSet.getString(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
+    public Boolean getNullableBoolean(String columnLabel) {
         try {
+            String dbValue = resultSet.getString(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
             return DtBoolean.ofProvysDb(dbValue);
         } catch (InternalException e) {
-            throw new InternalException(LOG, "Incorrect Provys boolean value retrieved from column " + columnLabel, e);
+            throw new SqlException(LOG, "Incorrect Provys boolean value retrieved from column " + columnLabel, e);
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, Boolean.class, e);
         }
     }
 
     @Override
     @Nonnull
-    public Optional<Boolean> getOptionalDtBoolean(int columnIndex) throws SQLException {
-        String dbValue = resultSet.getString(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
+    public Optional<Boolean> getOptionalBoolean(int columnIndex) {
+        return Optional.ofNullable(getNullableBoolean(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Boolean> getOptionalBoolean(String columnLabel) {
+        return Optional.ofNullable(getNullableBoolean(columnLabel));
+    }
+
+    @Override
+    public byte getNonnullByte(int columnIndex) {
         try {
-            return Optional.of(DtBoolean.ofProvysDb(dbValue));
-        } catch (InternalException e) {
-            throw new InternalException(LOG, "Incorrect Provys boolean value retrieved from column index "
-                    + columnIndex, e);
+            var value = resultSet.getByte(columnIndex);
+            checkWasNotNull(columnIndex);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, byte.class, e);
         }
     }
 
     @Override
-    @Nonnull
-    public Optional<Boolean> getOptionalDtBoolean(String columnLabel) throws SQLException {
-        String dbValue = resultSet.getString(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
+    public byte getNonnullByte(String columnLabel) {
         try {
-            return Optional.of(DtBoolean.ofProvysDb(dbValue));
-        } catch (InternalException e) {
-            throw new InternalException(LOG, "Incorrect Provys boolean value retrieved from column " + columnLabel, e);
+            var value = resultSet.getByte(columnLabel);
+            checkWasNotNull(columnLabel);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, byte.class, e);
         }
     }
 
+    @Nullable
     @Override
-    public byte getNonnullByte(int columnIndex) throws SQLException {
-        var value = resultSet.getByte(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
-        return value;
-    }
-
-    @Override
-    public byte getNonnullByte(String columnLabel) throws SQLException {
-        var value = resultSet.getByte(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Byte> getOptionalByte(int columnIndex) throws SQLException {
-        var value = resultSet.getByte(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Byte> getOptionalByte(String columnLabel) throws SQLException {
-        var value = resultSet.getByte(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    public short getNonnullShort(int columnIndex) throws SQLException {
-        var value = resultSet.getShort(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
-        return value;
-    }
-
-    @Override
-    public short getNonnullShort(String columnLabel) throws SQLException {
-        var value = resultSet.getShort(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Short> getOptionalShort(int columnIndex) throws SQLException {
-        var value = resultSet.getShort(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Short> getOptionalShort(String columnLabel) throws SQLException {
-        var value = resultSet.getShort(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    public int getNonnullInteger(int columnIndex) throws SQLException {
-        var value = resultSet.getInt(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
-        return value;
-    }
-
-    @Override
-    public int getNonnullInteger(String columnLabel) throws SQLException {
-        var value = resultSet.getInt(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Integer> getOptionalInteger(int columnIndex) throws SQLException {
-        var value = resultSet.getInt(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public Optional<Integer> getOptionalInteger(String columnLabel) throws SQLException {
-        var value = resultSet.getInt(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public String getNonnullString(int columnIndex) throws SQLException {
-        var value = resultSet.getString(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public String getNonnullString(String columnLabel) throws SQLException {
-        var value = resultSet.getString(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public Optional<String> getOptionalString(int columnIndex) throws SQLException {
-        var value = resultSet.getString(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public Optional<String> getOptionalString(String columnLabel) throws SQLException {
-        var value = resultSet.getString(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public BigInteger getNonnullDtUid(int columnIndex) throws SQLException {
-        var value = resultSet.getBigDecimal(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
+    public Byte getNullableByte(int columnIndex) {
         try {
-            return value.toBigIntegerExact();
+            var value = resultSet.getByte(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, byte.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Byte getNullableByte(String columnLabel) {
+        try {
+            var value = resultSet.getByte(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, byte.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Byte> getOptionalByte(int columnIndex) {
+        return Optional.ofNullable(getNullableByte(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Byte> getOptionalByte(String columnLabel) {
+        return Optional.ofNullable(getNullableByte(columnLabel));
+    }
+
+    @Override
+    public short getNonnullShort(int columnIndex) {
+        try {
+            var value = resultSet.getShort(columnIndex);
+            checkWasNotNull(columnIndex);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, short.class, e);
+        }
+    }
+
+    @Override
+    public short getNonnullShort(String columnLabel) {
+        try {
+            var value = resultSet.getShort(columnLabel);
+            checkWasNotNull(columnLabel);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, short.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Short getNullableShort(int columnIndex) {
+        try {
+            var value = resultSet.getShort(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, short.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Short getNullableShort(String columnLabel) {
+        try {
+            var value = resultSet.getShort(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, short.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Short> getOptionalShort(int columnIndex) {
+        return Optional.ofNullable(getNullableShort(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Short> getOptionalShort(String columnLabel) {
+        return Optional.ofNullable(getNullableShort(columnLabel));
+    }
+
+    @Override
+    public int getNonnullInteger(int columnIndex) {
+        try {
+            var value = resultSet.getInt(columnIndex);
+            checkWasNotNull(columnIndex);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, int.class, e);
+        }
+    }
+
+    @Override
+    public int getNonnullInteger(String columnLabel) {
+        try {
+            var value = resultSet.getInt(columnLabel);
+            checkWasNotNull(columnLabel);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, int.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Integer getNullableInteger(int columnIndex) {
+        try {
+            var value = resultSet.getInt(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, int.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Integer getNullableInteger(String columnLabel) {
+        try {
+            var value = resultSet.getInt(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, int.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Integer> getOptionalInteger(int columnIndex) {
+        return Optional.ofNullable(getNullableInteger(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Integer> getOptionalInteger(String columnLabel) {
+        return Optional.ofNullable(getNullableInteger(columnLabel));
+    }
+
+    @Nonnull
+    @Override
+    public String getNonnullString(int columnIndex) {
+        var result = getNullableString(columnIndex);
+        if (result == null) {
+            throw getNullException(columnIndex);
+        }
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public String getNonnullString(String columnLabel) {
+        var result = getNullableString(columnLabel);
+        if (result == null) {
+            throw getNullException(columnLabel);
+        }
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public String getNullableString(int columnIndex) {
+        try {
+            var value = resultSet.getString(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, String.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getNullableString(String columnLabel) {
+        try {
+            var value = resultSet.getString(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, String.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<String> getOptionalString(int columnIndex) {
+        return Optional.ofNullable(getNullableString(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<String> getOptionalString(String columnLabel) {
+        return Optional.ofNullable(getNullableString(columnLabel));
+    }
+
+    @Nonnull
+    @Override
+    public BigDecimal getNonnullBigDecimal(int columnIndex) {
+        var result = getNullableBigDecimal(columnIndex);
+        if (result == null) {
+            throw getNullException(columnIndex);
+        }
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public BigDecimal getNonnullBigDecimal(String columnLabel) {
+        var result = getNullableBigDecimal(columnLabel);
+        if (result == null) {
+            throw getNullException(columnLabel);
+        }
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public BigDecimal getNullableBigDecimal(int columnIndex) {
+        try {
+            var value = resultSet.getBigDecimal(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, BigDecimal.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public BigDecimal getNullableBigDecimal(String columnLabel) {
+        try {
+            var value = resultSet.getBigDecimal(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, BigDecimal.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<BigDecimal> getOptionalBigDecimal(int columnIndex) {
+        return Optional.ofNullable(getNullableBigDecimal(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<BigDecimal> getOptionalBigDecimal(String columnLabel) {
+        return Optional.ofNullable(getNullableBigDecimal(columnLabel));
+    }
+
+    @Nonnull
+    @Override
+    public BigInteger getNonnullDtUid(int columnIndex) {
+        var result = getNullableDtUid(columnIndex);
+        if (result == null) {
+            throw getNullException(columnIndex);
+        }
+        return result;
+    }
+
+    @Nonnull
+    @Override
+    public BigInteger getNonnullDtUid(String columnLabel) {
+        var result = getNullableDtUid(columnLabel);
+        if (result == null) {
+            throw getNullException(columnLabel);
+        }
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public BigInteger getNullableDtUid(int columnIndex) {
+        var result = getNullableBigDecimal(columnIndex);
+        try {
+            return (result == null) ? null : result.toBigIntegerExact();
         } catch (ArithmeticException e) {
-            throw new InternalException(LOG, "Fractional part encountered when reading Uid, column index " +
-                    columnIndex);
+            throw new SqlException(LOG, "Fractional part encountered when reading Uid, column " + columnIndex);
         }
     }
 
+    @Nullable
     @Override
-    @Nonnull
-    public BigInteger getNonnullDtUid(String columnLabel) throws SQLException {
-        var value = resultSet.getBigDecimal(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
+    public BigInteger getNullableDtUid(String columnLabel) {
+        var result = getNullableBigDecimal(columnLabel);
         try {
-            return value.toBigIntegerExact();
+            return (result == null) ? null : result.toBigIntegerExact();
         } catch (ArithmeticException e) {
-            throw new InternalException(LOG, "Fractional part encountered when reading Uid, column " + columnLabel);
+            throw new SqlException(LOG, "Fractional part encountered when reading Uid, column " + columnLabel);
         }
     }
 
     @Override
     @Nonnull
-    public Optional<BigInteger> getOptionalDtUid(int columnIndex) throws SQLException {
-        var value = resultSet.getBigDecimal(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(value.toBigIntegerExact());
-        } catch (ArithmeticException e) {
-            throw new InternalException(LOG, "Fractional part encountered when reading Uid, column index " +
-                    columnIndex);
-        }
+    public Optional<BigInteger> getOptionalDtUid(int columnIndex) {
+        return Optional.ofNullable(getNullableDtUid(columnIndex));
     }
 
     @Override
     @Nonnull
-    public Optional<BigInteger> getOptionalDtUid(String columnLabel) throws SQLException {
-        var value = resultSet.getBigDecimal(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(value.toBigIntegerExact());
-        } catch (ArithmeticException e) {
-            throw new InternalException(LOG, "Fractional part encountered when reading Uid, column " + columnLabel);
-        }
-    }
-
-    @Override
-    @Nonnull
-    public BigDecimal getNonnullBigDecimal(int columnIndex) throws SQLException {
-        var value = resultSet.getBigDecimal(columnIndex);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public BigDecimal getNonnullBigDecimal(String columnLabel) throws SQLException {
-        var value = resultSet.getBigDecimal(columnLabel);
-        if (resultSet.wasNull()) {
-            throw new InternalException(LOG, "Unexpected null value in ResultSet, column " + columnLabel);
-        }
-        return value;
-    }
-
-    @Override
-    @Nonnull
-    public Optional<BigDecimal> getOptionalBigDecimal(int columnIndex) throws SQLException {
-        var value = resultSet.getBigDecimal(columnIndex);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
-    }
-
-    @Override
-    @Nonnull
-    public Optional<BigDecimal> getOptionalBigDecimal(String columnLabel) throws SQLException {
-        var value = resultSet.getBigDecimal(columnLabel);
-        if (resultSet.wasNull()) {
-            return Optional.empty();
-        }
-        return Optional.of(value);
+    public Optional<BigInteger> getOptionalDtUid(String columnLabel) {
+        return Optional.ofNullable(getNullableDtUid(columnLabel));
     }
 }
