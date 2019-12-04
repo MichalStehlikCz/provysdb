@@ -3,7 +3,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 
-public class LiteralBigDecimal extends LiteralNumber<BigDecimal> {
+class LiteralBigDecimal extends LiteralNumber<BigDecimal> {
 
     /**
      * Get literal corresponding to given BigDecimal value
@@ -12,7 +12,7 @@ public class LiteralBigDecimal extends LiteralNumber<BigDecimal> {
      * @return new literal, representing supplied value
      */
     @Nonnull
-    public static LiteralBigDecimal of(BigDecimal value) {
+    static LiteralBigDecimal of(BigDecimal value) {
         return new LiteralBigDecimal(value);
     }
 

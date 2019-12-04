@@ -2,6 +2,7 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
+import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
 import com.provys.provysdb.sqlbuilder.*;
 import org.apache.logging.log4j.LogManager;
@@ -80,7 +81,12 @@ class BindVariableImpl<T> implements BindVariableT<T> {
 
     @Override
     public void bind(DbPreparedStatement statement, int parameterIndex) {
-        var value = getValue().orElse(null);
-        statement.setValue(parameterIndex, getType(), value);
+        try {
+            var value = getValue().orElse(null);
+            statement.setNullableValue(parameterIndex, value, getType());
+        } catch (Exception e) {
+            throw new SqlException(LOG, "Error binding value " + getValue().orElse(null) +
+                    " to variable " + getName(), e);
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.provys.provysdb.sqlparser.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.impl.BindNameImpl;
+import com.provys.provysdb.sqlbuilder.SqlFactory;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
@@ -16,7 +16,7 @@ class ParsedBind extends ParsedTokenBase implements BindName {
 
     ParsedBind(int line, int pos, String name) {
         super(line, pos);
-        this.name = new BindNameImpl(name);
+        this.name = SqlFactory.bind(name);
     }
 
     @Nonnull

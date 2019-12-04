@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * else in SQL, bind names are case insensitive. Bind name mus be string that starts with letter and contains only
  * letters, numbers and underscore.
  */
-public class BindNameImpl implements BindName {
+class BindNameImpl implements BindName {
 
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(BindNameImpl.class);
@@ -36,7 +36,7 @@ public class BindNameImpl implements BindName {
     @Nonnull
     private final String name;
 
-    public BindNameImpl(String name) {
+    BindNameImpl(String name) {
         this.name = validateName(name);
     }
 

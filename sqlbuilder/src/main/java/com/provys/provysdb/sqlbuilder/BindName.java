@@ -14,8 +14,9 @@ public interface BindName extends Expression {
     String getName();
 
     /**
-     * Return bind value with the same name and type, but with new value. Used as part of bind value method. Specified
-     * object must be of the type compatible with bind variable
+     * Return bind value with the same name. When applied on bind name without type information, it returns value of
+     * type matching supplied object. If bind already has type, action will fail if required type does not match current
+     * type of bind value
      *
      * @param value is value to be assigned to new bind
      * @return bind variable with the same name as old one, but with the new value

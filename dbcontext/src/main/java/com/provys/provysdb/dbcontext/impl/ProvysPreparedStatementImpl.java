@@ -1,9 +1,9 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.common.datatype.DtBoolean;
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.DbResultSet;
-import com.provys.provysdb.dbcontext.SqlTypeMap;
+import com.provys.provysdb.dbcontext.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +18,8 @@ import java.util.Calendar;
 @SuppressWarnings("unused")
 class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysStatementImpl<T>
         implements DbPreparedStatement {
+
+    private static final Logger LOG = LogManager.getLogger(ProvysPreparedStatementImpl.class);
 
     @Nonnull
     private final SqlTypeMap sqlTypeMap;
@@ -327,37 +329,86 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
         return statement.executeLargeUpdate();
     }
 
-    @Override
-    public void setDtBoolean(int parameterIndex, boolean value) throws SQLException {
-        setString(parameterIndex, DtBoolean.toProvysDb(value));
+    @Nonnull
+    private SqlException getSetException(int parameterIndex, Class<?> clazz, @Nullable Object value, SQLException e) {
+        return new SqlException(LOG, "Sql exception setting bind on index " + parameterIndex +
+                ", type " + clazz.getSimpleName() + " to value " + value, e);
     }
 
     @Override
-    public void setNullableDtBoolean(int parameterIndex, @Nullable Boolean value) throws SQLException {
-        if (value == null) {
-            setNull(parameterIndex, Types.CHAR);
-        } else {
+    public void setNonnullDbBoolean(int parameterIndex, boolean value) {
+        try {
+            setBoolean(parameterIndex, value);
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, DtBoolean.class, value, e);
+        }
+    }
+
+    @Override
+    public void setNullableDbBoolean(int parameterIndex, @Nullable Boolean value) {
+        try {
+            if (value == null) {
+                setNull(parameterIndex, Types.BOOLEAN);
+            } else {
+                setNonnullDbBoolean(parameterIndex, value);
+            }
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, DtBoolean.class, value, e);
+        }
+    }
+
+    @Override
+    public void setNonnullBoolean(int parameterIndex, boolean value) {
+        try {
             setString(parameterIndex, DtBoolean.toProvysDb(value));
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, Boolean.class, value, e);
         }
     }
 
     @Override
-    public void setDtUid(int parameterIndex, BigInteger value) throws SQLException {
-        setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+    public void setNullableBoolean(int parameterIndex, @Nullable Boolean value) {
+        try {
+            if (value == null) {
+                setNull(parameterIndex, Types.CHAR);
+            } else {
+                setNonnullBoolean(parameterIndex, value);
+            }
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, Boolean.class, value, e);
+        }
     }
 
     @Override
-    public void setNullableDtUid(int parameterIndex, @Nullable BigInteger value) throws SQLException {
-        if (value == null) {
-            setNull(parameterIndex, Types.NUMERIC);
-        } else {
+    public void setNonnullDtUid(int parameterIndex, BigInteger value) {
+        try {
             setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, BigInteger.class, value, e);
         }
     }
 
+    @Override
+    public void setNullableDtUid(int parameterIndex, @Nullable BigInteger value) {
+        try {
+            if (value == null) {
+                setNull(parameterIndex, Types.NUMERIC);
+            } else {
+                setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+            }
+        } catch (SQLException e) {
+            throw getSetException(parameterIndex, BigInteger.class, value, e);
+        }
+    }
 
     @Override
-    public <V> void setValue(int parameterIndex, Class<V> type, @Nullable V value) {
+    public void setNonnullValue(int parameterIndex, Object value) {
+        //noinspection unchecked - we know that we get adapter for proper type... there is just no way to express it
+        ((SqlTypeAdapter<Object>) sqlTypeMap.getAdapter(value.getClass())).bindValue(statement, parameterIndex, value);
+    }
+
+    @Override
+    public <V> void setNullableValue(int parameterIndex, @Nullable V value, Class<V> type) {
         sqlTypeMap.getAdapter(type).bindValue(statement, parameterIndex, value);
     }
 

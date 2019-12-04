@@ -1058,7 +1058,7 @@ class ProvysResultSetImpl implements DbResultSet {
     }
 
     @Override
-    public boolean getNonnullBoolean(int columnIndex) {
+    public Boolean getNonnullBoolean(int columnIndex) {
         var result = getNullableBoolean(columnIndex);
         if (result == null) {
             throw getNullException(columnIndex);
@@ -1067,7 +1067,7 @@ class ProvysResultSetImpl implements DbResultSet {
     }
 
     @Override
-    public boolean getNonnullBoolean(String columnLabel) {
+    public Boolean getNonnullBoolean(String columnLabel) {
         var result = getNullableBoolean(columnLabel);
         if (result == null) {
             throw getNullException(columnLabel);

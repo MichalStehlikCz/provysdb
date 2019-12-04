@@ -1,8 +1,8 @@
 package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.SqlFactory;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.impl.SqlIdentifierImpl;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 
@@ -19,7 +19,7 @@ class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
 
     ParsedIdentifier(int line, int pos, String name) {
         super(line, pos);
-        this.identifier = SqlIdentifierImpl.parse(name);
+        this.identifier = SqlFactory.name(name);
     }
 
     ParsedIdentifier(int line, int pos, SqlIdentifier identifier) {

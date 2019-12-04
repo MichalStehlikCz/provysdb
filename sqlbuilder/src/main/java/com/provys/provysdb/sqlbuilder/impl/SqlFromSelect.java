@@ -5,7 +5,7 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class SqlFromSelect extends SqlFromBase {
+class SqlFromSelect extends SqlFromBase {
 
     @Nonnull
     private final Select select;

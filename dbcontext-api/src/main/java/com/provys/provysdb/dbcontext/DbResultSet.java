@@ -20,7 +20,7 @@ public interface DbResultSet extends ResultSet {
      * @param columnIndex is index of column to be retrieved
      * @return boolean value corresponding to value in column
      */
-    boolean getNonnullBoolean(int columnIndex);
+    Boolean getNonnullBoolean(int columnIndex);
 
     /**
      * Return value of (mandatory) provys boolean column (char Y / N)
@@ -28,7 +28,7 @@ public interface DbResultSet extends ResultSet {
      * @param columnLabel is name of column to be retrieved
      * @return boolean value corresponding to value in column
      */
-    boolean getNonnullBoolean(String columnLabel);
+    Boolean getNonnullBoolean(String columnLabel);
 
     /**
      * Return value of optional provys boolean column (char Y / N)

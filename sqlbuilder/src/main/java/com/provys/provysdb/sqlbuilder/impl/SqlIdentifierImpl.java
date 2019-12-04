@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * normalisation of supplied text, thus equals on sql identifiers is equivalent to two identifiers pointing to the same
  * object
  */
-public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier {
+class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier {
 
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(SqlIdentifierImpl.class);
@@ -30,7 +30,7 @@ public class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIden
      * @return parsed identifier
      */
     @Nonnull
-    public static SqlIdentifierImpl parse(String text) {
+    static SqlIdentifierImpl parse(String text) {
         var result = text.trim();
         if (result.charAt(0) == '"') {
             // delimited identifier

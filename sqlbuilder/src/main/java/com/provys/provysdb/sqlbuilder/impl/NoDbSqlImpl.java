@@ -14,7 +14,7 @@ public class NoDbSqlImpl extends SqlImpl implements NoDbSql {
         super(tokenizer);
     }
 
-    NoDbSqlImpl() {
+    public NoDbSqlImpl() {
         this(new DefaultSqlTokenizer());
     }
 

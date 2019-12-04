@@ -101,6 +101,12 @@ public abstract class SqlImpl implements Sql {
 
     @Nonnull
     @Override
+    public BindName bind(String name) {
+        return new BindNameImpl(name);
+    }
+
+    @Nonnull
+    @Override
     public <T> BindValueT<T> bind(String name, T value) {
         return BindValueImpl.ofObject(name, value);
     }

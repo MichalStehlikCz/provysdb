@@ -15,50 +15,77 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
     DbResultSet executeQuery() throws SQLException;
 
     /**
+     * Set (mandatory) value to bind value of database boolean type
+     *
+     * @param parameterIndex is index of bind variable
+     * @param value is value to be bound
+     * @throws SqlException when any problem is encountered
+     */
+    void setNonnullDbBoolean(int parameterIndex, boolean value);
+
+    /**
+     * Set optional value to bind value of database boolean type
+     *
+     * @param parameterIndex is index of bind variable
+     * @param value is value to be bound
+     * @throws SqlException when any problem is encountered
+     */
+    void setNullableDbBoolean(int parameterIndex, @Nullable Boolean value);
+
+    /**
      * Set (mandatory) value to bind value of provys boolean type (char Y / N / NULL)
      *
      * @param parameterIndex is index of bind variable
      * @param value is value to be bound
-     * @throws SQLException when any problem is encountered
+     * @throws SqlException when any problem is encountered
      */
-    void setDtBoolean(int parameterIndex, boolean value) throws SQLException;
+    void setNonnullBoolean(int parameterIndex, boolean value);
 
     /**
      * Set value to bind value of provys boolean type (char Y / N / NULL)
      *
      * @param parameterIndex is index of bind variable
      * @param value is value to be bound
-     * @throws SQLException when any problem is encountered
+     * @throws SqlException when any problem is encountered
      */
-    void setNullableDtBoolean(int parameterIndex, @Nullable Boolean value) throws SQLException;
+    void setNullableBoolean(int parameterIndex, @Nullable Boolean value);
 
     /**
      * Set (mandatory) value to bind value of provys Uid type
      *
      * @param parameterIndex is index of bind variable
      * @param value is value to be bound
-     * @throws SQLException when any problem is encountered
+     * @throws SqlException when any problem is encountered
      */
-    void setDtUid(int parameterIndex, BigInteger value) throws SQLException;
+    void setNonnullDtUid(int parameterIndex, BigInteger value);
 
     /**
      * Set (optional) value to bind value of provys Uid type
      *
      * @param parameterIndex is index of bind variable
      * @param value is value to be bound
-     * @throws SQLException when any problem is encountered
+     * @throws SqlException when any problem is encountered
      */
-    void setNullableDtUid(int parameterIndex, @Nullable BigInteger value) throws SQLException;
+    void setNullableDtUid(int parameterIndex, @Nullable BigInteger value);
 
     /**
-     * Set (optional) value to bind value, use default conversion of supplied type to Sql
+     * Set mandatory value to bind value, use default conversion of supplied type to Sql.\Note that type will be
+     * inferred from value and thus might not correspond to formal parameter type
      *
      * @param parameterIndex is index of bind value in statement
-     * @param type is type of supplied value
      * @param value is value to be bound
+     */
+    void setNonnullValue(int parameterIndex, Object value);
+
+    /**
+     * Set optional value to bind value, use default conversion of supplied type to Sql
+     *
+     * @param parameterIndex is index of bind value in statement
+     * @param value is value to be bound
+     * @param type is type of supplied value
      * @param <T> is (Java) type of value to be bound
      */
-    <T> void setValue(int parameterIndex, Class<T> type, @Nullable T value);
+    <T> void setNullableValue(int parameterIndex, @Nullable T value, Class<T> type);
 
     /**
      * Get type adapter map usable for given statement

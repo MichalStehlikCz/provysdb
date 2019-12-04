@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ConditionSimpleWithBinds implements Condition {
+class ConditionSimpleWithBinds implements Condition {
 
     @Nonnull
     private final String sql;

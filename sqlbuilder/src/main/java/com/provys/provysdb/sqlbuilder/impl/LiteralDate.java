@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 /**
  * Class represents SQL date literal (maps to DATE)
  */
-public class LiteralDate extends LiteralBase<DtDate> {
+class LiteralDate extends LiteralBase<DtDate> {
 
     /**
      * Create date literal from supplied date value
@@ -17,7 +17,7 @@ public class LiteralDate extends LiteralBase<DtDate> {
      * @return date literal, representing supplied value
      */
     @Nonnull
-    public static LiteralDate of(DtDate value) {
+    static LiteralDate of(DtDate value) {
         return new LiteralDate(value);
     }
 

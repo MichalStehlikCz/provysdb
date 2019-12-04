@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import javax.annotation.Nonnull;
 
-public class LiteralInt extends LiteralNumber<Integer> {
+class LiteralInt extends LiteralNumber<Integer> {
 
     /**
      * Get literal corresponding to given Integer value
@@ -11,7 +11,7 @@ public class LiteralInt extends LiteralNumber<Integer> {
      * @return new literal, representing supplied value
      */
     @Nonnull
-    public static LiteralInt of(int value) {
+    static LiteralInt of(int value) {
         return new LiteralInt(value);
     }
 

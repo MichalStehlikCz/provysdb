@@ -5,6 +5,7 @@ import com.provys.common.datatype.StringParser;
 import com.provys.common.exception.InternalException;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.SqlFactory;
 import com.provys.provysdb.sqlbuilder.impl.*;
 import com.provys.provysdb.sqlparser.*;
 import org.apache.logging.log4j.LogManager;
@@ -332,7 +333,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 text.append(nextChar());
             }
             nextChar();
-            return new ParsedLiteral<>(startLine, pos, LiteralDate.of(DtDate.parseIso(text.toString())));
+            return new ParsedLiteral<>(startLine, pos, SqlFactory.literal(DtDate.parseIso(text.toString())));
         }
 
         @Nonnull
@@ -427,7 +428,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 if (peekChar() == '\'') {
                     nextChar();
                     if (peekChar() != '\'') {
-                        return new ParsedLiteral<>(line, pos, LiteralVarchar.of(value.toString()));
+                        return new ParsedLiteral<>(line, pos, SqlFactory.literal(value.toString()));
                     }
                     // two quotation marks are evaluated as single one
                 }
@@ -442,19 +443,19 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         private SqlParsedToken createNumericLiteral(int pos, String literal, boolean dotEncountered) {
             if (dotEncountered) {
                 if (literal.length() <= 16) {
-                    return new ParsedLiteral<>(line, pos, LiteralDouble.of(Double.parseDouble(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(Double.parseDouble(literal)));
                 } else {
-                    return new ParsedLiteral<>(line, pos, LiteralBigDecimal.of(new BigDecimal(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(new BigDecimal(literal)));
                 }
             } else {
                 if (literal.length() <= 2) {
-                    return new ParsedLiteral<>(line, pos, LiteralByte.of(Byte.parseByte(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(Byte.parseByte(literal)));
                 } else if (literal.length() <= 4) {
-                    return new ParsedLiteral<>(line, pos, LiteralShort.of(Short.parseShort(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(Short.parseShort(literal)));
                 } else if (literal.length() <= 9) {
-                    return new ParsedLiteral<>(line, pos, LiteralInt.of(Integer.parseInt(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(Integer.parseInt(literal)));
                 } else {
-                    return new ParsedLiteral<>(line, pos, LiteralBigInteger.of(new BigInteger(literal)));
+                    return new ParsedLiteral<>(line, pos, SqlFactory.literal(new BigInteger(literal)));
                 }
             }
         }

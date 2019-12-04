@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 /**
  * Class represents SQL string literal (VARCHAR2)
  */
-public class LiteralVarchar extends LiteralBase<String> {
+class LiteralVarchar extends LiteralBase<String> {
 
     /**
      * Get literal corresponding to given String value
@@ -16,7 +16,7 @@ public class LiteralVarchar extends LiteralBase<String> {
      * @return new literal, representing supplied value
      */
     @Nonnull
-    public static LiteralVarchar of(String value) {
+    static LiteralVarchar of(String value) {
         return new LiteralVarchar(value);
     }
 

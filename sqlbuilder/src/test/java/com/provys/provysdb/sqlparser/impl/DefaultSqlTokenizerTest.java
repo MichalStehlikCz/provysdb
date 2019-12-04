@@ -2,9 +2,7 @@ package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.common.datatype.DtDate;
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.impl.BindNameImpl;
-import com.provys.provysdb.sqlbuilder.impl.LiteralByte;
-import com.provys.provysdb.sqlbuilder.impl.LiteralDate;
+import com.provys.provysdb.sqlbuilder.SqlFactory;
 import com.provys.provysdb.sqlparser.SqlKeyword;
 import com.provys.provysdb.sqlparser.SqlParsedToken;
 import com.provys.provysdb.sqlparser.SqlSymbol;
@@ -43,7 +41,7 @@ class DefaultSqlTokenizerTest {
                 , new Object[]{"a:=5;", new SqlParsedToken[]{
                         new ParsedIdentifier(1, 1, "a")
                         , new ParsedSymbol(1, 2, SqlSymbol.ASSIGNMENT)
-                        , new ParsedLiteral<>(1, 4, LiteralByte.of((byte) 5))
+                        , new ParsedLiteral<>(1, 4, SqlFactory.literal((byte) 5))
                         , new ParsedSymbol(1, 5, SqlSymbol.SEMICOLON)}}
                 , new Object[]{"arc.call(p_A => :a, p_B => :b2);", new SqlParsedToken[]{
                         new ParsedIdentifier(1, 1, "arc")
@@ -61,7 +59,8 @@ class DefaultSqlTokenizerTest {
                         , new ParsedSymbol(1, 32, SqlSymbol.SEMICOLON)}}
                 , new Object[]{"SELECT\n    date '2018-01-12'\nFROM\n    dual", new SqlParsedToken[]{
                         new ParsedKeyword(1, 1, SqlKeyword.SELECT)
-                        , new ParsedLiteral<>(2, 5, LiteralDate.of(DtDate.of(2018, 1, 12)))
+                        , new ParsedLiteral<>(2, 5,
+                        SqlFactory.literal(DtDate.of(2018, 1, 12)))
                         , new ParsedKeyword(3, 1, SqlKeyword.FROM)
                         , new ParsedIdentifier(4, 5, "dual")}}
         );
@@ -86,8 +85,8 @@ class DefaultSqlTokenizerTest {
                         new BindName[]{}}
                 , new Object[]{"a:=5;", "a:=5;", new BindName[]{}}
                 , new Object[]{"arc.call(p_A => :a, p_B => :b2);", "arc.call(p_a => ?, p_b => ?);",
-                        new BindName[]{new BindNameImpl("a"),
-                                new BindNameImpl("b2")}}
+                        new BindName[]{SqlFactory.bind("a"),
+                                SqlFactory.bind("b2")}}
                 , new Object[]{"SELECT\n    date '2018-01-12'\nFROM\n    dual", "SELECT DATE'2018-01-12' FROM dual",
                         new BindName[]{}}
         );
