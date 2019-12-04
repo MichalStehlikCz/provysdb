@@ -7,10 +7,8 @@
     <version>1.3.6-SNAPSHOT</version>
     <modules>
         <module>dbcontext-api</module>
-        <module>sqlbuilder-api</module>
         <module>dbcontext</module>
         <module>sqlbuilder</module>
-        <module>dbsqlbuilder-api</module>
         <module>dbsqlbuilder</module>
     </modules>
     <packaging>pom</packaging>
