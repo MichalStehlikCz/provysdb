@@ -7,6 +7,9 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 
 import com.provys.provysdb.dbcontext.SqlException;
+import oracle.ucp.UniversalConnectionPoolException;
+import oracle.ucp.admin.UniversalConnectionPoolManager;
+import oracle.ucp.admin.UniversalConnectionPoolManagerImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +36,8 @@ import org.eclipse.microprofile.config.ConfigProvider;
 class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(ProvysConnectionPoolDataSource.class);
+    @Nonnull
+    private static final String POOL_NAME = "ProvysDB";
 
     @Nonnull
     private final PoolDataSource oraclePool;
@@ -42,6 +47,18 @@ class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
      * Creates supporting Oracle Universal Connection Pool based on read connection information.
      */
     ProvysConnectionPoolDataSource() {
+        UniversalConnectionPoolManager mgr;
+        try {
+            mgr = UniversalConnectionPoolManagerImpl.getUniversalConnectionPoolManager();
+            for (String name : mgr.getConnectionPoolNames()) {
+                if (name.equals(POOL_NAME)) {
+                    LOG.warn("Connection pool with name {} found; destroying it", POOL_NAME);
+                    mgr.destroyConnectionPool(POOL_NAME);
+                }
+            }
+        } catch (UniversalConnectionPoolException e) {
+            LOG.warn("Exception checking connection pool existence", e);
+        }
         String user = null;
         String db = null;
         try {
@@ -60,7 +77,7 @@ class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
                     .getOptionalValue("PROVYSDB_URL", String.class)
                     .orElse("localhost:1521:PVYS");
             oraclePool.setURL("jdbc:oracle:thin:@" + db);
-            oraclePool.setConnectionPoolName("ProvysDB");
+            oraclePool.setConnectionPoolName(POOL_NAME);
             int minPoolSize = config
                     .getOptionalValue("PROVYSDB_MINPOOLSIZE", Integer.class)
                     .orElse(1);
