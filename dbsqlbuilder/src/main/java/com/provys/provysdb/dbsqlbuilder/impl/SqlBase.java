@@ -13,6 +13,7 @@ import java.util.*;
 
 abstract class SqlBase extends SqlImpl implements DbSql {
 
+    @Nonnull
     private final DbContext dbContext;
 
     private SqlBase(DbContext dbContext, SqlTokenizer tokenizer) {
