@@ -237,6 +237,15 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
             }
             modified = false;
         }
+
+        @Override
+        public String toString() {
+            return "BindWithPos{" +
+                    "bind=" + bind +
+                    ", positions=" + positions +
+                    ", modified=" + modified +
+                    '}';
+        }
     }
 
     @Nonnull
