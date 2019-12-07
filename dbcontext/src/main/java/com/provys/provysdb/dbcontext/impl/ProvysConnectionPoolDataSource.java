@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 
+import com.provys.provysdb.dbcontext.SqlException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,40 +40,51 @@ class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
     /**
      * Constructor for provys connection that reads all info from environment.
      * Creates supporting Oracle Universal Connection Pool based on read connection information.
-     *
-     * @throws SQLException on any SQL error that happens during pool initiation
      */
-    ProvysConnectionPoolDataSource() throws SQLException {
-        oraclePool = PoolDataSourceFactory.getPoolDataSource();
-        oraclePool.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
-        Config config = ConfigProvider.getConfig();
-        String user = config
-                .getOptionalValue("PROVYSDB_USER", String.class)
-                .orElse("KER");
-        oraclePool.setUser(user);
-        String pwd = config
-                .getOptionalValue("PROVYSDB_PWD", String.class)
-                .orElse("ker");
-        oraclePool.setPassword(pwd);
-        String db = config
-                .getOptionalValue("PROVYSDB_URL", String.class)
-                .orElse("localhost:1521:PVYS");
-        oraclePool.setURL("jdbc:oracle:thin:@" + db);
-        oraclePool.setConnectionPoolName("ProvysDB");
-        int minPoolSize = config
-                .getOptionalValue("PROVYSDB_MINPOOLSIZE", Integer.class)
-                .orElse(1);
-        oraclePool.setMinPoolSize(minPoolSize);
-        oraclePool.setInitialPoolSize(minPoolSize);
-        int maxPoolSize = config
-                .getOptionalValue("PROVYSDB_MAXPOOLSIZE", Integer.class)
-                .orElse(10);
-        oraclePool.setMaxPoolSize(maxPoolSize);
-        oraclePool.setValidateConnectionOnBorrow(true);
-        // Register connection labeling callback
-        oraclePool.registerConnectionLabelingCallback(new ProvysConnectionLabelingCallback());
-        LOG.info("Connection pool created (user {} db {} minsize {} maxsize {}", user, db, minPoolSize,
-                maxPoolSize);
+    ProvysConnectionPoolDataSource() {
+        String user = null;
+        String db = null;
+        try {
+            oraclePool = PoolDataSourceFactory.getPoolDataSource();
+            oraclePool.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
+            Config config = ConfigProvider.getConfig();
+            user = config
+                    .getOptionalValue("PROVYSDB_USER", String.class)
+                    .orElse("KER");
+            oraclePool.setUser(user);
+            String pwd = config
+                    .getOptionalValue("PROVYSDB_PWD", String.class)
+                    .orElse("ker");
+            oraclePool.setPassword(pwd);
+            db = config
+                    .getOptionalValue("PROVYSDB_URL", String.class)
+                    .orElse("localhost:1521:PVYS");
+            oraclePool.setURL("jdbc:oracle:thin:@" + db);
+            oraclePool.setConnectionPoolName("ProvysDB");
+            int minPoolSize = config
+                    .getOptionalValue("PROVYSDB_MINPOOLSIZE", Integer.class)
+                    .orElse(1);
+            oraclePool.setMinPoolSize(minPoolSize);
+            oraclePool.setInitialPoolSize(minPoolSize);
+            int maxPoolSize = config
+                    .getOptionalValue("PROVYSDB_MAXPOOLSIZE", Integer.class)
+                    .orElse(10);
+            oraclePool.setMaxPoolSize(maxPoolSize);
+            oraclePool.setValidateConnectionOnBorrow(true);
+            // Register connection labeling callback
+            oraclePool.registerConnectionLabelingCallback(new ProvysConnectionLabelingCallback());
+            LOG.info("Connection pool created (user {}, db {}, minsize {}, maxsize {}", user, db, minPoolSize,
+                    maxPoolSize);
+        } catch (SQLException e) {
+            throw new SqlException(LOG, "Failed to create connection pool (user " + user + ", db " + db + ")");
+        }
+        // now try to get connection (to verify that connection pool parameters are valid)
+        try (Connection conn = getConnection()) {
+            LOG.info("Verified connection to database (user {}, db {})", user, db);
+        } catch (SQLException e) {
+            LOG.warn("Failed to verify connection pool (user {}, db {}) - attempt to get connection thrown {}",
+                    user, db, e);
+        }
     }
 
     @Override

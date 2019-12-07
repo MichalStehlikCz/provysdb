@@ -1,10 +1,7 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.dbcontext.DbConnection;
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.DbResultSet;
-import com.provys.provysdb.dbcontext.DbRowMapper;
+import com.provys.provysdb.dbcontext.*;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.*;
@@ -37,7 +34,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
     @Nonnull
     private static Map<String, BindWithPos> getBinds(List<BindName> binds) {
         // first construct list of positions for each supplied bind name
-        int pos = 0;
+        int pos = 1;
         Map<BindName, List<Integer>> bindPosMap = new HashMap<>(binds.size());
         for (var bind : binds) {
             var posList = bindPosMap.computeIfAbsent(bind, val -> new ArrayList<>(3));
@@ -51,15 +48,28 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
         return result;
     }
 
-    SelectStatementTImpl(String sqlText, List<BindName> binds, DbSql sqlContext) {
+    @SuppressWarnings("squid:S2637") // Sonar does notice initialisation in try-catch block
+    private SelectStatementTImpl(String sqlText, List<BindName> binds, DbConnection connection, boolean closeConnection) {
         this.sqlText = sqlText;
-        this.connection = sqlContext.getConnection();
+        if (closeConnection) {
+            this.connection = connection;
+        } else {
+            this.connection = null;
+        }
         try {
-            this.statement = this.connection.prepareStatement(sqlText);
+            this.statement = connection.prepareStatement(sqlText);
         } catch (SQLException e) {
-            throw new InternalException(LOG, "Failed to parse statement " + sqlText, e);
+            throw new SqlException(LOG, "Failed to parse statement " + sqlText, e);
         }
         this.binds = getBinds(binds);
+    }
+
+    SelectStatementTImpl(String sqlText, List<BindName> binds, DbConnection connection) {
+        this(sqlText, binds, connection, false);
+    }
+
+    SelectStatementTImpl(String sqlText, List<BindName> binds, DbSql sqlContext) {
+        this(sqlText, binds, sqlContext.getConnection(), true);
     }
 
     SelectStatementTImpl(Select select, DbSql sqlContext) {
@@ -67,14 +77,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
     }
 
     SelectStatementTImpl(Select select, DbConnection connection) {
-        this.sqlText = select.getSqlText();
-        this.connection = null;
-        try {
-            this.statement = connection.prepareStatement(select.getSqlText());
-        } catch (SQLException e) {
-            throw new InternalException(LOG, "Failed to parse statement " + select, e);
-        }
-        this.binds = getBinds(select.getBinds());
+        this(select.getSqlText(), select.getBinds(), connection);
     }
 
     /**
@@ -366,5 +369,15 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
             next = null;
             return result;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SelectStatementTImpl{" +
+                "sqlText='" + sqlText + '\'' +
+                ", binds=" + binds +
+                ", connection=" + connection +
+                ", closed=" + closed +
+                '}';
     }
 }
