@@ -1,11 +1,11 @@
 package com.provys.provysdb.dbcontext;
 
+import com.provys.common.datatype.DtUid;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -223,6 +223,58 @@ public interface DbResultSet extends ResultSet {
     Optional<Integer> getOptionalInteger(String columnLabel);
 
     /**
+     * Return value of (mandatory) Character column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    char getNonnullCharacter(int columnIndex);
+
+    /**
+     * Return value of (mandatory) Character column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    char getNonnullCharacter(String columnLabel);
+
+    /**
+     * Return value of optional Character column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column, null when empty
+     */
+    @Nullable
+    Character getNullableCharacter(int columnIndex);
+
+    /**
+     * Return value of optional Character column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    @Nullable
+    Character getNullableCharacter(String columnLabel);
+
+    /**
+     * Return value of optional Character column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Character> getOptionalCharacter(int columnIndex);
+
+    /**
+     * Return value of optional Character column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Character> getOptionalCharacter(String columnLabel);
+
+    /**
      * Return value of (mandatory) String column
      *
      * @param columnIndex is index of column to be retrieved
@@ -337,7 +389,7 @@ public interface DbResultSet extends ResultSet {
      * @return value in column
      */
     @Nonnull
-    BigInteger getNonnullDtUid(int columnIndex);
+    DtUid getNonnullDtUid(int columnIndex);
 
     /**
      * Return value of (mandatory) Uid column
@@ -346,7 +398,7 @@ public interface DbResultSet extends ResultSet {
      * @return value in column
      */
     @Nonnull
-    BigInteger getNonnullDtUid(String columnLabel);
+    DtUid getNonnullDtUid(String columnLabel);
 
     /**
      * Return value of optional Uid column
@@ -355,7 +407,7 @@ public interface DbResultSet extends ResultSet {
      * @return value in column, null when empty
      */
     @Nullable
-    BigInteger getNullableDtUid(int columnIndex);
+    DtUid getNullableDtUid(int columnIndex);
 
     /**
      * Return value of optional Uid column
@@ -364,7 +416,7 @@ public interface DbResultSet extends ResultSet {
      * @return value in column, null when empty
      */
     @Nullable
-    BigInteger getNullableDtUid(String columnLabel);
+    DtUid getNullableDtUid(String columnLabel);
 
     /**
      * Return value of optional Uid column
@@ -373,7 +425,7 @@ public interface DbResultSet extends ResultSet {
      * @return value in column
      */
     @Nonnull
-    Optional<BigInteger> getOptionalDtUid(int columnIndex);
+    Optional<DtUid> getOptionalDtUid(int columnIndex);
 
     /**
      * Return value of optional Uid column
@@ -382,5 +434,5 @@ public interface DbResultSet extends ResultSet {
      * @return value in column
      */
     @Nonnull
-    Optional<BigInteger> getOptionalDtUid(String columnLabel);
+    Optional<DtUid> getOptionalDtUid(String columnLabel);
 }

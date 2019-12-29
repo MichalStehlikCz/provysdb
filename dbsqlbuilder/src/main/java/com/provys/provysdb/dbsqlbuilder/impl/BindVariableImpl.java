@@ -1,6 +1,5 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
@@ -10,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.SQLException;
 import java.util.Optional;
 
 class BindVariableImpl<T> implements BindVariableT<T> {

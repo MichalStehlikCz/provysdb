@@ -35,15 +35,14 @@ public class ProvysDbContext implements DbContext {
      * Default creator for Provys database context.
      * Initializes provys database connection pool
      *
-     * @throws SQLException when initialisation of session pool for connection to PROVYS database fails
      */
-    public ProvysDbContext() throws SQLException {
+    public ProvysDbContext() {
         provysDataSource = buildProvysDBDataSource();
         sqlTypeMap = new SqlTypeFactory().getDefaultMap();
     }
 
     @Nonnull
-    private ProvysConnectionPoolDataSource buildProvysDBDataSource() throws SQLException {
+    private ProvysConnectionPoolDataSource buildProvysDBDataSource() {
         return new ProvysConnectionPoolDataSource();
     }
 
@@ -51,7 +50,7 @@ public class ProvysDbContext implements DbContext {
     @Nonnull
     public DbConnection getConnection() {
         try {
-            return new ProvysConnectionImpl(provysDataSource.getConnection(), sqlTypeMap);
+            return new ProvysConnection(provysDataSource.getConnection(), sqlTypeMap);
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
         }
@@ -61,7 +60,7 @@ public class ProvysDbContext implements DbContext {
     @Nonnull
     public DbConnection getConnection(String dbToken) {
         try {
-            return new ProvysConnectionImpl(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)),
+            return new ProvysConnection(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)),
                     sqlTypeMap);
         } catch (SQLException e) {
             throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",

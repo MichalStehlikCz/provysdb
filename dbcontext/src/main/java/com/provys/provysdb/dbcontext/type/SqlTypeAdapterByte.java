@@ -1,20 +1,31 @@
 package com.provys.provysdb.dbcontext.type;
 
+import com.provys.provysdb.dbcontext.DbPreparedStatement;
+import com.provys.provysdb.dbcontext.DbResultSet;
+
 import javax.annotation.Nonnull;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
 public class SqlTypeAdapterByte extends SqlTypeAdapterBase<Byte> {
+
+    private static final SqlTypeAdapterByte INSTANCE = new SqlTypeAdapterByte();
+
+    /**
+     * @return instance of this type adapter
+     */
+    public static SqlTypeAdapterByte getInstance() {
+        return INSTANCE;
+    }
+
     @Nonnull
     @Override
-    protected Byte readValueInternal(ResultSet resultSet, int columnIndex) throws SQLException {
+    protected Byte readValueInternal(DbResultSet resultSet, int columnIndex) throws SQLException {
         return resultSet.getByte(columnIndex);
     }
 
     @Override
-    protected void bindValueInternal(PreparedStatement statement, int parameterIndex, Byte value) throws SQLException {
+    protected void bindValueInternal(DbPreparedStatement statement, int parameterIndex, Byte value) throws SQLException {
         statement.setByte(parameterIndex, value);
     }
 

@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlbuilder;
 
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
+import com.provys.common.datatype.DtUid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -84,6 +85,13 @@ public interface Sql {
      */
     @Nonnull
     LiteralT<BigDecimal> literal(BigDecimal value);
+
+    /**
+     * @param value is value of literal
+     * @return DtUid literal
+     */
+    @Nonnull
+    LiteralT<DtUid> literal(DtUid value);
 
     /**
      * @param value is value of literal

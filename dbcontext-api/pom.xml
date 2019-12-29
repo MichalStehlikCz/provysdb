@@ -18,6 +18,10 @@
             <groupId>com.provys.common</groupId>
             <artifactId>common-exception</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.provys.common</groupId>
+            <artifactId>common-datatype</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -1,6 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.common.datatype.DtBoolean;
+import com.provys.common.datatype.DtUid;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.SqlException;
@@ -12,7 +13,6 @@ import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
@@ -23,13 +23,13 @@ import java.util.Optional;
  * Wrapper on {@code ResultSet}, adding support for Provys framework specific data types
  */
 @SuppressWarnings("unused")
-class ProvysResultSetImpl implements DbResultSet {
+class ProvysResultSet implements DbResultSet {
 
-    private static final Logger LOG = LogManager.getLogger(ProvysResultSetImpl.class);
+    private static final Logger LOG = LogManager.getLogger(ProvysResultSet.class);
 
     private final ResultSet resultSet;
 
-    ProvysResultSetImpl(ResultSet resultSet) {
+    ProvysResultSet(ResultSet resultSet) {
         this.resultSet = resultSet;
     }
 
@@ -1305,6 +1305,74 @@ class ProvysResultSetImpl implements DbResultSet {
         return Optional.ofNullable(getNullableInteger(columnLabel));
     }
 
+    @Override
+    public char getNonnullCharacter(int columnIndex) {
+        var result = getNullableCharacter(columnIndex);
+        if (result == null) {
+            throw getNullException(columnIndex);
+        }
+        return result;
+    }
+
+    @Override
+    public char getNonnullCharacter(String columnLabel) {
+        var result = getNullableCharacter(columnLabel);
+        if (result == null) {
+            throw getNullException(columnLabel);
+        }
+        return result;
+    }
+
+    @Nullable
+    @Override
+    public Character getNullableCharacter(int columnIndex) {
+        //noinspection DuplicatedCode
+        try {
+            var value = resultSet.getString(columnIndex);
+            if (resultSet.wasNull() || value.isEmpty()) {
+                return null;
+            }
+            if (value.length() > 1) {
+                throw new SqlException(LOG, "Cannot read string longer than 1 character to char variable, column "
+                        + columnIndex);
+            }
+            return value.charAt(0);
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, char.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Character getNullableCharacter(String columnLabel) {
+        //noinspection DuplicatedCode
+        try {
+            var value = resultSet.getString(columnLabel);
+            if (resultSet.wasNull() || value.isEmpty()) {
+                return null;
+            }
+            if (value.length() > 1) {
+                throw new SqlException(LOG, "Cannot read string longer than 1 character to char variable, column "
+                        + columnLabel);
+            }
+            return value.charAt(0);
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, char.class, e);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Optional<Character> getOptionalCharacter(int columnIndex) {
+        return Optional.ofNullable(getNullableCharacter(columnIndex));
+    }
+
+    @Nonnull
+    @Override
+    public Optional<Character> getOptionalCharacter(String columnLabel) {
+        return Optional.ofNullable(getNullableCharacter(columnLabel));
+    }
+
     @Nonnull
     @Override
     public String getNonnullString(int columnIndex) {
@@ -1427,7 +1495,7 @@ class ProvysResultSetImpl implements DbResultSet {
 
     @Nonnull
     @Override
-    public BigInteger getNonnullDtUid(int columnIndex) {
+    public DtUid getNonnullDtUid(int columnIndex) {
         var result = getNullableDtUid(columnIndex);
         if (result == null) {
             throw getNullException(columnIndex);
@@ -1437,7 +1505,7 @@ class ProvysResultSetImpl implements DbResultSet {
 
     @Nonnull
     @Override
-    public BigInteger getNonnullDtUid(String columnLabel) {
+    public DtUid getNonnullDtUid(String columnLabel) {
         var result = getNullableDtUid(columnLabel);
         if (result == null) {
             throw getNullException(columnLabel);
@@ -1447,35 +1515,35 @@ class ProvysResultSetImpl implements DbResultSet {
 
     @Nullable
     @Override
-    public BigInteger getNullableDtUid(int columnIndex) {
+    public DtUid getNullableDtUid(int columnIndex) {
         var result = getNullableBigDecimal(columnIndex);
         try {
-            return (result == null) ? null : result.toBigIntegerExact();
+            return (result == null) ? null : DtUid.of(result);
         } catch (ArithmeticException e) {
-            throw new SqlException(LOG, "Fractional part encountered when reading Uid, column " + columnIndex);
+            throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnIndex);
         }
     }
 
     @Nullable
     @Override
-    public BigInteger getNullableDtUid(String columnLabel) {
+    public DtUid getNullableDtUid(String columnLabel) {
         var result = getNullableBigDecimal(columnLabel);
         try {
-            return (result == null) ? null : result.toBigIntegerExact();
-        } catch (ArithmeticException e) {
-            throw new SqlException(LOG, "Fractional part encountered when reading Uid, column " + columnLabel);
+            return (result == null) ? null : DtUid.of(result);
+        } catch (InternalException e) {
+            throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnLabel);
         }
     }
 
     @Override
     @Nonnull
-    public Optional<BigInteger> getOptionalDtUid(int columnIndex) {
+    public Optional<DtUid> getOptionalDtUid(int columnIndex) {
         return Optional.ofNullable(getNullableDtUid(columnIndex));
     }
 
     @Override
     @Nonnull
-    public Optional<BigInteger> getOptionalDtUid(String columnLabel) {
+    public Optional<DtUid> getOptionalDtUid(String columnLabel) {
         return Optional.ofNullable(getNullableDtUid(columnLabel));
     }
 }

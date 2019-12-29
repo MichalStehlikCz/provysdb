@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
+import com.provys.common.datatype.DtUid;
 import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlparser.SqlSymbol;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
@@ -85,6 +86,12 @@ public abstract class SqlImpl implements Sql {
     @Override
     public LiteralT<BigDecimal> literal(BigDecimal value) {
         return LiteralBigDecimal.of(value);
+    }
+
+    @Nonnull
+    @Override
+    public LiteralT<DtUid> literal(DtUid value) {
+        return LiteralDtUid.of(value);
     }
 
     @Nonnull

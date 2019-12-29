@@ -8,17 +8,17 @@ import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.Objects;
 
-class ProvysStatementImpl<T extends Statement> implements DbStatement {
+class ProvysStatement<T extends Statement> implements DbStatement {
     @Nonnull
     final T statement;
 
-    ProvysStatementImpl(T statement) {
+    ProvysStatement(T statement) {
         this.statement = Objects.requireNonNull(statement);
     }
 
     @Override
     public DbResultSet executeQuery(String sql) throws SQLException {
-        return new ProvysResultSetImpl(statement.executeQuery(sql));
+        return new ProvysResultSet(statement.executeQuery(sql));
     }
 
     @Override
@@ -93,7 +93,7 @@ class ProvysStatementImpl<T extends Statement> implements DbStatement {
 
     @Override
     public DbResultSet getResultSet() throws SQLException {
-        return new ProvysResultSetImpl(statement.getResultSet());
+        return new ProvysResultSet(statement.getResultSet());
     }
 
     @Override
@@ -163,7 +163,7 @@ class ProvysStatementImpl<T extends Statement> implements DbStatement {
 
     @Override
     public DbResultSet getGeneratedKeys() throws SQLException {
-        return new ProvysResultSetImpl(statement.getGeneratedKeys());
+        return new ProvysResultSet(statement.getGeneratedKeys());
     }
 
     @Override

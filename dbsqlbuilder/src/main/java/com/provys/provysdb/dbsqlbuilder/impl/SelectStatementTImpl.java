@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @SuppressWarnings("WeakerAccess")
-abstract class SelectStatementTImpl<S extends SelectStatementTImpl> {
+abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
     private static final Logger LOG = LogManager.getLogger(SelectStatementTImpl.class);
     @Nonnull

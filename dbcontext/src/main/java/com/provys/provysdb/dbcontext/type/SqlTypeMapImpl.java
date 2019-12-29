@@ -33,13 +33,14 @@ class SqlTypeMapImpl implements SqlTypeMap {
     }
 
     @Nullable
-    private static SqlTypeAdapter getAdapterSuper(Class<?> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
-        Class currentType = type;
+    private static <T> SqlTypeAdapter<T> getAdapterSuper(Class<T> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
+        Class<?> currentType = type;
         // first try to find adapter for type in superclasses
         while (currentType != null) {
             var result = adapterMap.get(currentType);
             if (result != null) {
-                return result;
+                //noinspection unchecked
+                return (SqlTypeAdapter<T>) result;
             }
             currentType = currentType.getSuperclass();
         }
@@ -47,9 +48,9 @@ class SqlTypeMapImpl implements SqlTypeMap {
     }
 
     @Nullable
-    private static SqlTypeAdapter getAdapterInterface(Class<?> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
-        Deque<Class> classes = new ArrayDeque<>();
-        Class currentType = type;
+    private static <T> SqlTypeAdapter<T> getAdapterInterface(Class<T> type, Map<Class<?>, SqlTypeAdapter<?>> adapterMap) {
+        Deque<Class<?>> classes = new ArrayDeque<>();
+        Class<?> currentType = type;
         // first put superclasses in queue
         while (currentType != null) {
             classes.add(currentType);
@@ -60,7 +61,8 @@ class SqlTypeMapImpl implements SqlTypeMap {
             currentType = classes.pollFirst();
             var result = adapterMap.get(currentType);
             if (result != null) {
-                return result;
+                //noinspection unchecked
+                return (SqlTypeAdapter<T>) result;
             }
             for (var iface : currentType.getInterfaces()) {
                 classes.addLast(iface);
@@ -73,7 +75,7 @@ class SqlTypeMapImpl implements SqlTypeMap {
     @Nonnull
     public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
         // first try to find in supertype... mostly successful so better to try it before heavy weight search
-        SqlTypeAdapter result = getAdapterSuper(type, adaptersByClass);
+        var result = getAdapterSuper(type, adaptersByClass);
         // next go through class hierarchy once more, but this time use interfaces
         if (result == null) {
             result = getAdapterInterface(type, adaptersByClass);
@@ -81,7 +83,6 @@ class SqlTypeMapImpl implements SqlTypeMap {
                 throw new InternalException(LOG, "No sql type adapter found for class " + type);
             }
         }
-        //noinspection unchecked
-        return  (SqlTypeAdapter<T>) result;
+        return result;
     }
 }

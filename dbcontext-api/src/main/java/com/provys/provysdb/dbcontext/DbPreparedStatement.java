@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext;
 
+import com.provys.common.datatype.DtUid;
+
 import javax.annotation.Nullable;
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
@@ -57,7 +59,7 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @param value is value to be bound
      * @throws SqlException when any problem is encountered
      */
-    void setNonnullDtUid(int parameterIndex, BigInteger value);
+    void setNonnullDtUid(int parameterIndex, DtUid value);
 
     /**
      * Set (optional) value to bind value of provys Uid type
@@ -66,7 +68,7 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
      * @param value is value to be bound
      * @throws SqlException when any problem is encountered
      */
-    void setNullableDtUid(int parameterIndex, @Nullable BigInteger value);
+    void setNullableDtUid(int parameterIndex, @Nullable DtUid value);
 
     /**
      * Set mandatory value to bind value, use default conversion of supplied type to Sql.\Note that type will be

@@ -1,6 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.common.datatype.DtBoolean;
+import com.provys.common.datatype.DtUid;
 import com.provys.provysdb.dbcontext.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,21 +11,20 @@ import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
 @SuppressWarnings("unused")
-class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysStatementImpl<T>
+class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStatement<T>
         implements DbPreparedStatement {
 
-    private static final Logger LOG = LogManager.getLogger(ProvysPreparedStatementImpl.class);
+    private static final Logger LOG = LogManager.getLogger(ProvysPreparedStatement.class);
 
     @Nonnull
     private final SqlTypeMap sqlTypeMap;
 
-    ProvysPreparedStatementImpl(T preparedStatement, SqlTypeMap sqlTypeMap) {
+    ProvysPreparedStatement(T preparedStatement, SqlTypeMap sqlTypeMap) {
         super(preparedStatement);
         this.sqlTypeMap = sqlTypeMap;
     }
@@ -39,7 +39,7 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
 
     @Override
     public DbResultSet executeQuery() throws SQLException {
-        return new ProvysResultSetImpl(statement.executeQuery());
+        return new ProvysResultSet(statement.executeQuery());
     }
 
     @Override
@@ -380,36 +380,36 @@ class ProvysPreparedStatementImpl<T extends PreparedStatement> extends ProvysSta
     }
 
     @Override
-    public void setNonnullDtUid(int parameterIndex, BigInteger value) {
+    public void setNonnullDtUid(int parameterIndex, DtUid value) {
         try {
-            setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+            setBigDecimal(parameterIndex, new BigDecimal(value.getValue(), 0));
         } catch (SQLException e) {
-            throw getSetException(parameterIndex, BigInteger.class, value, e);
+            throw getSetException(parameterIndex, DtUid.class, value, e);
         }
     }
 
     @Override
-    public void setNullableDtUid(int parameterIndex, @Nullable BigInteger value) {
+    public void setNullableDtUid(int parameterIndex, @Nullable DtUid value) {
         try {
             if (value == null) {
                 setNull(parameterIndex, Types.NUMERIC);
             } else {
-                setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+                setBigDecimal(parameterIndex, new BigDecimal(value.getValue(), 0));
             }
         } catch (SQLException e) {
-            throw getSetException(parameterIndex, BigInteger.class, value, e);
+            throw getSetException(parameterIndex, DtUid.class, value, e);
         }
     }
 
     @Override
     public void setNonnullValue(int parameterIndex, Object value) {
         //noinspection unchecked - we know that we get adapter for proper type... there is just no way to express it
-        ((SqlTypeAdapter<Object>) sqlTypeMap.getAdapter(value.getClass())).bindValue(statement, parameterIndex, value);
+        ((SqlTypeAdapter<Object>) sqlTypeMap.getAdapter(value.getClass())).bindValue(this, parameterIndex, value);
     }
 
     @Override
     public <V> void setNullableValue(int parameterIndex, @Nullable V value, Class<V> type) {
-        sqlTypeMap.getAdapter(type).bindValue(statement, parameterIndex, value);
+        sqlTypeMap.getAdapter(type).bindValue(this, parameterIndex, value);
     }
 
     @Override

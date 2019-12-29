@@ -11,10 +11,10 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-class ProvysCallableStatementImpl<T extends CallableStatement> extends ProvysPreparedStatementImpl<T>
+class ProvysCallableStatement<T extends CallableStatement> extends ProvysPreparedStatement<T>
         implements DbCallableStatement {
 
-    ProvysCallableStatementImpl(T statement, SqlTypeMap sqlTypeMap) {
+    ProvysCallableStatement(T statement, SqlTypeMap sqlTypeMap) {
         super(statement, sqlTypeMap);
     }
 

@@ -40,7 +40,10 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
     @Nonnull
     private DbRowMapper<T1> getRowMapper() {
         return ((resultSet, rowNumber)
-                -> getStatement().getAdapterMap().getAdapter(column1.getType()).readValue(resultSet, 1));
+                -> getStatement()
+                .getAdapterMap()
+                .getAdapter(column1.getType())
+                .readNonnullValue(resultSet, 1));
     }
 
     @Nonnull

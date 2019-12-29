@@ -8,17 +8,18 @@ import com.provys.provysdb.dbcontext.SqlTypeMap;
 public class SqlTypeFactory {
 
     private static final SqlTypeMap DEFAULT_MAP = new SqlTypeMapImpl(
-            new SqlTypeAdapterBigDecimal(),
-            new SqlTypeAdapterBigInteger(),
-            new SqlTypeAdapterBoolean(),
-            new SqlTypeAdapterByte(),
-            new SqlTypeAdapterInteger(),
-            new SqlTypeAdapterString()
+            SqlTypeAdapterBigDecimal.getInstance(),
+            SqlTypeAdapterBigInteger.getInstance(),
+            SqlTypeAdapterBoolean.getInstance(),
+            SqlTypeAdapterByte.getInstance(),
+            SqlTypeAdapterInteger.getInstance(),
+            SqlTypeAdapterString.getInstance(),
+            SqlTypeAdapterDtUid.getInstance()
             );
 
     /**
      * Retrieve sql type adapter map, containing sql type adapters, defined in this library: BigDecimal, BigInteger,
-     * Boolean (converts boolean to Y/N according to Provys conventions), Byte, Integer, String
+     * Boolean (converts boolean to Y/N according to Provys conventions), Byte, Integer, String, DtUid
      *
      * @return default sql type adapter map
      */
