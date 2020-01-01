@@ -166,7 +166,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlIdentifier column);
+    SqlTableColumn column(SqlIdentifier column);
 
     /**
      * Create column with given name and alias
@@ -176,7 +176,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlIdentifier column, SqlIdentifier alias);
+    SqlTableColumn column(SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Create column with given table alias, name and alias
@@ -186,7 +186,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column);
+    SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column);
 
     /**
      * Create column with given table alias, name and alias
@@ -197,7 +197,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
+    SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
 
     /**
      * Create new column; no alias is created, meaning column name will be sued instead and no table spec risking
@@ -209,7 +209,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(String columnName);
+    SqlTableColumn column(String columnName);
 
     /**
      * Create new column; no alias is created, meaning column name will be sued instead
@@ -221,7 +221,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(String tableAlias, String columnName);
+    SqlTableColumn column(String tableAlias, String columnName);
 
     /**
      * Create new column
@@ -234,7 +234,7 @@ public interface Sql {
      * @return created column
      */
     @Nonnull
-    SqlColumn column(String tableAlias, String columnName, String alias);
+    SqlTableColumn column(String tableAlias, String columnName, String alias);
 
     /**
      * Create column with given SQL text
@@ -323,6 +323,28 @@ public interface Sql {
     SqlColumn columnSql(String sql, String alias, Iterable<BindValue> binds);
 
     /**
+     * Create typed column based on non-typed column and specified type
+     *
+     * @param column is original (likely non-typed) column
+     * @param clazz is type of return value of column
+     * @return created column
+     * @param <T> is Java type corresponding to values in given column
+     */
+    @Nonnull
+    <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz);
+
+    /**
+     * Create typed column based on non-typed column and specified type
+     *
+     * @param column is original (likely non-typed) column
+     * @param clazz is type of return value of column
+     * @return created column
+     * @param <T> is Java type corresponding to values in given column
+     */
+    @Nonnull
+    <T> SqlTableColumnT<T> column(SqlTableColumn column, Class<T> clazz);
+
+    /**
      * Create mandatory column with given name
      *
      * @param column is name of table column to be assigned to column
@@ -331,7 +353,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(SqlIdentifier column, Class<T> clazz);
 
     /**
      * Create mandatory column with given name and alias
@@ -343,7 +365,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
      * Create mandatory column with given table alias, name and alias
@@ -355,7 +377,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
 
     /**
      * Create mandatory column with given table alias, name and alias
@@ -368,7 +390,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
     /**
      * Create new mandatory column; it is created without table alias, risking ambiguity
@@ -380,7 +402,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(String columnName, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(String columnName, Class<T> clazz);
 
     /**
      * Create new mandatory column; no alias is created, meaning column name will be sued instead
@@ -394,7 +416,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
 
     /**
      * Create new mandatory column
@@ -409,7 +431,7 @@ public interface Sql {
      * @param <T> is Java type corresponding to values in given column
      */
     @Nonnull
-    <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
+    <T> SqlTableColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
 
     /**
      * Create mandatory column with given SQL text

@@ -208,7 +208,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(SqlIdentifier column) {
+    public static SqlTableColumn column(SqlIdentifier column) {
         return SQL.column(column);
     }
 
@@ -220,7 +220,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(SqlIdentifier column, SqlIdentifier alias) {
+    public static SqlTableColumn column(SqlIdentifier column, SqlIdentifier alias) {
         return SQL.column(column, alias);
     }
 
@@ -232,7 +232,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column) {
+    public static SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column) {
         return SQL.column(tableAlias, column);
     }
 
@@ -245,7 +245,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias) {
+    public static SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias) {
         return SQL.column(tableAlias, column, alias);
     }
 
@@ -259,7 +259,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(String columnName) {
+    public static SqlTableColumn column(String columnName) {
         return SQL.column(columnName);
     }
 
@@ -273,7 +273,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(String tableAlias, String columnName) {
+    public static SqlTableColumn column(String tableAlias, String columnName) {
         return SQL.column(tableAlias, columnName);
     }
 
@@ -288,7 +288,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static SqlColumn column(String tableAlias, String columnName, String alias) {
+    public static SqlTableColumn column(String tableAlias, String columnName, String alias) {
         return SQL.column(tableAlias, columnName, alias);
     }
 
@@ -395,6 +395,32 @@ public final class SqlFactory {
     }
 
     /**
+     * Create typed column based on supplied (untyped) column and type
+     *
+     * @param column is untyped column
+     * @param clazz is type of return value of column
+     * @param <T> is Java type corresponding to values in given column
+     * @return created column
+     */
+    @Nonnull
+    public static <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz) {
+        return SQL.column(column, clazz);
+    }
+
+    /**
+     * Create typed table column based on supplied (untyped) table column and type
+     *
+     * @param column is untyped column
+     * @param clazz is type of return value of column
+     * @param <T> is Java type corresponding to values in given column
+     * @return created column
+     */
+    @Nonnull
+    public static <T> SqlTableColumnT<T> column(SqlTableColumn column, Class<T> clazz) {
+        return SQL.column(column, clazz);
+    }
+
+    /**
      * Create mandatory column with given name
      *
      * @param column is name of table column to be assigned to column
@@ -403,7 +429,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
         return SQL.column(column, clazz);
     }
 
@@ -417,7 +443,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         return SQL.column(column, alias, clazz);
     }
 
@@ -431,7 +457,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
         return SQL.column(tableAlias, column, clazz);
     }
 
@@ -446,7 +472,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         return SQL.column(tableAlias, column, alias, clazz);
     }
 
@@ -460,7 +486,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(String columnName, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(String columnName, Class<T> clazz) {
         return SQL.column(columnName, clazz);
     }
 
@@ -476,7 +502,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(String tableAlias, String columnName, Class<T> clazz) {
         return SQL.column(tableAlias, columnName, clazz);
     }
 
@@ -493,7 +519,7 @@ public final class SqlFactory {
      * @return created column
      */
     @Nonnull
-    public static <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
+    public static <T> SqlTableColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
         return SQL.column(tableAlias, columnName, alias, clazz);
     }
 

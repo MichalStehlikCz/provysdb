@@ -132,43 +132,43 @@ public abstract class SqlImpl implements Sql {
 
     @Nonnull
     @Override
-    public SqlColumn column(SqlIdentifier column) {
+    public SqlTableColumn column(SqlIdentifier column) {
         return new SqlColumnSimple(null, column, null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(SqlIdentifier column, @Nullable SqlIdentifier alias) {
+    public SqlTableColumn column(SqlIdentifier column, @Nullable SqlIdentifier alias) {
         return new SqlColumnSimple(null, column, alias);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column) {
+    public SqlTableColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column) {
         return new SqlColumnSimple(tableAlias, column, null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias) {
+    public SqlTableColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias) {
         return new SqlColumnSimple(tableAlias, column, alias);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(String columnName) {
+    public SqlTableColumn column(String columnName) {
         return new SqlColumnSimple(null, name(columnName), null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(String tableAlias, String columnName) {
+    public SqlTableColumn column(String tableAlias, String columnName) {
         return new SqlColumnSimple(tableAlias(tableAlias), name(columnName), null);
     }
 
     @Nonnull
     @Override
-    public SqlColumn column(String tableAlias, String columnName, String alias) {
+    public SqlTableColumn column(String tableAlias, String columnName, String alias) {
         return column(tableAlias(tableAlias), name(columnName), name(alias));
     }
 
@@ -223,49 +223,54 @@ public abstract class SqlImpl implements Sql {
     }
 
     @Nonnull
-    private <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz) {
+    public <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz) {
         return new SqlColumnTImpl<>(column, clazz);
     }
 
     @Nonnull
+    public <T> SqlTableColumnT<T> column(SqlTableColumn column, Class<T> clazz) {
+        return new SqlTableColumnTImpl<>(column, clazz);
+    }
+
+    @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
         return column(column(column), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         return column(column(column, alias), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz) {
         return column(column(tableAlias, column), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
         return column(column(tableAlias, column, alias), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(String columnName, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(String columnName, Class<T> clazz) {
         return column(column(columnName), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(String tableAlias, String columnName, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(String tableAlias, String columnName, Class<T> clazz) {
         return column(column(tableAlias, columnName), clazz);
     }
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
+    public <T> SqlTableColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz) {
         return column(column(tableAlias, columnName, alias), clazz);
     }
 

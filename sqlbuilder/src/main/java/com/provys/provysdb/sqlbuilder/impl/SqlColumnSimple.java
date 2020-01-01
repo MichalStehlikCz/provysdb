@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-class SqlColumnSimple extends SqlColumnBase {
+class SqlColumnSimple extends SqlColumnBase implements SqlTableColumn {
 
     @Nullable
     private final SqlTableAlias tableAlias;
@@ -26,6 +26,24 @@ class SqlColumnSimple extends SqlColumnBase {
         }
         builder.append(column);
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
+    }
+
+    @Nonnull
+    @Override
+    public SqlTableColumn withAlias(SqlIdentifier alias) {
+        if (getAlias().filter(al -> al.equals(alias)).isPresent()) {
+            return this;
+        }
+        return new SqlColumnSimple(tableAlias, column, alias);
+    }
+
+    @Nonnull
+    @Override
+    public SqlTableColumn withTableAlias(SqlTableAlias tableAlias) {
+        if (tableAlias.equals(this.tableAlias)) {
+            return this;
+        }
+        return new SqlColumnSimple(tableAlias, column, getAlias().orElse(null));
     }
 
     @Override

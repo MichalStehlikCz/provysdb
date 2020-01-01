@@ -6,14 +6,14 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
 
-class SqlColumnTImpl<T> implements SqlColumnT<T> {
+public class SqlTableColumnTImpl<T> implements SqlTableColumnT<T> {
 
     @Nonnull
-    private final SqlColumn column;
+    private final SqlTableColumn column;
     @Nonnull
     private final Class<T> type;
 
-    SqlColumnTImpl(SqlColumn column, Class<T> type) {
+    SqlTableColumnTImpl(SqlTableColumn column, Class<T> type) {
         this.column = Objects.requireNonNull(column);
         this.type = Objects.requireNonNull(type);
     }
@@ -37,10 +37,21 @@ class SqlColumnTImpl<T> implements SqlColumnT<T> {
 
     @Nonnull
     @Override
-    public SqlColumnT<T> withAlias(SqlIdentifier alias) {
-        if (getAlias().filter(al -> al.equals(alias)).isPresent()) {
+    public SqlTableColumnT<T> withAlias(SqlIdentifier alias) {
+        var baseColumn = column.withAlias(alias);
+        if (baseColumn == column) {
             return this;
         }
-        return new SqlColumnTImpl<>(column.withAlias(alias), type);
+        return new SqlTableColumnTImpl<>(baseColumn, type);
+    }
+
+    @Nonnull
+    @Override
+    public SqlTableColumnT<T> withTableAlias(SqlTableAlias tableAlias) {
+        var baseColumn = column.withTableAlias(tableAlias);
+        if (baseColumn == column) {
+            return this;
+        }
+        return new SqlTableColumnTImpl<>(baseColumn, type);
     }
 }

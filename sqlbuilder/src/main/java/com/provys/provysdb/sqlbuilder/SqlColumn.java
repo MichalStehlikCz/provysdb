@@ -14,4 +14,13 @@ public interface SqlColumn extends SqlElement {
      */
     @Nonnull
     Optional<SqlIdentifier> getAlias();
+
+    /**
+     * Create new column with alias replaced with specified one
+     *
+     * @param alias is alias that should be used for new column
+     * @return column with specified alias
+     */
+    @Nonnull
+    SqlColumn withAlias(SqlIdentifier alias);
 }

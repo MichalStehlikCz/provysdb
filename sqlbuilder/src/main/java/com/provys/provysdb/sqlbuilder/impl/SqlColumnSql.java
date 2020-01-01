@@ -1,8 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,5 +30,36 @@ class SqlColumnSql extends SqlColumnBase {
         builder.appendWrapped(sql, 4);
         getAlias().ifPresent(alias -> builder.append(' ').append(alias));
         builder.addBinds(binds);
+    }
+
+    @Nonnull
+    @Override
+    public SqlColumn withAlias(SqlIdentifier alias) {
+        if (getAlias().filter(al -> al.equals(alias)).isPresent()) {
+            return this;
+        }
+        return new SqlColumnSql(sql, alias);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SqlColumnSql that = (SqlColumnSql) o;
+        return sql.equals(that.sql) &&
+                binds.equals(that.binds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sql, binds);
+    }
+
+    @Override
+    public String toString() {
+        return "SqlColumnSql{" +
+                "sql='" + sql + '\'' +
+                ", binds=" + binds +
+                "} " + super.toString();
     }
 }
