@@ -223,6 +223,110 @@ public interface DbResultSet extends ResultSet {
     Optional<Integer> getOptionalInteger(String columnLabel);
 
     /**
+     * Return value of (mandatory) float column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    float getNonnullFloat(int columnIndex);
+
+    /**
+     * Return value of (mandatory) float column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    float getNonnullFloat(String columnLabel);
+
+    /**
+     * Return value of optional Float column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column, null when empty
+     */
+    @Nullable
+    Float getNullableFloat(int columnIndex);
+
+    /**
+     * Return value of optional Float column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column, null when empty
+     */
+    @Nullable
+    Float getNullableFloat(String columnLabel);
+
+    /**
+     * Return value of optional Float column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Float> getOptionalFloat(int columnIndex);
+
+    /**
+     * Return value of optional Float column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Float> getOptionalFloat(String columnLabel);
+
+    /**
+     * Return value of (mandatory) double column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    double getNonnullDouble(int columnIndex);
+
+    /**
+     * Return value of (mandatory) double column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    double getNonnullDouble(String columnLabel);
+
+    /**
+     * Return value of optional Double column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column, null when empty
+     */
+    @Nullable
+    Double getNullableDouble(int columnIndex);
+
+    /**
+     * Return value of optional Double column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column, null when empty
+     */
+    @Nullable
+    Double getNullableDouble(String columnLabel);
+
+    /**
+     * Return value of optional Double column
+     *
+     * @param columnIndex is index of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Double> getOptionalDouble(int columnIndex);
+
+    /**
+     * Return value of optional Double column
+     *
+     * @param columnLabel is name of column to be retrieved
+     * @return value in column
+     */
+    @Nonnull
+    Optional<Double> getOptionalDouble(String columnLabel);
+
+    /**
      * Return value of (mandatory) Character column
      *
      * @param columnIndex is index of column to be retrieved

@@ -1304,6 +1304,130 @@ class ProvysResultSet implements DbResultSet {
     public Optional<Integer> getOptionalInteger(String columnLabel) {
         return Optional.ofNullable(getNullableInteger(columnLabel));
     }
+    
+    @Override
+    public float getNonnullFloat(int columnIndex) {
+        try {
+            var value = resultSet.getFloat(columnIndex);
+            checkWasNotNull(columnIndex);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, Float.class, e);
+        }
+    }
+
+    @Override
+    public float getNonnullFloat(String columnLabel) {
+        try {
+            var value = resultSet.getFloat(columnLabel);
+            checkWasNotNull(columnLabel);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, Float.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Float getNullableFloat(int columnIndex) {
+        try {
+            var value = resultSet.getFloat(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, Float.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Float getNullableFloat(String columnLabel) {
+        try {
+            var value = resultSet.getFloat(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, Float.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Float> getOptionalFloat(int columnIndex) {
+        return Optional.ofNullable(getNullableFloat(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Float> getOptionalFloat(String columnLabel) {
+        return Optional.ofNullable(getNullableFloat(columnLabel));
+    }
+
+    @Override
+    public double getNonnullDouble(int columnIndex) {
+        try {
+            var value = resultSet.getDouble(columnIndex);
+            checkWasNotNull(columnIndex);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, Double.class, e);
+        }
+    }
+
+    @Override
+    public double getNonnullDouble(String columnLabel) {
+        try {
+            var value = resultSet.getDouble(columnLabel);
+            checkWasNotNull(columnLabel);
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, Double.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Double getNullableDouble(int columnIndex) {
+        try {
+            var value = resultSet.getDouble(columnIndex);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnIndex, Double.class, e);
+        }
+    }
+
+    @Nullable
+    @Override
+    public Double getNullableDouble(String columnLabel) {
+        try {
+            var value = resultSet.getDouble(columnLabel);
+            if (resultSet.wasNull()) {
+                return null;
+            }
+            return value;
+        } catch (SQLException e) {
+            throw getGetSqlException(columnLabel, Double.class, e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Double> getOptionalDouble(int columnIndex) {
+        return Optional.ofNullable(getNullableDouble(columnIndex));
+    }
+
+    @Override
+    @Nonnull
+    public Optional<Double> getOptionalDouble(String columnLabel) {
+        return Optional.ofNullable(getNullableDouble(columnLabel));
+    }
 
     @Override
     public char getNonnullCharacter(int columnIndex) {
