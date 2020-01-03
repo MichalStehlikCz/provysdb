@@ -1642,7 +1642,7 @@ class ProvysResultSet implements DbResultSet {
     public DtUid getNullableDtUid(int columnIndex) {
         var result = getNullableBigDecimal(columnIndex);
         try {
-            return (result == null) ? null : DtUid.of(result);
+            return (result == null) ? null : DtUid.valueOf(result);
         } catch (ArithmeticException e) {
             throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnIndex);
         }
@@ -1653,7 +1653,7 @@ class ProvysResultSet implements DbResultSet {
     public DtUid getNullableDtUid(String columnLabel) {
         var result = getNullableBigDecimal(columnLabel);
         try {
-            return (result == null) ? null : DtUid.of(result);
+            return (result == null) ? null : DtUid.valueOf(result);
         } catch (InternalException e) {
             throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnLabel);
         }
