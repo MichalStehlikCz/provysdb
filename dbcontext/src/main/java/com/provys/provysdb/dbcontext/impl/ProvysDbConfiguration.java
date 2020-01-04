@@ -39,7 +39,7 @@ class ProvysDbConfiguration {
      */
     @Nonnull
     public String getUrl() {
-        return Objects.requireNonNull(url);
+        return Objects.requireNonNull(url, "Property provysdb.url not specified");
     }
 
     /**
@@ -47,20 +47,23 @@ class ProvysDbConfiguration {
      */
     @Nonnull
     public String getUser() {
-        return Objects.requireNonNull(user);
+        return Objects.requireNonNull(user, "Property provysdb.user not specified");
     }
 
     /**
      * @return value of field pwd
      */
     public String getPwd() {
-        return Objects.requireNonNull(pwd);
+        return Objects.requireNonNull(pwd, "Property provysdb.pwd not specified");
     }
 
     /**
      * @return value of field minPoolSize
      */
     public int getMinPoolSize() {
+        if (minPoolSize <= 0) {
+            throw new IllegalArgumentException("Invalid value of property provysdb.minpoolsize " + minPoolSize);
+        }
         return minPoolSize;
     }
 
@@ -68,6 +71,9 @@ class ProvysDbConfiguration {
      * @return value of field maxPoolSize
      */
     public int getMaxPoolSize() {
+        if (maxPoolSize <= 0) {
+            throw new IllegalArgumentException("Invalid value of property provysdb.maxpoolsize " + maxPoolSize);
+        }
         return maxPoolSize;
     }
 }
