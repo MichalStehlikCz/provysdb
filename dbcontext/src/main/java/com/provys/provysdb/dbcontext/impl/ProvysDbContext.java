@@ -10,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Objects;
 
 /**
  * Class supports connection to Provys database and gives access to this database via connection (class
- * {@code ProvysConnection})
+ * {@code DbConnection}). Simplified wrapper around actual data source, wraps retrieved connections in ProvysConnection
+ * wrapper, potentially providing monitoring for database calls
  *
  * @author stehlik
  */
@@ -33,17 +35,13 @@ public class ProvysDbContext implements DbContext {
 
     /**
      * Default creator for Provys database context.
-     * Initializes provys database connection pool
      *
+     * @param provysDataSource is DataSource used to access Provys Oracle database
      */
-    public ProvysDbContext() {
-        provysDataSource = buildProvysDBDataSource();
+    @Inject
+    public ProvysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
+        this.provysDataSource = Objects.requireNonNull(provysDataSource);
         sqlTypeMap = new SqlTypeFactory().getDefaultMap();
-    }
-
-    @Nonnull
-    private ProvysConnectionPoolDataSource buildProvysDBDataSource() {
-        return new ProvysConnectionPoolDataSource();
     }
 
     @Override

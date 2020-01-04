@@ -14,6 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.sql.CommonDataSource;
 import javax.sql.DataSource;
 import oracle.ucp.jdbc.PoolDataSource;
@@ -33,6 +35,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
  * @author stehlik
  */
 @SuppressWarnings("WeakerAccess")
+@ApplicationScoped
 class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(ProvysConnectionPoolDataSource.class);
@@ -46,7 +49,8 @@ class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
      * Constructor for provys connection that reads all info from environment.
      * Creates supporting Oracle Universal Connection Pool based on read connection information.
      */
-    ProvysConnectionPoolDataSource() {
+    @Inject
+    ProvysConnectionPoolDataSource(ProvysDbConfiguration dbConfiguration) {
         UniversalConnectionPoolManager mgr;
         try {
             mgr = UniversalConnectionPoolManagerImpl.getUniversalConnectionPoolManager();
@@ -64,28 +68,17 @@ class ProvysConnectionPoolDataSource implements DataSource, CommonDataSource {
         try {
             oraclePool = PoolDataSourceFactory.getPoolDataSource();
             oraclePool.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
-            Config config = ConfigProvider.getConfig();
-            user = config
-                    .getOptionalValue("PROVYSDB_USER", String.class)
-                    .orElse("KER");
+            user = dbConfiguration.getUser();
             oraclePool.setUser(user);
-            String pwd = config
-                    .getOptionalValue("PROVYSDB_PWD", String.class)
-                    .orElse("ker");
+            String pwd = dbConfiguration.getPwd();
             oraclePool.setPassword(pwd);
-            db = config
-                    .getOptionalValue("PROVYSDB_URL", String.class)
-                    .orElse("localhost:1521:PVYS");
+            db = dbConfiguration.getUrl();
             oraclePool.setURL("jdbc:oracle:thin:@" + db);
             oraclePool.setConnectionPoolName(POOL_NAME);
-            int minPoolSize = config
-                    .getOptionalValue("PROVYSDB_MINPOOLSIZE", Integer.class)
-                    .orElse(1);
+            int minPoolSize = dbConfiguration.getMinPoolSize();
             oraclePool.setMinPoolSize(minPoolSize);
             oraclePool.setInitialPoolSize(minPoolSize);
-            int maxPoolSize = config
-                    .getOptionalValue("PROVYSDB_MAXPOOLSIZE", Integer.class)
-                    .orElse(10);
+            int maxPoolSize = dbConfiguration.getMaxPoolSize();
             oraclePool.setMaxPoolSize(maxPoolSize);
             oraclePool.setValidateConnectionOnBorrow(true);
             // Register connection labeling callback
