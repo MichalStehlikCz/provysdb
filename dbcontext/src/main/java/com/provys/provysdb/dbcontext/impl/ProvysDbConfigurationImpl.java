@@ -1,7 +1,9 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.annotation.Nonnull;
 import javax.enterprise.context.ApplicationScoped;
@@ -13,6 +15,7 @@ import java.util.Objects;
  * as source of properties for establishing connection
  */
 @ApplicationScoped
+@ConfigurationProperties(prefix = "provysdb")
 class ProvysDbConfigurationImpl implements ProvysDbConfiguration {
 
     @Nonnull
@@ -29,13 +32,14 @@ class ProvysDbConfigurationImpl implements ProvysDbConfiguration {
     private final int maxPoolSize;
 
     @Inject
-    ProvysDbConfigurationImpl(@ConfigProperty(name = "provysdb.url") @Value("${provysdb.url}") String url,
-                              @ConfigProperty(name = "provysdb.user") @Value("${provysdb.user}") String user,
-                              @ConfigProperty(name = "provysdb.pwd") @Value("${provysdb.pwd}") String pwd,
+    @ConstructorBinding
+    ProvysDbConfigurationImpl(@ConfigProperty(name = "provysdb.url") String url,
+                              @ConfigProperty(name = "provysdb.user") String user,
+                              @ConfigProperty(name = "provysdb.pwd") String pwd,
                               @ConfigProperty(name = "provysdb.minpoolsize", defaultValue = "1")
-                              @Value("${provysdb.minpoolsize:1}") int minPoolSize,
+                              @DefaultValue("1") int minPoolSize,
                               @ConfigProperty(name = "provysdb.maxpoolsize", defaultValue = "10")
-                              @Value("${provysdb.maxpoolsize:10}") int maxPoolSize) {
+                              @DefaultValue("10") int maxPoolSize) {
         if (Objects.requireNonNull(url, "Property provysdb.url not specified").isBlank()) {
             throw new IllegalArgumentException("Property provysdb.url cannot be blank");
         }
