@@ -11,7 +11,7 @@ import java.sql.SQLException;
  *
  * @author stehlik
  */
-interface ProvysConnectionPoolDataSource extends DataSource, CommonDataSource {
+public interface ProvysConnectionPoolDataSource extends DataSource, CommonDataSource {
 
     Connection getConnectionWithToken(String dbToken) throws SQLException;
 

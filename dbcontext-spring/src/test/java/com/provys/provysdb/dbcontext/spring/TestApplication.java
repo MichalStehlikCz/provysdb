@@ -1,4 +1,4 @@
-package com.provys.provysdb.dbcontext.impl;
+package com.provys.provysdb.dbcontext.spring;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;

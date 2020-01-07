@@ -1,5 +1,6 @@
-package com.provys.provysdb.dbcontext.impl;
+package com.provys.provysdb.dbcontext.spring;
 
+import com.provys.provysdb.dbcontext.impl.ProvysDbConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

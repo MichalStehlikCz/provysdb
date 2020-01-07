@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Interface represents configuration needed for datasource initiation.
  */
-interface ProvysDbConfiguration {
+public interface ProvysDbConfiguration {
     /**
      * @return value of field url
      */
