@@ -3,7 +3,10 @@ package com.provys.provysdb.dbcontext.impl;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.enterprise.context.ApplicationScoped;

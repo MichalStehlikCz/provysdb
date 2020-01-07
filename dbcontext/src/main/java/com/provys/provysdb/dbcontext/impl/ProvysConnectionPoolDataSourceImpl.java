@@ -19,6 +19,10 @@ import javax.inject.Inject;
 
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * {@code DataSource} to be used for accessing PROVYS database. Based on Oracle Universal Connection Pool,
@@ -33,6 +37,8 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
  */
 @SuppressWarnings("WeakerAccess")
 @ApplicationScoped
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolDataSource {
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(ProvysConnectionPoolDataSourceImpl.class);

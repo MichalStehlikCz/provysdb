@@ -1,0 +1,6 @@
+provysdb:
+  url: testurl
+  user: testuser
+  pwd: testpwd
+  min-pool-size: 5
+  max-pool-size: 20
