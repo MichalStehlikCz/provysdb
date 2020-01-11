@@ -14,8 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
@@ -32,7 +30,6 @@ import oracle.ucp.jdbc.PoolDataSourceFactory;
  * @author stehlik
  */
 @SuppressWarnings("WeakerAccess")
-@ApplicationScoped
 public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolDataSource {
     @Nonnull
     private static final Logger LOG = LogManager.getLogger(ProvysConnectionPoolDataSourceImpl.class);
@@ -45,8 +42,9 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
     /**
      * Constructor for provys connection that reads all info from environment.
      * Creates supporting Oracle Universal Connection Pool based on read connection information.
+     *
+     * @param dbConfiguration is class containing information, needed for configuration of database pool
      */
-    @Inject
     public ProvysConnectionPoolDataSourceImpl(ProvysDbConfiguration dbConfiguration) {
         UniversalConnectionPoolManager mgr;
         try {

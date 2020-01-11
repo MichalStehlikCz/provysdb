@@ -3,7 +3,8 @@ package com.provys.provysdb.dbcontext.impl;
 import javax.annotation.Nonnull;
 
 /**
- * Interface represents configuration needed for datasource initiation.
+ * Interface represents configuration needed for datasource initiation. Used internally when initiating connection pool
+ * data source
  */
 public interface ProvysDbConfiguration {
     /**

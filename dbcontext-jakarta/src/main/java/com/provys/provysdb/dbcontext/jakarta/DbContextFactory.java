@@ -1,25 +1,27 @@
-package com.provys.provysdb.dbcontext.spring;
+package com.provys.provysdb.dbcontext.jakarta;
 
 import com.provys.provysdb.dbcontext.DbContext;
 import com.provys.provysdb.dbcontext.impl.ProvysConnectionPoolDataSource;
 import com.provys.provysdb.dbcontext.impl.ProvysConnectionPoolDataSourceImpl;
 import com.provys.provysdb.dbcontext.impl.ProvysDbConfiguration;
 import com.provys.provysdb.dbcontext.impl.ProvysDbContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Nonnull;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-@Configuration
-public class DbContextFactory {
+@ApplicationScoped
+class DbContextFactory {
 
-    @Bean
+    @Produces
+    @ApplicationScoped
     @Nonnull
     ProvysConnectionPoolDataSource provysDbDataSource(ProvysDbConfiguration dbConfiguration) {
         return new ProvysConnectionPoolDataSourceImpl(dbConfiguration);
     }
 
-    @Bean
+    @Produces
+    @ApplicationScoped
     @Nonnull
     DbContext provysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
         return new ProvysDbContext(provysDataSource);

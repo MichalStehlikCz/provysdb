@@ -8,9 +8,14 @@
     <modules>
         <module>dbcontext-api</module>
         <module>dbcontext</module>
-        <module>sqlbuilder</module>
-        <module>dbsqlbuilder</module>
         <module>dbcontext-spring</module>
+        <module>dbcontext-jakarta</module>
+        <module>sqlbuilder</module>
+        <module>sqlbuilder-jakarta</module>
+        <module>sqlbuilder-spring</module>
+        <module>dbsqlbuilder</module>
+        <module>dbsqlbuilder-jakarta</module>
+        <module>dbsqlbuilder-spring</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -41,6 +46,11 @@
     </distributionManagement>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>1.0</version>
+            </dependency>
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.cdi-api</artifactId>

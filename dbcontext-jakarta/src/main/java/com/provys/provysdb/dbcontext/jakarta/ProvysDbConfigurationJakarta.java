@@ -1,20 +1,19 @@
-package com.provys.provysdb.dbcontext.spring;
+package com.provys.provysdb.dbcontext.jakarta;
 
 import com.provys.provysdb.dbcontext.impl.ProvysDbConfiguration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.annotation.Nonnull;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.Objects;
 
 /**
  * Class retrieves parameters of database connection from environment. Used by {@code ProvysConnectionPoolDataSource}
  * as source of properties for establishing connection
  */
-@ConfigurationProperties(prefix = "provysdb")
-public class ProvysDbConfigurationImpl implements ProvysDbConfiguration {
+@ApplicationScoped
+class ProvysDbConfigurationJakarta implements ProvysDbConfiguration {
 
     @Nonnull
     private final String url;
@@ -29,9 +28,12 @@ public class ProvysDbConfigurationImpl implements ProvysDbConfiguration {
 
     private final int maxPoolSize;
 
-    @ConstructorBinding
-    ProvysDbConfigurationImpl(String url, String user, String pwd, @DefaultValue("1") int minPoolSize,
-                              @DefaultValue("10") int maxPoolSize) {
+    @Inject
+    ProvysDbConfigurationJakarta(@ConfigProperty(name = "provysdb.url") String url,
+                                 @ConfigProperty(name = "provysdb.user") String user,
+                                 @ConfigProperty(name = "provysdb.pwd") String pwd,
+                                 @ConfigProperty(name = "provysdb.minpoolsize", defaultValue = "1") int minPoolSize,
+                                 @ConfigProperty(name = "provysdb.maxpoolsize", defaultValue = "10") int maxPoolSize) {
         if (Objects.requireNonNull(url, "Property provysdb.url not specified").isBlank()) {
             throw new IllegalArgumentException("Property provysdb.url cannot be blank");
         }

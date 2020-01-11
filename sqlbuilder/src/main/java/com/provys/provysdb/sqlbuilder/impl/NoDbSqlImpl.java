@@ -5,12 +5,19 @@ import com.provys.provysdb.sqlparser.SqlTokenizer;
 import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
 
 import javax.annotation.Nonnull;
-import javax.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+/**
+ * Sql builder without database - allows to build select statement, but this statement cannot be executed directly - it
+ * has to be either used with supplied connection, used as sub-select or sent to different service for execution
+ */
 public class NoDbSqlImpl extends SqlImpl implements NoDbSql {
 
-    NoDbSqlImpl(SqlTokenizer tokenizer) {
+    /**
+     * Create sql builder with supplied tokenizer.
+     *
+     * @param tokenizer is used to parse parts of statement supplied as string
+     */
+    public NoDbSqlImpl(SqlTokenizer tokenizer) {
         super(tokenizer);
     }
 

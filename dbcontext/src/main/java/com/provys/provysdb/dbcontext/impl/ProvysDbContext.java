@@ -9,8 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -21,8 +19,6 @@ import java.util.Objects;
  *
  * @author stehlik
  */
-@SuppressWarnings("unused")
-@ApplicationScoped
 public class ProvysDbContext implements DbContext {
 
     @Nonnull
@@ -38,7 +34,6 @@ public class ProvysDbContext implements DbContext {
      *
      * @param provysDataSource is DataSource used to access Provys Oracle database
      */
-    @Inject
     public ProvysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
         this.provysDataSource = Objects.requireNonNull(provysDataSource);
         sqlTypeMap = new SqlTypeFactory().getDefaultMap();
