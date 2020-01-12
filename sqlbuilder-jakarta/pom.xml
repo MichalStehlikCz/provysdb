@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sqlbuilder-jee</artifactId>
+    <artifactId>sqlbuilder-jakarta</artifactId>
     <dependencies>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
