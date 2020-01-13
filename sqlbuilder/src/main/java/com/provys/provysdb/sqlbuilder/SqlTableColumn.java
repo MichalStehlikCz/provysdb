@@ -7,6 +7,14 @@ import javax.annotation.Nonnull;
  */
 public interface SqlTableColumn extends SqlColumn {
 
+    /**
+     * returns same column with different alias. Often used to re/alias columns based on attributes, generated from
+     * meta-information, that have default alias. Note that given column is non/mutable class, returned value is
+     * different column instance
+     *
+     * @param alias is alias that should be used for new column
+     * @return column with the same content but different alias
+     */
     @Nonnull
     SqlTableColumn withAlias(SqlIdentifier alias);
 

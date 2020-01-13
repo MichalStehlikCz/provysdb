@@ -12,6 +12,7 @@ import java.util.Optional;
  * Adds support for Provys framework specific data-types to {@code ResultSet}. Moreover, exposes interface that is free
  * of SQLExceptions, as these are wrapped in SqlException - and it is runtime exception, thus doesn't have to be caught
  */
+@SuppressWarnings("unused")
 public interface DbResultSet extends ResultSet {
 
     /**

@@ -1,5 +1,9 @@
 package com.provys.provysdb.sqlparser;
 
+/**
+ * Sql keywords (more exactly Oracle SQL keywords). Even unused items are useful as they are used to recognise item as
+ * keyword during tokenization
+ */
 public enum SqlKeyword {
     ALL,
     ALTER,

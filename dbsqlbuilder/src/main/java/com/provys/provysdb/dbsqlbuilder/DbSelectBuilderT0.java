@@ -5,6 +5,10 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * Database backed select builder interface with zero columns
+ */
+@SuppressWarnings("unused")
 public interface DbSelectBuilderT0 extends DbSelectBuilderBase, SelectBuilderBase<DbSelectBuilderT0, DbSelectBuilder> {
 
     /**

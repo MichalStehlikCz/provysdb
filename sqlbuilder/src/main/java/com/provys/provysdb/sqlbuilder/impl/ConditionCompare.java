@@ -6,15 +6,11 @@ import com.provys.provysdb.sqlbuilder.Condition;
 import com.provys.provysdb.sqlbuilder.Expression;
 import com.provys.provysdb.sqlbuilder.ExpressionT;
 import com.provys.provysdb.sqlparser.SqlSymbol;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
 class ConditionCompare implements Condition {
-
-    private static final Logger LOG = LogManager.getLogger(ConditionCompare.class);
 
     @Nonnull
     private final Expression first;
@@ -27,7 +23,7 @@ class ConditionCompare implements Condition {
         this.first = Objects.requireNonNull(first);
         this.second = Objects.requireNonNull(second);
         if (!comparison.isComparison()) {
-            throw new InternalException(LOG, "Invalid comparison - symbol " + comparison.getSymbol() + "not valid");
+            throw new InternalException("Invalid comparison - symbol " + comparison.getSymbol() + "not valid");
         }
         this.comparison = comparison;
     }

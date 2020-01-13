@@ -3,8 +3,6 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.common.datatype.DtUid;
 import com.provys.provysdb.dbcontext.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,8 +16,6 @@ import java.util.Calendar;
 @SuppressWarnings("unused")
 class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStatement<T>
         implements DbPreparedStatement {
-
-    private static final Logger LOG = LogManager.getLogger(ProvysPreparedStatement.class);
 
     @Nonnull
     private final SqlTypeMap sqlTypeMap;
@@ -331,7 +327,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
 
     @Nonnull
     private SqlException getSetException(int parameterIndex, Class<?> clazz, @Nullable Object value, SQLException e) {
-        return new SqlException(LOG, "Sql exception setting bind on index " + parameterIndex +
+        return new SqlException("Sql exception setting bind on index " + parameterIndex +
                 ", type " + clazz.getSimpleName() + " to value " + value, e);
     }
 

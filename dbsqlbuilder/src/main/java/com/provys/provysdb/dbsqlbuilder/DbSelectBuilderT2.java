@@ -5,6 +5,13 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * Database backed select interface with two columns
+ *
+ * @param <T1> is type of the first column
+ * @param <T2> is type of the second column
+ */
+@SuppressWarnings("unused")
 public interface DbSelectBuilderT2<T1, T2>
         extends SelectBuilderBase<DbSelectBuilderT2<T1, T2>, DbSelectBuilder>, DbSelectBuilderBase {
 

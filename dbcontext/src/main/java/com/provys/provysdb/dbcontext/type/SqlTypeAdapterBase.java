@@ -4,8 +4,6 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbcontext.SqlTypeAdapter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,9 +12,8 @@ import java.util.Optional;
 
 public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
 
-    private static final Logger LOG = LogManager.getLogger(SqlTypeAdapterBase.class);
-
     @Nonnull
+    @Override
     public Optional<String> getTypeName() {
         return Optional.empty();
     }
@@ -31,12 +28,12 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
         try {
             var value = readValueInternal(resultSet, columnIndex);
             if (resultSet.wasNull() || (value == null)) {
-                throw new SqlException(LOG, "Mandatory column value was null (" + columnIndex + ", " +
+                throw new SqlException("Mandatory column value was null (" + columnIndex + ", " +
                         resultSet.getMetaData().getColumnName(columnIndex) + ")");
             }
             return value;
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Exception reading from result set", e);
+            throw new SqlException("Exception reading from result set", e);
         }
     }
 
@@ -46,7 +43,7 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
         try {
             return readNonnullValue(resultSet, resultSet.findColumn(columnLabel));
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Column " + columnLabel + " not found");
+            throw new SqlException("Column " + columnLabel + " not found");
         }
     }
 
@@ -60,7 +57,7 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
             }
             return value;
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Exception reading from result set", e);
+            throw new SqlException("Exception reading from result set", e);
         }
     }
 
@@ -70,7 +67,7 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
         try {
             return readNullableValue(resultSet, resultSet.findColumn(columnLabel));
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Column " + columnLabel + " not found");
+            throw new SqlException("Column " + columnLabel + " not found");
         }
     }
 
@@ -92,7 +89,7 @@ public abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
                 bindValueInternal(statement, parameterIndex, value);
             }
         } catch (SQLException e) {
-            throw new SqlException(LOG,
+            throw new SqlException(
                     "Error binding variable (" + statement + ", " + parameterIndex + ", " + value + ")", e);
         }
     }

@@ -2,6 +2,9 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Interface represents element of from clause - e.g. either just table to be selected from or join clause
+ */
 public interface SqlFrom extends SqlElement {
 
     /**

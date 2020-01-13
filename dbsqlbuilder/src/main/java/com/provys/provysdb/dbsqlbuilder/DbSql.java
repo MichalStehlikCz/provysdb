@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 /**
  * Interface defining root factory class for all objects, used for building Sql statements
  */
+@SuppressWarnings("unused")
 public interface DbSql extends Sql {
 
     /**

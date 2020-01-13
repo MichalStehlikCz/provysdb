@@ -2,8 +2,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,8 +12,6 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("UnusedReturnValue")
 public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S>, S extends Sql> {
-
-    private static final Logger LOG = LogManager.getLogger(SelectBuilderBaseImpl.class);
 
     private final S sql;
     private final Map<SqlIdentifier, SqlColumn> columnByName;
@@ -42,7 +38,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
 
     void mapColumn(SqlIdentifier alias, SqlColumn column) {
         if (columnByName.putIfAbsent(alias, column) != null) {
-            throw new InternalException(LOG, "Attempt to insert duplicate column to column list (" + alias.getText() +
+            throw new InternalException("Attempt to insert duplicate column to column list (" + alias.getText() +
                     " , " + this.toString() + ")");
         }
     }
@@ -169,7 +165,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
 
     private void mapTable(SqlTableAlias alias, SqlFrom table) {
         if (tableByAlias.putIfAbsent(alias, table) != null) {
-            throw new InternalException(LOG, "Attempt to insert duplicate table to from list (" + alias.getAlias() +
+            throw new InternalException("Attempt to insert duplicate table to from list (" + alias.getAlias() +
                     " , " + this.toString() + ")");
         }
     }

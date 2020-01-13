@@ -7,6 +7,7 @@ import com.provys.provysdb.sqlbuilder.BindValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 public interface BindVariable extends BindValue {
 
     /**

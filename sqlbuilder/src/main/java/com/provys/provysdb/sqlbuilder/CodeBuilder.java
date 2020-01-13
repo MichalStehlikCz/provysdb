@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author stehlik
  */
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue"})
 public interface CodeBuilder {
 
     /**

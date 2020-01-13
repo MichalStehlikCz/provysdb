@@ -1,5 +1,8 @@
 package com.provys.provysdb.sqlbuilder;
 
+/**
+ * Sql element represents any element of sql statement. Element's only ability is export its sql representation.
+ */
 public interface SqlElement {
 
     /**

@@ -3,8 +3,6 @@ package com.provys.provysdb.dbcontext.type;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -13,8 +11,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 public class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
-
-    private static final Logger LOG = LogManager.getLogger(SqlTypeAdapterBigInteger.class);
 
     private static final SqlTypeAdapterBigInteger INSTANCE = new SqlTypeAdapterBigInteger();
 
@@ -35,7 +31,7 @@ public class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
         try {
             return value.toBigIntegerExact();
         } catch (ArithmeticException e) {
-            throw new InternalException(LOG, "Fractional part encountered when reading BigInteger, column index " +
+            throw new InternalException("Fractional part encountered when reading BigInteger, column index " +
                     columnIndex);
         }
     }

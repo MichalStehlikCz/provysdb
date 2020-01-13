@@ -105,7 +105,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
     private void throwNoConnection(LabelableConnection labelableConnection) {
         if (!(labelableConnection instanceof Connection)) {
-            throw new InternalException(LOG, "Oracle connection pool sent no-connection for configuration");
+            throw new InternalException("Oracle connection pool sent no-connection for configuration");
         }
     }
 

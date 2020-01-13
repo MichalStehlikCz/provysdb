@@ -5,8 +5,6 @@ import com.provys.provysdb.dbcontext.*;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +17,6 @@ import java.util.stream.StreamSupport;
 @SuppressWarnings("WeakerAccess")
 abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
-    private static final Logger LOG = LogManager.getLogger(SelectStatementTImpl.class);
     @Nonnull
     private final String sqlText;
     @Nonnull
@@ -59,7 +56,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         try {
             this.statement = connection.prepareStatement(sqlText);
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Failed to parse statement " + sqlText, e);
+            throw new SqlException("Failed to parse statement " + sqlText, e);
         }
         this.binds = getBinds(binds);
     }
@@ -94,11 +91,11 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     @Nonnull
     public S bindValue(String bind, @Nullable Object value) {
         if (closed) {
-            throw new InternalException(LOG, "Attempt to bind value in closed statement " + this);
+            throw new InternalException("Attempt to bind value in closed statement " + this);
         }
         var oldValue = binds.get(bind);
         if (oldValue == null) {
-            throw new InternalException(LOG, "Bind variable with name " + bind + " not found in statement " + this);
+            throw new InternalException("Bind variable with name " + bind + " not found in statement " + this);
         }
         oldValue.setValue(value);
         return self();
@@ -122,13 +119,13 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
     public DbResultSet execute() {
         if (closed) {
-            throw new InternalException(LOG, "Attempt to execute closed statement " + this);
+            throw new InternalException("Attempt to execute closed statement " + this);
         }
         bindValues();
         try {
             return statement.executeQuery();
         } catch (SQLException e) {
-            throw new InternalException(LOG, "Error executing statement " + this, e);
+            throw new InternalException("Error executing statement " + this, e);
         }
     }
 
@@ -150,13 +147,13 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                 connection.close();
             } catch (SQLException e) {
                 if (exception == null) {
-                    throw new InternalException(LOG, "Error closing connection", e);
+                    throw new InternalException("Error closing connection", e);
                 }
             }
             connection = null;
         }
         if (exception != null) {
-            throw new InternalException(LOG, "Error closing prepared statement", exception);
+            throw new InternalException("Error closing prepared statement", exception);
         }
     }
 
@@ -196,8 +193,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                 if (bind instanceof BindValueT) {
                     combinedBind = ((BindValueT<?>) bind).withValue(null);
                 } else {
-                    throw new InternalException(LOG,
-                            "Cannot bind null value to bind variable with unknown type " + bind);
+                    throw new InternalException("Cannot bind null value to bind variable with unknown type " + bind);
                 }
             } else {
                 combinedBind = bind.withValue(value);
@@ -209,27 +205,13 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
             modified = true;
         }
 
-        /**
-         * Set value to given bind
-         *
-         * @param bind is new value to be set
-         */
-        public void setBind(BindName bind) {
-            var combinedBind = this.bind.combine(bind);
-            if (combinedBind == this.bind) {
-                return;
-            }
-            this.bind = combinedBind;
-            modified = true;
-        }
-
         void bindValue(DbPreparedStatement statement) {
             if (!modified) {
                 // if value has not been modified, we do not have to rebind it
                 return;
             }
             if (!(bind instanceof BindVariable)) {
-                throw new InternalException(LOG, "Value not assigned to bind variable " + bind.getName());
+                throw new InternalException("Value not assigned to bind variable " + bind.getName());
             }
             BindVariable bindVariable = (BindVariable) bind;
             for (var position : positions) {
@@ -253,14 +235,14 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         T result;
         try (var resultSet = execute()) {
             if (!resultSet.next()) {
-                throw new InternalException(LOG, "Exact fetch returned no rows" + this);
+                throw new InternalException("Exact fetch returned no rows" + this);
             }
             result = rowMapper.map(resultSet, 0);
             if (resultSet.next()) {
-                throw new InternalException(LOG, "Exact fetch returned more than one row" + this);
+                throw new InternalException("Exact fetch returned more than one row" + this);
             }
         } catch (SQLException e) {
-            throw new InternalException(LOG, "Exception thrown by sql statement " + this);
+            throw new InternalException("Exception thrown by sql statement " + this);
         }
         return result;
     }
@@ -274,7 +256,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                 result.add(rowMapper.map(resultSet, row++));
             }
         } catch (SQLException e) {
-            throw new InternalException(LOG, "Exception thrown by sql statement " + this);
+            throw new InternalException("Exception thrown by sql statement " + this);
         }
         return result;
     }
@@ -297,7 +279,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                         this.close();
                     }
                     if (exception != null) {
-                        throw new InternalException(LOG, "Error fetching data from statement " + this, exception);
+                        throw new InternalException("Error fetching data from statement " + this, exception);
                     }
                 });
     }
@@ -332,8 +314,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
     private static class DbResultSetIterator<T> implements Iterator<T> {
 
-        private static final Logger LOG = LogManager.getLogger(DbResultSetIterator.class);
-
         @Nonnull
         private final DbRowMapper<T> rowMapper;
         @Nonnull
@@ -359,7 +339,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                     next = rowMapper.map(resultSet, rowNumber++);
                 }
             } catch (SQLException e) {
-                throw new InternalException(LOG, "Error fetching data in stream", e);
+                throw new InternalException("Error fetching data in stream", e);
             }
         }
 

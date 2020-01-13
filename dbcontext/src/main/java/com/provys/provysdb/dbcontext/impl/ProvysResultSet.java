@@ -5,8 +5,6 @@ import com.provys.common.datatype.DtUid;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.SqlException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,8 +22,6 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 class ProvysResultSet implements DbResultSet {
-
-    private static final Logger LOG = LogManager.getLogger(ProvysResultSet.class);
 
     private final ResultSet resultSet;
 
@@ -1025,12 +1021,12 @@ class ProvysResultSet implements DbResultSet {
 
     @Nonnull
     private SqlException getNullException(int columnIndex) {
-        return new SqlException(LOG, "Unexpected null value in ResultSet, column index " + columnIndex);
+        return new SqlException("Unexpected null value in ResultSet, column index " + columnIndex);
     }
 
     @Nonnull
     private SqlException getNullException(String columnLabel) {
-        return new SqlException(LOG, "Unexpected null value in ResultSet, column label " + columnLabel);
+        return new SqlException("Unexpected null value in ResultSet, column label " + columnLabel);
     }
 
     private void checkWasNotNull(int columnIndex) throws SQLException {
@@ -1047,13 +1043,13 @@ class ProvysResultSet implements DbResultSet {
 
     @Nonnull
     private SqlException getGetSqlException(int columnIndex, Class<?> type, SQLException e) {
-        return new SqlException(LOG, "Error reading " + type.getSimpleName() + " value from ResultSet, column "
+        return new SqlException("Error reading " + type.getSimpleName() + " value from ResultSet, column "
                 + columnIndex, e);
     }
 
     @Nonnull
     private SqlException getGetSqlException(String columnLabel, Class<?> type, SQLException e) {
-        return new SqlException(LOG, "Error reading " + type.getSimpleName() + " value from ResultSet, column "
+        return new SqlException("Error reading " + type.getSimpleName() + " value from ResultSet, column "
                 + columnLabel, e);
     }
 
@@ -1085,7 +1081,7 @@ class ProvysResultSet implements DbResultSet {
             }
             return DtBoolean.ofProvysDb(dbValue);
         } catch (InternalException e) {
-            throw new SqlException(LOG, "Incorrect Provys boolean value retrieved from column index " + columnIndex, e);
+            throw new SqlException("Incorrect Provys boolean value retrieved from column index " + columnIndex, e);
         } catch (SQLException e) {
             throw getGetSqlException(columnIndex, Boolean.class, e);
         }
@@ -1101,7 +1097,7 @@ class ProvysResultSet implements DbResultSet {
             }
             return DtBoolean.ofProvysDb(dbValue);
         } catch (InternalException e) {
-            throw new SqlException(LOG, "Incorrect Provys boolean value retrieved from column " + columnLabel, e);
+            throw new SqlException("Incorrect Provys boolean value retrieved from column " + columnLabel, e);
         } catch (SQLException e) {
             throw getGetSqlException(columnLabel, Boolean.class, e);
         }
@@ -1457,7 +1453,7 @@ class ProvysResultSet implements DbResultSet {
                 return null;
             }
             if (value.length() > 1) {
-                throw new SqlException(LOG, "Cannot read string longer than 1 character to char variable, column "
+                throw new SqlException("Cannot read string longer than 1 character to char variable, column "
                         + columnIndex);
             }
             return value.charAt(0);
@@ -1476,7 +1472,7 @@ class ProvysResultSet implements DbResultSet {
                 return null;
             }
             if (value.length() > 1) {
-                throw new SqlException(LOG, "Cannot read string longer than 1 character to char variable, column "
+                throw new SqlException("Cannot read string longer than 1 character to char variable, column "
                         + columnLabel);
             }
             return value.charAt(0);
@@ -1644,7 +1640,7 @@ class ProvysResultSet implements DbResultSet {
         try {
             return (result == null) ? null : DtUid.valueOf(result);
         } catch (ArithmeticException e) {
-            throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnIndex);
+            throw new SqlException("Invalid Uid value encountered when reading Uid, column " + columnIndex);
         }
     }
 
@@ -1655,7 +1651,7 @@ class ProvysResultSet implements DbResultSet {
         try {
             return (result == null) ? null : DtUid.valueOf(result);
         } catch (InternalException e) {
-            throw new SqlException(LOG, "Invalid Uid value encountered when reading Uid, column " + columnLabel);
+            throw new SqlException("Invalid Uid value encountered when reading Uid, column " + columnLabel);
         }
     }
 

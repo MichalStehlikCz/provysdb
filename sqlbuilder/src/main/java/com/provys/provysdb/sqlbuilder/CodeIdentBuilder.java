@@ -2,6 +2,9 @@ package com.provys.provysdb.sqlbuilder;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Ident builder, supports creation of common idents. Can be retrieved from CodeBuilder
+ */
 public interface CodeIdentBuilder {
     /**
      * Set ident (used either on all lines or starting from second line, depending if firstIdent is set)

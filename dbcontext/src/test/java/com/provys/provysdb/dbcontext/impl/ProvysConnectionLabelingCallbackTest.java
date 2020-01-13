@@ -1,8 +1,6 @@
 package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.common.exception.InternalException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -14,8 +12,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
 
 class ProvysConnectionLabelingCallbackTest {
-
-    private static final Logger LOG = LogManager.getLogger(ProvysConnectionLabelingCallbackTest.class.getName());
 
     @SuppressWarnings("squid:S3878")
     @Nonnull
@@ -65,7 +61,7 @@ class ProvysConnectionLabelingCallbackTest {
             currentLabels.load(currentLabelsReader);
             assertThat(new ProvysConnectionLabelingCallback().cost(reqLabels, currentLabels)).isEqualTo(result);
         } catch (IOException e) {
-            throw new InternalException(LOG, "Error reading labels", e);
+            throw new InternalException("Error reading labels", e);
         }
     }
 

@@ -4,16 +4,12 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
 import com.provys.provysdb.sqlbuilder.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 class BindVariableImpl<T> implements BindVariableT<T> {
-
-    private static final Logger LOG = LogManager.getLogger(BindVariableImpl.class);
 
     @Nonnull
     private final BindValueT<T> bindValue;
@@ -83,7 +79,7 @@ class BindVariableImpl<T> implements BindVariableT<T> {
             var value = getValue().orElse(null);
             statement.setNullableValue(parameterIndex, value, getType());
         } catch (Exception e) {
-            throw new SqlException(LOG, "Error binding value " + getValue().orElse(null) +
+            throw new SqlException("Error binding value " + getValue().orElse(null) +
                     " to variable " + getName(), e);
         }
     }

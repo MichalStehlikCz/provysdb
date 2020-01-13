@@ -5,8 +5,6 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.sqlbuilder.BindName;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -32,17 +30,17 @@ class SelectStatementTImplTest {
         }
     }
 
-    private static final Logger LOG = LogManager.getLogger(SelectStatementTImplTest.class);
+    @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
+    private static final String testSql = "test sql";
 
     @Test
     void testExecute() throws SQLException {
-        var sql = "test sql";
         var resultSet = mock(DbResultSet.class);
         var preparedStatement = mock(DbPreparedStatement.class);
         when (preparedStatement.executeQuery()).thenReturn(resultSet);
         var connection = mock(DbConnection.class);
-        when (connection.prepareStatement(sql)).thenReturn(preparedStatement);
-        var selectStatement = new SelectStatementTest(sql, Collections.emptyList(), connection);
+        when (connection.prepareStatement(testSql)).thenReturn(preparedStatement);
+        var selectStatement = new SelectStatementTest(testSql, Collections.emptyList(), connection);
         assertThat(selectStatement.execute()).isEqualTo(resultSet);
         verify(preparedStatement, times(1)).executeQuery();
         verifyNoMoreInteractions(preparedStatement);
@@ -50,15 +48,14 @@ class SelectStatementTImplTest {
 
     @Test
     void testExecuteWithBind() throws SQLException {
-        var sql = "test sql";
         var resultSet = mock(DbResultSet.class);
         var preparedStatement = mock(DbPreparedStatement.class);
         when (preparedStatement.executeQuery()).thenReturn(resultSet);
         var connection = mock(DbConnection.class);
-        when (connection.prepareStatement(sql)).thenReturn(preparedStatement);
+        when (connection.prepareStatement(testSql)).thenReturn(preparedStatement);
         var bind = mock(BindVariable.class);
         when(bind.getName()).thenReturn("bind1");
-        var selectStatement = new SelectStatementTest(sql, List.of(bind), connection);
+        var selectStatement = new SelectStatementTest(testSql, List.of(bind), connection);
         assertThat(selectStatement.execute()).isEqualTo(resultSet);
         verify(preparedStatement, times(1)).executeQuery();
         verifyNoMoreInteractions(preparedStatement);

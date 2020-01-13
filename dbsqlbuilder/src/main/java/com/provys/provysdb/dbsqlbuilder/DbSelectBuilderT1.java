@@ -5,6 +5,12 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * Variant of database backed select builder interface with single typed column
+ *
+ * @param <T1> type of select's single column
+ */
+@SuppressWarnings("unused")
 public interface DbSelectBuilderT1<T1>
         extends SelectBuilderBase<DbSelectBuilderT1<T1>, DbSelectBuilder>, DbSelectBuilderBase {
     /**

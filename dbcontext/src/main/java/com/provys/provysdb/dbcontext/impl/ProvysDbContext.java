@@ -5,8 +5,6 @@ import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbContext;
 import com.provys.provysdb.dbcontext.type.SqlTypeFactory;
 import com.provys.provysdb.dbcontext.SqlTypeMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.sql.SQLException;
@@ -20,9 +18,6 @@ import java.util.Objects;
  * @author stehlik
  */
 public class ProvysDbContext implements DbContext {
-
-    @Nonnull
-    private static final Logger LOG = LogManager.getLogger(ProvysDbContext.class);
 
     @Nonnull
     private final ProvysConnectionPoolDataSource provysDataSource;
@@ -45,7 +40,7 @@ public class ProvysDbContext implements DbContext {
         try {
             return new ProvysConnection(provysDataSource.getConnection(), sqlTypeMap);
         } catch (SQLException e) {
-            throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
+            throw new RegularException("PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
         }
     }
 
@@ -56,7 +51,7 @@ public class ProvysDbContext implements DbContext {
             return new ProvysConnection(provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)),
                     sqlTypeMap);
         } catch (SQLException e) {
-            throw new RegularException(LOG, "PROVYSDB_CANNOTCONNECTWITHTOKEN",
+            throw new RegularException("PROVYSDB_CANNOTCONNECTWITHTOKEN",
                     "Failed to initialize connection with token", e);
         }
     }

@@ -2,8 +2,6 @@ package com.provys.provysdb.dbcontext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Optional;
 
 /**

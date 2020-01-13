@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Enum lists strings that can be used as symbols in SQL language (or - more exactly - Oracle SQL dialect)
+ */
 public enum SqlSymbol {
 
     PARAM_VALUE("=>", false),

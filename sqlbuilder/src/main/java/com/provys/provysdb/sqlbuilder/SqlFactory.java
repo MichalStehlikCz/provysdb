@@ -2,6 +2,7 @@ package com.provys.provysdb.sqlbuilder;
 
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
+import com.provys.common.datatype.DtUid;
 import com.provys.provysdb.sqlbuilder.impl.*;
 
 import javax.annotation.Nonnull;
@@ -120,6 +121,15 @@ public final class SqlFactory {
      */
     @Nonnull
     public static LiteralT<BigDecimal> literal(BigDecimal value) {
+        return SQL.literal(value);
+    }
+
+    /**
+     * @param value is value of literal
+     * @return DtUid literal
+     */
+    @Nonnull
+    public static LiteralT<DtUid> literal(DtUid value) {
         return SQL.literal(value);
     }
 
@@ -992,5 +1002,6 @@ public final class SqlFactory {
     /**
      * Pure utility class, cannot be instantiated
      */
+    @SuppressWarnings("unused")
     private SqlFactory() {}
 }

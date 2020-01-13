@@ -2,8 +2,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.regex.Pattern;
@@ -11,18 +9,15 @@ import java.util.regex.Pattern;
 class SqlTableAliasImpl implements SqlTableAlias {
 
     @Nonnull
-    private static final Logger LOG = LogManager.getLogger(SqlTableAliasImpl.class);
-
-    @Nonnull
     private static final Pattern PATTERN = Pattern.compile("(?:[a-zA-Z][a-zA-Z0-9_#$]*)|(?:\"[^\"]*\")|(?:<<[0-9]+>>)");
 
     @Nonnull
     private static String validate(String aliasText) {
         if (aliasText.isBlank()) {
-            throw new InternalException(LOG, "Blank text supplied as SQL table alias");
+            throw new InternalException("Blank text supplied as SQL table alias");
         }
         if (!PATTERN.matcher(aliasText).matches()) {
-            throw new InternalException(LOG, "Supplied text is not valid SQL table alias - '" + aliasText + "'");
+            throw new InternalException("Supplied text is not valid SQL table alias - '" + aliasText + "'");
         }
         if ((aliasText.charAt(0) == '"') || (aliasText.charAt(0) == '<')) {
             return aliasText;

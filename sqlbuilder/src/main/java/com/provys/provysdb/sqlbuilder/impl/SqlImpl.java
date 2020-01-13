@@ -21,13 +21,6 @@ public abstract class SqlImpl implements Sql {
         this.tokenizer = Objects.requireNonNull(tokenizer);
     }
 
-    /**
-     * @return value of field tokenizer
-     */
-    public SqlTokenizer getTokenizer() {
-        return tokenizer;
-    }
-
     @Nonnull
     @Override
     public LiteralT<String> literal(String value) {
@@ -199,7 +192,7 @@ public abstract class SqlImpl implements Sql {
     @Nonnull
     @Override
     public SqlColumn columnSql(String sql) {
-        var builder = tokenizer.getBinds(sql);
+        var builder = tokenizer.normalize(sql);
         return columnDirect(builder.build(), null, builder.getBinds());
     }
 
@@ -218,7 +211,7 @@ public abstract class SqlImpl implements Sql {
     @Nonnull
     @Override
     public SqlColumn columnSql(String sql, @Nullable String alias, Iterable<BindValue> binds) {
-        var builder = tokenizer.getBinds(sql).applyBindVariables(binds);
+        var builder = tokenizer.normalize(sql).applyBindVariables(binds);
         return columnDirect(builder.build(), alias, builder.getBinds());
     }
 
@@ -355,7 +348,7 @@ public abstract class SqlImpl implements Sql {
     @Nonnull
     @Override
     public SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
-        var builder = tokenizer.getBinds(sqlSelect);
+        var builder = tokenizer.normalize(sqlSelect);
         return new SqlFromSql(builder.build(), alias, builder.getBinds());
     }
 
@@ -416,7 +409,7 @@ public abstract class SqlImpl implements Sql {
     @Nonnull
     @Override
     public Condition conditionSql(String conditionSql, Iterable<BindValue> binds) {
-        var builder = tokenizer.getBinds(conditionSql).applyBindVariables(binds);
+        var builder = tokenizer.normalize(conditionSql).applyBindVariables(binds);
         return new ConditionSimpleWithBinds(builder.build(), builder.getBinds());
     }
 

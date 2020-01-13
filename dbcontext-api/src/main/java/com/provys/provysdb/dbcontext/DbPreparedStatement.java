@@ -3,7 +3,6 @@ package com.provys.provysdb.dbcontext;
 import com.provys.common.datatype.DtUid;
 
 import javax.annotation.Nullable;
-import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -11,6 +10,7 @@ import java.sql.SQLException;
  * Provys extension of JDBC's prepared statement.
  * Built on Provys connection, adds support for work with Provys specific data-types via parametrised setValue method
  */
+@SuppressWarnings("unused")
 public interface DbPreparedStatement extends PreparedStatement, DbStatement {
 
     @Override

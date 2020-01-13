@@ -1,8 +1,6 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,9 +12,6 @@ import java.util.regex.Pattern;
  * object
  */
 class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier {
-
-    @Nonnull
-    private static final Logger LOG = LogManager.getLogger(SqlIdentifierImpl.class);
 
     @Nonnull
     private static final Pattern PATTERN_ORDINARY = Pattern.compile("([A-Z][A-Z0-9_#$]*)");
@@ -52,10 +47,10 @@ class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier 
     private static String validate(String name) {
         var result = name.trim();
         if (result.isEmpty()) {
-            throw new InternalException(LOG, "Blank text supplied as SQL name");
+            throw new InternalException("Blank text supplied as SQL name");
         }
         if (result.contains("\n")) {
-            throw new InternalException(LOG, "Invalid SQL delimited name - name cannot contain newline");
+            throw new InternalException("Invalid SQL delimited name - name cannot contain newline");
         }
         return result;
     }

@@ -81,7 +81,7 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
             LOG.info("Connection pool created (user {}, db {}, minsize {}, maxsize {}", user, db, minPoolSize,
                     maxPoolSize);
         } catch (SQLException e) {
-            throw new SqlException(LOG, "Failed to create connection pool (user " + user + ", db " + db + ")");
+            throw new SqlException("Failed to create connection pool (user " + user + ", db " + db + ")");
         }
         // now try to get connection (to verify that connection pool parameters are valid)
         try (Connection conn = getConnection()) {

@@ -4,8 +4,6 @@ import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,16 +17,13 @@ import java.util.regex.Pattern;
 class BindNameImpl implements BindName {
 
     @Nonnull
-    private static final Logger LOG = LogManager.getLogger(BindNameImpl.class);
-
-    @Nonnull
     private static final Pattern NAME_PATTERN = Pattern.compile("([A-Z][A-Z0-9_]*)");
 
     @Nonnull
     private static String validateName(String name) {
         var result = name.trim().toUpperCase();
         if (!NAME_PATTERN.matcher(result).matches()) {
-            throw new InternalException(LOG, "Invalid bind name " + name);
+            throw new InternalException("Invalid bind name " + name);
         }
         return result;
     }
@@ -59,7 +54,7 @@ class BindNameImpl implements BindName {
             return this;
         }
         if (!getName().equals(other.getName())) {
-            throw new InternalException(LOG,
+            throw new InternalException(
                     "Cannot combine bind variables with different names (" + getName() + "!=" + other.getName() + ")");
         }
         if (other instanceof BindValue) {

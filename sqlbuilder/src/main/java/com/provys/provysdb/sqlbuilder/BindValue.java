@@ -3,6 +3,9 @@ package com.provys.provysdb.sqlbuilder;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
+/**
+ * Bind value extends BindName by connecting type and value to named bind
+ */
 public interface BindValue extends BindName {
 
     @Nonnull

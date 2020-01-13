@@ -24,34 +24,25 @@ public final class SqlException extends ProvysException {
      * Note that the detail message associated with {@code cause} is not automatically incorporated in this runtime
      * exception's detail message.
      *
-     * @param logger is logger for current class; exception is logger as error to logger
      * @param message the detail message; displayed to user if translations via database are not available. Message is
      *               prefixed with internal name
      * @param params is list of parameter and their values that can be embedded in error message
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A @{code null}
      *             value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public SqlException(Logger logger, String message, Map<String, String> params, @Nullable Throwable cause) {
-        super(message, cause);
-        if ((cause == null) || (cause instanceof SqlException) || (cause instanceof InternalException) ||
-                (cause instanceof RegularException)) {
-            // null does not need logging and remaining too were already logged
-            logger.error("{}: {}; params {}", NAME_NM, message, params);
-        } else {
-            logger.error("{}: {}; params {}; cause {}", NAME_NM, message, params, cause);
-        }
+    public SqlException(String message, @Nullable Map<String, String> params, @Nullable Throwable cause) {
+        super(message, params, cause);
     }
 
     /**
      * Constructs a new PROVYS Sql exception with the specified detail message and parameters.
      *
-     * @param logger is logger for current class; exception is logger as error to logger
      * @param message the detail message; displayed to user if translations via database are not available. Message is
      *               prefixed with internal name
      * @param params is list of parameter and their values that can be embedded in error message
      */
-    public SqlException(Logger logger, String message, Map<String, String> params) {
-        this(logger, message, params, null);
+    public SqlException(String message, @Nullable Map<String, String> params) {
+        this(message, params, null);
     }
 
     /**
@@ -59,25 +50,23 @@ public final class SqlException extends ProvysException {
      * Note that the detail message associated with {@code cause} is not
      * automatically incorporated in this runtime exception's detail message.
      *
-     * @param logger is logger for current class; exception is logger as error to logger
      * @param message the detail message; displayed to user if translations via database are not available. Message is
      *               prefixed with internal name
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A @{code null}
      *             value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public SqlException(Logger logger, String message, @Nullable Throwable cause) {
-        this(logger, message, Collections.emptyMap(), cause);
+    public SqlException(String message, @Nullable Throwable cause) {
+        this(message, null, cause);
     }
 
     /**
      * Constructs a new PROVYS Sql exception with the specified detail message.
      *
-     * @param logger is logger for current class; exception is logger as error to logger
      * @param message the detail message; displayed to user if translations via database are not available. Message is
      *               prefixed with internal name
      */
-    public SqlException(Logger logger, String message) {
-        this(logger, message, (Throwable) null);
+    public SqlException(String message) {
+        this(message, (Throwable) null);
     }
 
     @Nonnull

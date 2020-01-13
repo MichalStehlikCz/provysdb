@@ -2,8 +2,6 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,9 +11,6 @@ import java.util.*;
  * Represents variable connected with select statement, its type and value.
  */
 class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
-
-    @Nonnull
-    private static final Logger LOG = LogManager.getLogger(BindValueImpl.class);
 
     /**
      * Get bind variable with specified name and value. Type of variable is deferred from supplied value
@@ -59,7 +54,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
     private BindValueImpl(String name, Class<T> type, @Nullable T value) {
         super(name);
         if ((value != null) && !type.isInstance(value)) {
-            throw new InternalException(LOG, "Incorrect type of bind value for variable " + name +
+            throw new InternalException("Incorrect type of bind value for variable " + name +
                     " (type " + type + ", value " + value.getClass() + ")");
         }
         this.type = Objects.requireNonNull(type);
@@ -79,7 +74,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
     @Override
     public <U> Optional<U> getValue(Class<U> type) {
         if (!type.isAssignableFrom(this.type)) {
-            throw new InternalException(LOG, "Cannot convert value of bind variable " + getName() + " from " +
+            throw new InternalException("Cannot convert value of bind variable " + getName() + " from " +
                     this.type + " to " + type);
         }
         //noinspection unchecked
@@ -99,7 +94,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
             return this;
         }
         if ((value != null) && (!type.isAssignableFrom(value.getClass()))) {
-            throw new InternalException(LOG, "Cannot set value to bind variable " + getName() + ", type " + this.type +
+            throw new InternalException("Cannot set value to bind variable " + getName() + ", type " + this.type +
                     ", value type " + value.getClass());
         }
         //noinspection unchecked
@@ -113,7 +108,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
             return this;
         }
         if (!getName().equals(other.getName())) {
-            throw new InternalException(LOG,
+            throw new InternalException(
                     "Cannot combine bind variables with different names (" + getName() + "!=" + other.getName() + ")");
         }
         if (!(other instanceof BindValue)) {
@@ -121,7 +116,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
         }
         var otherVariable = (BindValue) other;
         if (!type.equals(otherVariable.getType())) {
-            throw new InternalException(LOG,
+            throw new InternalException(
                     "Cannot combine bind variables with different types (" + type + "!=" + otherVariable.getType() +
                             ")");
         }
@@ -130,7 +125,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
         }
         if (value == null) {
             if (!(otherVariable instanceof BindValueT)) {
-                throw new InternalException(LOG,
+                throw new InternalException(
                         "Class implementing BindValue is expected to implement BindValueT as well");
             }
             //noinspection unchecked - we verified that values are of the same type few lines above
@@ -138,7 +133,7 @@ class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
         } else if (otherVariable.getValue(Object.class).isEmpty()) {
             return this;
         }
-        throw new InternalException(LOG, "Cannot combine bind variable " + getName() + " - values differ (" +
+        throw new InternalException("Cannot combine bind variable " + getName() + " - values differ (" +
                 this.value + "!=" + otherVariable.getValue(Object.class).orElse(null) + ")");
     }
 

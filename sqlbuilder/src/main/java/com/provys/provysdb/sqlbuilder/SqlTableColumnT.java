@@ -9,9 +9,11 @@ import javax.annotation.Nonnull;
  */
 public interface SqlTableColumnT<T> extends SqlColumnT<T>, SqlTableColumn {
 
+    @Override
     @Nonnull
     SqlTableColumnT<T> withAlias(SqlIdentifier alias);
 
+    @Override
     @Nonnull
     SqlTableColumnT<T> withTableAlias(SqlTableAlias tableAlias);
 }

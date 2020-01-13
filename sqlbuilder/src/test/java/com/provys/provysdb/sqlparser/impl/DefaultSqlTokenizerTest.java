@@ -95,7 +95,7 @@ class DefaultSqlTokenizerTest {
     @ParameterizedTest
     @MethodSource
     void getBindsTest(String source, String parsed, BindName[] binds) {
-        var builder = new DefaultSqlTokenizer().getBinds(source);
+        var builder = new DefaultSqlTokenizer().normalize(source);
         assertThat(builder.build()).isEqualTo(parsed);
         assertThat(builder.getBinds()).containsExactly(binds);
     }

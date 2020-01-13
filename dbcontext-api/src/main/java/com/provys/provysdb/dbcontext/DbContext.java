@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Represents database context for Sql builder - statements are deferred to this context's connections
  */
+@SuppressWarnings("unused")
 public interface DbContext {
 
     @Nonnull

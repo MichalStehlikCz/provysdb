@@ -8,8 +8,6 @@ import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlFactory;
 import com.provys.provysdb.sqlbuilder.impl.*;
 import com.provys.provysdb.sqlparser.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,8 +21,6 @@ import static com.provys.provysdb.sqlparser.SpaceMode.*;
  * Tokenizer is used to parse supplied text into tokens
  */
 public class DefaultSqlTokenizer implements SqlTokenizer {
-
-    private static final Logger LOG = LogManager.getLogger(DefaultSqlTokenizer.class);
 
     private final int maxTokens;
 
@@ -50,21 +46,21 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         while (sqlScanner.hasNext()) {
             tokens.add(sqlScanner.next());
             if (tokens.size() > maxTokens) {
-                throw new InternalException(LOG, "Maximal number of parsed tokens exceeded");
+                throw new InternalException("Maximal number of parsed tokens exceeded");
             }
         }
         return tokens;
     }
 
     @Override
-    public CodeBuilder getBinds(String source) {
+    public CodeBuilder normalize(String source) {
         try (Scanner scanner = new Scanner(source)) {
-            return getBinds(scanner);
+            return normalize(scanner);
         }
     }
 
     @Override
-    public CodeBuilder getBinds(Scanner scanner) {
+    public CodeBuilder normalize(Scanner scanner) {
         var builder = new CodeBuilderImpl();
         var sqlScanner = new SqlScanner(scanner);
         SpaceMode afterPrev = null;
@@ -288,7 +284,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                     comment.append(nextChar);
                 }
             }
-            throw new InternalException(LOG, "Unclosed multiline comment - end of file reached");
+            throw new InternalException("Unclosed multiline comment - end of file reached");
         }
 
         /**
@@ -311,7 +307,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 }
             }
             return new ParsedSymbol(line, pos, SqlSymbol.getBySymbol(firstChar)
-                    .orElseThrow(() -> new InternalException(LOG, "Invalid character '" + firstChar +
+                    .orElseThrow(() -> new InternalException("Invalid character '" + firstChar +
                             "' found parsing SQL on line " + line + ", position " + pos)));
         }
 
@@ -325,7 +321,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         private SqlParsedToken readDateLiteral(int pos) {
             skipWhiteSpace();
             if (nextChar() != '\'') {
-                throw new RegularException(LOG, "SQLPARSER_MISSING_APOS_IN_DATE_LITERAL","' expected in date literal");
+                throw new RegularException("SQLPARSER_MISSING_APOS_IN_DATE_LITERAL","' expected in date literal");
             }
             var startLine = line;
             var text = new StringBuilder();
@@ -376,7 +372,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             var name = new StringBuilder().append('"');
             while (hasNextChar()) {
                 if (peekChar() == '\n') {
-                    throw new RegularException(LOG, "SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
+                    throw new RegularException("SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
                             "End of line encountered reading delimited token at line <<LINE>>, position <<POS>>",
                             Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
                 }
@@ -389,7 +385,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 }
                 name.append(nextChar());
             }
-            throw new RegularException(LOG, "SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
+            throw new RegularException("SQLPARSER_UNFINISHED_DELIMITED_TOKEN",
                     "End of file encountered reading delimited token at line <<LINE>>, position <<POS>>",
                     Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
         }
@@ -434,7 +430,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
                 }
                 value.append(nextChar());
             }
-            throw new RegularException(LOG, "SQLPARSER_UNFINISHED_STRING_LITERAL",
+            throw new RegularException("SQLPARSER_UNFINISHED_STRING_LITERAL",
                     "End of file encountered reading string literal at line <<LINE>>, position <<POS>>",
                     Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
         }
@@ -471,7 +467,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
             while (((peekChar() >= '0') && (peekChar() <= '9')) || (peekChar() == '.')) {
                 if (peekChar() == '.') {
                     if (dotEncountered) {
-                        throw new RegularException(LOG, "SQLPARSER_DOUBLE_DOT_IN_NUMERIC_LITERAL",
+                        throw new RegularException("SQLPARSER_DOUBLE_DOT_IN_NUMERIC_LITERAL",
                                 "Two dots encountered in numeric literal (line <<LINE>>, pos <<POS>>)",
                                 Map.of("LINE", Integer.toString(line), "POS", Integer.toString(pos)));
                     } else {

@@ -6,6 +6,6 @@ package com.provys.provysdb.sqlbuilder;
  * @param <T> is type to which expression evaluates (or more exactly Java class that best corresponds to SQL type this
  *           expression evaluates to)
  */
-@SuppressWarnings({"unused", "squid:S2326"})
+@SuppressWarnings("squid:S2326")
 public interface ExpressionT<T> extends Expression {
 }

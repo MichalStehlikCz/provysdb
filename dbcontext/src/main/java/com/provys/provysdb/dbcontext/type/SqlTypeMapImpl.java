@@ -80,7 +80,7 @@ class SqlTypeMapImpl implements SqlTypeMap {
         if (result == null) {
             result = getAdapterInterface(type, adaptersByClass);
             if (result == null) {
-                throw new InternalException(LOG, "No sql type adapter found for class " + type);
+                throw new InternalException("No sql type adapter found for class " + type);
             }
         }
         return result;

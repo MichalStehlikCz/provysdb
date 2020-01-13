@@ -14,8 +14,6 @@ import java.util.List;
 class DbSelectBuilderT0Impl extends DbSelectBuilderBaseImpl<DbSelectBuilderT0Impl, SelectBuilderT0Impl<DbSql>>
         implements DbSelectBuilderT0 {
 
-    private static final Logger LOG = LogManager.getLogger(DbSelectBuilderT0Impl.class);
-
     DbSelectBuilderT0Impl(DbSql sql) {
         super(new SelectBuilderT0Impl<>(sql));
     }
@@ -128,6 +126,6 @@ class DbSelectBuilderT0Impl extends DbSelectBuilderBaseImpl<DbSelectBuilderT0Imp
     @Nonnull
     @Override
     public Select build() {
-        throw new InternalException(LOG, "Cannot build select statement with no columns " + this);
+        throw new InternalException("Cannot build select statement with no columns " + this);
     }
 }
