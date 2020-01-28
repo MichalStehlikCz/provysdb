@@ -5,6 +5,7 @@ import com.provys.provysdb.sqlbuilder.*;
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,13 @@ public class CodeBuilderImpl implements CodeBuilder {
     @Override
     public CodeBuilder append(SqlTableAlias alias) {
         return append(alias.getAlias());
+    }
+
+    @Nonnull
+    @Override
+    public CodeBuilder apply(Consumer<CodeBuilder> appendFunction) {
+        appendFunction.accept(this);
+        return this;
     }
 
     @Nonnull

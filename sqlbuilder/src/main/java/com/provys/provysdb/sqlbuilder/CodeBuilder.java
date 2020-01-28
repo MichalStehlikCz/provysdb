@@ -3,6 +3,7 @@ package com.provys.provysdb.sqlbuilder;
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * CodeBuilder is object that allows to build SQL statement (string) from lines.
@@ -17,7 +18,7 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code.
      *
      * @param text contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(String text);
@@ -26,7 +27,7 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code; char variant
      *
      * @param character contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(char character);
@@ -35,7 +36,7 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code; int variant
      *
      * @param number contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(int number);
@@ -44,7 +45,7 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code; BigInteger variant
      *
      * @param number contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(BigInteger number);
@@ -53,7 +54,7 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code; SqlName variant
      *
      * @param name contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(SqlIdentifier name);
@@ -62,10 +63,21 @@ public interface CodeBuilder {
      * Appends piece of text to already existing code; SqlTableAlias variant
      *
      * @param alias contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder append(SqlTableAlias alias);
+
+    /**
+     * Use function that appends some text to this builder. Note that it should not be used for function implementation,
+     * as it would lead to circular dependence. Construct is to allow use of addSql functions in fluent build of
+     * statement via CodeBuilder
+     *
+     * @param appendFunction is function that accepts builder and appends appropriate text to it
+     * @return self to support fluent build
+     */
+    @Nonnull
+    CodeBuilder apply(Consumer<CodeBuilder> appendFunction);
 
     /**
      * Appends piece of text that might span multiple lines to already existing
@@ -75,7 +87,7 @@ public interface CodeBuilder {
      *
      * @param text contains text to be added
      * @param additionalIdent is number of characters that newlines should be idented above current level
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder appendWrapped(String text, int additionalIdent);
@@ -87,7 +99,7 @@ public interface CodeBuilder {
      * with current length.
      *
      * @param text contains text to be added
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder appendWrapped(String text);
@@ -95,7 +107,7 @@ public interface CodeBuilder {
     /**
      * Finishes line in already existing code.
      *
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder appendLine();
@@ -104,7 +116,7 @@ public interface CodeBuilder {
      * Appends line of text to already existing code.
      *
      * @param line contains text to be added (without newline char)
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder appendLine(String line);
@@ -119,7 +131,7 @@ public interface CodeBuilder {
      * Sets ident to specified ident.
      *
      * @param ident is ident to be used
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder setIdent(CodeIdent ident);
@@ -128,7 +140,7 @@ public interface CodeBuilder {
      * Sets ident to given string.
      *
      * @param ident is new ident string
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder setIdent(String ident);
@@ -138,7 +150,7 @@ public interface CodeBuilder {
      *
      * @param ident is new ident string
      * @param chars is length to which ident should be left padded with spaces
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder setIdent(String ident, int chars);
@@ -148,7 +160,7 @@ public interface CodeBuilder {
      *
      * @param firstIdent is new ident for the first line
      * @param ident is new ident valid from the second line on
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder setIdent(String firstIdent, String ident);
@@ -161,7 +173,7 @@ public interface CodeBuilder {
      * @param ident is new ident valid from the second line on
      * @param chars is required ident length - supplied strings will be left
      * padded with spaces to reach this length
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder setIdent(String firstIdent, String ident, int chars);
@@ -171,7 +183,7 @@ public interface CodeBuilder {
      * code block
      *
      * @param increaseBy is number of additional characters
-     * @return returns self to support fluent build
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder increasedIdent(int increaseBy);
@@ -182,7 +194,7 @@ public interface CodeBuilder {
      *
      * @param ident new ident text, left padded ith spaces to required length
      * @param increaseBy is number of characters ident should be increased by
-     * @return self to support chaining
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder increasedIdent(String ident, int increaseBy);
@@ -196,7 +208,7 @@ public interface CodeBuilder {
      * padding it with spaces to required length
      * @param ident is ident text that will be used from second line on
      * @param increaseBy is number of characters ident should be increased by
-     * @return self to support chaining
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder increasedIdent(String firstIdent, String ident, int increaseBy);
@@ -204,7 +216,7 @@ public interface CodeBuilder {
     /**
      * Returns to previous ident.
      *
-     * @return self to allow chaining.
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder popIdent();
@@ -213,7 +225,7 @@ public interface CodeBuilder {
      * Appends bind variable to end of binds collection
      *
      * @param bind is bind variable to be added to list of binds
-     * @return self to support chaining
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder addBind(BindName bind);
@@ -222,7 +234,7 @@ public interface CodeBuilder {
      * Appends list of bind variables to end of binds collection
      *
      * @param binds are bind variables to be added to list of binds
-     * @return self to support chaining
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder addBinds(List<BindName> binds);
@@ -232,7 +244,7 @@ public interface CodeBuilder {
      * with supplied variable
      *
      * @param bindVariables are variables supplied to add type and value to binds
-     * @return self to support chaining
+     * @return self to support fluent build
      */
     @Nonnull
     CodeBuilder applyBindVariables(Iterable<BindValue> bindVariables);

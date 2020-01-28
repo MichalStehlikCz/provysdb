@@ -824,4 +824,27 @@ public interface Sql {
      */
     @Nonnull
     <T> Condition isNull(ExpressionT<T> first);
+
+    /**
+     * Retrieve SQL NVL function
+     *
+     * @param first is the first parameter
+     * @param second is the second parameter
+     * @param <T> is type of the first expression, also used as type of result
+     * @return NVL expression
+     */
+    @Nonnull
+    <T> ExpressionT<T> nvl(ExpressionT<T> first, ExpressionT<? extends T> second);
+
+    /**
+     * Retrieve SQL COALESCE function
+     *
+     * @param first is first operand, defining type of coalesce expression
+     * @param expressions is list of additional operands
+     * @param <T> is type of first operand and of the result as well
+     * @return COALESCE expression
+     */
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    <T> ExpressionT<T> coalesce(ExpressionT<T> first, ExpressionT<? extends T>... expressions);
 }

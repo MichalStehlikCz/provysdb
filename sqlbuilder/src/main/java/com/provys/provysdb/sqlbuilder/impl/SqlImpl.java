@@ -497,4 +497,15 @@ public abstract class SqlImpl implements Sql {
     public <T> Condition isNull(ExpressionT<T> first) {
         return new ConditionIsNull(first);
     }
+
+    @Nonnull
+    public <T> ExpressionT<T> nvl(ExpressionT<T> first, ExpressionT<? extends T> second) {
+        return new FuncNvl<>(first, second);
+    }
+
+    @SafeVarargs
+    @Nonnull
+    public final <T> ExpressionT<T> coalesce(ExpressionT<T> first, ExpressionT<? extends T>... expressions) {
+        return new FuncCoalesce<>(first, expressions);
+    }
 }

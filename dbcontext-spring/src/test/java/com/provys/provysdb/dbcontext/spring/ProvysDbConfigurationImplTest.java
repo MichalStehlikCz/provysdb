@@ -11,7 +11,6 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class ProvysDbConfigurationImplTest {
 
-
     @Inject
     ProvysDbConfiguration dbConfiguration;
 

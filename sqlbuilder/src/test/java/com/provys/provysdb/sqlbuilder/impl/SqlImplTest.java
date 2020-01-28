@@ -39,4 +39,29 @@ class SqlImplTest {
         assertThat(builder.build()).isEqualTo("(100 IS NULL)");
         assertThat(builder.getBinds()).isEmpty();
     }
+
+    @Test
+    void nvl() {
+        var builder = new CodeBuilderImpl();
+        var sql = new NoDbSqlImpl();
+        var first = sql.literal(100);
+        var second = sql.column("second", Integer.class);
+        var nvl = sql.nvl(first, second);
+        nvl.addSql(builder);
+        assertThat(builder.build()).isEqualTo("NVL(100, second)");
+        assertThat(builder.getBinds()).isEmpty();
+    }
+
+    @Test
+    void coalesce() {
+        var builder = new CodeBuilderImpl();
+        var sql = new NoDbSqlImpl();
+        var first = sql.literal(100);
+        var second = sql.column("second", Integer.class);
+        var third = sql.literal(555);
+        var coalesce = sql.coalesce(first, second, third);
+        coalesce.addSql(builder);
+        assertThat(builder.build()).isEqualTo("COALESCE(100, second, 555)");
+        assertThat(builder.getBinds()).isEmpty();
+    }
 }
