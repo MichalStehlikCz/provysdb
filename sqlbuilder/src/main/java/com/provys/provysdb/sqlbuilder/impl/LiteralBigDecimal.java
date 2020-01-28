@@ -19,4 +19,10 @@ class LiteralBigDecimal extends LiteralNumber<BigDecimal> {
     private LiteralBigDecimal(BigDecimal value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<BigDecimal> getType() {
+        return BigDecimal.class;
+    }
 }

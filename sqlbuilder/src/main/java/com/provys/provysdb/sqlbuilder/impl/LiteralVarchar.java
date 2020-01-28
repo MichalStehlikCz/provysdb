@@ -28,4 +28,10 @@ class LiteralVarchar extends LiteralBase<String> {
     public void addSql(CodeBuilder builder) {
         builder.append('\'').append(getValue().replace("'", "''")).append('\'');
     }
+
+    @Nonnull
+    @Override
+    public Class<String> getType() {
+        return String.class;
+    }
 }

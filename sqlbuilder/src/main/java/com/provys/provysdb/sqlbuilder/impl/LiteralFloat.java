@@ -18,4 +18,10 @@ class LiteralFloat extends LiteralNumber<Float> {
     private LiteralFloat(Float value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<Float> getType() {
+        return Float.class;
+    }
 }

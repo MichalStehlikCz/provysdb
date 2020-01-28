@@ -1,10 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.Expression;
-import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlparser.SqlSymbol;
 
 import javax.annotation.Nonnull;

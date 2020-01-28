@@ -27,4 +27,10 @@ class FuncNvl<T> implements ExpressionT<T> {
     public void addSql(CodeBuilder builder) {
         builder.append("NVL(").apply(first::addSql).append(", ").apply(second::addSql).append(')');
     }
+
+    @Nonnull
+    @Override
+    public Class<T> getType() {
+        return first.getType();
+    }
 }

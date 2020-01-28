@@ -124,6 +124,16 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     }
 
     @Nonnull
+    public SelectBuilderImpl<S> column(Expression expression, SqlIdentifier alias) {
+        return columnUntyped(sql.column(expression, alias));
+    }
+
+    @Nonnull
+    public SelectBuilderImpl<S> column(Expression expression, String alias) {
+        return columnUntyped(sql.column(expression, alias));
+    }
+
+    @Nonnull
     public SelectBuilderImpl<S> columnDirect(String columnSql) {
         return columnUntyped(sql.columnDirect(columnSql));
     }
@@ -307,6 +317,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
                 .increasedIdent("", ", ", 4);
         for (var column : getColumns()) {
             column.addSql(builder);
+            column.getAlias().ifPresent(alias -> builder.append(' ').append(alias));
             builder.appendLine();
         }
         builder.popIdent()

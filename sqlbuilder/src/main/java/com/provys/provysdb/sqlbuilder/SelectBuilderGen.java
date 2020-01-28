@@ -99,6 +99,28 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
     <T> U column(String tableAlias, String columnName, String alias, Class<T> clazz);
 
     /**
+     * Add column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @param <T> is type of expression / column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    <T> U column(ExpressionT<T> expression, SqlIdentifier alias);
+
+    /**
+     * Add column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @param <T> is type of expression / column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    <T> U column(ExpressionT<T> expression, String alias);
+
+    /**
      * Add column with given SQL text
      *
      * @param columnSql is text that will be used as column definition

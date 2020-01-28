@@ -34,4 +34,10 @@ public class LiteralDtUid extends LiteralBase<DtUid> {
     public void addSql(CodeBuilder builder) {
         builder.append(getValue().toString());
     }
+
+    @Nonnull
+    @Override
+    public Class<DtUid> getType() {
+        return DtUid.class;
+    }
 }

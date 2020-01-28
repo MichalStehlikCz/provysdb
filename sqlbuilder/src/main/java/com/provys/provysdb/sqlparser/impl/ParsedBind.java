@@ -39,7 +39,7 @@ class ParsedBind extends ParsedTokenBase implements BindName {
 
     @Nonnull
     @Override
-    public SqlTokenType getType() {
+    public SqlTokenType getTokenType() {
         return SqlTokenType.BIND;
     }
 

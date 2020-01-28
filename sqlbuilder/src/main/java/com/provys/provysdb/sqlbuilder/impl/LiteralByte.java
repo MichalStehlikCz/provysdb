@@ -18,4 +18,10 @@ class LiteralByte extends LiteralNumber<Byte> {
     private LiteralByte(Byte value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<Byte> getType() {
+        return Byte.class;
+    }
 }

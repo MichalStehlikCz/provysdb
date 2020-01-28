@@ -18,4 +18,10 @@ class LiteralDouble extends LiteralNumber<Double> {
     private LiteralDouble(Double value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<Double> getType() {
+        return Double.class;
+    }
 }

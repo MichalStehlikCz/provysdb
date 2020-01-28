@@ -23,7 +23,7 @@ class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
     @Nonnull
     @Override
-    public SqlTokenType getType() {
+    public SqlTokenType getTokenType() {
         return SqlTokenType.SYMBOL;
     }
 

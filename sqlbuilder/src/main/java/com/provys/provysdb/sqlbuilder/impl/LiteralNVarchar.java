@@ -25,4 +25,10 @@ class LiteralNVarchar extends LiteralBase<String> {
     public void addSql(CodeBuilder builder) {
         builder.append("N'").append(getValue().replace("'", "''")).append('\'');
     }
+
+    @Nonnull
+    @Override
+    public Class<String> getType() {
+        return String.class;
+    }
 }

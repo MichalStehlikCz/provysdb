@@ -73,6 +73,17 @@ class DbSelectBuilderImpl extends DbSelectBuilderBaseImpl<DbSelectBuilderImpl, S
         return this;
     }
 
+    @Nonnull
+    @Override
+    public <T> DbSelectBuilderImpl column(ExpressionT<T> expression, SqlIdentifier alias) {
+        return column(getSql().column(expression, alias));
+    }
+
+    @Nonnull
+    @Override
+    public <T> DbSelectBuilderImpl column(ExpressionT<T> expression, String alias) {
+        return column(getSql().column(expression, alias));
+    }
     @Override
     @Nonnull
     public <T> DbSelectBuilderImpl columnDirect(String columnSql, Class<T> clazz) {
@@ -174,6 +185,20 @@ class DbSelectBuilderImpl extends DbSelectBuilderBaseImpl<DbSelectBuilderImpl, S
     @Nonnull
     public DbSelectBuilderImpl column(String tableAlias, String columnName, String alias) {
         getSelectBuilder().column(tableAlias, columnName, alias);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public DbSelectBuilderImpl column(Expression expression, SqlIdentifier alias) {
+        getSelectBuilder().column(expression, alias);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public DbSelectBuilderImpl column(Expression expression, String alias) {
+        getSelectBuilder().column(expression, alias);
         return this;
     }
 

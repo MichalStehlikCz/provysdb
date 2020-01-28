@@ -25,7 +25,6 @@ class SqlColumnSimple extends SqlColumnBase implements SqlTableColumn {
             builder.append(tableAlias.getAlias()).append('.');
         }
         builder.append(column);
-        getAlias().ifPresent(alias -> builder.append(' ').append(alias));
     }
 
     @Nonnull

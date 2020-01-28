@@ -29,7 +29,7 @@ class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
 
     @Nonnull
     @Override
-    public SqlTokenType getType() {
+    public SqlTokenType getTokenType() {
         return SqlTokenType.NAME;
     }
 

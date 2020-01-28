@@ -3,6 +3,8 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
+import javax.annotation.Nonnull;
+
 class LiteralBoolean extends LiteralBase<Boolean> {
 
     private static final LiteralBoolean TRUE = new LiteralBoolean(true);
@@ -19,5 +21,11 @@ class LiteralBoolean extends LiteralBase<Boolean> {
     @Override
     public void addSql(CodeBuilder builder) {
         builder.append('\'').append(DtBoolean.toProvysDb(getValue())).append('\'');
+    }
+
+    @Nonnull
+    @Override
+    public Class<Boolean> getType() {
+        return Boolean.class;
     }
 }

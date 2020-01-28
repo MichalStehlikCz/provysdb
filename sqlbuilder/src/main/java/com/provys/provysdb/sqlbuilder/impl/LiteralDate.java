@@ -29,4 +29,10 @@ class LiteralDate extends LiteralBase<DtDate> {
     public void addSql(CodeBuilder builder) {
         builder.append("DATE'").append(getValue().toIso()).append("'");
     }
+
+    @Nonnull
+    @Override
+    public Class<DtDate> getType() {
+        return DtDate.class;
+    }
 }

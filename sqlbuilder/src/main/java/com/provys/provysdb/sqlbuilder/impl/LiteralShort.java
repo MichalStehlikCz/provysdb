@@ -18,4 +18,10 @@ class LiteralShort extends LiteralNumber<Short> {
     private LiteralShort(Short value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<Short> getType() {
+        return Short.class;
+    }
 }

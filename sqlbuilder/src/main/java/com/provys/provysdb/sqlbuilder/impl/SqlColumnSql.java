@@ -28,7 +28,6 @@ class SqlColumnSql extends SqlColumnBase {
     @Override
     public void addSql(CodeBuilder builder) {
         builder.appendWrapped(sql, 4);
-        getAlias().ifPresent(alias -> builder.append(' ').append(alias));
         builder.addBinds(binds);
     }
 

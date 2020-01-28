@@ -105,6 +105,18 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends SelectBuilderBas
 
     @Nonnull
     @Override
+    public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, SqlIdentifier alias) {
+        return column(getSql().column(expression, alias));
+    }
+
+    @Nonnull
+    @Override
+    public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, String alias) {
+        return column(getSql().column(expression, alias));
+    }
+
+    @Nonnull
+    @Override
     public <T> SelectBuilderImpl<S> columnDirect(String columnSql, Class<T> clazz) {
         return column(getSql().columnDirect(columnSql, clazz));
     }

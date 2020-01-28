@@ -38,7 +38,7 @@ class SqlColumnTImpl<T> implements SqlColumnT<T> {
     @Nonnull
     @Override
     public SqlColumnT<T> withAlias(SqlIdentifier alias) {
-        if (getAlias().filter(al -> al.equals(alias)).isPresent()) {
+        if (alias.equals(getAlias().orElse(null))) {
             return this;
         }
         return new SqlColumnTImpl<>(column.withAlias(alias), type);

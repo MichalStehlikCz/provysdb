@@ -22,7 +22,7 @@ class ParsedSingleLineComment extends ParsedTokenBase {
 
     @Nonnull
     @Override
-    public SqlTokenType getType() {
+    public SqlTokenType getTokenType() {
         return SqlTokenType.COMMENT;
     }
 

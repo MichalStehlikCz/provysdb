@@ -19,4 +19,10 @@ class LiteralBigInteger extends LiteralNumber<BigInteger> {
     private LiteralBigInteger(BigInteger value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<BigInteger> getType() {
+        return BigInteger.class;
+    }
 }

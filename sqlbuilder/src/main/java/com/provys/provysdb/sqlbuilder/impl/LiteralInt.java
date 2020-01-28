@@ -18,4 +18,10 @@ class LiteralInt extends LiteralNumber<Integer> {
     private LiteralInt(Integer value) {
         super(value);
     }
+
+    @Nonnull
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
+    }
 }

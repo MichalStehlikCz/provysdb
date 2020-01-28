@@ -13,7 +13,7 @@ public interface SqlToken extends SqlElement {
      * @return token type
      */
     @Nonnull
-    SqlTokenType getType();
+    SqlTokenType getTokenType();
 
     /**
      * @return if space before is needed

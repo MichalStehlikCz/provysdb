@@ -29,4 +29,10 @@ class LiteralDateTime extends LiteralBase<DtDateTime> {
     public void addSql(CodeBuilder builder) {
         builder.append("TO_DATE('").append(getValue().toIso()).append("', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
     }
+
+    @Nonnull
+    @Override
+    public Class<DtDateTime> getType() {
+        return DtDateTime.class;
+    }
 }

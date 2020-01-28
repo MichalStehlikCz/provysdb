@@ -83,6 +83,18 @@ public class SelectBuilderImpl<S extends Sql> extends SelectBuilderBaseImpl<Sele
 
     @Nonnull
     @Override
+    public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, SqlIdentifier alias) {
+        return column(getSql().column(expression, alias));
+    }
+
+    @Nonnull
+    @Override
+    public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, String alias) {
+        return column(getSql().column(expression, alias));
+    }
+
+    @Nonnull
+    @Override
     public <T> SelectBuilderImpl<S> columnDirect(String columnSql, Class<T> clazz) {
         return columnDirect(columnSql);
     }

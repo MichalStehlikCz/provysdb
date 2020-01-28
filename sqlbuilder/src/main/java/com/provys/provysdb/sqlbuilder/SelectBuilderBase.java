@@ -82,6 +82,26 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
     U column(String tableAlias, String columnName);
 
     /**
+     * Add column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    U column(Expression expression, SqlIdentifier alias);
+
+    /**
+     * Add column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @return self to support fluent build
+     */
+    @Nonnull
+    U column(Expression expression, String alias);
+
+    /**
      * Add column with given SQL text
      *
      * @param columnSql is text that will be used as column definition

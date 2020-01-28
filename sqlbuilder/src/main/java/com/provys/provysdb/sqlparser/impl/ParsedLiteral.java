@@ -27,7 +27,7 @@ class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
 
     @Nonnull
     @Override
-    public SqlTokenType getType() {
+    public SqlTokenType getTokenType() {
         return SqlTokenType.LITERAL;
     }
 
@@ -69,5 +69,11 @@ class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
         return "SqlLiteral{" +
                 "value=" + value +
                 "} " + super.toString();
+    }
+
+    @Nonnull
+    @Override
+    public Class<T> getType() {
+        return value.getType();
     }
 }

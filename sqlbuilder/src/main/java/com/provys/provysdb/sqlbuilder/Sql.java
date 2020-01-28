@@ -207,7 +207,7 @@ public interface Sql {
     SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
 
     /**
-     * Create new column; no alias is created, meaning column name will be sued instead and no table spec risking
+     * Create new column; no alias is created, meaning column name will be used instead and no table spec risking
      * ambiguity if more tables are joined
      *
      * @param columnName is name of column. It must be valid
@@ -219,7 +219,7 @@ public interface Sql {
     SqlTableColumn column(String columnName);
 
     /**
-     * Create new column; no alias is created, meaning column name will be sued instead
+     * Create new column; no alias is created, meaning column name will be used instead
      *
      * @param tableAlias is alias of table column is in
      * @param columnName is name of column. It must be valid
@@ -242,6 +242,48 @@ public interface Sql {
      */
     @Nonnull
     SqlTableColumn column(String tableAlias, String columnName, String alias);
+
+    /**
+     * Create new column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @return new column with given expression and alias
+     */
+    @Nonnull
+    SqlColumn column(Expression expression, SqlIdentifier alias);
+
+    /**
+     * Create new column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @return new column with given expression and alias
+     */
+    @Nonnull
+    SqlColumn column(Expression expression, String alias);
+
+    /**
+     * Create new column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @param <T> is type of expression / column
+     * @return new column with given expression and alias
+     */
+    @Nonnull
+    <T> SqlColumnT<T> column(ExpressionT<T> expression, SqlIdentifier alias);
+
+    /**
+     * Create new column based on given expression
+     *
+     * @param expression is expression column should be based on
+     * @param alias is alias used for column
+     * @param <T> is type of expression / column
+     * @return new column with given expression and alias
+     */
+    @Nonnull
+    <T> SqlColumnT<T> column(ExpressionT<T> expression, String alias);
 
     /**
      * Create column with given SQL text

@@ -4,6 +4,7 @@ import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.dbsqlbuilder.SelectStatement;
 import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderBaseImpl;
+import com.provys.provysdb.sqlbuilder.impl.SelectBuilderImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,6 +81,16 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
     @Nonnull
     public DbSelectBuilderImpl column(String tableAlias, String columnName, String alias) {
         return new DbSelectBuilderImpl(selectBuilder.column(tableAlias, columnName, alias));
+    }
+
+    @Nonnull
+    public DbSelectBuilderImpl column(Expression expression, SqlIdentifier alias) {
+        return new DbSelectBuilderImpl(selectBuilder.column(expression, alias));
+    }
+
+    @Nonnull
+    public DbSelectBuilderImpl column(Expression expression, String alias) {
+        return new DbSelectBuilderImpl(selectBuilder.column(expression, alias));
     }
 
     @Nonnull

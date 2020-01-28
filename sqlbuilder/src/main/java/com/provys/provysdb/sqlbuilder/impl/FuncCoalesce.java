@@ -3,9 +3,8 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.ExpressionT;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * Backing functions for COALESCE SQL function
@@ -14,27 +13,27 @@ import java.util.List;
  */
 class FuncCoalesce<T> implements ExpressionT<T> {
 
-    private final List<ExpressionT<? extends T>> expressionList;
+    private final ExpressionT<T> first;
+    private final List<ExpressionT<? extends T>> expressions;
 
     @SafeVarargs
-    FuncCoalesce(ExpressionT<T> expression0, ExpressionT<? extends T>... expressions) {
-        expressionList = new ArrayList<>(expressions.length + 1);
-        expressionList.add(expression0);
-        Collections.addAll(expressionList, expressions);
+    FuncCoalesce(ExpressionT<T> first, ExpressionT<? extends T>... expressions) {
+        this.first = Objects.requireNonNull(first);
+        this.expressions = List.copyOf(Arrays.asList(expressions));
     }
 
     @Override
     public void addSql(CodeBuilder builder) {
-        builder.append("COALESCE(");
-        boolean first = true;
-        for (var expression : expressionList) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append(", ");
-            }
-            expression.addSql(builder);
+        builder.append("COALESCE(").apply(first::addSql);
+        for (var expression : expressions) {
+            builder.append(", ").apply(expression::addSql);
         }
         builder.append(')');
+    }
+
+    @Nonnull
+    @Override
+    public Class<T> getType() {
+        return first.getType();
     }
 }
