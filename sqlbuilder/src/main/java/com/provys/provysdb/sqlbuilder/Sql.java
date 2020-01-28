@@ -87,6 +87,13 @@ public interface Sql {
     LiteralT<BigDecimal> literal(BigDecimal value);
 
     /**
+     * @param value is value of literal. Note that Java boolean is translated to Y/N char
+     * @return boolean literal
+     */
+    @Nonnull
+    LiteralT<Boolean> literal(boolean value);
+
+    /**
      * @param value is value of literal
      * @return DtUid literal
      */

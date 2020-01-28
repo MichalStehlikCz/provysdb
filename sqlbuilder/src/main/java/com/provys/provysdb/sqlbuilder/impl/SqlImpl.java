@@ -83,6 +83,12 @@ public abstract class SqlImpl implements Sql {
 
     @Nonnull
     @Override
+    public LiteralT<Boolean> literal(boolean value) {
+        return LiteralBoolean.of(value);
+    }
+
+    @Nonnull
+    @Override
     public LiteralT<DtUid> literal(DtUid value) {
         return LiteralDtUid.of(value);
     }
