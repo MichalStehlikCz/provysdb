@@ -19,6 +19,7 @@ class SelectStatementTImplTest {
 
     private static class SelectStatementTest extends SelectStatementTImpl<SelectStatementTest> {
 
+        @SuppressWarnings("SameParameterValue")
         SelectStatementTest(String sqlText, List<BindName> binds, DbConnection connection) {
             super(sqlText, binds, connection);
         }
@@ -30,7 +31,6 @@ class SelectStatementTImplTest {
         }
     }
 
-    @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
     private static final String testSql = "test sql";
 
     @Test

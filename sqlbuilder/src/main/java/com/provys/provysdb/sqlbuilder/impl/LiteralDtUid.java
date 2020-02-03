@@ -32,7 +32,7 @@ public class LiteralDtUid extends LiteralBase<DtUid> {
 
     @Override
     public void addSql(CodeBuilder builder) {
-        builder.append(getValue().toString());
+        builder.append(getValue().getValue().toString());
     }
 
     @Nonnull

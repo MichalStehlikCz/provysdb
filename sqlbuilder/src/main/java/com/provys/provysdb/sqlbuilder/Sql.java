@@ -272,7 +272,7 @@ public interface Sql {
      * @return new column with given expression and alias
      */
     @Nonnull
-    <T> SqlColumnT<T> column(ExpressionT<T> expression, SqlIdentifier alias);
+    <T> SqlColumnT<T> column(ExpressionT<T> expression, @Nullable SqlIdentifier alias);
 
     /**
      * Create new column based on given expression

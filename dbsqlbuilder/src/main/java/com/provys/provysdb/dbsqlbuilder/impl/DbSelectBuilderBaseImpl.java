@@ -4,7 +4,6 @@ import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.dbsqlbuilder.SelectStatement;
 import com.provys.provysdb.sqlbuilder.*;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderBaseImpl;
-import com.provys.provysdb.sqlbuilder.impl.SelectBuilderImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

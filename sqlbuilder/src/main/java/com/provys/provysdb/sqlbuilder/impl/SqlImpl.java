@@ -185,14 +185,14 @@ public abstract class SqlImpl implements Sql {
 
     @Nonnull
     @Override
-    public <T> SqlColumnT<T> column(ExpressionT<T> expression, SqlIdentifier alias) {
-        return new SqlColumnExpressionT(expression, alias);
+    public <T> SqlColumnT<T> column(ExpressionT<T> expression, @Nullable SqlIdentifier alias) {
+        return new SqlColumnExpressionT<>(expression, alias);
     }
 
     @Nonnull
     @Override
     public <T> SqlColumnT<T> column(ExpressionT<T> expression, String alias) {
-        return column(expression, alias);
+        return column(expression, name(alias));
     }
 
     @Nonnull
