@@ -1,42 +1,50 @@
 package com.provys.provysdb.dbcontext;
 
-import javax.annotation.Nonnull;
-
 /**
- * Represents database context for Sql builder - statements are deferred to this context's connections
+ * Represents database context for Sql builder - statements are deferred to this context's
+ * connections.
  */
-@SuppressWarnings("unused")
 public interface DbContext {
 
-    @Nonnull
-    DbConnection getConnection();
+  /**
+   * Retrieve connection without user context to Provys database. This connection is generally used
+   * for actions that do not require user context - e.g. loading configuration or performing
+   * asynchronous actions, that are made under system and not user credentials
+   *
+   * @return admin (no user contexted) connection
+   */
+  DbConnection getConnection();
 
-    /**
-     * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper that provides
-     * monitoring, logging and wrappers around prepared statement and result-set, supporting Provys framework specific
-     * classes / mapping to types used in database. Uses token to switch to particular Provys user account
-     *
-     * @param dbToken is valid token, registered in Provys database
-     * @return retrieved connection
-     */
-    @Nonnull
-    DbConnection getConnection(String dbToken);
+  /**
+   * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper
+   * that provides monitoring, logging and wrappers around prepared statement and result-set,
+   * supporting Provys framework specific classes / mapping to types used in database. Uses token to
+   * switch to particular Provys user account
+   *
+   * @param dbToken is valid token, registered in Provys database
+   * @return retrieved connection
+   */
+  DbConnection getConnection(String dbToken);
 
-    /**
-     * @return username used to open connection to Provys database
-     */
-    @Nonnull
-    String getUser();
+  /**
+   * Oracle user used to access Provys database.
+   *
+   * @return username used to open connection to Provys database
+   */
+  String getUser();
 
-    /**
-     * @return URL of database provys data-source is connected to
-     */
-    @Nonnull
-    String getUrl();
+  /**
+   * URL of database connections are connected to. It is Oracle JDBC thin URL, might include
+   * fail-over
+   *
+   * @return URL of database provys data-source is connected to
+   */
+  String getUrl();
 
-    /**
-     * @return sql type adapter map used in given database context
-     */
-    @Nonnull
-    SqlTypeMap getSqlTypeMap();
+  /**
+   * Sql type map to be used with connections, retrieved from this database context.
+   *
+   * @return sql type adapter map used in given database context
+   */
+  SqlTypeMap getSqlTypeMap();
 }
