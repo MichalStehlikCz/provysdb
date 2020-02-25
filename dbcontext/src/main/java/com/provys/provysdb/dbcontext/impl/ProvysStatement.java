@@ -1,16 +1,22 @@
 package com.provys.provysdb.dbcontext.impl;
 
-import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.DbStatement;
-
-import javax.annotation.Nonnull;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.Objects;
 
+/**
+ * Wrapper around Statement, adds Provys specific functionality. Mostly used via subclasses ({@link
+ * ProvysPreparedStatement} and {@link ProvysCallableStatement})
+ *
+ * @param <T> is type of wrapped statement; used to enable effective subclassing
+ */
 class ProvysStatement<T extends Statement> implements DbStatement {
-    @Nonnull
-    final T statement;
+
+    private final T statement;
 
     ProvysStatement(T statement) {
         this.statement = Objects.requireNonNull(statement);
@@ -152,8 +158,8 @@ class ProvysStatement<T extends Statement> implements DbStatement {
     }
 
     @Override
-    public DbConnection getConnection() throws SQLException {
-        return (DbConnection) statement.getConnection();
+    public Connection getConnection() throws SQLException {
+        return statement.getConnection();
     }
 
     @Override
@@ -302,4 +308,10 @@ class ProvysStatement<T extends Statement> implements DbStatement {
         return statement.isWrapperFor(iface);
     }
 
+    @Override
+    public String toString() {
+        return "ProvysStatement{" +
+            "statement=" + statement +
+            '}';
+    }
 }
