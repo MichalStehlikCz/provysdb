@@ -3,51 +3,51 @@ package com.provys.provysdb.dbcontext.type;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
-
-import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
+class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
 
-    private static final SqlTypeAdapterBigInteger INSTANCE = new SqlTypeAdapterBigInteger();
+  private static final SqlTypeAdapterBigInteger INSTANCE = new SqlTypeAdapterBigInteger();
 
-    /**
-     * @return instance of this type adapter
-     */
-    public static SqlTypeAdapterBigInteger getInstance() {
-        return INSTANCE;
+  /**
+   * @return instance of this type adapter
+   */
+  static SqlTypeAdapterBigInteger getInstance() {
+    return INSTANCE;
+  }
+
+  @Override
+  protected BigInteger readValueInternal(DbResultSet resultSet, int columnIndex)
+      throws SQLException {
+    var value = resultSet.getBigDecimal(columnIndex);
+    if (resultSet.wasNull()) {
+      return BigInteger.ZERO;
     }
-
-    @Nonnull
-    @Override
-    protected BigInteger readValueInternal(DbResultSet resultSet, int columnIndex) throws SQLException {
-        var value = resultSet.getBigDecimal(columnIndex);
-        if (resultSet.wasNull()) {
-            return BigInteger.ZERO;
-        }
-        try {
-            return value.toBigIntegerExact();
-        } catch (ArithmeticException e) {
-            throw new InternalException("Fractional part encountered when reading BigInteger, column index " +
-                    columnIndex);
-        }
+    try {
+      return value.toBigIntegerExact();
+    } catch (ArithmeticException e) {
+      throw new InternalException(
+          "Fractional part encountered when reading BigInteger, column index " +
+              columnIndex, e);
     }
+  }
 
-    @Override
-    protected void bindValueInternal(DbPreparedStatement statement, int parameterIndex, BigInteger value) throws SQLException {
-        statement.setBigDecimal(parameterIndex, new BigDecimal(value, 0));
-    }
+  @Override
+  protected void bindValueInternal(DbPreparedStatement statement, int parameterIndex,
+      BigInteger value) throws SQLException {
+    statement.setBigDecimal(parameterIndex, new BigDecimal(value, 0));
+  }
 
-    @Override
-    public Class<BigInteger> getType() {
-        return BigInteger.class;
-    }
+  @Override
+  public Class<BigInteger> getType() {
+    return BigInteger.class;
+  }
 
-    @Override
-    public int getSqlType() {
-        return Types.BIGINT;
-    }
+  @Override
+  public int getSqlType() {
+    return Types.BIGINT;
+  }
 }

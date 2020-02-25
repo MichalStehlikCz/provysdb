@@ -1,6 +1,5 @@
 package com.provys.provysdb.sqlbuilder;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -8,7 +7,6 @@ import java.util.Optional;
  */
 public interface BindValue extends BindName {
 
-    @Nonnull
     Class<?> getType();
 
     /**
@@ -19,7 +17,6 @@ public interface BindValue extends BindName {
      * @param <T> is type parameter, representing type of returned value
      * @return value associated with this bind value, empty optional if no value has been defined yet
      */
-    @Nonnull
     <T> Optional<T> getValue(Class<T> type);
 
     /**
@@ -30,7 +27,6 @@ public interface BindValue extends BindName {
      * @param other is bind variable this variable should be combined with
      * @return this or other bind variable, depending which has more complete information
      */
-    @Nonnull
     @Override
     BindValue combine(BindName other);
 }

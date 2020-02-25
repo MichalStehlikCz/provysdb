@@ -1,16 +1,13 @@
 package com.provys.provysdb.sqlbuilder;
 
-import javax.annotation.Nonnull;
-
 /**
- * Single wrapper around String, represents name of bind variable and implements appropriate validation
+ * Single wrapper around String, represents name of bind variable and implements appropriate validation.
  */
 public interface BindName extends Expression {
 
     /**
      * @return bind name
      */
-    @Nonnull
     String getName();
 
     /**
@@ -21,7 +18,6 @@ public interface BindName extends Expression {
      * @param value is value to be assigned to new bind
      * @return bind variable with the same name as old one, but with the new value
      */
-    @Nonnull
     BindValue withValue(Object value);
 
     /**
@@ -32,6 +28,5 @@ public interface BindName extends Expression {
      * @param other is bind variable this variable should be combined with
      * @return this or other bind variable, depending which has more complete information
      */
-    @Nonnull
     BindName combine(BindName other);
 }

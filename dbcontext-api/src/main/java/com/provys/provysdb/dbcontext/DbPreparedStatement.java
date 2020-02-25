@@ -15,6 +15,13 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
   DbResultSet executeQuery() throws SQLException;
 
   /**
+   * Sql statement this prepared statement is built on.
+   *
+   * @return sql statement this prepared statement is built on
+   */
+  String getSql();
+
+  /**
    * Set (mandatory) value to bind value of database boolean type.
    *
    * @param parameterIndex is index of bind variable

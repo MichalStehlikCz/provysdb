@@ -9,14 +9,26 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Date;
+import java.sql.NClob;
+import java.sql.Ref;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Wrapper on {@code ResultSet}, adding support for Provys framework specific data types.
@@ -1030,13 +1042,11 @@ class ProvysResultSet implements DbResultSet {
     return resultSet.isWrapperFor(iface);
   }
 
-  @Nonnull
-  private SqlException getNullException(int columnIndex) {
+  private static SqlException getNullException(int columnIndex) {
     return new SqlException("Unexpected null value in ResultSet, column index " + columnIndex);
   }
 
-  @Nonnull
-  private SqlException getNullException(String columnLabel) {
+  private static SqlException getNullException(String columnLabel) {
     return new SqlException("Unexpected null value in ResultSet, column label " + columnLabel);
   }
 
@@ -1052,15 +1062,13 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nonnull
-  private SqlException getGetSqlException(int columnIndex, Class<?> type, SQLException e) {
+  private static SqlException getGetSqlException(int columnIndex, Class<?> type, SQLException e) {
     return new SqlException(
         "Error reading " + type.getSimpleName() + " value from ResultSet, column "
             + columnIndex, e);
   }
 
-  @Nonnull
-  private SqlException getGetSqlException(String columnLabel, Class<?> type, SQLException e) {
+  private static SqlException getGetSqlException(String columnLabel, Class<?> type, SQLException e) {
     return new SqlException(
         "Error reading " + type.getSimpleName() + " value from ResultSet, column "
             + columnLabel, e);
@@ -1084,9 +1092,9 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nullable
   @Override
-  public Boolean getNullableBoolean(int columnIndex) {
+  @SuppressWarnings("squid:S2447") // we intentionally return null from boolean method
+  public @Nullable Boolean getNullableBoolean(int columnIndex) {
     try {
       String dbValue = resultSet.getString(columnIndex);
       if (resultSet.wasNull()) {
@@ -1101,9 +1109,9 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Boolean getNullableBoolean(String columnLabel) {
+  @SuppressWarnings("squid:S2447") // we intentionally return null from boolean method
+  public @Nullable Boolean getNullableBoolean(String columnLabel) {
     try {
       String dbValue = resultSet.getString(columnLabel);
       if (resultSet.wasNull()) {
@@ -1119,13 +1127,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Boolean> getOptionalBoolean(int columnIndex) {
     return Optional.ofNullable(getNullableBoolean(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Boolean> getOptionalBoolean(String columnLabel) {
     return Optional.ofNullable(getNullableBoolean(columnLabel));
   }
@@ -1152,9 +1158,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Byte getNullableByte(int columnIndex) {
+  public @Nullable Byte getNullableByte(int columnIndex) {
     try {
       var value = resultSet.getByte(columnIndex);
       if (resultSet.wasNull()) {
@@ -1166,9 +1171,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Byte getNullableByte(String columnLabel) {
+  public @Nullable Byte getNullableByte(String columnLabel) {
     try {
       var value = resultSet.getByte(columnLabel);
       if (resultSet.wasNull()) {
@@ -1181,13 +1185,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Byte> getOptionalByte(int columnIndex) {
     return Optional.ofNullable(getNullableByte(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Byte> getOptionalByte(String columnLabel) {
     return Optional.ofNullable(getNullableByte(columnLabel));
   }
@@ -1214,9 +1216,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Short getNullableShort(int columnIndex) {
+  public @Nullable Short getNullableShort(int columnIndex) {
     try {
       var value = resultSet.getShort(columnIndex);
       if (resultSet.wasNull()) {
@@ -1228,9 +1229,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Short getNullableShort(String columnLabel) {
+  public @Nullable Short getNullableShort(String columnLabel) {
     try {
       var value = resultSet.getShort(columnLabel);
       if (resultSet.wasNull()) {
@@ -1243,13 +1243,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Short> getOptionalShort(int columnIndex) {
     return Optional.ofNullable(getNullableShort(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Short> getOptionalShort(String columnLabel) {
     return Optional.ofNullable(getNullableShort(columnLabel));
   }
@@ -1276,9 +1274,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Integer getNullableInteger(int columnIndex) {
+  public @Nullable Integer getNullableInteger(int columnIndex) {
     try {
       var value = resultSet.getInt(columnIndex);
       if (resultSet.wasNull()) {
@@ -1290,9 +1287,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Integer getNullableInteger(String columnLabel) {
+  public @Nullable Integer getNullableInteger(String columnLabel) {
     try {
       var value = resultSet.getInt(columnLabel);
       if (resultSet.wasNull()) {
@@ -1305,13 +1301,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Integer> getOptionalInteger(int columnIndex) {
     return Optional.ofNullable(getNullableInteger(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Integer> getOptionalInteger(String columnLabel) {
     return Optional.ofNullable(getNullableInteger(columnLabel));
   }
@@ -1338,9 +1332,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Float getNullableFloat(int columnIndex) {
+  public @Nullable Float getNullableFloat(int columnIndex) {
     try {
       var value = resultSet.getFloat(columnIndex);
       if (resultSet.wasNull()) {
@@ -1352,9 +1345,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Float getNullableFloat(String columnLabel) {
+  public @Nullable Float getNullableFloat(String columnLabel) {
     try {
       var value = resultSet.getFloat(columnLabel);
       if (resultSet.wasNull()) {
@@ -1367,13 +1359,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Float> getOptionalFloat(int columnIndex) {
     return Optional.ofNullable(getNullableFloat(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Float> getOptionalFloat(String columnLabel) {
     return Optional.ofNullable(getNullableFloat(columnLabel));
   }
@@ -1400,9 +1390,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Double getNullableDouble(int columnIndex) {
+  public @Nullable Double getNullableDouble(int columnIndex) {
     try {
       var value = resultSet.getDouble(columnIndex);
       if (resultSet.wasNull()) {
@@ -1414,9 +1403,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Double getNullableDouble(String columnLabel) {
+  public @Nullable Double getNullableDouble(String columnLabel) {
     try {
       var value = resultSet.getDouble(columnLabel);
       if (resultSet.wasNull()) {
@@ -1429,13 +1417,11 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<Double> getOptionalDouble(int columnIndex) {
     return Optional.ofNullable(getNullableDouble(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<Double> getOptionalDouble(String columnLabel) {
     return Optional.ofNullable(getNullableDouble(columnLabel));
   }
@@ -1458,9 +1444,8 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nullable
   @Override
-  public Character getNullableCharacter(int columnIndex) {
+  public @Nullable Character getNullableCharacter(int columnIndex) {
     //noinspection DuplicatedCode
     try {
       var value = resultSet.getString(columnIndex);
@@ -1478,9 +1463,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public Character getNullableCharacter(String columnLabel) {
+  public @Nullable Character getNullableCharacter(String columnLabel) {
     //noinspection DuplicatedCode
     try {
       var value = resultSet.getString(columnLabel);
@@ -1498,19 +1482,16 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nonnull
   @Override
   public Optional<Character> getOptionalCharacter(int columnIndex) {
     return Optional.ofNullable(getNullableCharacter(columnIndex));
   }
 
-  @Nonnull
   @Override
   public Optional<Character> getOptionalCharacter(String columnLabel) {
     return Optional.ofNullable(getNullableCharacter(columnLabel));
   }
 
-  @Nonnull
   @Override
   public String getNonnullString(int columnIndex) {
     var result = getNullableString(columnIndex);
@@ -1520,7 +1501,6 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nonnull
   @Override
   public String getNonnullString(String columnLabel) {
     var result = getNullableString(columnLabel);
@@ -1530,9 +1510,8 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nullable
   @Override
-  public String getNullableString(int columnIndex) {
+  public @Nullable String getNullableString(int columnIndex) {
     try {
       var value = resultSet.getString(columnIndex);
       if (resultSet.wasNull()) {
@@ -1544,9 +1523,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public String getNullableString(String columnLabel) {
+  public @Nullable String getNullableString(String columnLabel) {
     try {
       var value = resultSet.getString(columnLabel);
       if (resultSet.wasNull()) {
@@ -1559,18 +1537,15 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<String> getOptionalString(int columnIndex) {
     return Optional.ofNullable(getNullableString(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<String> getOptionalString(String columnLabel) {
     return Optional.ofNullable(getNullableString(columnLabel));
   }
 
-  @Nonnull
   @Override
   public BigDecimal getNonnullBigDecimal(int columnIndex) {
     var result = getNullableBigDecimal(columnIndex);
@@ -1580,7 +1555,6 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nonnull
   @Override
   public BigDecimal getNonnullBigDecimal(String columnLabel) {
     var result = getNullableBigDecimal(columnLabel);
@@ -1590,9 +1564,8 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nullable
   @Override
-  public BigDecimal getNullableBigDecimal(int columnIndex) {
+  public @Nullable BigDecimal getNullableBigDecimal(int columnIndex) {
     try {
       var value = resultSet.getBigDecimal(columnIndex);
       if (resultSet.wasNull()) {
@@ -1604,9 +1577,8 @@ class ProvysResultSet implements DbResultSet {
     }
   }
 
-  @Nullable
   @Override
-  public BigDecimal getNullableBigDecimal(String columnLabel) {
+  public @Nullable BigDecimal getNullableBigDecimal(String columnLabel) {
     try {
       var value = resultSet.getBigDecimal(columnLabel);
       if (resultSet.wasNull()) {
@@ -1619,18 +1591,15 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Nonnull
   public Optional<BigDecimal> getOptionalBigDecimal(int columnIndex) {
     return Optional.ofNullable(getNullableBigDecimal(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<BigDecimal> getOptionalBigDecimal(String columnLabel) {
     return Optional.ofNullable(getNullableBigDecimal(columnLabel));
   }
 
-  @Nonnull
   @Override
   public DtUid getNonnullDtUid(int columnIndex) {
     var result = getNullableDtUid(columnIndex);
@@ -1640,7 +1609,6 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nonnull
   @Override
   public DtUid getNonnullDtUid(String columnLabel) {
     var result = getNullableDtUid(columnLabel);
@@ -1650,38 +1618,34 @@ class ProvysResultSet implements DbResultSet {
     return result;
   }
 
-  @Nullable
   @Override
-  public DtUid getNullableDtUid(int columnIndex) {
+  public @Nullable DtUid getNullableDtUid(int columnIndex) {
     var result = getNullableBigDecimal(columnIndex);
     try {
       return (result == null) ? null : DtUid.valueOf(result);
     } catch (ArithmeticException e) {
       throw new SqlException(
-          "Invalid Uid value encountered when reading Uid, column " + columnIndex);
+          "Invalid Uid value encountered when reading Uid, column " + columnIndex, e);
     }
   }
 
-  @Nullable
   @Override
-  public DtUid getNullableDtUid(String columnLabel) {
+  public @Nullable DtUid getNullableDtUid(String columnLabel) {
     var result = getNullableBigDecimal(columnLabel);
     try {
       return (result == null) ? null : DtUid.valueOf(result);
     } catch (InternalException e) {
       throw new SqlException(
-          "Invalid Uid value encountered when reading Uid, column " + columnLabel);
+          "Invalid Uid value encountered when reading Uid, column " + columnLabel, e);
     }
   }
 
   @Override
-  @Nonnull
   public Optional<DtUid> getOptionalDtUid(int columnIndex) {
     return Optional.ofNullable(getNullableDtUid(columnIndex));
   }
 
   @Override
-  @Nonnull
   public Optional<DtUid> getOptionalDtUid(String columnLabel) {
     return Optional.ofNullable(getNullableDtUid(columnLabel));
   }

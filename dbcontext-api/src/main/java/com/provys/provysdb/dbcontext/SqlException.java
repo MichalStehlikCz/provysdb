@@ -1,13 +1,14 @@
 package com.provys.provysdb.dbcontext;
 
 import com.provys.common.exception.ProvysException;
+import java.sql.SQLException;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Represents internal exception during work with JDBC. This exception can be used in internal
- * checks, where other code should ensure exception is not thrown. It should never be used for
- * validation of external data
+ * Represents internal exception during work with JDBC. Usually masks {@link SQLException}. This
+ * exception can be used in internal checks, for example when data are being bound to sql variables,
+ * but should not be used outside database access layer.
  */
 public final class SqlException extends ProvysException {
 
