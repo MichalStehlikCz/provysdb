@@ -2,36 +2,37 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
-import javax.annotation.Nonnull;
-
 /**
- * Class represents SQL string literal (VARCHAR2)
+ * Class represents SQL string literal (VARCHAR2).
  */
-class LiteralVarchar extends LiteralBase<String> {
+final class LiteralVarchar extends LiteralBase<String> {
 
-    /**
-     * Get literal corresponding to given String value
-     *
-     * @param value is string value this literal represents
-     * @return new literal, representing supplied value
-     */
-    @Nonnull
-    static LiteralVarchar of(String value) {
-        return new LiteralVarchar(value);
-    }
+  /**
+   * Get literal corresponding to given String value.
+   *
+   * @param value is string value this literal represents
+   * @return new literal, representing supplied value
+   */
+  static LiteralVarchar of(String value) {
+    return new LiteralVarchar(value);
+  }
 
-    private LiteralVarchar(String value) {
-        super(value);
-    }
+  private LiteralVarchar(String value) {
+    super(value);
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        builder.append('\'').append(getValue().replace("'", "''")).append('\'');
-    }
+  @Override
+  public void addSql(CodeBuilder builder) {
+    builder.append('\'').append(getValue().replace("'", "''")).append('\'');
+  }
 
-    @Nonnull
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
+  @Override
+  public Class<String> getType() {
+    return String.class;
+  }
+
+  @Override
+  public String toString() {
+    return "LiteralVarchar{" + super.toString() + '}';
+  }
 }

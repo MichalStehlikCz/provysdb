@@ -3,41 +3,43 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.datatype.DtUid;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
-import javax.annotation.Nonnull;
+final class LiteralDtUid extends LiteralBase<DtUid> {
 
-public class LiteralDtUid extends LiteralBase<DtUid> {
+  private static final LiteralDtUid PRIV = new LiteralDtUid(DtUid.PRIV);
+  private static final LiteralDtUid ME = new LiteralDtUid(DtUid.ME);
 
-    private static final LiteralDtUid PRIV = new LiteralDtUid(DtUid.PRIV);
-    private static final LiteralDtUid ME = new LiteralDtUid(DtUid.ME);
-
-    /**
-     * Get literal corresponding to given DtUid value
-     *
-     * @param value is Uid value this literal represents
-     * @return new literal, representing supplied value
-     */
-    @Nonnull
-    static LiteralDtUid of(DtUid value) {
-        if (value == DtUid.PRIV) {
-            return PRIV;
-        } else if (value == DtUid.ME) {
-            return ME;
-        }
-        return new LiteralDtUid(value);
+  /**
+   * Get literal corresponding to given DtUid value.
+   *
+   * @param value is Uid value this literal represents
+   * @return new literal, representing supplied value
+   */
+  static LiteralDtUid of(DtUid value) {
+    if (value.isPriv()) {
+      return PRIV;
     }
-
-    private LiteralDtUid(DtUid value) {
-        super(value);
+    if (value.isME()) {
+      return ME;
     }
+    return new LiteralDtUid(value);
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        builder.append(getValue().getValue().toString());
-    }
+  private LiteralDtUid(DtUid value) {
+    super(value);
+  }
 
-    @Nonnull
-    @Override
-    public Class<DtUid> getType() {
-        return DtUid.class;
-    }
+  @Override
+  public void addSql(CodeBuilder builder) {
+    builder.append(getValue().getValue().toString());
+  }
+
+  @Override
+  public Class<DtUid> getType() {
+    return DtUid.class;
+  }
+
+  @Override
+  public String toString() {
+    return "LiteralDtUid{" + super.toString() + '}';
+  }
 }

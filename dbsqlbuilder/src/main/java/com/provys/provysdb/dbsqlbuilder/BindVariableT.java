@@ -15,6 +15,7 @@ public interface BindVariableT<T> extends BindVariable, BindValueT<T> {
      * @param value is value to be assigned to new bind
      * @return bind variable with the same name as old one, but with the new value
      */
+    @Override
     @Nonnull
     BindVariableT<T> withValue(@Nullable Object value);
 
@@ -26,6 +27,7 @@ public interface BindVariableT<T> extends BindVariable, BindValueT<T> {
      * @param other is bind variable this variable should be combined with
      * @return this or other bind variable, depending which has more complete information
      */
+    @Override
     @Nonnull
     BindVariableT<T> combine(BindName other);
 }

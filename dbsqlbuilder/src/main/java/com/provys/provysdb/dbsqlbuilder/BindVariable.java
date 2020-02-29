@@ -28,6 +28,7 @@ public interface BindVariable extends BindValue {
      * @param other is bind variable this variable should be combined with
      * @return this or other bind variable, depending which has more complete information
      */
+    @Override
     @Nonnull
     BindVariable combine(BindName other);
 

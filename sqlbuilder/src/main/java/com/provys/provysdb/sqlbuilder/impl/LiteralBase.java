@@ -1,45 +1,46 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.LiteralT;
-
-import javax.annotation.Nonnull;
 import java.util.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Common ancestor for literal classes
+ * Common ancestor for literal classes.
  */
 abstract class LiteralBase<T> implements LiteralT<T> {
 
-    @Nonnull
-    private final T value;
+  private final T value;
 
-    LiteralBase(T value) {
-        this.value = Objects.requireNonNull(value);
-    }
+  LiteralBase(T value) {
+    this.value = Objects.requireNonNull(value);
+  }
 
-    @Nonnull
-    public T getValue() {
-        return value;
-    }
+  @Override
+  public T getValue() {
+    return value;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LiteralBase<?> that = (LiteralBase<?>) o;
-        return value.equals(that.value);
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    LiteralBase<?> that = (LiteralBase<?>) o;
+    return Objects.equals(value, that.value);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
+  @Override
+  public int hashCode() {
+    return value != null ? value.hashCode() : 0;
+  }
 
-    @Nonnull
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "{" +
-                "value=" + value +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "LiteralBase{"
+        + "value=" + value
+        + '}';
+  }
 }

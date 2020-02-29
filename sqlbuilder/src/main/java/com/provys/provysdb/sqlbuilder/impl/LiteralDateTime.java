@@ -3,36 +3,38 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
-import javax.annotation.Nonnull;
-
 /**
- * Class represents SQL datetime literal (maps to DATE)
+ * Class represents SQL datetime literal (maps to DATE).
  */
-class LiteralDateTime extends LiteralBase<DtDateTime> {
+final class LiteralDateTime extends LiteralBase<DtDateTime> {
 
-    /**
-     * Create date literal from supplied date value
-     *
-     * @param value is supplied date value
-     * @return date literal, representing supplied value
-     */
-    @Nonnull
-    static LiteralDateTime of(DtDateTime value) {
-        return new LiteralDateTime(value);
-    }
+  /**
+   * Create date literal from supplied date value.
+   *
+   * @param value is supplied date value
+   * @return date literal, representing supplied value
+   */
+  static LiteralDateTime of(DtDateTime value) {
+    return new LiteralDateTime(value);
+  }
 
-    private LiteralDateTime(DtDateTime value) {
-        super(value);
-    }
+  private LiteralDateTime(DtDateTime value) {
+    super(value);
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        builder.append("TO_DATE('").append(getValue().toIso()).append("', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
-    }
+  @Override
+  public void addSql(CodeBuilder builder) {
+    builder.append("TO_DATE('").append(getValue().toIso())
+        .append("', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
+  }
 
-    @Nonnull
-    @Override
-    public Class<DtDateTime> getType() {
-        return DtDateTime.class;
-    }
+  @Override
+  public Class<DtDateTime> getType() {
+    return DtDateTime.class;
+  }
+
+  @Override
+  public String toString() {
+    return "LiteralDateTime{" + super.toString() + '}';
+  }
 }

@@ -2,56 +2,56 @@ package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeIdent;
 import com.provys.provysdb.sqlbuilder.CodeIdentBuilder;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class CodeIdentBuilderImpl implements CodeIdentBuilder {
 
-    @Nullable
-    private String ident = null;
-    @Nullable
-    private String firstIdent = null;
-    @Nullable
-    private CodeIdent linkedIdent = null;
+  private @Nullable String ident = null;
+  private @Nullable String firstIdent = null;
+  private @Nullable CodeIdent linkedIdent = null;
 
-    @Nonnull
-    @Override
-    public CodeIdentBuilder setIdent(String ident) {
-        this.ident = ident;
-        return this;
-    }
+  @Override
+  public CodeIdentBuilder setIdent(String newIdent) {
+    this.ident = newIdent;
+    return this;
+  }
 
-    @Nonnull
-    @Override
-    public CodeIdentBuilder setFirstIdent(String firstIdent) {
-        this.firstIdent = firstIdent;
-        return this;
-    }
+  @Override
+  public CodeIdentBuilder setFirstIdent(String newFirstIdent) {
+    this.firstIdent = newFirstIdent;
+    return this;
+  }
 
-    @Nonnull
-    @Override
-    public CodeIdentBuilder linkedIdent(CodeIdent previousIdent) {
-        this.linkedIdent = previousIdent;
-        return this;
-    }
+  @Override
+  public CodeIdentBuilder linkedIdent(CodeIdent newPreviousIdent) {
+    this.linkedIdent = newPreviousIdent;
+    return this;
+  }
 
-    @Nonnull
-    @Override
-    public CodeIdent build() {
-        CodeIdent result;
-        if (firstIdent == null) {
-            if (ident == null) {
-                result = CodeIdentVoid.getInstance();
-            } else {
-                result = CodeIdentSimple.of(ident);
-            }
-        } else {
-            result = CodeIdentFirst.of(firstIdent, (ident == null) ? "" : ident);
-        }
-        if (linkedIdent != null) {
-            result = CodeIdentLinked.of(result, linkedIdent);
-        }
-        return result;
+  @Override
+  public CodeIdent build() {
+    CodeIdent result;
+    if (firstIdent == null) {
+      if (ident == null) {
+        result = CodeIdentVoid.getInstance();
+      } else {
+        result = CodeIdentSimple.of(ident);
+      }
+    } else {
+      result = CodeIdentFirst.of(firstIdent, (ident == null) ? "" : ident);
     }
+    if (linkedIdent != null) {
+      return CodeIdentLinked.of(result, linkedIdent);
+    }
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "CodeIdentBuilderImpl{"
+        + "ident='" + ident + '\''
+        + ", firstIdent='" + firstIdent + '\''
+        + ", linkedIdent=" + linkedIdent
+        + '}';
+  }
 }

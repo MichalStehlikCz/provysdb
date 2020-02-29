@@ -1,16 +1,14 @@
 package com.provys.provysdb.sqlbuilder;
 
-import javax.annotation.Nonnull;
-
 /**
- * Represents ident that is to be used for text
+ * Represents ident that is to be used for text when appending new lines to {@link CodeBuilder}.
+ * Implementations of this interface can be mutable.
  */
 public interface CodeIdent {
 
     /**
      * @return current ident text
      */
-    @Nonnull
     String get();
 
     /**
@@ -21,8 +19,9 @@ public interface CodeIdent {
     void use(StringBuilder builder);
 
     /**
+     * Clone ident or return self in case of immutable ident.
+     *
      * @return clone of this ident; can return self if given ident is not mutable
      */
-    @Nonnull
     CodeIdent copy();
 }

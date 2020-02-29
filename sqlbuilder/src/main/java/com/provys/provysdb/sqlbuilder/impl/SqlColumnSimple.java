@@ -1,74 +1,77 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.*;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.SqlTableColumn;
 import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SqlColumnSimple extends SqlColumnBase implements SqlTableColumn {
 
-    @Nullable
-    private final SqlTableAlias tableAlias;
-    @Nonnull
-    private final SqlIdentifier column;
+  private final @Nullable SqlTableAlias tableAlias;
+  private final SqlIdentifier column;
 
-    SqlColumnSimple(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, @Nullable SqlIdentifier alias) {
-        super(alias);
-        this.tableAlias = tableAlias;
-        this.column = Objects.requireNonNull(column);
+  SqlColumnSimple(@Nullable SqlTableAlias tableAlias, SqlIdentifier column,
+      @Nullable SqlIdentifier alias) {
+    super(alias);
+    this.tableAlias = tableAlias;
+    this.column = Objects.requireNonNull(column);
+  }
+
+  @Override
+  public void addSql(CodeBuilder builder) {
+    if (tableAlias != null) {
+      builder.append(tableAlias.getAlias()).append('.');
     }
+    builder.append(column);
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        if (tableAlias != null) {
-            builder.append(tableAlias.getAlias()).append('.');
-        }
-        builder.append(column);
+  @Override
+  public SqlTableColumn withAlias(SqlIdentifier alias) {
+    if (getOptAlias().filter(al -> al.equals(alias)).isPresent()) {
+      return this;
     }
+    return new SqlColumnSimple(tableAlias, column, alias);
+  }
 
-    @Nonnull
-    @Override
-    public SqlTableColumn withAlias(SqlIdentifier alias) {
-        if (getAlias().filter(al -> al.equals(alias)).isPresent()) {
-            return this;
-        }
-        return new SqlColumnSimple(tableAlias, column, alias);
+  @Override
+  public SqlTableColumn withTableAlias(SqlTableAlias newTableAlias) {
+    if (newTableAlias.equals(this.tableAlias)) {
+      return this;
     }
+    return new SqlColumnSimple(newTableAlias, column, getAlias());
+  }
 
-    @Nonnull
-    @Override
-    public SqlTableColumn withTableAlias(SqlTableAlias tableAlias) {
-        if (tableAlias.equals(this.tableAlias)) {
-            return this;
-        }
-        return new SqlColumnSimple(tableAlias, column, getAlias().orElse(null));
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SqlColumnSimple that = (SqlColumnSimple) o;
-
-        return Objects.equals(tableAlias, that.tableAlias) &&
-                column.equals(that.column);
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
-
-    @Override
-    public int hashCode() {
-        int result = tableAlias != null ? tableAlias.hashCode() : 0;
-        result = 31 * result + column.hashCode();
-        return result;
+    if (!super.equals(o)) {
+      return false;
     }
+    SqlColumnSimple that = (SqlColumnSimple) o;
+    return Objects.equals(tableAlias, that.tableAlias)
+        && Objects.equals(column, that.column);
+  }
 
-    @Override
-    public String toString() {
-        return "SqlColumnSimple{" +
-                "tableAlias=" + tableAlias +
-                ", column=" + column +
-                ", alias=" + getAlias().orElse(null) +
-                '}';
-    }
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (tableAlias != null ? tableAlias.hashCode() : 0);
+    result = 31 * result + (column != null ? column.hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "SqlColumnSimple{"
+        + "tableAlias=" + tableAlias
+        + ", column=" + column
+        + ", " + super.toString() + '}';
+  }
 }

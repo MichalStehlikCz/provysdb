@@ -1,33 +1,29 @@
 package com.provys.provysdb.sqlbuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Typed version of bind variable interface
+ * Typed version of bind variable interface.
+ *
  * @param <T> is type of value this bind variable can hold
  */
 public interface BindValueT<T> extends BindValue, ExpressionT<T> {
 
     /**
+     * Type associated with this bind value.
+     *
      * @return type associated with bind variable
      */
     @Override
-    @Nonnull
     Class<T> getType();
 
     /**
-     * @return value assigned to bind variable, empty optional if no value has been assigned yet
+     * @return value assigned to bind variable, empty optional if no or null value has been assigned.
      */
-    @Nonnull
-    Optional<T> getValue();
+    @Nullable T getValue();
 
-    @Nonnull
-    @Override
-    BindValueT<T> withValue(@Nullable Object value);
+    BindValueT<T> withValue(@Nullable T newValue);
 
-    @Nonnull
     @Override
     BindValueT<T> combine(BindName other);
 }

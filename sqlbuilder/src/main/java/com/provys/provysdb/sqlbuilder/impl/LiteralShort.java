@@ -1,27 +1,28 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import javax.annotation.Nonnull;
+final class LiteralShort extends LiteralNumber<Short> {
 
-class LiteralShort extends LiteralNumber<Short> {
+  /**
+   * Get literal corresponding to given Short value.
+   *
+   * @param value is short value this literal represents
+   * @return new literal, representing supplied value
+   */
+  static LiteralShort of(short value) {
+    return new LiteralShort(value);
+  }
 
-    /**
-     * Get literal corresponding to given Short value
-     *
-     * @param value is short value this literal represents
-     * @return new literal, representing supplied value
-     */
-    @Nonnull
-    static LiteralShort of(short value) {
-        return new LiteralShort(value);
-    }
+  private LiteralShort(Short value) {
+    super(value);
+  }
 
-    private LiteralShort(Short value) {
-        super(value);
-    }
+  @Override
+  public Class<Short> getType() {
+    return Short.class;
+  }
 
-    @Nonnull
-    @Override
-    public Class<Short> getType() {
-        return Short.class;
-    }
+  @Override
+  public String toString() {
+    return "LiteralShort{" + super.toString() + '}';
+  }
 }

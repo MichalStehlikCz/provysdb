@@ -3,29 +3,31 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
-import javax.annotation.Nonnull;
+final class LiteralBoolean extends LiteralBase<Boolean> {
 
-class LiteralBoolean extends LiteralBase<Boolean> {
+  private static final LiteralBoolean TRUE = new LiteralBoolean(true);
+  private static final LiteralBoolean FALSE = new LiteralBoolean(false);
 
-    private static final LiteralBoolean TRUE = new LiteralBoolean(true);
-    private static final LiteralBoolean FALSE = new LiteralBoolean(false);
+  static LiteralBoolean of(boolean value) {
+    return value ? TRUE : FALSE;
+  }
 
-    static LiteralBoolean of(boolean value) {
-        return value ? TRUE : FALSE;
-    }
+  private LiteralBoolean(Boolean value) {
+    super(value);
+  }
 
-    LiteralBoolean(Boolean value) {
-        super(value);
-    }
+  @Override
+  public void addSql(CodeBuilder builder) {
+    builder.append('\'').append(DtBoolean.toProvysDb(getValue())).append('\'');
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        builder.append('\'').append(DtBoolean.toProvysDb(getValue())).append('\'');
-    }
+  @Override
+  public Class<Boolean> getType() {
+    return Boolean.class;
+  }
 
-    @Nonnull
-    @Override
-    public Class<Boolean> getType() {
-        return Boolean.class;
-    }
+  @Override
+  public String toString() {
+    return "LiteralBoolean{" + super.toString() + '}';
+  }
 }
