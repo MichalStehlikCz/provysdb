@@ -8,7 +8,7 @@ import com.provys.provysdb.sqlbuilder.SqlTableColumnT;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlTableColumnTImpl<T> implements SqlTableColumnT<T> {
+final class SqlTableColumnTImpl<T> implements SqlTableColumnT<T> {
 
   private final SqlTableColumn column;
   private final Class<T> type;
@@ -43,8 +43,9 @@ class SqlTableColumnTImpl<T> implements SqlTableColumnT<T> {
   }
 
   @Override
-  public SqlTableColumnT<T> withTableAlias(SqlTableAlias tableAlias) {
-    var baseColumn = column.withTableAlias(tableAlias);
+  public SqlTableColumnT<T> withTableAlias(SqlTableAlias newTableAlias) {
+    var baseColumn = column.withTableAlias(newTableAlias);
+    //noinspection ObjectEquality - we return this in case no new base column was created
     if (baseColumn == column) {
       return this;
     }
@@ -61,7 +62,7 @@ class SqlTableColumnTImpl<T> implements SqlTableColumnT<T> {
     }
     SqlTableColumnTImpl<?> that = (SqlTableColumnTImpl<?>) o;
     return Objects.equals(column, that.column)
-        && Objects.equals(type, that.type);
+        && type == that.type;
   }
 
   @Override

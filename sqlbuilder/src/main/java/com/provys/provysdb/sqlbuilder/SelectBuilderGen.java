@@ -158,7 +158,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>   is type of column being added
    * @return self to support fluent build
    */
-  <T> U columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
+  <T> U columnDirect(String sql, String alias, List<? extends BindName> binds, Class<T> clazz);
 
   /**
    * Add column with given SQL text, parse text for binds.
@@ -205,5 +205,6 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>       is type of column being added
    * @return self to support fluent build
    */
-  <T> U columnSql(String columnSql, String alias, Collection<BindValue> binds, Class<T> clazz);
+  <T> U columnSql(String columnSql, String alias, Collection<? extends BindValue> binds,
+      Class<T> clazz);
 }

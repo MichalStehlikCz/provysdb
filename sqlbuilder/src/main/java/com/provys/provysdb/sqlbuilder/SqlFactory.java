@@ -47,16 +47,6 @@ public final class SqlFactory {
   }
 
   /**
-   * String literal represented as NVARCHAR2 in database.
-   *
-   * @param value is value of literal
-   * @return NVarchar literal
-   */
-  public static LiteralT<String> literalNVarchar(String value) {
-    return SQL.literalNVarchar(value);
-  }
-
-  /**
    * Byte literal.
    *
    * @param value is value of literal
@@ -164,6 +154,16 @@ public final class SqlFactory {
    */
   public static LiteralT<DtDateTime> literal(DtDateTime value) {
     return SQL.literal(value);
+  }
+
+  /**
+   * String literal represented as NVARCHAR2 in database.
+   *
+   * @param value is value of literal
+   * @return NVarchar literal
+   */
+  public static LiteralT<String> literalNVarchar(String value) {
+    return SQL.literalNVarchar(value);
   }
 
   /**
@@ -301,7 +301,7 @@ public final class SqlFactory {
   }
 
   /**
-   * Create new column; no alias is created, meaning column name will be used instead and no table
+   * Create new column. No alias is created, meaning column name will be used instead and no table
    * spec risking ambiguity if more tables are joined
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
@@ -338,102 +338,6 @@ public final class SqlFactory {
    */
   public static SqlTableColumn column(String tableAlias, String columnName, String alias) {
     return SQL.column(tableAlias, columnName, alias);
-  }
-
-  /**
-   * Create column with given SQL text.
-   *
-   * @param columnSql is text that will be used as column definition
-   * @return created column
-   */
-  public static SqlColumn columnDirect(String columnSql) {
-    return SQL.columnDirect(columnSql);
-  }
-
-  /**
-   * Create column with given SQL text and alias.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @return created column
-   */
-  public static SqlColumn columnDirect(String sql, String alias) {
-    return SQL.columnDirect(sql, alias);
-  }
-
-  /**
-   * Add column with given SQL text, alias and binds to list of columns.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column
-   * @return created column
-   */
-  public static SqlColumn columnDirect(String sql, String alias, BindName... binds) {
-    return SQL.columnDirect(sql, alias, binds);
-  }
-
-  /**
-   * Add column with given SQL text, alias and binds to list of columns.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
-   *              Java conventions (e.g. using ? as placeholder)
-   * @return created column
-   */
-  public static SqlColumn columnDirect(String sql, String alias, List<BindName> binds) {
-    return SQL.columnDirect(sql, alias, binds);
-  }
-
-  /**
-   * Create column with given SQL text and parse it for bind variables, expressed using :name
-   * notation.
-   *
-   * @param columnSql is text that will be used as column definition
-   * @return created column
-   */
-  public static SqlColumn columnSql(String columnSql) {
-    return SQL.columnSql(columnSql);
-  }
-
-  /**
-   * Create column with given SQL text and alias and parse it for bind variables, expressed using
-   * :name notation.
-   *
-   * @param sql   is text that will be used as column definition. Binds are parsed from text
-   * @param alias is text that will be used as alias for new column
-   * @return created column
-   */
-  public static SqlColumn columnSql(String sql, String alias) {
-    return SQL.columnSql(sql, alias);
-  }
-
-  /**
-   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
-   * notation. Bind variables can be supplied to assign value and type to binds
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column
-   * @return created column
-   */
-  public static SqlColumn columnSql(String sql, String alias, BindValue... binds) {
-    return SQL.columnSql(sql, alias, binds);
-  }
-
-  /**
-   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
-   * notation. Bind variables can be supplied to assign value and type to binds
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
-   *              Java conventions (e.g. using ? as placeholder)
-   * @return created column
-   */
-  public static SqlColumn columnSql(String sql, String alias, Collection<BindValue> binds) {
-    return SQL.columnSql(sql, alias, binds);
   }
 
   /**
@@ -563,6 +467,52 @@ public final class SqlFactory {
   }
 
   /**
+   * Create column with given SQL text.
+   *
+   * @param columnSql is text that will be used as column definition
+   * @return created column
+   */
+  public static SqlColumn columnDirect(String columnSql) {
+    return SQL.columnDirect(columnSql);
+  }
+
+  /**
+   * Create column with given SQL text and alias.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @return created column
+   */
+  public static SqlColumn columnDirect(String sql, String alias) {
+    return SQL.columnDirect(sql, alias);
+  }
+
+  /**
+   * Add column with given SQL text, alias and binds to list of columns.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column
+   * @return created column
+   */
+  public static SqlColumn columnDirect(String sql, String alias, BindName... binds) {
+    return SQL.columnDirect(sql, alias, binds);
+  }
+
+  /**
+   * Add column with given SQL text, alias and binds to list of columns.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
+   *              Java conventions (e.g. using ? as placeholder)
+   * @return created column
+   */
+  public static SqlColumn columnDirect(String sql, String alias, List<BindName> binds) {
+    return SQL.columnDirect(sql, alias, binds);
+  }
+
+  /**
    * Create mandatory column with given SQL text.
    *
    * @param columnSql is text that will be used as column definition
@@ -616,6 +566,57 @@ public final class SqlFactory {
   public static <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds,
       Class<T> clazz) {
     return SQL.columnDirect(sql, alias, binds, clazz);
+  }
+
+  /**
+   * Create column with given SQL text and parse it for bind variables, expressed using :name
+   * notation.
+   *
+   * @param columnSql is text that will be used as column definition
+   * @return created column
+   */
+  public static SqlColumn columnSql(String columnSql) {
+    return SQL.columnSql(columnSql);
+  }
+
+  /**
+   * Create column with given SQL text and alias and parse it for bind variables, expressed using
+   * :name notation.
+   *
+   * @param sql   is text that will be used as column definition. Binds are parsed from text
+   * @param alias is text that will be used as alias for new column
+   * @return created column
+   */
+  public static SqlColumn columnSql(String sql, String alias) {
+    return SQL.columnSql(sql, alias);
+  }
+
+  /**
+   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
+   * notation. Bind variables can be supplied to assign value and type to binds
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column
+   * @return created column
+   */
+  public static SqlColumn columnSql(String sql, String alias, BindValue... binds) {
+    return SQL.columnSql(sql, alias, binds);
+  }
+
+  /**
+   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
+   * notation. Bind variables can be supplied to assign value and type to binds
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
+   *              Java conventions (e.g. using ? as placeholder)
+   * @return created column
+   */
+  public static SqlColumn columnSql(String sql, String alias,
+      Collection<? extends BindValue> binds) {
+    return SQL.columnSql(sql, alias, binds);
   }
 
   /**
@@ -711,6 +712,28 @@ public final class SqlFactory {
   }
 
   /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return created from clause
+   */
+  public static SqlFrom from(Select select, SqlTableAlias alias) {
+    return SQL.from(select, alias);
+  }
+
+  /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return created from clause
+   */
+  public static SqlFrom from(Select select, String alias) {
+    return SQL.from(select, alias);
+  }
+
+  /**
    * Create from clause based on Sql expression, directly passed to evaluation without parsing.
    *
    * @param sqlSelect is SQL expression used as data source in SQL clause
@@ -753,28 +776,6 @@ public final class SqlFactory {
    */
   public static SqlFrom fromSql(String sqlSelect, String alias) {
     return SQL.fromSql(sqlSelect, alias);
-  }
-
-  /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return created from clause
-   */
-  public static SqlFrom from(Select select, SqlTableAlias alias) {
-    return SQL.from(select, alias);
-  }
-
-  /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return created from clause
-   */
-  public static SqlFrom from(Select select, String alias) {
-    return SQL.from(select, alias);
   }
 
   /**

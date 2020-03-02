@@ -3,13 +3,15 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.CodeIdent;
 
 /**
- * This ident does exactly nothing when used - it can be used as default ident
+ * This ident does exactly nothing when used - it can be used as default ident.
  */
 final class CodeIdentVoid implements CodeIdent {
 
   private static final CodeIdentVoid INSTANCE = new CodeIdentVoid();
 
   /**
+   * (The only) instance of {@code CodeIdentVoid}.
+   *
    * @return instance of {@code CodeIdentVoid}
    */
   static CodeIdentVoid getInstance() {
@@ -17,7 +19,7 @@ final class CodeIdentVoid implements CodeIdent {
   }
 
   /**
-   * Static getInstance method should be used instead of constructor
+   * Static getInstance method should be used instead of constructor.
    */
   private CodeIdentVoid() {
   }

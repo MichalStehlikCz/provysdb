@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlTableAliasImpl implements SqlTableAlias {
+final class SqlTableAliasImpl implements SqlTableAlias {
 
   private static final Pattern PATTERN = Pattern
       .compile("(?:[a-zA-Z][a-zA-Z0-9_#$]*)|(?:\"[^\"]*\")|(?:<<[0-9]+>>)");
@@ -18,7 +18,7 @@ class SqlTableAliasImpl implements SqlTableAlias {
     }
     if (!PATTERN.matcher(aliasText).matches()) {
       throw new InternalException(
-          "Supplied text is not valid SQL table alias - '" + aliasText + "'");
+          "Supplied text is not valid SQL table alias - '" + aliasText + '\'');
     }
     if ((aliasText.charAt(0) == '"') || (aliasText.charAt(0) == '<')) {
       return aliasText;

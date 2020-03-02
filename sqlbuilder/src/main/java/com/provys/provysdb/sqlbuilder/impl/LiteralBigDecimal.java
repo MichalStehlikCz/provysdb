@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 final class LiteralBigDecimal extends LiteralNumber<BigDecimal> {
 
   /**
-   * Get literal corresponding to given BigDecimal value
+   * Get literal corresponding to given BigDecimal value.
    *
    * @param value is value this literal represents
    * @return new literal, representing supplied value

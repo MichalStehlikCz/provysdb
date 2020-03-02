@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlFromSql extends SqlFromBase {
+final class SqlFromSql extends SqlFromBase {
 
   private final String sql;
-  private final Collection<BindName> binds;
+  private final List<BindName> binds;
 
   SqlFromSql(String sql, SqlTableAlias alias) {
     super(alias);

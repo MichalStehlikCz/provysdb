@@ -1,7 +1,6 @@
 package com.provys.provysdb.sqlparser;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-
 import java.util.List;
 import java.util.Scanner;
 

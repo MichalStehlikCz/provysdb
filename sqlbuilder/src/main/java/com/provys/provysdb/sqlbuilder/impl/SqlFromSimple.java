@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Used to represent element in from clause, built on table or view.
  */
-class SqlFromSimple extends SqlFromBase {
+final class SqlFromSimple extends SqlFromBase {
 
   private final SqlIdentifier tableName;
 

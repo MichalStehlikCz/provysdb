@@ -18,6 +18,7 @@ abstract class SqlFromBase implements SqlFrom {
     return alias;
   }
 
+  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

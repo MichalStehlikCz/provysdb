@@ -25,8 +25,8 @@ final class ConditionEmpty implements Condition {
     return true;
   }
 
-    @Override
-    public String toString() {
-        return "ConditionEmpty{}";
-    }
+  @Override
+  public String toString() {
+    return "ConditionEmpty{}";
+  }
 }

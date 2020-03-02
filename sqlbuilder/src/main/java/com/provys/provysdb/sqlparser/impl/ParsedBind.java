@@ -8,7 +8,7 @@ import com.provys.provysdb.sqlparser.SqlTokenType;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class ParsedBind extends ParsedTokenBase implements BindName {
+final class ParsedBind extends ParsedTokenBase implements BindName {
 
   private final BindName name;
 

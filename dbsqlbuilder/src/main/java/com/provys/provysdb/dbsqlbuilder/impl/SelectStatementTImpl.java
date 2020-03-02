@@ -1,35 +1,42 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.dbcontext.*;
+import com.provys.provysdb.dbcontext.DbConnection;
+import com.provys.provysdb.dbcontext.DbPreparedStatement;
+import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
-import com.provys.provysdb.sqlbuilder.*;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.Select;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@SuppressWarnings("WeakerAccess")
 abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
-    @Nonnull
     private final String sqlText;
-    @Nonnull
     private final DbPreparedStatement statement;
     private final Map<String, BindWithPos> binds;
-    /** If selectStatement retrieved connection from context, it will be kept here and returned to pool on close;
-     * when connection is passed to constructor, it is not held here and thus not closed */
+
+    /**
+     * Owned connection.
+     * If selectStatement retrieved connection from context, it will be kept here and returned to
+     * pool on close; when connection is passed to constructor, it is not held here and thus not
+     * closed
+     */
     @Nullable
     private DbConnection connection;
     private boolean closed = false;
 
-    @Nonnull
-    private static Map<String, BindWithPos> getBinds(List<BindName> binds) {
+    private static Map<String, BindWithPos> getBinds(Collection<? extends BindName> binds) {
         // first construct list of positions for each supplied bind name
         int pos = 1;
         Map<BindName, List<Integer>> bindPosMap = new HashMap<>(binds.size());
@@ -45,27 +52,24 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         return result;
     }
 
-    @SuppressWarnings("squid:S2637") // Sonar does notice initialisation in try-catch block
-    private SelectStatementTImpl(String sqlText, List<BindName> binds, DbConnection connection, boolean closeConnection) {
+    private SelectStatementTImpl(String sqlText, Collection<? extends BindName> binds,
+        @SuppressWarnings("NullableProblems") DbConnection connection, boolean closeConnection) {
         this.sqlText = sqlText;
         if (closeConnection) {
             this.connection = connection;
         } else {
             this.connection = null;
         }
-        try {
-            this.statement = connection.prepareStatement(sqlText);
-        } catch (SQLException e) {
-            throw new SqlException("Failed to parse statement " + sqlText, e);
-        }
+        this.statement = connection.prepareStatement(sqlText);
         this.binds = getBinds(binds);
     }
 
-    SelectStatementTImpl(String sqlText, List<BindName> binds, DbConnection connection) {
+    SelectStatementTImpl(String sqlText, Collection<? extends BindName> binds,
+        DbConnection connection) {
         this(sqlText, binds, connection, false);
     }
 
-    SelectStatementTImpl(String sqlText, List<BindName> binds, DbSql sqlContext) {
+    SelectStatementTImpl(String sqlText, Collection<? extends BindName> binds, DbSql sqlContext) {
         this(sqlText, binds, sqlContext.getConnection(), true);
     }
 
@@ -78,9 +82,10 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     /**
+     * Statement this select is based on.
+     * 
      * @return value of field statement
      */
-    @Nonnull
     DbPreparedStatement getStatement() {
         return statement;
     }
@@ -249,16 +254,32 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
     @Nonnull
     public <T> List<T> fetchNoClose(DbRowMapper<T> rowMapper) {
-        List<T> result = new ArrayList<>();
+        List<T> result = new ArrayList<>(10);
         try (var resultSet = execute()) {
             long row = 0;
             while (resultSet.next()) {
                 result.add(rowMapper.map(resultSet, row++));
             }
         } catch (SQLException e) {
-            throw new InternalException("Exception thrown by sql statement " + this);
+            throw new InternalException("Exception thrown by sql statement " + this, e);
         }
         return result;
+    }
+
+    private void onCloseStream(ResultSet resultSet, boolean close) {
+            // close both result and this statement
+            Exception exception = null;
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                exception = e;
+            }
+            if (close) {
+                this.close();
+            }
+            if (exception != null) {
+                throw new InternalException("Error fetching data from statement " + this, exception);
+            }
     }
 
     @Nonnull
@@ -267,21 +288,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         return StreamSupport
                 .stream(Spliterators.spliteratorUnknownSize(new DbResultSetIterator<>(rowMapper, resultSet),
                         Spliterator.ORDERED), false)
-                .onClose(() -> {
-                    // close both result and this statement
-                    Exception exception = null;
-                    try {
-                        resultSet.close();
-                    } catch (SQLException e) {
-                        exception = e;
-                    }
-                    if (close) {
-                        this.close();
-                    }
-                    if (exception != null) {
-                        throw new InternalException("Error fetching data from statement " + this, exception);
-                    }
-                });
+                .onClose(() -> onCloseStream(resultSet, close));
     }
 
     @Nonnull

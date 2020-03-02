@@ -13,7 +13,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <U> is corresponding interface, used when columns or their type information is missing
  *            from type signature
  */
-public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends SelectBuilderBase<U, U>> {
+public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
+    U extends SelectBuilderBase<U, U>> {
 
   /**
    * List defined columns.
@@ -138,7 +139,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @param binds     is list of binds, associated with given column
    * @return self to support fluent build
    */
-  U columnDirect(String columnSql, String alias, List<BindName> binds);
+  U columnDirect(String columnSql, String alias, List<? extends BindName> binds);
 
   /**
    * Add column with given SQL text, parse text for binds.
@@ -177,7 +178,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @param binds     is list of binds, associated with given column
    * @return self to support fluent build
    */
-  U columnSql(String columnSql, String alias, Collection<BindValue> binds);
+  U columnSql(String columnSql, String alias, Collection<? extends BindValue> binds);
 
   /**
    * Add table to from clause of the statement.
@@ -204,6 +205,24 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @return self to support fluent build
    */
   T from(String tableName, String alias);
+
+  /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return self to support fluent build
+   */
+  T from(Select select, SqlTableAlias alias);
+
+  /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return self to support fluent build
+   */
+  T from(Select select, String alias);
 
   /**
    * Create from clause based on Sql expression.
@@ -240,24 +259,6 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @return self to support fluent build
    */
   T fromSql(String sqlSelect, String alias);
-
-  /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return self to support fluent build
-   */
-  T from(Select select, SqlTableAlias alias);
-
-  /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return self to support fluent build
-   */
-  T from(Select select, String alias);
 
   /**
    * Add from clause for pseudo-table dual.
@@ -301,7 +302,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @param binds        is list of bind variables, associated with condition
    * @return self to support fluent build
    */
-  T whereDirect(String conditionSql, List<BindName> binds);
+  T whereDirect(String conditionSql, List<? extends BindName> binds);
 
   /**
    * Add where condition.
@@ -330,7 +331,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>, U extends 
    * @param binds        is list of bind variables, associated with condition
    * @return self to support fluent build
    */
-  T whereSql(String conditionSql, Collection<BindValue> binds);
+  T whereSql(String conditionSql, Collection<? extends BindValue> binds);
 
   /**
    * Add multiple conditions combined using AND.

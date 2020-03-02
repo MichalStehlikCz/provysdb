@@ -1,5 +1,9 @@
 package com.provys.provysdb.sqlparser.impl;
 
+import static com.provys.provysdb.sqlparser.SpaceMode.FORCE;
+import static com.provys.provysdb.sqlparser.SpaceMode.FORCE_NONE;
+import static com.provys.provysdb.sqlparser.SpaceMode.NORMAL;
+
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.StringParser;
 import com.provys.common.exception.InternalException;
@@ -23,10 +27,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-import static com.provys.provysdb.sqlparser.SpaceMode.*;
-
 /**
- * Tokenizer is used to parse supplied text into tokens
+ * Tokenizer is used to parse supplied text into tokens.
  */
 public class DefaultSqlTokenizer implements SqlTokenizer {
 
@@ -74,10 +76,10 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
     SpaceMode afterPrev = null;
     while (sqlScanner.hasNext()) {
       var token = sqlScanner.next();
-      if ((afterPrev != null) &&
-          (((token.spaceBefore() == FORCE) && (afterPrev != FORCE_NONE)) ||
-              ((afterPrev == FORCE) && (token.spaceBefore() != FORCE_NONE)) ||
-              ((token.spaceBefore() == NORMAL) && (afterPrev == NORMAL)))) {
+      if ((afterPrev != null)
+          && (((token.spaceBefore() == FORCE) && (afterPrev != FORCE_NONE))
+          || ((afterPrev == FORCE) && (token.spaceBefore() != FORCE_NONE))
+          || ((token.spaceBefore() == NORMAL) && (afterPrev == NORMAL)))) {
         builder.append(' ');
       }
       token.addSql(builder);
@@ -86,10 +88,17 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
     return builder;
   }
 
+  @Override
+  public String toString() {
+    return "DefaultSqlTokenizer{"
+        + "maxTokens=" + maxTokens
+        + '}';
+  }
+
   private static final class SqlScanner implements Iterator<SqlParsedToken> {
 
     /**
-     * Check if supplied character is whitespace
+     * Check if supplied character is whitespace.
      */
     private static boolean isWhiteSpace(char character) {
       return (character == ' ') || (character == '\t') || (character == '\n');
@@ -280,14 +289,15 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
       String firstChar = Character.toString(nextChar());
       if (hasNextChar()) {
         String twoChars = firstChar + peekChar();
-        if (SqlSymbol.getBySymbol(twoChars).isPresent()) {
+        var symbol = SqlSymbol.getBySymbol(twoChars);
+        if (symbol.isPresent()) {
           nextChar();
-          return new ParsedSymbol(line, pos, SqlSymbol.getBySymbol(twoChars).get());
+          return new ParsedSymbol(line, pos, symbol.get());
         }
       }
       return new ParsedSymbol(line, pos, SqlSymbol.getBySymbol(firstChar)
-          .orElseThrow(() -> new InternalException("Invalid character '" + firstChar +
-              "' found parsing SQL on line " + line + ", position " + pos)));
+          .orElseThrow(() -> new InternalException("Invalid character '" + firstChar
+              + "' found parsing SQL on line " + line + ", position " + pos)));
     }
 
     /**
@@ -320,11 +330,10 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
       var pos = getPos();
       var nameBuilder = new StringBuilder();
       while (hasNextChar() && (
-          ((peekChar() >= 'A') && (peekChar() <= 'Z')) ||
-              ((peekChar() >= 'a') && (peekChar() <= 'z')) ||
-              ((peekChar() >= '0') && (peekChar() <= '9')) ||
-              (peekChar() == '_') || (peekChar() == '$') ||
-              (peekChar() == '#'))) {
+          ((peekChar() >= 'A') && (peekChar() <= 'Z'))
+              || ((peekChar() >= 'a') && (peekChar() <= 'z'))
+              || ((peekChar() >= '0') && (peekChar() <= '9'))
+              || (peekChar() == '_') || (peekChar() == '$') || (peekChar() == '#'))) {
         nameBuilder.append(nextChar());
       }
       var name = nameBuilder.toString();
@@ -379,10 +388,10 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
       }
       var nameBuilder = new StringBuilder();
       while (hasNextChar() && (
-          ((peekChar() >= 'A') && (peekChar() <= 'Z')) ||
-              ((peekChar() >= 'a') && (peekChar() <= 'z')) ||
-              ((peekChar() >= '0') && (peekChar() <= '9')) ||
-              (peekChar() == '_'))) {
+          ((peekChar() >= 'A') && (peekChar() <= 'Z'))
+              || ((peekChar() >= 'a') && (peekChar() <= 'z'))
+              || ((peekChar() >= '0') && (peekChar() <= '9'))
+              || (peekChar() == '_'))) {
         nameBuilder.append(nextChar());
       }
       return new ParsedBind(line, pos, nameBuilder.toString());
@@ -490,8 +499,8 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
     public SqlParsedToken next() {
       if (!skipWhiteSpace()
           || (currentLine == null)) { // condition on currentLine is not necessary as
-        // skipWhiteSpace would return false, but static code analysis is unable to consider it and would
-        // produce warning
+        // skipWhiteSpace would return false, but static code analysis is unable to consider it
+        // and would produce warning
         throw new NoSuchElementException("Cannot read Sql token - end of code reached");
       }
       if (((peekChar() >= 'a') && (peekChar() <= 'z')) || ((peekChar() >= 'A') && (peekChar()

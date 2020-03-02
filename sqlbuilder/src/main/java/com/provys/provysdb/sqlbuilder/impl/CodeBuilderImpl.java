@@ -1,8 +1,21 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.CodeIdent;
+import com.provys.provysdb.sqlbuilder.CodeIdentBuilder;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -76,13 +89,13 @@ public class CodeBuilderImpl implements CodeBuilder {
     }
     boolean first = true;
     String tempIdent = null; // temporary ident; only used on second and consecutive lines
-    for (var line : text.split("\n")) {
+    for (var line : text.split("\n", -1)) {
       if (first) {
         first = false;
       } else {
         if (tempIdent == null) {
-          tempIdent = String
-              .format("%1$-" + (currentIdent.get().length() + additionalIdent + 1) + 's', '\n');
+          var format = "%1$-" + (currentIdent.get().length() + additionalIdent + 1) + 's';
+          tempIdent = String.format(format, '\n');
         }
         append(tempIdent);
       }
@@ -153,8 +166,8 @@ public class CodeBuilderImpl implements CodeBuilder {
   public CodeBuilder setIdent(String firstIdent, String ident, int chars) {
     if (chars < firstIdent.length()) {
       throw new IllegalArgumentException(
-          "Ident length cannot be smaller than length of supplied first line " +
-              "ident prefix");
+          "Ident length cannot be smaller than length of supplied first line "
+              + "ident prefix");
     }
     if (chars < ident.length()) {
       throw new IllegalArgumentException(
@@ -204,7 +217,7 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
-  public CodeBuilder applyBindValues(Collection<BindValue> bindValues) {
+  public CodeBuilder applyBindValues(Collection<? extends BindValue> bindValues) {
     final var bindMap = bindValues.stream()
         .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
     binds.replaceAll(bindName -> replaceBindName(bindMap, bindName));

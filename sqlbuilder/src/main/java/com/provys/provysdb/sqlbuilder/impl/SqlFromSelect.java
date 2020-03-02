@@ -6,7 +6,7 @@ import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlFromSelect extends SqlFromBase {
+final class SqlFromSelect extends SqlFromBase {
 
   private final Select select;
 

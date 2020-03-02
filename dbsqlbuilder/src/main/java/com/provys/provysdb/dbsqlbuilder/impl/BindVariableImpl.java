@@ -45,8 +45,8 @@ class BindVariableImpl<T> implements BindVariableT<T> {
 
     @Override
     @Nonnull
-    public <U> Optional<U> getValue(Class<U> type) {
-        return bindValue.getValue(type);
+    public <U> Optional<U> getValue(Class<U> returnType) {
+        return bindValue.getValue(returnType);
     }
 
     @Override

@@ -160,7 +160,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>       is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder columnDirect(String columnSql, String alias, List<BindName> binds,
+  <T> SelectBuilder columnDirect(String columnSql, String alias, List<? extends BindName> binds,
       Class<T> clazz);
 
   /**
@@ -208,6 +208,6 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>       is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder columnSql(String columnSql, String alias, Collection<BindValue> binds,
+  <T> SelectBuilder columnSql(String columnSql, String alias, Collection<? extends BindValue> binds,
       Class<T> clazz);
 }

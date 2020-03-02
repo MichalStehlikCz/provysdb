@@ -7,7 +7,7 @@ import com.provys.provysdb.sqlbuilder.SqlTableColumn;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlColumnSimple extends SqlColumnBase implements SqlTableColumn {
+final class SqlColumnSimple extends SqlColumnBase implements SqlTableColumn {
 
   private final @Nullable SqlTableAlias tableAlias;
   private final SqlIdentifier column;

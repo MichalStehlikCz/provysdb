@@ -45,7 +45,7 @@ class BindNameImpl implements BindName {
     if (!getName().equals(other.getName())) {
       throw new InternalException(
           "Cannot combine bind variables with different names (" + getName() + "!=" + other
-              .getName() + ")");
+              .getName() + ')');
     }
     if (other instanceof BindValue) {
       return other.combine(this);

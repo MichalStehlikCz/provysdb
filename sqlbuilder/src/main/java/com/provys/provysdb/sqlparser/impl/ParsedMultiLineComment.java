@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Instance represents multi-line comment.
  */
-class ParsedMultiLineComment extends ParsedTokenBase {
+final class ParsedMultiLineComment extends ParsedTokenBase {
 
   private final String comment;
 

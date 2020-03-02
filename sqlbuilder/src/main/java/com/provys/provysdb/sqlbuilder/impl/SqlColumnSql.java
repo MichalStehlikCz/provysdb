@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlColumnSql extends SqlColumnBase {
+final class SqlColumnSql extends SqlColumnBase {
 
   private final String sql;
-  private final Collection<BindName> binds;
+  private final List<BindName> binds;
 
   SqlColumnSql(String sql, @Nullable SqlIdentifier alias) {
     super(alias);
@@ -21,7 +21,7 @@ class SqlColumnSql extends SqlColumnBase {
     this.binds = Collections.emptyList();
   }
 
-  SqlColumnSql(String sql, @Nullable SqlIdentifier alias, Collection<BindName> binds) {
+  SqlColumnSql(String sql, @Nullable SqlIdentifier alias, Collection<? extends BindName> binds) {
     super(alias);
     this.sql = Objects.requireNonNull(sql);
     this.binds = List.copyOf(binds);
@@ -48,7 +48,7 @@ class SqlColumnSql extends SqlColumnBase {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof SqlColumnSql)) {
       return false;
     }
     if (!super.equals(o)) {

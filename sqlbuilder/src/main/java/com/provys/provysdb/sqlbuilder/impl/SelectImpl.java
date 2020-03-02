@@ -11,10 +11,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Select statement together with associated bind variables, as created from select builder.
  */
-class SelectImpl implements Select {
+final class SelectImpl implements Select {
 
   private final String sqlText;
-  private final Collection<BindName> binds;
+  private final List<BindName> binds;
 
   SelectImpl(String sql) {
     this.sqlText = Objects.requireNonNull(sql);

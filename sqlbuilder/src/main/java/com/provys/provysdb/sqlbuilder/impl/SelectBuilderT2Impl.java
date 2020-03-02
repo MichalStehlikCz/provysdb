@@ -22,6 +22,13 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
   private final SqlColumnT<T1> column1;
   private final SqlColumnT<T2> column2;
 
+  /**
+   * Create new builder based on specified statement builder with two supplied columns.
+   *
+   * @param sql     is parent select builder
+   * @param column1 is the first column
+   * @param column2 is the second column
+   */
   public SelectBuilderT2Impl(S sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
     super(sql);
     this.column1 = Objects.requireNonNull(column1);
@@ -135,8 +142,8 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> columnDirect(String columnSql, String alias, List<BindName> binds,
-      Class<T> clazz) {
+  public <T> SelectBuilderImpl<S> columnDirect(String columnSql, String alias,
+      List<? extends BindName> binds, Class<T> clazz) {
     return column(getSql().columnDirect(columnSql, alias, binds, clazz));
   }
 
@@ -158,7 +165,7 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
 
   @Override
   public <T> SelectBuilderImpl<S> columnSql(String columnSql, String alias,
-      Collection<BindValue> binds, Class<T> clazz) {
+      Collection<? extends BindValue> binds, Class<T> clazz) {
     return column(getSql().columnSql(columnSql, alias, binds, clazz));
   }
 

@@ -25,14 +25,6 @@ public interface Sql {
   LiteralT<String> literal(String value);
 
   /**
-   * String literal represented as NVARCHAR2.
-   *
-   * @param value is value of literal
-   * @return NVarchar literal
-   */
-  LiteralT<String> literalNVarchar(String value);
-
-  /**
    * Byte literal.
    *
    * @param value is value of literal
@@ -127,6 +119,14 @@ public interface Sql {
    * @return datetime literal
    */
   LiteralT<DtDateTime> literal(DtDateTime value);
+
+  /**
+   * String literal represented as NVARCHAR2.
+   *
+   * @param value is value of literal
+   * @return NVarchar literal
+   */
+  LiteralT<String> literalNVarchar(String value);
 
   /**
    * Create bind name based on supplied String.
@@ -316,86 +316,6 @@ public interface Sql {
   <T> SqlColumnT<T> column(ExpressionT<T> expression, String alias);
 
   /**
-   * Create column with given SQL text.
-   *
-   * @param columnSql is text that will be used as column definition
-   * @return created column
-   */
-  SqlColumn columnDirect(String columnSql);
-
-  /**
-   * Create column with given SQL text and alias.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @return created column
-   */
-  SqlColumn columnDirect(String sql, String alias);
-
-  /**
-   * Add column with given SQL text, alias and binds to list of columns.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column
-   * @return created column
-   */
-  SqlColumn columnDirect(String sql, String alias, BindName... binds);
-
-  /**
-   * Add column with given SQL text, alias and binds to list of columns.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
-   *              Java conventions (e.g. using ? as placeholder)
-   * @return created column
-   */
-  SqlColumn columnDirect(String sql, String alias, List<BindName> binds);
-
-  /**
-   * Create column with given SQL text and parse it for bind variables, expressed using :name
-   * notation.
-   *
-   * @param columnSql is text that will be used as column definition
-   * @return created column
-   */
-  SqlColumn columnSql(String columnSql);
-
-  /**
-   * Create column with given SQL text and alias and parse it for bind variables, expressed using
-   * :name notation.
-   *
-   * @param sql   is text that will be used as column definition. Binds are parsed from text
-   * @param alias is text that will be used as alias for new column
-   * @return created column
-   */
-  SqlColumn columnSql(String sql, String alias);
-
-  /**
-   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
-   * notation; bind variables can be supplied to assign value and type to binds.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column
-   * @return created column
-   */
-  SqlColumn columnSql(String sql, String alias, BindValue... binds);
-
-  /**
-   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
-   * notation; bind variables can be supplied to assign value and type to binds.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
-   *              Java conventions (e.g. using ? as placeholder)
-   * @return created column
-   */
-  SqlColumn columnSql(String sql, String alias, Collection<BindValue> binds);
-
-  /**
    * Create typed column based on non-typed column and specified type.
    *
    * @param column is original (likely non-typed) column
@@ -503,6 +423,44 @@ public interface Sql {
    * Create column with given SQL text.
    *
    * @param columnSql is text that will be used as column definition
+   * @return created column
+   */
+  SqlColumn columnDirect(String columnSql);
+
+  /**
+   * Create column with given SQL text and alias.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @return created column
+   */
+  SqlColumn columnDirect(String sql, String alias);
+
+  /**
+   * Add column with given SQL text, alias and binds to list of columns.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column
+   * @return created column
+   */
+  SqlColumn columnDirect(String sql, String alias, BindName... binds);
+
+  /**
+   * Add column with given SQL text, alias and binds to list of columns.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
+   *              Java conventions (e.g. using ? as placeholder)
+   * @return created column
+   */
+  SqlColumn columnDirect(String sql, String alias, List<? extends BindName> binds);
+
+  /**
+   * Create column with given SQL text.
+   *
+   * @param columnSql is text that will be used as column definition
    * @param clazz     is type of return value of column
    * @param <T>       is Java type corresponding to values in given column
    * @return created column
@@ -543,7 +501,50 @@ public interface Sql {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds, Class<T> clazz);
+  <T> SqlColumnT<T> columnDirect(String sql, String alias, List<? extends BindName> binds,
+      Class<T> clazz);
+
+  /**
+   * Create column with given SQL text and parse it for bind variables, expressed using :name
+   * notation.
+   *
+   * @param columnSql is text that will be used as column definition
+   * @return created column
+   */
+  SqlColumn columnSql(String columnSql);
+
+  /**
+   * Create column with given SQL text and alias and parse it for bind variables, expressed using
+   * :name notation.
+   *
+   * @param sql   is text that will be used as column definition. Binds are parsed from text
+   * @param alias is text that will be used as alias for new column
+   * @return created column
+   */
+  SqlColumn columnSql(String sql, String alias);
+
+  /**
+   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
+   * notation; bind variables can be supplied to assign value and type to binds.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column
+   * @return created column
+   */
+  SqlColumn columnSql(String sql, String alias, BindValue... binds);
+
+  /**
+   * Add column with given SQL text, alias and parse it for bind variables, expressed using :name
+   * notation; bind variables can be supplied to assign value and type to binds.
+   *
+   * @param sql   is text that will be used as column definition
+   * @param alias is text that will be used as alias for new column
+   * @param binds is list of binds used in column, in proper oder, binds should be referenced using
+   *              Java conventions (e.g. using ? as placeholder)
+   * @return created column
+   */
+  SqlColumn columnSql(String sql, String alias, Collection<? extends BindValue> binds);
 
   /**
    * Create column with given SQL text and parse it for bind variables, expressed using :name
@@ -585,15 +586,16 @@ public interface Sql {
    * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed
    * using :name notation. Bind variables can be supplied to assign value and type to binds
    *
+   * @param <T>   is Java type corresponding to values in given column
    * @param sql   is text that will be used as column definition
    * @param alias is text that will be used as alias for new column
    * @param binds is list of binds used in column, in proper oder, binds should be referenced using
    *              Java conventions (e.g. using ? as placeholder)
    * @param clazz is type of return value of column
-   * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnSql(String sql, String alias, Collection<BindValue> binds, Class<T> clazz);
+  <T> SqlColumnT<T> columnSql(String sql, String alias, Collection<? extends BindValue> binds,
+      Class<T> clazz);
 
   /**
    * Create Sql table alias object based on supplied text. Validates text during creation.
@@ -620,6 +622,24 @@ public interface Sql {
    * @return created from clause
    */
   SqlFrom from(String tableName, String alias);
+
+  /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return created from clause
+   */
+  SqlFrom from(Select select, SqlTableAlias alias);
+
+  /**
+   * Add sql expression to from clause of the statement.
+   *
+   * @param select is select statement that will be used in from clause
+   * @param alias  as alias to be assigned to given expression
+   * @return created from clause
+   */
+  SqlFrom from(Select select, String alias);
 
   /**
    * Create from clause based on Sql expression, directly passed to evaluation without parsing.
@@ -659,24 +679,6 @@ public interface Sql {
   SqlFrom fromSql(String sqlSelect, String alias);
 
   /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return created from clause
-   */
-  SqlFrom from(Select select, SqlTableAlias alias);
-
-  /**
-   * Add sql expression to from clause of the statement.
-   *
-   * @param select is select statement that will be used in from clause
-   * @param alias  as alias to be assigned to given expression
-   * @return created from clause
-   */
-  SqlFrom from(Select select, String alias);
-
-  /**
    * Create from clause for pseudo-table dual.
    *
    * @return clause from pseudo-table dual
@@ -710,7 +712,7 @@ public interface Sql {
    * @param binds        is list of bind variables, associated with condition
    * @return created where condition
    */
-  Condition conditionDirect(String conditionSql, List<BindName> binds);
+  Condition conditionDirect(String conditionSql, List<? extends BindName> binds);
 
   /**
    * Create where condition; parse supplied string to retrieve bind variables.
@@ -741,7 +743,7 @@ public interface Sql {
    * @param binds        is list of bind variables, associated with condition
    * @return created where condition
    */
-  Condition conditionSql(String conditionSql, Collection<BindValue> binds);
+  Condition conditionSql(String conditionSql, Collection<? extends BindValue> binds);
 
   /**
    * Combine multiple conditions using AND.

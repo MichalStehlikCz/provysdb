@@ -222,7 +222,7 @@ public interface CodeBuilder {
    * @param bindValues are variables supplied to add type and value to binds
    * @return self to support fluent build
    */
-  CodeBuilder applyBindValues(Collection<BindValue> bindValues);
+  CodeBuilder applyBindValues(Collection<? extends BindValue> bindValues);
 
   /**
    * Method retrieves code, produced by CodeBuilder.

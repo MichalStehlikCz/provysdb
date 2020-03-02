@@ -3,12 +3,32 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.common.datatype.DtUid;
-import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.BindValueT;
+import com.provys.provysdb.sqlbuilder.Condition;
+import com.provys.provysdb.sqlbuilder.ConditionJoiner;
+import com.provys.provysdb.sqlbuilder.Expression;
+import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.LiteralT;
+import com.provys.provysdb.sqlbuilder.Select;
+import com.provys.provysdb.sqlbuilder.Sql;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
+import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlFrom;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.SqlTableColumn;
+import com.provys.provysdb.sqlbuilder.SqlTableColumnT;
 import com.provys.provysdb.sqlparser.SqlSymbol;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -23,11 +43,6 @@ public class SqlImpl implements Sql {
   @Override
   public LiteralT<String> literal(String value) {
     return LiteralVarchar.of(value);
-  }
-
-  @Override
-  public LiteralT<String> literalNVarchar(String value) {
-    return LiteralNVarchar.of(value);
   }
 
   @Override
@@ -88,6 +103,11 @@ public class SqlImpl implements Sql {
   @Override
   public LiteralT<DtDateTime> literal(DtDateTime value) {
     return LiteralDateTime.of(value);
+  }
+
+  @Override
+  public LiteralT<String> literalNVarchar(String value) {
+    return LiteralNVarchar.of(value);
   }
 
   @Override
@@ -182,48 +202,6 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public SqlColumn columnDirect(String columnSql) {
-    return new SqlColumnSql(columnSql, null);
-  }
-
-  @Override
-  public SqlColumn columnDirect(String sql, String alias) {
-    return new SqlColumnSql(sql, name(alias));
-  }
-
-  @Override
-  public SqlColumn columnDirect(String sql, String alias, BindName... binds) {
-    return columnDirect(sql, alias, Arrays.asList(binds));
-  }
-
-  @Override
-  public SqlColumn columnDirect(String sql, @Nullable String alias, List<BindName> binds) {
-    return new SqlColumnSql(sql, (alias == null) ? null : name(alias), binds);
-  }
-
-  @Override
-  public SqlColumn columnSql(String columnSql) {
-    var builder = tokenizer.normalize(columnSql);
-    return columnDirect(builder.build(), null, builder.getBinds());
-  }
-
-  @Override
-  public SqlColumn columnSql(String sql, String alias) {
-    return columnSql(sql, alias, Collections.emptyList());
-  }
-
-  @Override
-  public SqlColumn columnSql(String sql, @Nullable String alias, BindValue... binds) {
-    return columnSql(sql, alias, Arrays.asList(binds));
-  }
-
-  @Override
-  public SqlColumn columnSql(String sql, @Nullable String alias, Collection<BindValue> binds) {
-    var builder = tokenizer.normalize(sql).applyBindValues(binds);
-    return columnDirect(builder.build(), alias, builder.getBinds());
-  }
-
-  @Override
   public <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz) {
     return new SqlColumnTImpl<>(column, clazz);
   }
@@ -272,6 +250,27 @@ public class SqlImpl implements Sql {
   }
 
   @Override
+  public SqlColumn columnDirect(String columnSql) {
+    return new SqlColumnSql(columnSql, null);
+  }
+
+  @Override
+  public SqlColumn columnDirect(String sql, String alias) {
+    return new SqlColumnSql(sql, name(alias));
+  }
+
+  @Override
+  public SqlColumn columnDirect(String sql, @Nullable String alias, BindName... binds) {
+    return columnDirect(sql, alias, Arrays.asList(binds));
+  }
+
+  @Override
+  public SqlColumn columnDirect(String sql, @Nullable String alias,
+      List<? extends BindName> binds) {
+    return new SqlColumnSql(sql, (alias == null) ? null : name(alias), binds);
+  }
+
+  @Override
   public <T> SqlColumnT<T> columnDirect(String columnSql, Class<T> clazz) {
     return column(columnDirect(columnSql), clazz);
   }
@@ -288,9 +287,32 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds,
+  public <T> SqlColumnT<T> columnDirect(String sql, String alias, List<? extends BindName> binds,
       Class<T> clazz) {
     return column(columnDirect(sql, alias, binds), clazz);
+  }
+
+  @Override
+  public SqlColumn columnSql(String columnSql) {
+    var builder = tokenizer.normalize(columnSql);
+    return columnDirect(builder.build(), null, builder.getBinds());
+  }
+
+  @Override
+  public SqlColumn columnSql(String sql, String alias) {
+    return columnSql(sql, alias, Collections.emptyList());
+  }
+
+  @Override
+  public SqlColumn columnSql(String sql, @Nullable String alias, BindValue... binds) {
+    return columnSql(sql, alias, Arrays.asList(binds));
+  }
+
+  @Override
+  public SqlColumn columnSql(String sql, @Nullable String alias,
+      Collection<? extends BindValue> binds) {
+    var builder = tokenizer.normalize(sql).applyBindValues(binds);
+    return columnDirect(builder.build(), alias, builder.getBinds());
   }
 
   @Override
@@ -309,7 +331,8 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public <T> SqlColumnT<T> columnSql(String sql, String alias, Collection<BindValue> binds,
+  public <T> SqlColumnT<T> columnSql(String sql, String alias,
+      Collection<? extends BindValue> binds,
       Class<T> clazz) {
     return column(columnSql(sql, alias, binds), clazz);
   }
@@ -327,6 +350,16 @@ public class SqlImpl implements Sql {
   @Override
   public SqlFrom from(String tableName, String alias) {
     return from(name(tableName), tableAlias(alias));
+  }
+
+  @Override
+  public SqlFrom from(Select select, SqlTableAlias alias) {
+    return new SqlFromSelect(select, alias);
+  }
+
+  @Override
+  public SqlFrom from(Select select, String alias) {
+    return new SqlFromSelect(select, tableAlias(alias));
   }
 
   @Override
@@ -351,16 +384,6 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public SqlFrom from(Select select, SqlTableAlias alias) {
-    return new SqlFromSelect(select, alias);
-  }
-
-  @Override
-  public SqlFrom from(Select select, String alias) {
-    return new SqlFromSelect(select, tableAlias(alias));
-  }
-
-  @Override
   public SqlFrom fromDual() {
     return SqlFromDual.getInstance();
   }
@@ -376,7 +399,7 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public Condition conditionDirect(String conditionSql, List<BindName> binds) {
+  public Condition conditionDirect(String conditionSql, List<? extends BindName> binds) {
     return new ConditionSimpleWithBinds(conditionSql, binds);
   }
 
@@ -391,7 +414,7 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public Condition conditionSql(String conditionSql, Collection<BindValue> binds) {
+  public Condition conditionSql(String conditionSql, Collection<? extends BindValue> binds) {
     var builder = tokenizer.normalize(conditionSql).applyBindValues(binds);
     return new ConditionSimpleWithBinds(builder.build(), builder.getBinds());
   }
@@ -430,7 +453,7 @@ public class SqlImpl implements Sql {
 
   private static <T> Condition compare(ExpressionT<T> first, ExpressionT<T> second,
       SqlSymbol comparison) {
-    return new ConditionCompare(first, second, comparison);
+    return new ConditionCompare<>(first, second, comparison);
   }
 
   @Override

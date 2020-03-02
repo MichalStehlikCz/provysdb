@@ -9,7 +9,7 @@ import com.provys.provysdb.sqlbuilder.CodeBuilder;
 final class LiteralDate extends LiteralBase<DtDate> {
 
   /**
-   * Create date literal from supplied date value
+   * Create date literal from supplied date value.
    *
    * @param value is supplied date value
    * @return date literal, representing supplied value

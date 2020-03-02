@@ -1,18 +1,20 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sqlbuilder.Condition;
+import com.provys.provysdb.sqlbuilder.ExpressionT;
 import com.provys.provysdb.sqlparser.SqlSymbol;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class ConditionCompare implements Condition {
+final class ConditionCompare<T> implements Condition {
 
-  private final Expression first;
-  private final Expression second;
+  private final ExpressionT<T> first;
+  private final ExpressionT<T> second;
   private final SqlSymbol comparison;
 
-  <T> ConditionCompare(ExpressionT<T> first, ExpressionT<T> second, SqlSymbol comparison) {
+  ConditionCompare(ExpressionT<T> first, ExpressionT<T> second, SqlSymbol comparison) {
     this.first = Objects.requireNonNull(first);
     this.second = Objects.requireNonNull(second);
     if (!comparison.isComparison()) {
@@ -44,7 +46,7 @@ class ConditionCompare implements Condition {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ConditionCompare that = (ConditionCompare) o;
+    ConditionCompare<?> that = (ConditionCompare<?>) o;
     return Objects.equals(first, that.first)
         && Objects.equals(second, that.second)
         && comparison == that.comparison;

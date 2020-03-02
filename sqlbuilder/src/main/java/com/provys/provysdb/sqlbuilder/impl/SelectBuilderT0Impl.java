@@ -1,6 +1,17 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.Condition;
+import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.SelectBuilderT0;
+import com.provys.provysdb.sqlbuilder.Sql;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
+import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlFrom;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +40,7 @@ public class SelectBuilderT0Impl<S extends Sql> extends
 
   @Override
   protected List<SqlColumn> getModifiableColumns() {
-    return List.of();
+    return new ArrayList<>(1);
   }
 
   @Override
@@ -112,7 +123,7 @@ public class SelectBuilderT0Impl<S extends Sql> extends
 
   @Override
   public <T> SelectBuilderT1Impl<S, T> columnDirect(String columnSql, String alias,
-      List<BindName> binds, Class<T> clazz) {
+      List<? extends BindName> binds, Class<T> clazz) {
     return column(getSql().columnDirect(columnSql, alias, binds, clazz));
   }
 
@@ -134,7 +145,7 @@ public class SelectBuilderT0Impl<S extends Sql> extends
 
   @Override
   public <T> SelectBuilderT1Impl<S, T> columnSql(String columnSql, String alias,
-      Collection<BindValue> binds, Class<T> clazz) {
+      Collection<? extends BindValue> binds, Class<T> clazz) {
     return column(getSql().columnSql(columnSql, alias, binds, clazz));
   }
 

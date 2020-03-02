@@ -23,7 +23,7 @@ abstract class SqlColumnBase implements SqlColumn {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof SqlColumnBase)) {
       return false;
     }
     SqlColumnBase that = (SqlColumnBase) o;

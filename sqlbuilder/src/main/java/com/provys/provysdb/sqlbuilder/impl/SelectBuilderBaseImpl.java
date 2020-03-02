@@ -57,8 +57,8 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
   void mapColumn(SqlIdentifier alias, SqlColumn column) {
     if (columnByName.putIfAbsent(alias, column) != null) {
       throw new InternalException(
-          "Attempt to insert duplicate column to column list (" + alias.getText() +
-              " , " + this.toString() + ')');
+          "Attempt to insert duplicate column to column list (" + alias.getText()
+              + " , " + this.toString() + ')');
     }
   }
 
@@ -129,6 +129,16 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return columnUntyped(sql.column(tableAlias, column, alias));
   }
 
+  /**
+   * Add column to list of columns. It is expected to come from last item, added to from clause. If
+   * no items were added to from clause, column is added as is, without table alias
+   *
+   * @param columnName is name of column; it should be column in last item, added to from clause. It
+   *                   must be valid column name (in "" or first character letter and remaining
+   *                   letters, numbers and characters $ and #). Use columnSql to add columns based
+   *                   on sql expressions
+   * @return self to support fluent build
+   */
   public SelectBuilderImpl<S> column(String columnName) {
     return getLastTableAlias()
         .map(tableAlias -> columnUntyped(sql.column(tableAlias, sql.name(columnName))))
@@ -163,7 +173,8 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return columnUntyped(sql.columnDirect(sqlColumn, alias, binds));
   }
 
-  public SelectBuilderImpl<S> columnDirect(String sqlColumn, String alias, List<BindName> binds) {
+  public SelectBuilderImpl<S> columnDirect(String sqlColumn, String alias,
+      List<? extends BindName> binds) {
     return columnUntyped(sql.columnDirect(sqlColumn, alias, binds));
   }
 
@@ -179,18 +190,25 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return columnUntyped(sql.columnSql(columnSql, alias, binds));
   }
 
-  public SelectBuilderImpl<S> columnSql(String columnSql, String alias, Collection<BindValue> binds) {
+  public SelectBuilderImpl<S> columnSql(String columnSql, String alias,
+      Collection<? extends BindValue> binds) {
     return columnUntyped(sql.columnSql(columnSql, alias, binds));
   }
 
   private void mapTable(SqlTableAlias alias, SqlFrom table) {
     if (tableByAlias.putIfAbsent(alias, table) != null) {
       throw new InternalException(
-          "Attempt to insert duplicate table to from list (" + alias.getAlias() +
-              " , " + this.toString() + ")");
+          "Attempt to insert duplicate table to from list (" + alias.getAlias()
+              + " , " + this.toString() + ')');
     }
   }
 
+  /**
+   * Add table to from clause of the statement.
+   *
+   * @param table is table definition (potentially with join condition)
+   * @return self to support fluent build
+   */
   public T from(SqlFrom table) {
     mapTable(table.getAlias(), table);
     tables.add(table);
@@ -203,6 +221,14 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
 
   public T from(String tableName, String alias) {
     return from(sql.from(tableName, alias));
+  }
+
+  public T from(Select select, SqlTableAlias alias) {
+    return from(sql.from(select, alias));
+  }
+
+  public T from(Select select, String alias) {
+    return from(sql.from(select, alias));
   }
 
   public T fromDirect(String sqlSelect, SqlTableAlias alias) {
@@ -221,18 +247,16 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return from(sql.fromSql(sqlSelect, alias));
   }
 
-  public T from(Select select, SqlTableAlias alias) {
-    return from(sql.from(select, alias));
-  }
-
-  public T from(Select select, String alias) {
-    return from(sql.from(select, alias));
-  }
-
   public T fromDual() {
     return from(sql.fromDual());
   }
 
+  /**
+   * Add where condition.
+   *
+   * @param where is sql where condition to be added (or null, in tht case nothing is added)
+   * @return self to support fluent build
+   */
   public T where(@Nullable Condition where) {
     if ((where != null) && !where.isEmpty()) {
       conditions.add(where);
@@ -248,7 +272,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return where(sql.conditionDirect(conditionSql, binds));
   }
 
-  public T whereDirect(String conditionSql, List<BindName> binds) {
+  public T whereDirect(String conditionSql, List<? extends BindName> binds) {
     return where(sql.conditionDirect(conditionSql, binds));
   }
 
@@ -260,7 +284,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return where(sql.conditionSql(conditionSql, binds));
   }
 
-  public T whereSql(String conditionSql, Collection<BindValue> binds) {
+  public T whereSql(String conditionSql, Collection<? extends BindValue> binds) {
     return where(sql.conditionSql(conditionSql, binds));
   }
 
@@ -282,8 +306,8 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
 
   private static void addConditions(Iterable<? extends Condition> conditions, CodeBuilder builder) {
     for (var condition : conditions) {
-      if ((condition instanceof ConditionJoined) &&
-          ((ConditionJoined) condition).getOperator() == SqlConditionOperator.AND) {
+      if ((condition instanceof ConditionJoined)
+          && ((ConditionJoined) condition).getOperator() == SqlConditionOperator.AND) {
         addConditions(((ConditionJoined) condition).getConditions(), builder);
       } else {
         condition.addSql(builder);
@@ -299,6 +323,12 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
    */
   public abstract T copy();
 
+  /**
+   * Internal method, used to create new CodeBuilder and populate it with SELECT, based on this
+   * select builder.
+   *
+   * @return code builder with populated items from this select builder
+   */
   public CodeBuilder builder() {
     var builder = new CodeBuilderImpl()
         .appendLine("SELECT")

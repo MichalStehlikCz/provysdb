@@ -6,11 +6,11 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Backing function for NVL SQL function
+ * Backing function for NVL SQL function.
  *
  * @param <T> is type, defined by the first operand
  */
-class FuncNvl<T> implements ExpressionT<T> {
+final class FuncNvl<T> implements ExpressionT<T> {
 
   private final ExpressionT<T> first;
   private final ExpressionT<? extends T> second;

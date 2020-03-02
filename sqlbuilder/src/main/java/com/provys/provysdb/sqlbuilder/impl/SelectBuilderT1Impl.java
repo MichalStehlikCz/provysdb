@@ -43,6 +43,8 @@ public class SelectBuilderT1Impl<S extends Sql, T1> extends
   }
 
   /**
+   * Definition of the first column.
+   *
    * @return definition of first column
    */
   public SqlColumnT<T1> getColumn1() {
@@ -141,7 +143,7 @@ public class SelectBuilderT1Impl<S extends Sql, T1> extends
 
   @Override
   public <T> SelectBuilderT2Impl<S, T1, T> columnDirect(String columnSql, String alias,
-      List<BindName> binds, Class<T> clazz) {
+      List<? extends BindName> binds, Class<T> clazz) {
     return column(getSql().columnDirect(columnSql, alias, binds, clazz));
   }
 
@@ -164,7 +166,7 @@ public class SelectBuilderT1Impl<S extends Sql, T1> extends
 
   @Override
   public <T> SelectBuilderT2Impl<S, T1, T> columnSql(String columnSql, String alias,
-      Collection<BindValue> binds,
+      Collection<? extends BindValue> binds,
       Class<T> clazz) {
     return column(getSql().columnSql(columnSql, alias, binds, clazz));
   }

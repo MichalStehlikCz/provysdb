@@ -7,7 +7,7 @@ import com.provys.provysdb.sqlparser.SqlTokenType;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
+final class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
 
   private final LiteralT<T> value;
 

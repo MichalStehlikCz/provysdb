@@ -9,21 +9,23 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface BindValueT<T> extends BindValue, ExpressionT<T> {
 
-    /**
-     * Type associated with this bind value.
-     *
-     * @return type associated with bind variable
-     */
-    @Override
-    Class<T> getType();
+  /**
+   * Type associated with this bind value.
+   *
+   * @return type associated with bind variable
+   */
+  @Override
+  Class<T> getType();
 
-    /**
-     * @return value assigned to bind variable, empty optional if no or null value has been assigned.
-     */
-    @Nullable T getValue();
+  /**
+   * Value assigned to bind variable.
+   *
+   * @return value assigned to bind variable, null if no value has been assigned
+   */
+  @Nullable T getValue();
 
-    BindValueT<T> withValue(@Nullable T newValue);
+  BindValueT<T> withValue(@Nullable T newValue);
 
-    @Override
-    BindValueT<T> combine(BindName other);
+  @Override
+  BindValueT<T> combine(BindName other);
 }

@@ -3,11 +3,10 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.Condition;
 import com.provys.provysdb.sqlbuilder.Expression;
-
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class ConditionIsNull implements Condition {
+final class ConditionIsNull implements Condition {
 
   private final Expression expression;
 

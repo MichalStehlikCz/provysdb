@@ -7,7 +7,7 @@ import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class SqlColumnExpressionT<T> extends SqlColumnBase implements SqlColumnT<T> {
+final class SqlColumnExpressionT<T> extends SqlColumnBase implements SqlColumnT<T> {
 
   private final ExpressionT<T> expression;
 

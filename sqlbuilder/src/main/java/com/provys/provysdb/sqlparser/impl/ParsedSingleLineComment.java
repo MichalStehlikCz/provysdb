@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents single line comment in Sql code.
  */
-class ParsedSingleLineComment extends ParsedTokenBase {
+final class ParsedSingleLineComment extends ParsedTokenBase {
 
   private final String text;
 

@@ -18,7 +18,7 @@ final class ConditionJoined implements Condition {
   @Override
   public void addSql(CodeBuilder builder) {
     if (conditions.size() > 1) {
-      builder.append('(').appendLine().increasedIdent("", operator.toString() + " ", 2);
+      builder.append('(').appendLine().increasedIdent("", operator.toString() + ' ', 2);
     }
     for (var condition : conditions) {
       condition.addSql(builder);

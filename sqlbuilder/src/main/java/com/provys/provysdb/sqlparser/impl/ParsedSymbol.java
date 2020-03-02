@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Instance represents valid SQL symbol.
  */
-class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
+final class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol {
 
   private final SqlSymbol symbol;
 

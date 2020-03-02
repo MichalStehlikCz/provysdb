@@ -7,9 +7,9 @@ package com.provys.provysdb.sqlbuilder;
  */
 public interface SqlTableColumnT<T> extends SqlColumnT<T>, SqlTableColumn {
 
-    @Override
-    SqlTableColumnT<T> withAlias(SqlIdentifier alias);
+  @Override
+  SqlTableColumnT<T> withAlias(SqlIdentifier alias);
 
-    @Override
-    SqlTableColumnT<T> withTableAlias(SqlTableAlias tableAlias);
+  @Override
+  SqlTableColumnT<T> withTableAlias(SqlTableAlias newTableAlias);
 }

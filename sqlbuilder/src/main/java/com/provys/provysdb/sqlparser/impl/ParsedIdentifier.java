@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents name or keyword. Ordinary identifier is one that is not surrounded by double quotation
  * marks
  */
-class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
+final class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
 
   private final SqlIdentifier identifier;
 

@@ -7,7 +7,7 @@ import com.provys.provysdb.sqlparser.SqlTokenType;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class ParsedKeyword extends ParsedTokenBase {
+final class ParsedKeyword extends ParsedTokenBase {
 
   private final SqlKeyword keyword;
 
@@ -23,6 +23,8 @@ class ParsedKeyword extends ParsedTokenBase {
   }
 
   /**
+   * Value of field keyword.
+   *
    * @return value of field keyword
    */
   SqlKeyword getKeyword() {

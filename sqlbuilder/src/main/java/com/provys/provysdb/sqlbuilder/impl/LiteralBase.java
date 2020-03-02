@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.provysdb.sqlbuilder.LiteralT;
-import java.util.*;
+import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -20,6 +20,7 @@ abstract class LiteralBase<T> implements LiteralT<T> {
     return value;
   }
 
+  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

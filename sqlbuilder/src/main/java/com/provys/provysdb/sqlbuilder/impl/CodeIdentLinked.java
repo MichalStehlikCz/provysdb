@@ -10,7 +10,7 @@ import com.provys.provysdb.sqlbuilder.CodeIdent;
 final class CodeIdentLinked implements CodeIdent {
 
   /**
-   * Create new linked ident
+   * Create new linked ident.
    *
    * @param ident       is main ident (appended)
    * @param linkedIdent is previous ident, used as prefix

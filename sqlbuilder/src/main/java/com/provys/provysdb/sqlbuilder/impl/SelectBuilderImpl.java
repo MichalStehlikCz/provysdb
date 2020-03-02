@@ -1,7 +1,19 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
-import com.provys.provysdb.sqlbuilder.*;
-import java.util.*;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.Condition;
+import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.SelectBuilder;
+import com.provys.provysdb.sqlbuilder.Sql;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
+import com.provys.provysdb.sqlbuilder.SqlFrom;
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class SelectBuilderImpl<S extends Sql> extends
     SelectBuilderBaseImpl<SelectBuilderImpl<S>, S> implements SelectBuilder {
@@ -102,8 +114,8 @@ public class SelectBuilderImpl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> columnDirect(String sql, String alias, List<BindName> binds,
-      Class<T> clazz) {
+  public <T> SelectBuilderImpl<S> columnDirect(String sql, String alias,
+      List<? extends BindName> binds, Class<T> clazz) {
     return columnDirect(sql, alias, binds);
   }
 
@@ -125,7 +137,7 @@ public class SelectBuilderImpl<S extends Sql> extends
 
   @Override
   public <T> SelectBuilderImpl<S> columnSql(String columnSql, String alias,
-      Collection<BindValue> binds, Class<T> clazz) {
+      Collection<? extends BindValue> binds, Class<T> clazz) {
     return columnSql(columnSql, alias, binds);
   }
 

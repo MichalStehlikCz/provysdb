@@ -17,7 +17,7 @@ public enum SpaceMode {
    */
   NONE,
   /**
-   * Space is never used (used after newline)
+   * Space is never used (used after newline).
    */
   FORCE_NONE
 }

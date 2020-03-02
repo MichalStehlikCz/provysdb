@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlbuilder.impl;
 
 import com.provys.common.exception.InternalException;
-
+import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * non-mutable. Does normalisation of supplied text, thus equals on sql identifiers is equivalent to
  * two identifiers pointing to the same object
  */
-class SqlIdentifierImpl implements com.provys.provysdb.sqlbuilder.SqlIdentifier {
+final class SqlIdentifierImpl implements SqlIdentifier {
 
   private static final Pattern PATTERN_ORDINARY = Pattern.compile("([A-Z][A-Z0-9_#$]*)");
   private static final Pattern PATTERN_DELIMITED = Pattern.compile("(\"(?:[^\"]|\"\")*\")");
