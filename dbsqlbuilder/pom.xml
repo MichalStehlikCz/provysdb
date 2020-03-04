@@ -11,6 +11,10 @@
     <name>DbSqlBuilder</name>
     <dependencies>
         <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.provys.provysdb</groupId>
             <artifactId>dbcontext-api</artifactId>
             <version>${project.version}</version>
