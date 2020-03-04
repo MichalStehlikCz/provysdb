@@ -174,7 +174,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
   }
 
   public SelectBuilderImpl<S> columnDirect(String sqlColumn, String alias,
-      List<? extends BindName> binds) {
+      Collection<? extends BindName> binds) {
     return columnUntyped(sql.columnDirect(sqlColumn, alias, binds));
   }
 
@@ -272,7 +272,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return where(sql.conditionDirect(conditionSql, binds));
   }
 
-  public T whereDirect(String conditionSql, List<? extends BindName> binds) {
+  public T whereDirect(String conditionSql, Collection<? extends BindName> binds) {
     return where(sql.conditionDirect(conditionSql, binds));
   }
 

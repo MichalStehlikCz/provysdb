@@ -7,38 +7,39 @@ import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.impl.SqlImpl;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
 import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
-
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Objects;
 
 abstract class SqlBase extends SqlImpl implements DbSql {
 
-    @Nonnull
-    private final DbContext dbContext;
+  private final DbContext dbContext;
 
-    private SqlBase(DbContext dbContext, SqlTokenizer tokenizer) {
-        super(tokenizer);
-        this.dbContext = Objects.requireNonNull(dbContext);
-    }
+  private SqlBase(DbContext dbContext, SqlTokenizer tokenizer) {
+    super(tokenizer);
+    this.dbContext = Objects.requireNonNull(dbContext);
+  }
 
-    SqlBase(DbContext dbContext) {
-        this(dbContext, new DefaultSqlTokenizer());
-    }
+  SqlBase(DbContext dbContext) {
+    this(dbContext, new DefaultSqlTokenizer());
+  }
 
-    @Nonnull
-    DbContext getDbContext() {
-        return dbContext;
-    }
+  DbContext getDbContext() {
+    return dbContext;
+  }
 
-    @Nonnull
-    @Override
-    public SqlTypeMap getSqlTypeMap() {
-        return dbContext.getSqlTypeMap();
-    }
+  @Override
+  public SqlTypeMap getSqlTypeMap() {
+    return dbContext.getSqlTypeMap();
+  }
 
-    @Nonnull
-    @Override
-    public DbSelectBuilderT0 select() {
-        return new DbSelectBuilderT0Impl(this);
-    }
+  @Override
+  public DbSelectBuilderT0 select() {
+    return new DbSelectBuilderT0Impl(this);
+  }
+
+  @Override
+  public String toString() {
+    return "SqlBase{"
+        + "dbContext=" + dbContext
+        + ", " + super.toString() + '}';
+  }
 }

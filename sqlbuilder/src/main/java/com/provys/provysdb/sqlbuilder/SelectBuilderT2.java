@@ -160,8 +160,8 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>       is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder columnDirect(String columnSql, String alias, List<? extends BindName> binds,
-      Class<T> clazz);
+  <T> SelectBuilder columnDirect(String columnSql, String alias,
+      Collection<? extends BindName> binds, Class<T> clazz);
 
   /**
    * Add column with given SQL text, parse text for binds.

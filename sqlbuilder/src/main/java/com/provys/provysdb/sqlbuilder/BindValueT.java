@@ -24,7 +24,8 @@ public interface BindValueT<T> extends BindValue, ExpressionT<T> {
    */
   @Nullable T getValue();
 
-  BindValueT<T> withValue(@Nullable T newValue);
+  @Override
+  BindValueT<T> withValue(@Nullable Object newValue);
 
   @Override
   BindValueT<T> combine(BindName other);

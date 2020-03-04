@@ -139,7 +139,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param binds     is list of binds, associated with given column
    * @return self to support fluent build
    */
-  U columnDirect(String columnSql, String alias, List<? extends BindName> binds);
+  U columnDirect(String columnSql, String alias, Collection<? extends BindName> binds);
 
   /**
    * Add column with given SQL text, parse text for binds.
@@ -302,7 +302,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param binds        is list of bind variables, associated with condition
    * @return self to support fluent build
    */
-  T whereDirect(String conditionSql, List<? extends BindName> binds);
+  T whereDirect(String conditionSql, Collection<? extends BindName> binds);
 
   /**
    * Add where condition.

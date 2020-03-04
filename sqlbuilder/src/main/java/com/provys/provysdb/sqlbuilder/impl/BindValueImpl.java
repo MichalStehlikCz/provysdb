@@ -42,9 +42,13 @@ final class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
   private final Class<T> type;
   private final @Nullable T value;
 
+  @SuppressWarnings("unchecked")
+  private static <U> Class<U> getType(@NonNull U value) {
+    return (Class<U>) value.getClass();
+  }
+
   private BindValueImpl(String name, @NonNull T value) {
-    //noinspection unchecked
-    this(name, (Class<T>) value.getClass(), value);
+    this(name, getType(value), value);
   }
 
   private BindValueImpl(String name, Class<T> type, @Nullable T value) {
@@ -68,8 +72,9 @@ final class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
       throw new InternalException("Cannot convert value of bind variable " + getName() + " from "
           + this.type + " to " + type);
     }
-    //noinspection unchecked
-    return (U) value;
+    @SuppressWarnings("unchecked")
+    U result = (U) value;
+    return result;
   }
 
   @Override
@@ -78,9 +83,12 @@ final class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
   }
 
   @Override
-  public BindValueT<T> withValue(@Nullable T newValue) {
+  public BindValueT<T> withValue(@Nullable Object newValue) {
     if (Objects.equals(value, newValue)) {
       return this;
+    }
+    if (!getType().isInstance(newValue)) {
+      throw new InternalException("Cannot bind value " + newValue + " to bind variable " + this);
     }
     return new BindValueImpl<>(getName(), type, value);
   }
@@ -112,8 +120,9 @@ final class BindValueImpl<T> extends BindNameImpl implements BindValueT<T> {
         throw new InternalException(
             "Class implementing BindValue is expected to implement BindValueT as well");
       }
-      //noinspection unchecked - we verified that values are of the same type few lines above
-      return (BindValueT<T>) otherVariable;
+      @SuppressWarnings("unchecked") // we verified that values are of the same type few lines above
+      var result = (BindValueT<T>) otherVariable;
+      return result;
     }
     if (otherVariable.getValue(Object.class) == null) {
       return this;

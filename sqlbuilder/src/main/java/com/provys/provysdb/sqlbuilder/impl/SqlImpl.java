@@ -32,7 +32,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class SqlImpl implements Sql {
+public abstract class SqlImpl implements Sql {
 
   private final SqlTokenizer tokenizer;
 
@@ -266,7 +266,7 @@ public class SqlImpl implements Sql {
 
   @Override
   public SqlColumn columnDirect(String sql, @Nullable String alias,
-      List<? extends BindName> binds) {
+      Collection<? extends BindName> binds) {
     return new SqlColumnSql(sql, (alias == null) ? null : name(alias), binds);
   }
 
@@ -287,7 +287,8 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public <T> SqlColumnT<T> columnDirect(String sql, String alias, List<? extends BindName> binds,
+  public <T> SqlColumnT<T> columnDirect(String sql, String alias,
+      Collection<? extends BindName> binds,
       Class<T> clazz) {
     return column(columnDirect(sql, alias, binds), clazz);
   }
@@ -399,7 +400,7 @@ public class SqlImpl implements Sql {
   }
 
   @Override
-  public Condition conditionDirect(String conditionSql, List<? extends BindName> binds) {
+  public Condition conditionDirect(String conditionSql, Collection<? extends BindName> binds) {
     return new ConditionSimpleWithBinds(conditionSql, binds);
   }
 

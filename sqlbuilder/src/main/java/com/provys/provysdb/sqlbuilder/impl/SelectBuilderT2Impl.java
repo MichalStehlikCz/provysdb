@@ -143,7 +143,7 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
 
   @Override
   public <T> SelectBuilderImpl<S> columnDirect(String columnSql, String alias,
-      List<? extends BindName> binds, Class<T> clazz) {
+      Collection<? extends BindName> binds, Class<T> clazz) {
     return column(getSql().columnDirect(columnSql, alias, binds, clazz));
   }
 

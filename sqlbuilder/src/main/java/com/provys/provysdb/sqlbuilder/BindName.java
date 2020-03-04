@@ -1,5 +1,7 @@
 package com.provys.provysdb.sqlbuilder;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Single wrapper around String, represents name of bind variable and implements appropriate
  * validation.

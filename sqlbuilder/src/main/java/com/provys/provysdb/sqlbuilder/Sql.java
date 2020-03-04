@@ -455,7 +455,7 @@ public interface Sql {
    *              Java conventions (e.g. using ? as placeholder)
    * @return created column
    */
-  SqlColumn columnDirect(String sql, String alias, List<? extends BindName> binds);
+  SqlColumn columnDirect(String sql, String alias, Collection<? extends BindName> binds);
 
   /**
    * Create column with given SQL text.
@@ -501,7 +501,7 @@ public interface Sql {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnDirect(String sql, String alias, List<? extends BindName> binds,
+  <T> SqlColumnT<T> columnDirect(String sql, String alias, Collection<? extends BindName> binds,
       Class<T> clazz);
 
   /**
@@ -712,7 +712,7 @@ public interface Sql {
    * @param binds        is list of bind variables, associated with condition
    * @return created where condition
    */
-  Condition conditionDirect(String conditionSql, List<? extends BindName> binds);
+  Condition conditionDirect(String conditionSql, Collection<? extends BindName> binds);
 
   /**
    * Create where condition; parse supplied string to retrieve bind variables.

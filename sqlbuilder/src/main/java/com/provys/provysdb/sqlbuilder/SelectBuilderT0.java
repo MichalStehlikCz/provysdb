@@ -158,8 +158,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @return resulting select builder
    */
   <T> SelectBuilderT1<T> columnDirect(String columnSql, String alias,
-      List<? extends BindName> binds,
-      Class<T> clazz);
+      Collection<? extends BindName> binds, Class<T> clazz);
 
   /**
    * Add column with given SQL text, parse text for binds.

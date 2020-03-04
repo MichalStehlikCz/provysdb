@@ -121,6 +121,7 @@ class DbSelectBuilderT1Impl<T1> extends DbSelectBuilderBaseImpl<DbSelectBuilderT
         return new DbSelectBuilderT2Impl<>(getSelectBuilder().columnSql(columnSql, alias, binds, clazz));
     }
 
+    @Override
     @Nonnull
     public SelectStatementT1Impl<T1> prepare() {
         var builder = builder();

@@ -115,7 +115,7 @@ public class SelectBuilderImpl<S extends Sql> extends
 
   @Override
   public <T> SelectBuilderImpl<S> columnDirect(String sql, String alias,
-      List<? extends BindName> binds, Class<T> clazz) {
+      Collection<? extends BindName> binds, Class<T> clazz) {
     return columnDirect(sql, alias, binds);
   }
 

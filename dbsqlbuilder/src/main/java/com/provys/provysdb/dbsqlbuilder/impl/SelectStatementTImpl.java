@@ -3,18 +3,27 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
+import com.provys.provysdb.dbcontext.DbResultSet;
+import com.provys.provysdb.dbcontext.DbRowMapper;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.BindValueT;
 import com.provys.provysdb.sqlbuilder.Select;
+import com.provys.provysdb.sqlbuilder.SqlFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -83,17 +92,15 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
     /**
      * Statement this select is based on.
-     * 
+     *
      * @return value of field statement
      */
     DbPreparedStatement getStatement() {
         return statement;
     }
 
-    @Nonnull
     abstract S self();
 
-    @Nonnull
     public S bindValue(String bind, @Nullable Object value) {
         if (closed) {
             throw new InternalException("Attempt to bind value in closed statement " + this);
@@ -106,12 +113,10 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         return self();
     }
 
-    @Nonnull
     public <T> S bindValue(BindValueT<T> bind, @Nullable T value) {
         return bindValue(bind.getName(), value);
     }
 
-    @Nonnull
     public Collection<BindName> getBinds() {
         return binds.values().stream().map(BindWithPos::getBind).collect(Collectors.toUnmodifiableList());
     }
@@ -134,6 +139,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         }
     }
 
+    @SuppressWarnings("java:S2583") // Sonar does not evaluate assignment in exception handler
     public void close() {
         if (closed) {
             // repeated attempt to close statement should do nothing
@@ -168,7 +174,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         /** indicates if bind value has been modified after last time it has been bound to prepared statement */
         private boolean modified = true;
 
-        BindWithPos(BindName bind, List<Integer> positions) {
+        BindWithPos(BindName bind, Collection<Integer> positions) {
             if (bind instanceof BindVariable) {
                 this.bind = bind;
             } else if (bind instanceof BindValueT) {
@@ -201,7 +207,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                     throw new InternalException("Cannot bind null value to bind variable with unknown type " + bind);
                 }
             } else {
-                combinedBind = bind.withValue(value);
+                combinedBind = SqlFactory.bind(bind, value);
             }
             if (combinedBind == bind) {
                 return;
@@ -235,7 +241,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         }
     }
 
-    @Nonnull
     public <T> T fetchOneNoClose(DbRowMapper<T> rowMapper) {
         T result;
         try (var resultSet = execute()) {
@@ -247,12 +252,11 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                 throw new InternalException("Exact fetch returned more than one row" + this);
             }
         } catch (SQLException e) {
-            throw new InternalException("Exception thrown by sql statement " + this);
+            throw new InternalException("Exception thrown by sql statement " + this, e);
         }
         return result;
     }
 
-    @Nonnull
     public <T> List<T> fetchNoClose(DbRowMapper<T> rowMapper) {
         List<T> result = new ArrayList<>(10);
         try (var resultSet = execute()) {
@@ -260,10 +264,10 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
             while (resultSet.next()) {
                 result.add(rowMapper.map(resultSet, row++));
             }
+            return result;
         } catch (SQLException e) {
             throw new InternalException("Exception thrown by sql statement " + this, e);
         }
-        return result;
     }
 
     private void onCloseStream(ResultSet resultSet, boolean close) {
@@ -282,7 +286,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
             }
     }
 
-    @Nonnull
     private <T> Stream<T> stream(DbRowMapper<T> rowMapper, boolean close) {
         var resultSet = execute();
         return StreamSupport
@@ -291,7 +294,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
                 .onClose(() -> onCloseStream(resultSet, close));
     }
 
-    @Nonnull
     public <T> T fetchOne(DbRowMapper<T> rowMapper) {
         try {
             return fetchOneNoClose(rowMapper);
@@ -300,7 +302,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         }
     }
 
-    @Nonnull
     public <T> List<T> fetch(DbRowMapper<T> rowMapper) {
         try {
             return fetchNoClose(rowMapper);
@@ -309,26 +310,21 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         }
     }
 
-    @Nonnull
     public <T> Stream<T> stream(DbRowMapper<T> rowMapper) {
         return stream(rowMapper, true);
     }
 
-    @Nonnull
     public <T> Stream<T> streamNoClose(DbRowMapper<T> rowMapper) {
         return stream(rowMapper, false);
     }
 
     private static class DbResultSetIterator<T> implements Iterator<T> {
 
-        @Nonnull
         private final DbRowMapper<T> rowMapper;
-        @Nonnull
         private final DbResultSet resultSet;
         private long rowNumber = 0;
         private boolean finished = false;
-        @Nullable
-        private T next = null;
+        private @Nullable T next = null;
 
         DbResultSetIterator(DbRowMapper<T> rowMapper, DbResultSet resultSet) {
             this.rowMapper = rowMapper;
@@ -336,14 +332,14 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         }
 
         private void fetch() {
-            if ((finished) || (next != null)) {
+            if (finished || (next != null)) {
                 return;
             }
             try {
-                if (!resultSet.next()) {
-                    finished = true;
-                } else {
+                if (resultSet.next()) {
                     next = rowMapper.map(resultSet, rowNumber++);
+                } else {
+                    finished = true;
                 }
             } catch (SQLException e) {
                 throw new InternalException("Error fetching data in stream", e);
@@ -353,7 +349,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         @Override
         public boolean hasNext() {
             fetch();
-            return (!finished);
+            return !finished;
         }
 
         @Override

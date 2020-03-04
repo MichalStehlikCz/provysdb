@@ -3,84 +3,102 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
-import com.provys.provysdb.sqlbuilder.*;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.BindValueT;
+import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Optional;
+final class BindVariableImpl<T> implements BindVariableT<T> {
 
-class BindVariableImpl<T> implements BindVariableT<T> {
+  private final BindValueT<T> bindValue;
 
-    @Nonnull
-    private final BindValueT<T> bindValue;
+  BindVariableImpl(BindValueT<T> bindValue) {
+    this.bindValue = bindValue;
+  }
 
-    BindVariableImpl(BindValueT<T> bindValue) {
-        this.bindValue = bindValue;
+  @Override
+  public Class<T> getType() {
+    return bindValue.getType();
+  }
+
+  @Override
+  public @Nullable T getValue() {
+    return bindValue.getValue();
+  }
+
+  @Override
+  public BindVariableT<T> withValue(@Nullable Object newValue) {
+    BindValueT<T> result = bindValue.withValue(newValue);
+    if (result == this) {
+      return this;
     }
-
-    @Override
-    @Nonnull
-    public Class<T> getType() {
-        return bindValue.getType();
+    if (result instanceof BindVariableT<?>) {
+      return (BindVariableT<T>) result;
     }
+    return new BindVariableImpl<>(result);
+  }
 
-    @Override
-    @Nonnull
-    public Optional<T> getValue() {
-        return bindValue.getValue();
-    }
+  @Override
+  public <U> @Nullable U getValue(Class<U> returnType) {
+    return bindValue.getValue(returnType);
+  }
 
-    @Override
-    @Nonnull
-    public BindVariableT<T> withValue(@Nullable Object value) {
-        var result = bindValue.withValue(value);
-        if (result == this) {
-            return this;
-        }
-        if (result instanceof BindVariableT) {
-            return (BindVariableT<T>) result;
-        }
-        return new BindVariableImpl<>(result);
+  @Override
+  public BindVariableT<T> combine(BindName other) {
+    var result = bindValue.combine(other);
+    //noinspection ObjectEquality - intentional
+    if (result == this) {
+      return this;
     }
+    if (result instanceof BindVariableT<?>) {
+      return (BindVariableT<T>) result;
+    }
+    return new BindVariableImpl<>(result);
+  }
 
-    @Override
-    @Nonnull
-    public <U> Optional<U> getValue(Class<U> returnType) {
-        return bindValue.getValue(returnType);
-    }
+  @Override
+  public String getName() {
+    return bindValue.getName();
+  }
 
-    @Override
-    @Nonnull
-    public BindVariableT<T> combine(BindName other) {
-        var result = bindValue.combine(other);
-        if (result == this) {
-            return this;
-        }
-        if (result instanceof BindVariableT) {
-            return (BindVariableT<T>) result;
-        }
-        return new BindVariableImpl<>(result);
-    }
+  @Override
+  public void addSql(CodeBuilder builder) {
+    bindValue.addSql(builder);
+  }
 
-    @Override
-    @Nonnull
-    public String getName() {
-        return bindValue.getName();
+  @Override
+  public void bind(DbPreparedStatement statement, int parameterIndex) {
+    try {
+      var value = getValue();
+      statement.setNullableValue(parameterIndex, value, getType());
+    } catch (Exception e) {
+      throw new SqlException("Error binding value " + getValue() +
+          " to variable " + getName(), e);
     }
+  }
 
-    @Override
-    public void addSql(CodeBuilder builder) {
-        bindValue.addSql(builder);
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof BindVariableImpl)) {
+      return false;
+    }
+    BindVariableImpl<?> that = (BindVariableImpl<?>) o;
+    return Objects.equals(bindValue, that.bindValue);
+  }
 
-    @Override
-    public void bind(DbPreparedStatement statement, int parameterIndex) {
-        try {
-            var value = getValue().orElse(null);
-            statement.setNullableValue(parameterIndex, value, getType());
-        } catch (Exception e) {
-            throw new SqlException("Error binding value " + getValue().orElse(null) +
-                    " to variable " + getName(), e);
-        }
-    }
+  @Override
+  public int hashCode() {
+    return bindValue != null ? bindValue.hashCode() : 0;
+  }
+
+  @Override
+  public String toString() {
+    return "BindVariableImpl{"
+        + "bindValue=" + bindValue
+        + '}';
+  }
 }
