@@ -79,7 +79,7 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
           e);
     }
     // now try to get connection (to verify that connection pool parameters are valid)
-    try (Connection conn = getConnection()) {
+    try (Connection conn = oraclePool.getConnection()) {
       LOG.info("Verified connection to database (user {}, db {})", user, db);
     } catch (SQLException e) {
       LOG.warn(

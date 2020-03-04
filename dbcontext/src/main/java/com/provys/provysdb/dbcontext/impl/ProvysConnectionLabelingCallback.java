@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
+import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
+
 import com.provys.common.exception.InternalException;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -177,15 +179,17 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
       LOG.debug("Configure connection for labels {}; current {}", reqLabels, currentLabels);
       if (reqLabels.containsKey(PROPERTY_TOKEN)) {
         // required token connection
-        if ((currentLabels == null) || !reqLabels.getProperty(PROPERTY_TOKEN)
+        var propertyToken = castNonNull(reqLabels.getProperty(PROPERTY_TOKEN)); // contains key
+        if ((currentLabels == null) || !propertyToken
             .equals(currentLabels.getProperty(PROPERTY_TOKEN))) {
-          initToken(reqLabels.getProperty(PROPERTY_TOKEN), lconn);
+          initToken(propertyToken, lconn);
         }
       } else if (reqLabels.containsKey(PROPERTY_USER)) {
         // required user connection
-        if ((currentLabels == null) || !reqLabels.getProperty(PROPERTY_USER)
+        var propertyUser = castNonNull(reqLabels.getProperty(PROPERTY_USER)); // contains key
+        if ((currentLabels == null) || !propertyUser
             .equals(currentLabels.getProperty(PROPERTY_USER))) {
-          initUser(reqLabels.getProperty(PROPERTY_USER), lconn);
+          initUser(propertyUser, lconn);
         }
       } else {
         // required generic connection

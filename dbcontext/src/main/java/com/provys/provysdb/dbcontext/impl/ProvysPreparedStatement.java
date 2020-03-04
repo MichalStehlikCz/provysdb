@@ -124,39 +124,40 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
+  @SuppressWarnings("Nullness")
   public void setBytes(int parameterIndex, byte[] x) throws SQLException {
     getStatement().setBytes(parameterIndex, x);
   }
 
   @Override
-  public void setDate(int parameterIndex, Date x) throws SQLException {
+  public void setDate(int parameterIndex, @Nullable Date x) throws SQLException {
     getStatement().setDate(parameterIndex, x);
   }
 
   @Override
-  public void setTime(int parameterIndex, Time x) throws SQLException {
+  public void setTime(int parameterIndex, @Nullable Time x) throws SQLException {
     getStatement().setTime(parameterIndex, x);
   }
 
   @Override
-  public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
+  public void setTimestamp(int parameterIndex, @Nullable Timestamp x) throws SQLException {
     getStatement().setTimestamp(parameterIndex, x);
   }
 
   @Override
-  public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
+  public void setAsciiStream(int parameterIndex, @Nullable InputStream x, int length) throws SQLException {
     getStatement().setAsciiStream(parameterIndex, x, length);
   }
 
   @Override
   @Deprecated(since = "1.2")
   @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
+  public void setUnicodeStream(int parameterIndex, @Nullable InputStream x, int length) throws SQLException {
     getStatement().setUnicodeStream(parameterIndex, x, length);
   }
 
   @Override
-  public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
+  public void setBinaryStream(int parameterIndex, @Nullable InputStream x, int length) throws SQLException {
     getStatement().setBinaryStream(parameterIndex, x, length);
   }
 
@@ -166,12 +167,12 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
+  public void setObject(int parameterIndex, @Nullable Object x, int targetSqlType) throws SQLException {
     getStatement().setObject(parameterIndex, x, targetSqlType);
   }
 
   @Override
-  public void setObject(int parameterIndex, Object x) throws SQLException {
+  public void setObject(int parameterIndex, @Nullable Object x) throws SQLException {
     getStatement().setObject(parameterIndex, x);
   }
 
@@ -186,7 +187,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setCharacterStream(int parameterIndex, Reader reader, int length)
+  public void setCharacterStream(int parameterIndex, @Nullable Reader reader, int length)
       throws SQLException {
     getStatement().setCharacterStream(parameterIndex, reader, length);
   }
@@ -197,12 +198,12 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setBlob(int parameterIndex, Blob x) throws SQLException {
+  public void setBlob(int parameterIndex, @Nullable Blob x) throws SQLException {
     getStatement().setBlob(parameterIndex, x);
   }
 
   @Override
-  public void setClob(int parameterIndex, Clob x) throws SQLException {
+  public void setClob(int parameterIndex, @Nullable Clob x) throws SQLException {
     getStatement().setClob(parameterIndex, x);
   }
 
@@ -212,22 +213,22 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public ResultSetMetaData getMetaData() throws SQLException {
+  public @Nullable ResultSetMetaData getMetaData() throws SQLException {
     return getStatement().getMetaData();
   }
 
   @Override
-  public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
+  public void setDate(int parameterIndex, @Nullable Date x, Calendar cal) throws SQLException {
     getStatement().setDate(parameterIndex, x, cal);
   }
 
   @Override
-  public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
+  public void setTime(int parameterIndex, @Nullable Time x, Calendar cal) throws SQLException {
     getStatement().setTime(parameterIndex, x, cal);
   }
 
   @Override
-  public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
+  public void setTimestamp(int parameterIndex, @Nullable Timestamp x, Calendar cal) throws SQLException {
     getStatement().setTimestamp(parameterIndex, x, cal);
   }
 
@@ -237,7 +238,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setURL(int parameterIndex, URL x) throws SQLException {
+  public void setURL(int parameterIndex, @Nullable URL x) throws SQLException {
     getStatement().setURL(parameterIndex, x);
   }
 
@@ -252,34 +253,34 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setNString(int parameterIndex, String value) throws SQLException {
+  public void setNString(int parameterIndex, @Nullable String value) throws SQLException {
     getStatement().setNString(parameterIndex, value);
   }
 
   @Override
-  public void setNCharacterStream(int parameterIndex, Reader value, long length)
+  public void setNCharacterStream(int parameterIndex, @Nullable Reader value, long length)
       throws SQLException {
     getStatement().setNCharacterStream(parameterIndex, value, length);
   }
 
   @Override
-  public void setNClob(int parameterIndex, NClob value) throws SQLException {
+  public void setNClob(int parameterIndex, @Nullable NClob value) throws SQLException {
     getStatement().setNClob(parameterIndex, value);
   }
 
   @Override
-  public void setClob(int parameterIndex, Reader reader, long length) throws SQLException {
+  public void setClob(int parameterIndex, @Nullable Reader reader, long length) throws SQLException {
     getStatement().setClob(parameterIndex, reader, length);
   }
 
   @Override
-  public void setBlob(int parameterIndex, InputStream inputStream, long length)
+  public void setBlob(int parameterIndex, @Nullable InputStream inputStream, long length)
       throws SQLException {
     getStatement().setBlob(parameterIndex, inputStream, length);
   }
 
   @Override
-  public void setNClob(int parameterIndex, Reader reader, long length) throws SQLException {
+  public void setNClob(int parameterIndex, @Nullable Reader reader, long length) throws SQLException {
     getStatement().setNClob(parameterIndex, reader, length);
   }
 
@@ -289,70 +290,70 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  public void setObject(int parameterIndex, Object x, int targetSqlType, int scaleOrLength)
+  public void setObject(int parameterIndex, @Nullable Object x, int targetSqlType, int scaleOrLength)
       throws SQLException {
     getStatement().setObject(parameterIndex, x, targetSqlType, scaleOrLength);
   }
 
   @Override
-  public void setAsciiStream(int parameterIndex, InputStream x, long length) throws SQLException {
+  public void setAsciiStream(int parameterIndex, @Nullable InputStream x, long length) throws SQLException {
     getStatement().setAsciiStream(parameterIndex, x, length);
   }
 
   @Override
-  public void setBinaryStream(int parameterIndex, InputStream x, long length) throws SQLException {
+  public void setBinaryStream(int parameterIndex, @Nullable InputStream x, long length) throws SQLException {
     getStatement().setBinaryStream(parameterIndex, x, length);
   }
 
   @Override
-  public void setCharacterStream(int parameterIndex, Reader reader, long length)
+  public void setCharacterStream(int parameterIndex, @Nullable Reader reader, long length)
       throws SQLException {
     getStatement().setCharacterStream(parameterIndex, reader, length);
   }
 
   @Override
-  public void setAsciiStream(int parameterIndex, InputStream x) throws SQLException {
+  public void setAsciiStream(int parameterIndex, @Nullable InputStream x) throws SQLException {
     getStatement().setAsciiStream(parameterIndex, x);
   }
 
   @Override
-  public void setBinaryStream(int parameterIndex, InputStream x) throws SQLException {
+  public void setBinaryStream(int parameterIndex, @Nullable InputStream x) throws SQLException {
     getStatement().setBinaryStream(parameterIndex, x);
   }
 
   @Override
-  public void setCharacterStream(int parameterIndex, Reader reader) throws SQLException {
+  public void setCharacterStream(int parameterIndex, @Nullable Reader reader) throws SQLException {
     getStatement().setCharacterStream(parameterIndex, reader);
   }
 
   @Override
-  public void setNCharacterStream(int parameterIndex, Reader value) throws SQLException {
+  public void setNCharacterStream(int parameterIndex, @Nullable Reader value) throws SQLException {
     getStatement().setNCharacterStream(parameterIndex, value);
   }
 
   @Override
-  public void setClob(int parameterIndex, Reader reader) throws SQLException {
+  public void setClob(int parameterIndex, @Nullable Reader reader) throws SQLException {
     getStatement().setClob(parameterIndex, reader);
   }
 
   @Override
-  public void setBlob(int parameterIndex, InputStream inputStream) throws SQLException {
+  public void setBlob(int parameterIndex, @Nullable InputStream inputStream) throws SQLException {
     getStatement().setBlob(parameterIndex, inputStream);
   }
 
   @Override
-  public void setNClob(int parameterIndex, Reader reader) throws SQLException {
+  public void setNClob(int parameterIndex, @Nullable Reader reader) throws SQLException {
     getStatement().setNClob(parameterIndex, reader);
   }
 
   @Override
-  public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength)
+  public void setObject(int parameterIndex, @Nullable Object x, SQLType targetSqlType, int scaleOrLength)
       throws SQLException {
     getStatement().setObject(parameterIndex, x, targetSqlType, scaleOrLength);
   }
 
   @Override
-  public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
+  public void setObject(int parameterIndex, @Nullable Object x, SQLType targetSqlType) throws SQLException {
     getStatement().setObject(parameterIndex, x, targetSqlType);
   }
 
