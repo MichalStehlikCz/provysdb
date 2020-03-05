@@ -4,6 +4,7 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SqlTypeAdapterString extends SqlTypeAdapterBase<String> {
 
@@ -17,7 +18,7 @@ class SqlTypeAdapterString extends SqlTypeAdapterBase<String> {
   }
 
   @Override
-  protected String readValueInternal(DbResultSet resultSet, int columnIndex) throws SQLException {
+  protected @Nullable String readValueInternal(DbResultSet resultSet, int columnIndex) throws SQLException {
     return resultSet.getString(columnIndex);
   }
 

@@ -64,8 +64,10 @@ class SqlTypeMapImpl implements SqlTypeMap {
       currentType = classes.pollFirst();
       var result = adapterMap.get(currentType);
       if (result != null) {
+        @SuppressWarnings("unchecked")
+        var typedResult = (SqlTypeAdapter<T>) result;
         //noinspection unchecked
-        return (SqlTypeAdapter<T>) result;
+        return typedResult;
       }
       for (var iface : currentType.getInterfaces()) {
         classes.addLast(iface);

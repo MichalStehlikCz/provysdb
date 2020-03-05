@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext.impl;
 
+import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
+
 import com.provys.common.datatype.DtBoolean;
 import com.provys.common.datatype.DtUid;
 import com.provys.common.exception.InternalException;
@@ -28,6 +30,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.NullnessUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -57,7 +60,7 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public String getString(int columnIndex) throws SQLException {
+  public @Nullable String getString(int columnIndex) throws SQLException {
     return resultSet.getString(columnIndex);
   }
 
@@ -99,49 +102,49 @@ class ProvysResultSet implements DbResultSet {
   @Override
   @Deprecated(since = "1.2")
   @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+  public @Nullable BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
     return resultSet.getBigDecimal(columnIndex, scale);
   }
 
   @Override
-  public byte[] getBytes(int columnIndex) throws SQLException {
+  public byte @Nullable [] getBytes(int columnIndex) throws SQLException {
     return resultSet.getBytes(columnIndex);
   }
 
   @Override
-  public Date getDate(int columnIndex) throws SQLException {
+  public @Nullable Date getDate(int columnIndex) throws SQLException {
     return resultSet.getDate(columnIndex);
   }
 
   @Override
-  public Time getTime(int columnIndex) throws SQLException {
+  public @Nullable Time getTime(int columnIndex) throws SQLException {
     return resultSet.getTime(columnIndex);
   }
 
   @Override
-  public Timestamp getTimestamp(int columnIndex) throws SQLException {
+  public @Nullable Timestamp getTimestamp(int columnIndex) throws SQLException {
     return resultSet.getTimestamp(columnIndex);
   }
 
   @Override
-  public InputStream getAsciiStream(int columnIndex) throws SQLException {
+  public @Nullable InputStream getAsciiStream(int columnIndex) throws SQLException {
     return resultSet.getAsciiStream(columnIndex);
   }
 
   @Override
   @Deprecated(since = "1.2")
   @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+  public @Nullable InputStream getUnicodeStream(int columnIndex) throws SQLException {
     return resultSet.getUnicodeStream(columnIndex);
   }
 
   @Override
-  public InputStream getBinaryStream(int columnIndex) throws SQLException {
+  public @Nullable InputStream getBinaryStream(int columnIndex) throws SQLException {
     return resultSet.getBinaryStream(columnIndex);
   }
 
   @Override
-  public String getString(String columnLabel) throws SQLException {
+  public @Nullable String getString(String columnLabel) throws SQLException {
     return resultSet.getString(columnLabel);
   }
 
@@ -188,34 +191,34 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public byte[] getBytes(String columnLabel) throws SQLException {
+  public byte @Nullable [] getBytes(String columnLabel) throws SQLException {
     return resultSet.getBytes(columnLabel);
   }
 
   @Override
-  public Date getDate(String columnLabel) throws SQLException {
+  public @Nullable Date getDate(String columnLabel) throws SQLException {
     return resultSet.getDate(columnLabel);
   }
 
   @Override
-  public Time getTime(String columnLabel) throws SQLException {
+  public @Nullable Time getTime(String columnLabel) throws SQLException {
     return resultSet.getTime(columnLabel);
   }
 
   @Override
-  public Timestamp getTimestamp(String columnLabel) throws SQLException {
+  public @Nullable Timestamp getTimestamp(String columnLabel) throws SQLException {
     return resultSet.getTimestamp(columnLabel);
   }
 
   @Override
-  public InputStream getAsciiStream(String columnLabel) throws SQLException {
+  public @Nullable InputStream getAsciiStream(String columnLabel) throws SQLException {
     return resultSet.getAsciiStream(columnLabel);
   }
 
   @Override
   @Deprecated(since = "1.2")
   @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public InputStream getUnicodeStream(String columnLabel) throws SQLException {
+  public @Nullable InputStream getUnicodeStream(String columnLabel) throws SQLException {
     return resultSet.getUnicodeStream(columnLabel);
   }
 
@@ -225,7 +228,7 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public SQLWarning getWarnings() throws SQLException {
+  public @Nullable SQLWarning getWarnings() throws SQLException {
     return resultSet.getWarnings();
   }
 
@@ -245,12 +248,12 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public Object getObject(int columnIndex) throws SQLException {
+  public @Nullable Object getObject(int columnIndex) throws SQLException {
     return resultSet.getObject(columnIndex);
   }
 
   @Override
-  public Object getObject(String columnLabel) throws SQLException {
+  public @Nullable Object getObject(String columnLabel) throws SQLException {
     return resultSet.getObject(columnLabel);
   }
 
@@ -260,22 +263,22 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public Reader getCharacterStream(int columnIndex) throws SQLException {
+  public @Nullable Reader getCharacterStream(int columnIndex) throws SQLException {
     return resultSet.getCharacterStream(columnIndex);
   }
 
   @Override
-  public Reader getCharacterStream(String columnLabel) throws SQLException {
+  public @Nullable Reader getCharacterStream(String columnLabel) throws SQLException {
     return resultSet.getCharacterStream(columnLabel);
   }
 
   @Override
-  public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
+  public @Nullable BigDecimal getBigDecimal(int columnIndex) throws SQLException {
     return resultSet.getBigDecimal(columnIndex);
   }
 
   @Override
-  public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
+  public @Nullable BigDecimal getBigDecimal(String columnLabel) throws SQLException {
     return resultSet.getBigDecimal(columnLabel);
   }
 
@@ -613,12 +616,12 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public Statement getStatement() throws SQLException {
+  public @Nullable Statement getStatement() throws SQLException {
     return resultSet.getStatement();
   }
 
   @Override
-  public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
+  public @Nullable Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
     return resultSet.getObject(columnIndex, map);
   }
 
@@ -668,42 +671,42 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public Date getDate(int columnIndex, Calendar cal) throws SQLException {
+  public @Nullable Date getDate(int columnIndex, Calendar cal) throws SQLException {
     return resultSet.getDate(columnIndex, cal);
   }
 
   @Override
-  public Date getDate(String columnLabel, Calendar cal) throws SQLException {
+  public @Nullable Date getDate(String columnLabel, Calendar cal) throws SQLException {
     return resultSet.getDate(columnLabel, cal);
   }
 
   @Override
-  public Time getTime(int columnIndex, Calendar cal) throws SQLException {
+  public @Nullable Time getTime(int columnIndex, Calendar cal) throws SQLException {
     return resultSet.getTime(columnIndex, cal);
   }
 
   @Override
-  public Time getTime(String columnLabel, Calendar cal) throws SQLException {
+  public @Nullable Time getTime(String columnLabel, Calendar cal) throws SQLException {
     return resultSet.getTime(columnLabel, cal);
   }
 
   @Override
-  public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
+  public @Nullable Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
     return resultSet.getTimestamp(columnIndex, cal);
   }
 
   @Override
-  public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
+  public @Nullable Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
     return resultSet.getTimestamp(columnLabel, cal);
   }
 
   @Override
-  public URL getURL(int columnIndex) throws SQLException {
+  public @Nullable URL getURL(int columnIndex) throws SQLException {
     return resultSet.getURL(columnIndex);
   }
 
   @Override
-  public URL getURL(String columnLabel) throws SQLException {
+  public @Nullable URL getURL(String columnLabel) throws SQLException {
     return resultSet.getURL(columnLabel);
   }
 
@@ -748,12 +751,12 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public RowId getRowId(int columnIndex) throws SQLException {
+  public @Nullable RowId getRowId(int columnIndex) throws SQLException {
     return resultSet.getRowId(columnIndex);
   }
 
   @Override
-  public RowId getRowId(String columnLabel) throws SQLException {
+  public @Nullable RowId getRowId(String columnLabel) throws SQLException {
     return resultSet.getRowId(columnLabel);
   }
 
@@ -828,22 +831,22 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public String getNString(int columnIndex) throws SQLException {
+  public @Nullable String getNString(int columnIndex) throws SQLException {
     return resultSet.getNString(columnIndex);
   }
 
   @Override
-  public String getNString(String columnLabel) throws SQLException {
+  public @Nullable String getNString(String columnLabel) throws SQLException {
     return resultSet.getNString(columnLabel);
   }
 
   @Override
-  public Reader getNCharacterStream(int columnIndex) throws SQLException {
+  public @Nullable Reader getNCharacterStream(int columnIndex) throws SQLException {
     return resultSet.getNCharacterStream(columnIndex);
   }
 
   @Override
-  public Reader getNCharacterStream(String columnLabel) throws SQLException {
+  public @Nullable Reader getNCharacterStream(String columnLabel) throws SQLException {
     return resultSet.getNCharacterStream(columnLabel);
   }
 
@@ -1100,7 +1103,7 @@ class ProvysResultSet implements DbResultSet {
       if (resultSet.wasNull()) {
         return null;
       }
-      return DtBoolean.ofProvysDb(dbValue);
+      return DtBoolean.ofProvysDb(castNonNull(dbValue)); // after wasNull, it should be safe
     } catch (InternalException e) {
       throw new SqlException(
           "Incorrect Provys boolean value retrieved from column index " + columnIndex, e);
@@ -1117,7 +1120,7 @@ class ProvysResultSet implements DbResultSet {
       if (resultSet.wasNull()) {
         return null;
       }
-      return DtBoolean.ofProvysDb(dbValue);
+      return DtBoolean.ofProvysDb(castNonNull(dbValue)); // after wasNull it should be safe
     } catch (InternalException e) {
       throw new SqlException("Incorrect Provys boolean value retrieved from column " + columnLabel,
           e);
@@ -1449,7 +1452,11 @@ class ProvysResultSet implements DbResultSet {
     //noinspection DuplicatedCode
     try {
       var value = resultSet.getString(columnIndex);
-      if (resultSet.wasNull() || value.isEmpty()) {
+      if (resultSet.wasNull()) {
+        return null;
+      }
+      castNonNull(value); // safe after wasNull
+      if (value.isEmpty()) {
         return null;
       }
       if (value.length() > 1) {
@@ -1468,7 +1475,11 @@ class ProvysResultSet implements DbResultSet {
     //noinspection DuplicatedCode
     try {
       var value = resultSet.getString(columnLabel);
-      if (resultSet.wasNull() || value.isEmpty()) {
+      if (resultSet.wasNull()) {
+        return null;
+      }
+      castNonNull(value); // safe after wasNull
+      if (value.isEmpty()) {
         return null;
       }
       if (value.length() > 1) {

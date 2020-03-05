@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext.type;
 
+import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
+
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
@@ -26,6 +28,7 @@ class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
     if (resultSet.wasNull()) {
       return BigInteger.ZERO;
     }
+    castNonNull(value); // safe after wasNull
     try {
       return value.toBigIntegerExact();
     } catch (ArithmeticException e) {

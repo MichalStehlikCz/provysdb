@@ -124,7 +124,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   }
 
   @Override
-  @SuppressWarnings("Nullness")
+  @SuppressWarnings("Nullness") // fixes incorrect annotation in checker JDK
   public void setBytes(int parameterIndex, byte[] x) throws SQLException {
     getStatement().setBytes(parameterIndex, x);
   }

@@ -5,6 +5,7 @@ import com.provys.provysdb.dbcontext.DbResultSet;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Types;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SqlTypeAdapterBigDecimal extends SqlTypeAdapterBase<BigDecimal> {
 
@@ -18,7 +19,7 @@ class SqlTypeAdapterBigDecimal extends SqlTypeAdapterBase<BigDecimal> {
   }
 
   @Override
-  protected BigDecimal readValueInternal(DbResultSet resultSet, int columnIndex)
+  protected @Nullable BigDecimal readValueInternal(DbResultSet resultSet, int columnIndex)
       throws SQLException {
     return resultSet.getBigDecimal(columnIndex);
   }
