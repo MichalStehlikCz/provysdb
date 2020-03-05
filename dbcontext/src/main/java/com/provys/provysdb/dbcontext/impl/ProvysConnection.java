@@ -6,21 +6,18 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbStatement;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbcontext.SqlTypeMap;
-
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.NClob;
-import java.sql.PreparedStatement;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.SQLXML;
 import java.sql.Savepoint;
 import java.sql.ShardingKey;
-import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
@@ -64,6 +61,11 @@ class ProvysConnection implements DbConnection {
   @Override
   public void rollback() throws SQLException {
     connection.rollback();
+  }
+
+  @Override
+  public void rollback(Savepoint savepoint) throws SQLException {
+    connection.rollback(savepoint);
   }
 
   @Override
@@ -272,11 +274,6 @@ class ProvysConnection implements DbConnection {
   @Override
   public Savepoint setSavepoint(String name) throws SQLException {
     return connection.setSavepoint(name);
-  }
-
-  @Override
-  public void rollback(Savepoint savepoint) throws SQLException {
-    connection.rollback(savepoint);
   }
 
   @Override

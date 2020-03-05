@@ -1,5 +1,7 @@
 package com.provys.provysdb.dbcontext.type;
 
+import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
+
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.SqlTypeAdapter;
 import com.provys.provysdb.dbcontext.SqlTypeMap;
@@ -61,12 +63,11 @@ class SqlTypeMapImpl implements SqlTypeMap {
     }
     // next go through queue, check if there is adapter for it and register its superinterfaces
     while (!classes.isEmpty()) {
-      currentType = classes.pollFirst();
+      currentType = castNonNull(classes.pollFirst()); // is non-null, because classes was not empty
       var result = adapterMap.get(currentType);
       if (result != null) {
         @SuppressWarnings("unchecked")
         var typedResult = (SqlTypeAdapter<T>) result;
-        //noinspection unchecked
         return typedResult;
       }
       for (var iface : currentType.getInterfaces()) {

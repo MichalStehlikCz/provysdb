@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Labeling callback implementation - switch to required session
+ * Labeling callback implementation - switch to required session.
  */
 class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
@@ -110,14 +110,14 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     BigDecimal userId;
     // switch using token supported even if working under light user (like REP)
     try (var callableStatement = ((Connection) labelableConnection).prepareCall(
-        "BEGIN" +
-            "  KEC_User_CP.mp_SetUserID(\n" +
-            "        p_TokenID => :c_Token\n" +
-            "      , p_Remove => FALSE\n" +
-            "    );\n" +
-            "  :c_User_ID:=KER_User_EP.mf_GetUserID;" +
-            "  KER_Server_EP.mp_Commit;\n" +
-            "END;")) {
+        "BEGIN"
+            + "  KEC_User_CP.mp_SetUserID(\n"
+            + "        p_TokenID => :c_Token\n"
+            + "      , p_Remove => FALSE\n"
+            + "    );\n"
+            + "  :c_User_ID:=KER_User_EP.mf_GetUserID;"
+            + "  KER_Server_EP.mp_Commit;\n"
+            + "END;")) {
       callableStatement.setString("c_Token", token);
       callableStatement.registerOutParameter("c_User_ID", Types.NUMERIC);
       callableStatement.execute();
@@ -134,13 +134,13 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     throwNoConnection(labelableConnection);
     // user impersonalisation only works under strong user (PG access)
     try (var callableStatement = ((Connection) labelableConnection).prepareCall(
-        "BEGIN" +
-            "  KER_User_PG.mp_SetUserID(\n" +
-            "        p_User_ID => :c_User_ID\n" +
-            "      , p_TestRights => FALSE\n" +
-            "    );\n" +
-            "  KER_Server_EP.mp_Commit;\n" +
-            "END;")) {
+        "BEGIN"
+            + "  KER_User_PG.mp_SetUserID(\n"
+            + "        p_User_ID => :c_User_ID\n"
+            + "      , p_TestRights => FALSE\n"
+            + "    );\n"
+            + "  KER_Server_EP.mp_Commit;\n"
+            + "END;")) {
       callableStatement.setBigDecimal("c_User_ID", new BigDecimal(userId));
       callableStatement.execute();
     }
@@ -156,11 +156,11 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     BigDecimal userId;
     // default session initialisation works under any user
     try (var callableStatement = ((Connection) labelableConnection).prepareCall(
-        "BEGIN" +
-            "  KEC_User_CP.mp_SetUserID;\n" +
-            "  :c_User_ID:=KER_User_EP.mf_GetUserID;" +
-            "  KER_Server_EP.mp_Commit;\n" +
-            "END;")) {
+        "BEGIN"
+            + "  KEC_User_CP.mp_SetUserID;\n"
+            + "  :c_User_ID:=KER_User_EP.mf_GetUserID;"
+            + "  KER_Server_EP.mp_Commit;\n"
+            + "END;")) {
       callableStatement.registerOutParameter("c_User_ID", Types.NUMERIC);
       callableStatement.execute();
       userId = callableStatement.getBigDecimal("c_User_ID");

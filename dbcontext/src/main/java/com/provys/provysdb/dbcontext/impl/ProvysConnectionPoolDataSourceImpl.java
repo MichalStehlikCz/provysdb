@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
  * {@code DataSource} to be used for accessing PROVYS database. Based on Oracle Universal Connection
  * Pool, this data-source supports switching of session context to one representing user session on
  * retrieval
- * <p>
- * HikariCP was considered, but not chosen for now as it does not support connection labeling; if
+ *
+ * <p>HikariCP was considered, but not chosen for now as it does not support connection labeling; if
  * there are any problems with Oracle UCP, we might switch to HikariCP or other connection pool.
  * Nothing outside this class should depend on used connection pool
  *
@@ -94,15 +94,15 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
   }
 
   @Override
+  public Connection getConnection(String username, String password) throws SQLException {
+    throw new SQLFeatureNotSupportedException();
+  }
+
+  @Override
   public Connection getConnectionWithToken(String dbToken) throws SQLException {
     var reqLabels = new Properties();
     reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN, dbToken);
     return oraclePool.getConnection(reqLabels);
-  }
-
-  @Override
-  public Connection getConnection(String username, String password) throws SQLException {
-    throw new SQLFeatureNotSupportedException();
   }
 
   @Override

@@ -3,8 +3,8 @@ package com.provys.provysdb.dbcontext.impl;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbContext;
-import com.provys.provysdb.dbcontext.type.SqlTypeFactory;
 import com.provys.provysdb.dbcontext.SqlTypeMap;
+import com.provys.provysdb.dbcontext.type.SqlTypeFactory;
 import java.sql.SQLException;
 import java.util.Objects;
 

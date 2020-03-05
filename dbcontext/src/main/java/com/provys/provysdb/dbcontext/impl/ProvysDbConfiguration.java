@@ -1,32 +1,43 @@
 package com.provys.provysdb.dbcontext.impl;
 
 /**
- * Interface represents configuration needed for datasource initiation. Used internally when initiating connection pool
- * data source
+ * Interface represents configuration needed for datasource initiation. Used internally when
+ * initiating connection pool data source
  */
 public interface ProvysDbConfiguration {
-    /**
-     * @return value of field url
-     */
-    String getUrl();
 
-    /**
-     * @return value of field user
-     */
-    String getUser();
+  /**
+   * Url defining connection to Provys database.
+   *
+   * @return value of field url
+   */
+  String getUrl();
 
-    /**
-     * @return value of field pwd
-     */
-    String getPwd();
+  /**
+   * Database user used for connection.
+   *
+   * @return value of field user
+   */
+  String getUser();
 
-    /**
-     * @return value of field minPoolSize
-     */
-    int getMinPoolSize();
+  /**
+   * Password used for connection.
+   *
+   * @return value of field pwd
+   */
+  String getPwd();
 
-    /**
-     * @return value of field maxPoolSize
-     */
-    int getMaxPoolSize();
+  /**
+   * Minimal number of connections in pool.
+   *
+   * @return value of field minPoolSize
+   */
+  int getMinPoolSize();
+
+  /**
+   * Maximal number of connections in pool.
+   *
+   * @return value of field maxPoolSize
+   */
+  int getMaxPoolSize();
 }

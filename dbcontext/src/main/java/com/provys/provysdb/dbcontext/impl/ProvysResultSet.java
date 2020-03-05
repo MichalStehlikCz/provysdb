@@ -65,87 +65,13 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public boolean getBoolean(int columnIndex) throws SQLException {
-    return resultSet.getBoolean(columnIndex);
-  }
-
-  @Override
-  public byte getByte(int columnIndex) throws SQLException {
-    return resultSet.getByte(columnIndex);
-  }
-
-  @Override
-  public short getShort(int columnIndex) throws SQLException {
-    return resultSet.getShort(columnIndex);
-  }
-
-  @Override
-  public int getInt(int columnIndex) throws SQLException {
-    return resultSet.getInt(columnIndex);
-  }
-
-  @Override
-  public long getLong(int columnIndex) throws SQLException {
-    return resultSet.getLong(columnIndex);
-  }
-
-  @Override
-  public float getFloat(int columnIndex) throws SQLException {
-    return resultSet.getFloat(columnIndex);
-  }
-
-  @Override
-  public double getDouble(int columnIndex) throws SQLException {
-    return resultSet.getDouble(columnIndex);
-  }
-
-  @Override
-  @Deprecated(since = "1.2")
-  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public @Nullable BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-    return resultSet.getBigDecimal(columnIndex, scale);
-  }
-
-  @Override
-  public byte @Nullable [] getBytes(int columnIndex) throws SQLException {
-    return resultSet.getBytes(columnIndex);
-  }
-
-  @Override
-  public @Nullable Date getDate(int columnIndex) throws SQLException {
-    return resultSet.getDate(columnIndex);
-  }
-
-  @Override
-  public @Nullable Time getTime(int columnIndex) throws SQLException {
-    return resultSet.getTime(columnIndex);
-  }
-
-  @Override
-  public @Nullable Timestamp getTimestamp(int columnIndex) throws SQLException {
-    return resultSet.getTimestamp(columnIndex);
-  }
-
-  @Override
-  public @Nullable InputStream getAsciiStream(int columnIndex) throws SQLException {
-    return resultSet.getAsciiStream(columnIndex);
-  }
-
-  @Override
-  @Deprecated(since = "1.2")
-  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public @Nullable InputStream getUnicodeStream(int columnIndex) throws SQLException {
-    return resultSet.getUnicodeStream(columnIndex);
-  }
-
-  @Override
-  public @Nullable InputStream getBinaryStream(int columnIndex) throws SQLException {
-    return resultSet.getBinaryStream(columnIndex);
-  }
-
-  @Override
   public @Nullable String getString(String columnLabel) throws SQLException {
     return resultSet.getString(columnLabel);
+  }
+
+  @Override
+  public boolean getBoolean(int columnIndex) throws SQLException {
+    return resultSet.getBoolean(columnIndex);
   }
 
   @Override
@@ -154,8 +80,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public byte getByte(int columnIndex) throws SQLException {
+    return resultSet.getByte(columnIndex);
+  }
+
+  @Override
   public byte getByte(String columnLabel) throws SQLException {
     return resultSet.getByte(columnLabel);
+  }
+
+  @Override
+  public short getShort(int columnIndex) throws SQLException {
+    return resultSet.getShort(columnIndex);
   }
 
   @Override
@@ -164,8 +100,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public int getInt(int columnIndex) throws SQLException {
+    return resultSet.getInt(columnIndex);
+  }
+
+  @Override
   public int getInt(String columnLabel) throws SQLException {
     return resultSet.getInt(columnLabel);
+  }
+
+  @Override
+  public long getLong(int columnIndex) throws SQLException {
+    return resultSet.getLong(columnIndex);
   }
 
   @Override
@@ -174,8 +120,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public float getFloat(int columnIndex) throws SQLException {
+    return resultSet.getFloat(columnIndex);
+  }
+
+  @Override
   public float getFloat(String columnLabel) throws SQLException {
     return resultSet.getFloat(columnLabel);
+  }
+
+  @Override
+  public double getDouble(int columnIndex) throws SQLException {
+    return resultSet.getDouble(columnIndex);
   }
 
   @Override
@@ -184,10 +140,8 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  @Deprecated(since = "1.2")
-  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
-  public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-    return resultSet.getBigDecimal(columnLabel, scale);
+  public byte @Nullable [] getBytes(int columnIndex) throws SQLException {
+    return resultSet.getBytes(columnIndex);
   }
 
   @Override
@@ -196,8 +150,28 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public @Nullable Date getDate(int columnIndex) throws SQLException {
+    return resultSet.getDate(columnIndex);
+  }
+
+  @Override
   public @Nullable Date getDate(String columnLabel) throws SQLException {
     return resultSet.getDate(columnLabel);
+  }
+
+  @Override
+  public @Nullable Date getDate(int columnIndex, Calendar cal) throws SQLException {
+    return resultSet.getDate(columnIndex, cal);
+  }
+
+  @Override
+  public @Nullable Date getDate(String columnLabel, Calendar cal) throws SQLException {
+    return resultSet.getDate(columnLabel, cal);
+  }
+
+  @Override
+  public @Nullable Time getTime(int columnIndex) throws SQLException {
+    return resultSet.getTime(columnIndex);
   }
 
   @Override
@@ -206,8 +180,38 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public @Nullable Time getTime(int columnIndex, Calendar cal) throws SQLException {
+    return resultSet.getTime(columnIndex, cal);
+  }
+
+  @Override
+  public @Nullable Time getTime(String columnLabel, Calendar cal) throws SQLException {
+    return resultSet.getTime(columnLabel, cal);
+  }
+
+  @Override
+  public @Nullable Timestamp getTimestamp(int columnIndex) throws SQLException {
+    return resultSet.getTimestamp(columnIndex);
+  }
+
+  @Override
   public @Nullable Timestamp getTimestamp(String columnLabel) throws SQLException {
     return resultSet.getTimestamp(columnLabel);
+  }
+
+  @Override
+  public @Nullable Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
+    return resultSet.getTimestamp(columnIndex, cal);
+  }
+
+  @Override
+  public @Nullable Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
+    return resultSet.getTimestamp(columnLabel, cal);
+  }
+
+  @Override
+  public @Nullable InputStream getAsciiStream(int columnIndex) throws SQLException {
+    return resultSet.getAsciiStream(columnIndex);
   }
 
   @Override
@@ -218,8 +222,20 @@ class ProvysResultSet implements DbResultSet {
   @Override
   @Deprecated(since = "1.2")
   @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
+  public @Nullable InputStream getUnicodeStream(int columnIndex) throws SQLException {
+    return resultSet.getUnicodeStream(columnIndex);
+  }
+
+  @Override
+  @Deprecated(since = "1.2")
+  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
   public @Nullable InputStream getUnicodeStream(String columnLabel) throws SQLException {
     return resultSet.getUnicodeStream(columnLabel);
+  }
+
+  @Override
+  public @Nullable InputStream getBinaryStream(int columnIndex) throws SQLException {
+    return resultSet.getBinaryStream(columnIndex);
   }
 
   @Override
@@ -258,6 +274,27 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+    return resultSet.getObject(columnIndex, type);
+  }
+
+  @Override
+  public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+    return resultSet.getObject(columnLabel, type);
+  }
+
+  @Override
+  public @Nullable Object getObject(int columnIndex, Map<String, Class<?>> map)
+      throws SQLException {
+    return resultSet.getObject(columnIndex, map);
+  }
+
+  @Override
+  public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
+    return resultSet.getObject(columnLabel, map);
+  }
+
+  @Override
   public int findColumn(String columnLabel) throws SQLException {
     return resultSet.findColumn(columnLabel);
   }
@@ -280,6 +317,20 @@ class ProvysResultSet implements DbResultSet {
   @Override
   public @Nullable BigDecimal getBigDecimal(String columnLabel) throws SQLException {
     return resultSet.getBigDecimal(columnLabel);
+  }
+
+  @Override
+  @Deprecated(since = "1.2")
+  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
+  public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+    return resultSet.getBigDecimal(columnLabel, scale);
+  }
+
+  @Override
+  @Deprecated(since = "1.2")
+  @SuppressWarnings({"squid:MissingDeprecatedCheck", "squid:S1133"})
+  public @Nullable BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+    return resultSet.getBigDecimal(columnIndex, scale);
   }
 
   @Override
@@ -394,98 +445,13 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public void updateBoolean(int columnIndex, boolean x) throws SQLException {
-    resultSet.updateBoolean(columnIndex, x);
-  }
-
-  @Override
-  public void updateByte(int columnIndex, byte x) throws SQLException {
-    resultSet.updateByte(columnIndex, x);
-  }
-
-  @Override
-  public void updateShort(int columnIndex, short x) throws SQLException {
-    resultSet.updateShort(columnIndex, x);
-  }
-
-  @Override
-  public void updateInt(int columnIndex, int x) throws SQLException {
-    resultSet.updateInt(columnIndex, x);
-  }
-
-  @Override
-  public void updateLong(int columnIndex, long x) throws SQLException {
-    resultSet.updateLong(columnIndex, x);
-  }
-
-  @Override
-  public void updateFloat(int columnIndex, float x) throws SQLException {
-    resultSet.updateFloat(columnIndex, x);
-  }
-
-  @Override
-  public void updateDouble(int columnIndex, double x) throws SQLException {
-    resultSet.updateDouble(columnIndex, x);
-  }
-
-  @Override
-  public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
-    resultSet.updateBigDecimal(columnIndex, x);
-  }
-
-  @Override
-  public void updateString(int columnIndex, String x) throws SQLException {
-    resultSet.updateString(columnIndex, x);
-  }
-
-  @Override
-  public void updateBytes(int columnIndex, byte[] x) throws SQLException {
-    resultSet.updateBytes(columnIndex, x);
-  }
-
-  @Override
-  public void updateDate(int columnIndex, Date x) throws SQLException {
-    resultSet.updateDate(columnIndex, x);
-  }
-
-  @Override
-  public void updateTime(int columnIndex, Time x) throws SQLException {
-    resultSet.updateTime(columnIndex, x);
-  }
-
-  @Override
-  public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
-    resultSet.updateTimestamp(columnIndex, x);
-  }
-
-  @Override
-  public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
-    resultSet.updateAsciiStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
-    resultSet.updateBinaryStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
-    resultSet.updateCharacterStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
-    resultSet.updateObject(columnIndex, x, scaleOrLength);
-  }
-
-  @Override
-  public void updateObject(int columnIndex, Object x) throws SQLException {
-    resultSet.updateObject(columnIndex, x);
-  }
-
-  @Override
   public void updateNull(String columnLabel) throws SQLException {
     resultSet.updateNull(columnLabel);
+  }
+
+  @Override
+  public void updateBoolean(int columnIndex, boolean x) throws SQLException {
+    resultSet.updateBoolean(columnIndex, x);
   }
 
   @Override
@@ -494,8 +460,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateByte(int columnIndex, byte x) throws SQLException {
+    resultSet.updateByte(columnIndex, x);
+  }
+
+  @Override
   public void updateByte(String columnLabel, byte x) throws SQLException {
     resultSet.updateByte(columnLabel, x);
+  }
+
+  @Override
+  public void updateShort(int columnIndex, short x) throws SQLException {
+    resultSet.updateShort(columnIndex, x);
   }
 
   @Override
@@ -504,8 +480,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateInt(int columnIndex, int x) throws SQLException {
+    resultSet.updateInt(columnIndex, x);
+  }
+
+  @Override
   public void updateInt(String columnLabel, int x) throws SQLException {
     resultSet.updateInt(columnLabel, x);
+  }
+
+  @Override
+  public void updateLong(int columnIndex, long x) throws SQLException {
+    resultSet.updateLong(columnIndex, x);
   }
 
   @Override
@@ -514,8 +500,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateFloat(int columnIndex, float x) throws SQLException {
+    resultSet.updateFloat(columnIndex, x);
+  }
+
+  @Override
   public void updateFloat(String columnLabel, float x) throws SQLException {
     resultSet.updateFloat(columnLabel, x);
+  }
+
+  @Override
+  public void updateDouble(int columnIndex, double x) throws SQLException {
+    resultSet.updateDouble(columnIndex, x);
   }
 
   @Override
@@ -524,8 +520,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
+    resultSet.updateBigDecimal(columnIndex, x);
+  }
+
+  @Override
   public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
     resultSet.updateBigDecimal(columnLabel, x);
+  }
+
+  @Override
+  public void updateString(int columnIndex, String x) throws SQLException {
+    resultSet.updateString(columnIndex, x);
   }
 
   @Override
@@ -534,8 +540,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateBytes(int columnIndex, byte[] x) throws SQLException {
+    resultSet.updateBytes(columnIndex, x);
+  }
+
+  @Override
   public void updateBytes(String columnLabel, byte[] x) throws SQLException {
     resultSet.updateBytes(columnLabel, x);
+  }
+
+  @Override
+  public void updateDate(int columnIndex, Date x) throws SQLException {
+    resultSet.updateDate(columnIndex, x);
   }
 
   @Override
@@ -544,8 +560,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateTime(int columnIndex, Time x) throws SQLException {
+    resultSet.updateTime(columnIndex, x);
+  }
+
+  @Override
   public void updateTime(String columnLabel, Time x) throws SQLException {
     resultSet.updateTime(columnLabel, x);
+  }
+
+  @Override
+  public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
+    resultSet.updateTimestamp(columnIndex, x);
   }
 
   @Override
@@ -554,30 +580,46 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
-    resultSet.updateAsciiStream(columnLabel, x, length);
-  }
-
-  @Override
-  public void updateBinaryStream(String columnLabel, InputStream x, int length)
-      throws SQLException {
-    resultSet.updateBinaryStream(columnLabel, x, length);
-  }
-
-  @Override
-  public void updateCharacterStream(String columnLabel, Reader reader, int length)
-      throws SQLException {
-    resultSet.updateCharacterStream(columnLabel, reader, length);
-  }
-
-  @Override
-  public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
-    resultSet.updateObject(columnLabel, x, scaleOrLength);
+  public void updateObject(int columnIndex, Object x) throws SQLException {
+    resultSet.updateObject(columnIndex, x);
   }
 
   @Override
   public void updateObject(String columnLabel, Object x) throws SQLException {
     resultSet.updateObject(columnLabel, x);
+  }
+
+  @Override
+  public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength)
+      throws SQLException {
+    resultSet.updateObject(columnIndex, x, targetSqlType, scaleOrLength);
+  }
+
+  @Override
+  public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+      throws SQLException {
+    resultSet.updateObject(columnLabel, x, targetSqlType, scaleOrLength);
+  }
+
+  @Override
+  public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+    resultSet.updateObject(columnIndex, x, targetSqlType);
+  }
+
+  @Override
+  public void updateObject(String columnLabel, Object x, SQLType targetSqlType)
+      throws SQLException {
+    resultSet.updateObject(columnLabel, x, targetSqlType);
+  }
+
+  @Override
+  public void updateObject(int columnIndex, Object x, int scaleOrLength) throws SQLException {
+    resultSet.updateObject(columnIndex, x, scaleOrLength);
+  }
+
+  @Override
+  public void updateObject(String columnLabel, Object x, int scaleOrLength) throws SQLException {
+    resultSet.updateObject(columnLabel, x, scaleOrLength);
   }
 
   @Override
@@ -621,33 +663,8 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public @Nullable Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
-    return resultSet.getObject(columnIndex, map);
-  }
-
-  @Override
   public Ref getRef(int columnIndex) throws SQLException {
     return resultSet.getRef(columnIndex);
-  }
-
-  @Override
-  public Blob getBlob(int columnIndex) throws SQLException {
-    return resultSet.getBlob(columnIndex);
-  }
-
-  @Override
-  public Clob getClob(int columnIndex) throws SQLException {
-    return resultSet.getClob(columnIndex);
-  }
-
-  @Override
-  public Array getArray(int columnIndex) throws SQLException {
-    return resultSet.getArray(columnIndex);
-  }
-
-  @Override
-  public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-    return resultSet.getObject(columnLabel, map);
   }
 
   @Override
@@ -656,8 +673,18 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public Blob getBlob(int columnIndex) throws SQLException {
+    return resultSet.getBlob(columnIndex);
+  }
+
+  @Override
   public Blob getBlob(String columnLabel) throws SQLException {
     return resultSet.getBlob(columnLabel);
+  }
+
+  @Override
+  public Clob getClob(int columnIndex) throws SQLException {
+    return resultSet.getClob(columnIndex);
   }
 
   @Override
@@ -666,38 +693,13 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public Array getArray(int columnIndex) throws SQLException {
+    return resultSet.getArray(columnIndex);
+  }
+
+  @Override
   public Array getArray(String columnLabel) throws SQLException {
     return resultSet.getArray(columnLabel);
-  }
-
-  @Override
-  public @Nullable Date getDate(int columnIndex, Calendar cal) throws SQLException {
-    return resultSet.getDate(columnIndex, cal);
-  }
-
-  @Override
-  public @Nullable Date getDate(String columnLabel, Calendar cal) throws SQLException {
-    return resultSet.getDate(columnLabel, cal);
-  }
-
-  @Override
-  public @Nullable Time getTime(int columnIndex, Calendar cal) throws SQLException {
-    return resultSet.getTime(columnIndex, cal);
-  }
-
-  @Override
-  public @Nullable Time getTime(String columnLabel, Calendar cal) throws SQLException {
-    return resultSet.getTime(columnLabel, cal);
-  }
-
-  @Override
-  public @Nullable Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-    return resultSet.getTimestamp(columnIndex, cal);
-  }
-
-  @Override
-  public @Nullable Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
-    return resultSet.getTimestamp(columnLabel, cal);
   }
 
   @Override
@@ -731,6 +733,28 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
+    resultSet.updateBlob(columnIndex, inputStream);
+  }
+
+  @Override
+  public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
+    resultSet.updateBlob(columnLabel, inputStream);
+  }
+
+  @Override
+  public void updateBlob(int columnIndex, InputStream inputStream, long length)
+      throws SQLException {
+    resultSet.updateBlob(columnIndex, inputStream, length);
+  }
+
+  @Override
+  public void updateBlob(String columnLabel, InputStream inputStream, long length)
+      throws SQLException {
+    resultSet.updateBlob(columnLabel, inputStream, length);
+  }
+
+  @Override
   public void updateClob(int columnIndex, Clob x) throws SQLException {
     resultSet.updateClob(columnIndex, x);
   }
@@ -738,6 +762,26 @@ class ProvysResultSet implements DbResultSet {
   @Override
   public void updateClob(String columnLabel, Clob x) throws SQLException {
     resultSet.updateClob(columnLabel, x);
+  }
+
+  @Override
+  public void updateClob(int columnIndex, Reader reader) throws SQLException {
+    resultSet.updateClob(columnIndex, reader);
+  }
+
+  @Override
+  public void updateClob(String columnLabel, Reader reader) throws SQLException {
+    resultSet.updateClob(columnLabel, reader);
+  }
+
+  @Override
+  public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
+    resultSet.updateClob(columnIndex, reader, length);
+  }
+
+  @Override
+  public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
+    resultSet.updateClob(columnLabel, reader, length);
   }
 
   @Override
@@ -781,23 +825,43 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public void updateNString(int columnIndex, String nString) throws SQLException {
-    resultSet.updateNString(columnIndex, nString);
+  public void updateNString(int columnIndex, String nstring) throws SQLException {
+    resultSet.updateNString(columnIndex, nstring);
   }
 
   @Override
-  public void updateNString(String columnLabel, String nString) throws SQLException {
-    resultSet.updateNString(columnLabel, nString);
+  public void updateNString(String columnLabel, String nstring) throws SQLException {
+    resultSet.updateNString(columnLabel, nstring);
   }
 
   @Override
-  public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
-    resultSet.updateNClob(columnIndex, nClob);
+  public void updateNClob(int columnIndex, NClob nclob) throws SQLException {
+    resultSet.updateNClob(columnIndex, nclob);
   }
 
   @Override
-  public void updateNClob(String columnLabel, NClob nClob) throws SQLException {
-    resultSet.updateNClob(columnLabel, nClob);
+  public void updateNClob(String columnLabel, NClob nclob) throws SQLException {
+    resultSet.updateNClob(columnLabel, nclob);
+  }
+
+  @Override
+  public void updateNClob(int columnIndex, Reader reader) throws SQLException {
+    resultSet.updateNClob(columnIndex, reader);
+  }
+
+  @Override
+  public void updateNClob(String columnLabel, Reader reader) throws SQLException {
+    resultSet.updateNClob(columnLabel, reader);
+  }
+
+  @Override
+  public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
+    resultSet.updateNClob(columnIndex, reader, length);
+  }
+
+  @Override
+  public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
+    resultSet.updateNClob(columnLabel, reader, length);
   }
 
   @Override
@@ -862,71 +926,6 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
-    resultSet.updateAsciiStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
-    resultSet.updateBinaryStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
-    resultSet.updateCharacterStream(columnIndex, x, length);
-  }
-
-  @Override
-  public void updateAsciiStream(String columnLabel, InputStream x, long length)
-      throws SQLException {
-    resultSet.updateAsciiStream(columnLabel, x, length);
-  }
-
-  @Override
-  public void updateBinaryStream(String columnLabel, InputStream x, long length)
-      throws SQLException {
-    resultSet.updateBinaryStream(columnLabel, x, length);
-  }
-
-  @Override
-  public void updateCharacterStream(String columnLabel, Reader reader, long length)
-      throws SQLException {
-    resultSet.updateCharacterStream(columnLabel, reader, length);
-  }
-
-  @Override
-  public void updateBlob(int columnIndex, InputStream inputStream, long length)
-      throws SQLException {
-    resultSet.updateBlob(columnIndex, inputStream, length);
-  }
-
-  @Override
-  public void updateBlob(String columnLabel, InputStream inputStream, long length)
-      throws SQLException {
-    resultSet.updateBlob(columnLabel, inputStream, length);
-  }
-
-  @Override
-  public void updateClob(int columnIndex, Reader reader, long length) throws SQLException {
-    resultSet.updateClob(columnIndex, reader, length);
-  }
-
-  @Override
-  public void updateClob(String columnLabel, Reader reader, long length) throws SQLException {
-    resultSet.updateClob(columnLabel, reader, length);
-  }
-
-  @Override
-  public void updateNClob(int columnIndex, Reader reader, long length) throws SQLException {
-    resultSet.updateNClob(columnIndex, reader, length);
-  }
-
-  @Override
-  public void updateNClob(String columnLabel, Reader reader, long length) throws SQLException {
-    resultSet.updateNClob(columnLabel, reader, length);
-  }
-
-  @Override
   public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
     resultSet.updateNCharacterStream(columnIndex, x);
   }
@@ -942,18 +941,34 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
-  public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
-    resultSet.updateBinaryStream(columnIndex, x);
-  }
-
-  @Override
-  public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
-    resultSet.updateCharacterStream(columnIndex, x);
-  }
-
-  @Override
   public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
     resultSet.updateAsciiStream(columnLabel, x);
+  }
+
+  @Override
+  public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
+    resultSet.updateAsciiStream(columnIndex, x, length);
+  }
+
+  @Override
+  public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
+    resultSet.updateAsciiStream(columnLabel, x, length);
+  }
+
+  @Override
+  public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
+    resultSet.updateAsciiStream(columnIndex, x, length);
+  }
+
+  @Override
+  public void updateAsciiStream(String columnLabel, InputStream x, long length)
+      throws SQLException {
+    resultSet.updateAsciiStream(columnLabel, x, length);
+  }
+
+  @Override
+  public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
+    resultSet.updateBinaryStream(columnIndex, x);
   }
 
   @Override
@@ -962,71 +977,57 @@ class ProvysResultSet implements DbResultSet {
   }
 
   @Override
+  public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
+    resultSet.updateBinaryStream(columnIndex, x, length);
+  }
+
+  @Override
+  public void updateBinaryStream(String columnLabel, InputStream x, int length)
+      throws SQLException {
+    resultSet.updateBinaryStream(columnLabel, x, length);
+  }
+
+  @Override
+  public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
+    resultSet.updateBinaryStream(columnIndex, x, length);
+  }
+
+  @Override
+  public void updateBinaryStream(String columnLabel, InputStream x, long length)
+      throws SQLException {
+    resultSet.updateBinaryStream(columnLabel, x, length);
+  }
+
+  @Override
+  public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
+    resultSet.updateCharacterStream(columnIndex, x);
+  }
+
+  @Override
   public void updateCharacterStream(String columnLabel, Reader reader) throws SQLException {
     resultSet.updateCharacterStream(columnLabel, reader);
   }
 
   @Override
-  public void updateBlob(int columnIndex, InputStream inputStream) throws SQLException {
-    resultSet.updateBlob(columnIndex, inputStream);
+  public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
+    resultSet.updateCharacterStream(columnIndex, x, length);
   }
 
   @Override
-  public void updateBlob(String columnLabel, InputStream inputStream) throws SQLException {
-    resultSet.updateBlob(columnLabel, inputStream);
-  }
-
-  @Override
-  public void updateClob(int columnIndex, Reader reader) throws SQLException {
-    resultSet.updateClob(columnIndex, reader);
-  }
-
-  @Override
-  public void updateClob(String columnLabel, Reader reader) throws SQLException {
-    resultSet.updateClob(columnLabel, reader);
-  }
-
-  @Override
-  public void updateNClob(int columnIndex, Reader reader) throws SQLException {
-    resultSet.updateNClob(columnIndex, reader);
-  }
-
-  @Override
-  public void updateNClob(String columnLabel, Reader reader) throws SQLException {
-    resultSet.updateNClob(columnLabel, reader);
-  }
-
-  @Override
-  public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-    return resultSet.getObject(columnIndex, type);
-  }
-
-  @Override
-  public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
-    return resultSet.getObject(columnLabel, type);
-  }
-
-  @Override
-  public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength)
+  public void updateCharacterStream(String columnLabel, Reader reader, int length)
       throws SQLException {
-    resultSet.updateObject(columnIndex, x, targetSqlType, scaleOrLength);
+    resultSet.updateCharacterStream(columnLabel, reader, length);
   }
 
   @Override
-  public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+  public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
+    resultSet.updateCharacterStream(columnIndex, x, length);
+  }
+
+  @Override
+  public void updateCharacterStream(String columnLabel, Reader reader, long length)
       throws SQLException {
-    resultSet.updateObject(columnLabel, x, targetSqlType, scaleOrLength);
-  }
-
-  @Override
-  public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
-    resultSet.updateObject(columnIndex, x, targetSqlType);
-  }
-
-  @Override
-  public void updateObject(String columnLabel, Object x, SQLType targetSqlType)
-      throws SQLException {
-    resultSet.updateObject(columnLabel, x, targetSqlType);
+    resultSet.updateCharacterStream(columnLabel, reader, length);
   }
 
   @Override
@@ -1071,7 +1072,8 @@ class ProvysResultSet implements DbResultSet {
             + columnIndex, e);
   }
 
-  private static SqlException getGetSqlException(String columnLabel, Class<?> type, SQLException e) {
+  private static SqlException getGetSqlException(String columnLabel, Class<?> type,
+      SQLException e) {
     return new SqlException(
         "Error reading " + type.getSimpleName() + " value from ResultSet, column "
             + columnLabel, e);
@@ -1661,10 +1663,10 @@ class ProvysResultSet implements DbResultSet {
     return Optional.ofNullable(getNullableDtUid(columnLabel));
   }
 
-    @Override
-    public String toString() {
-        return "ProvysResultSet{" +
-            "resultSet=" + resultSet +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return "ProvysResultSet{"
+        + "resultSet=" + resultSet
+        + '}';
+  }
 }
