@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface SqlTypeAdapter<T> {
 
   /**
-   * Class thsi adapter converts to database values.
+   * Class this adapter converts to database values.
    *
    * @return class this adapter is associated with
    */
@@ -29,7 +29,7 @@ public interface SqlTypeAdapter<T> {
    * JDBC / database type associated with this adapter.
    *
    * @return name of type associated with this adapter (on JDBC level), empty optional for
-   * non-object types
+   *     non-object types
    */
   default Optional<String> getTypeName() {
     return Optional.empty();

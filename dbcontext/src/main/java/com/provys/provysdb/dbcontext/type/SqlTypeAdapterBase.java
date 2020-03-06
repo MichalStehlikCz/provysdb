@@ -18,8 +18,8 @@ abstract class SqlTypeAdapterBase<T> implements SqlTypeAdapter<T> {
     try {
       var value = readValueInternal(resultSet, columnIndex);
       if (resultSet.wasNull() || (value == null)) {
-        throw new SqlException("Mandatory column value was null (" + columnIndex + ", " +
-            resultSet.getMetaData().getColumnName(columnIndex) + ')');
+        throw new SqlException("Mandatory column value was null (" + columnIndex + ", "
+            + resultSet.getMetaData().getColumnName(columnIndex) + ')');
       }
       return value;
     } catch (SQLException e) {
