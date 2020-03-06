@@ -4,6 +4,7 @@ import com.provys.common.datatype.DtUid;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -492,4 +493,64 @@ public interface DbResultSet extends ResultSet {
    * @return value in column
    */
   Optional<DtUid> getOptionalDtUid(String columnLabel);
+
+  /**
+   * Return value of (mandatory) column of specified type.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column
+   * @param <T> is type of column
+   */
+  <T> @NonNull T getNonnullValue(int columnIndex, Class<T> type);
+
+  /**
+   * Return value of (mandatory) column of specified type.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column
+   * @param <T> is type of column
+   */
+  <T> @NonNull T getNonnullValue(String columnLabel, Class<T> type);
+
+  /**
+   * Return value of optional column of specified type.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column, null when empty
+   * @param <T> is type of column
+   */
+  <T> @Nullable T getNullableValue(int columnIndex, Class<T> type);
+
+  /**
+   * Return value of optional column of specified type.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column, null when empty
+   * @param <T> is type of column
+   */
+  <T> @Nullable T getNullableValue(String columnLabel, Class<T> type);
+
+  /**
+   * Return value of optional column of specified type.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column
+   * @param <T> is type of column
+   */
+  <T> Optional<@NonNull T> getOptionalValue(int columnIndex, Class<T> type);
+
+  /**
+   * Return value of optional column of specified type.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @param type is type of value to be read
+   * @return value in column
+   * @param <T> is type of column
+   */
+  <T> Optional<@NonNull T> getOptionalValue(String columnLabel, Class<T> type);
 }

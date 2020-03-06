@@ -1,10 +1,10 @@
 package com.provys.provysdb.dbcontext.jakarta;
 
 import com.provys.provysdb.dbcontext.impl.ProvysDbConfiguration;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Objects;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * Class retrieves parameters of database connection from environment. Used by {@code

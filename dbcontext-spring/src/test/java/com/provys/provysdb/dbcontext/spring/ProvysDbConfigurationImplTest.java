@@ -1,41 +1,45 @@
 package com.provys.provysdb.dbcontext.spring;
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.provys.provysdb.dbcontext.impl.ProvysDbConfiguration;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.inject.Inject;
-
-import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class ProvysDbConfigurationImplTest {
 
-    @Inject
-    ProvysDbConfiguration dbConfiguration;
+  @Autowired
+  private final ProvysDbConfiguration dbConfiguration;
 
-    @Test
-    void getUrlTest() {
-        assertThat(dbConfiguration.getUrl()).isEqualTo("testurl");
-    }
+  @Autowired
+  ProvysDbConfigurationImplTest(ProvysDbConfiguration dbConfiguration) {
+    this.dbConfiguration = dbConfiguration;
+  }
 
-    @Test
-    void getUserTest() {
-        assertThat(dbConfiguration.getUser()).isEqualTo("testuser");
-    }
+  @Test
+  void getUrlTest() {
+    assertThat(dbConfiguration.getUrl()).isEqualTo("testurl");
+  }
 
-    @Test
-    void getPwdTest() {
-        assertThat(dbConfiguration.getPwd()).isEqualTo("testpwd");
-    }
+  @Test
+  void getUserTest() {
+    assertThat(dbConfiguration.getUser()).isEqualTo("testuser");
+  }
 
-    @Test
-    void getMinPoolSizeTest() {
-        assertThat(dbConfiguration.getMinPoolSize()).isEqualTo(5);
-    }
+  @Test
+  void getPwdTest() {
+    assertThat(dbConfiguration.getPwd()).isEqualTo("testpwd");
+  }
 
-    @Test
-    void getMaxPoolSizeTest() {
-        assertThat(dbConfiguration.getMaxPoolSize()).isEqualTo(20);
-    }
+  @Test
+  void getMinPoolSizeTest() {
+    assertThat(dbConfiguration.getMinPoolSize()).isEqualTo(5);
+  }
+
+  @Test
+  void getMaxPoolSizeTest() {
+    assertThat(dbConfiguration.getMaxPoolSize()).isEqualTo(20);
+  }
 }

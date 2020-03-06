@@ -4,81 +4,82 @@ import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbRowMapper;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.dbsqlbuilder.SelectStatementT1;
-import com.provys.provysdb.sqlbuilder.*;
-
-import javax.annotation.Nonnull;
+import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sqlbuilder.Select;
+import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Impl<T1>>
-        implements SelectStatementT1<T1> {
+    implements SelectStatementT1<T1> {
 
-    @Nonnull
-    private final SqlColumnT<T1> column1;
+  private final SqlColumnT<T1> column1;
 
-    SelectStatementT1Impl(String sqlText, List<BindName> binds, DbSql sqlContext, SqlColumnT<T1> column1) {
-        super(sqlText, binds, sqlContext);
-        this.column1 = column1;
-    }
+  @SuppressWarnings("BoundedWildcard")
+  SelectStatementT1Impl(String sqlText, Collection<? extends BindName> binds, DbSql sqlContext,
+      SqlColumnT<T1> column1) {
+    super(sqlText, binds, sqlContext);
+    this.column1 = column1;
+  }
 
-    SelectStatementT1Impl(Select select, DbSql sqlContext, SqlColumnT<T1> column1) {
-        super(select, sqlContext);
-        this.column1 = column1;
-    }
+  @SuppressWarnings("BoundedWildcard")
+  SelectStatementT1Impl(Select select, DbSql sqlContext, SqlColumnT<T1> column1) {
+    super(select, sqlContext);
+    this.column1 = column1;
+  }
 
-    SelectStatementT1Impl(Select select, DbConnection connection, SqlColumnT<T1> column1) {
-        super(select, connection);
-        this.column1 = column1;
-    }
+  @SuppressWarnings("BoundedWildcard")
+  SelectStatementT1Impl(Select select, DbConnection connection, SqlColumnT<T1> column1) {
+    super(select, connection);
+    this.column1 = column1;
+  }
 
-    @Nonnull
-    @Override
-    SelectStatementT1Impl<T1> self() {
-        return this;
-    }
+  @Override
+  SelectStatementT1Impl<T1> self() {
+    return this;
+  }
 
-    @Nonnull
-    private DbRowMapper<T1> getRowMapper() {
-        return ((resultSet, rowNumber)
-                -> getStatement()
-                .getAdapterMap()
-                .getAdapter(column1.getType())
-                .readNonnullValue(resultSet, 1));
-    }
+  private DbRowMapper<@NonNull T1> getRowMapper() {
+    return (resultSet, rowNumber)
+        -> resultSet.getNonnullValue(1, column1.getType());
+  }
 
-    @Nonnull
-    @Override
-    public T1 fetchOne() {
-        return fetchOne(getRowMapper());
-    }
+  @Override
+  public @NonNull T1 fetchOne() {
+    return fetchOne(getRowMapper());
+  }
 
-    @Nonnull
-    @Override
-    public List<T1> fetch() {
-        return fetch(getRowMapper());
-    }
+  @Override
+  public List<@NonNull T1> fetch() {
+    return fetch(getRowMapper());
+  }
 
-    @Nonnull
-    @Override
-    public Stream<T1> stream() {
-        return stream(getRowMapper());
-    }
+  @Override
+  public Stream<@NonNull T1> stream() {
+    return stream(getRowMapper());
+  }
 
-    @Nonnull
-    @Override
-    public T1 fetchOneNoClose() {
-        return fetchOneNoClose(getRowMapper());
-    }
+  @Override
+  public @NonNull T1 fetchOneNoClose() {
+    return fetchOneNoClose(getRowMapper());
+  }
 
-    @Nonnull
-    @Override
-    public List<T1> fetchNoClose() {
-        return fetchNoClose(getRowMapper());
-    }
+  @Override
+  public List<@NonNull T1> fetchNoClose() {
+    return fetchNoClose(getRowMapper());
+  }
 
-    @Nonnull
-    @Override
-    public Stream<T1> streamNoClose() {
-        return streamNoClose(getRowMapper());
-    }
+  @Override
+  public Stream<@NonNull T1> streamNoClose() {
+    return streamNoClose(getRowMapper());
+  }
+
+  @Override
+  public String toString() {
+    return "SelectStatementT1Impl{"
+        + "column1=" + column1
+        + ", " + super.toString() + '}';
+  }
 }

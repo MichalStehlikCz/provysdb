@@ -13,6 +13,8 @@ class SqlTypeAdapterBoolean extends SqlTypeAdapterBase<Boolean> {
   private static final SqlTypeAdapterBoolean INSTANCE = new SqlTypeAdapterBoolean();
 
   /**
+   * Instance of boolean type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterBoolean getInstance() {

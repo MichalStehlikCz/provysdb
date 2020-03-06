@@ -12,6 +12,8 @@ class SqlTypeAdapterBigDecimal extends SqlTypeAdapterBase<BigDecimal> {
   private static final SqlTypeAdapterBigDecimal INSTANCE = new SqlTypeAdapterBigDecimal();
 
   /**
+   * Instance of BigDecimal type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterBigDecimal getInstance() {

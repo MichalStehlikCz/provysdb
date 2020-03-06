@@ -10,6 +10,8 @@ class SqlTypeAdapterByte extends SqlTypeAdapterBase<Byte> {
   private static final SqlTypeAdapterByte INSTANCE = new SqlTypeAdapterByte();
 
   /**
+   * Instance of Byte type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterByte getInstance() {

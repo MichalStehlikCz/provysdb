@@ -2,6 +2,7 @@ package com.provys.provysdb.dbsqlbuilder;
 
 import java.util.List;
 import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Select statement based on single column with defined type.
@@ -17,7 +18,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return value, retrieved by query
    */
-  T1 fetchOne();
+  @NonNull T1 fetchOne();
 
   /**
    * Execute associated statement (using connection fetched from underlying DataSource) and return
@@ -25,7 +26,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return list of fetched values
    */
-  List<T1> fetch();
+  List<@NonNull T1> fetch();
 
   /**
    * Execute associated statement (using connection, fetched from underlying DataSource) and return
@@ -34,7 +35,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return stream with returned values
    */
-  Stream<T1> stream();
+  Stream<@NonNull T1> stream();
 
   /**
    * Execute associated statement (using connection fetched from underlying DataSource) and return
@@ -42,7 +43,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return value, retrieved by query
    */
-  T1 fetchOneNoClose();
+  @NonNull T1 fetchOneNoClose();
 
   /**
    * Execute associated statement (using connection fetched from underlying DataSource) and return
@@ -50,7 +51,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return list of fetched values
    */
-  List<T1> fetchNoClose();
+  List<@NonNull T1> fetchNoClose();
 
   /**
    * Execute associated statement (using connection, fetched from underlying DataSource) and return
@@ -60,5 +61,5 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return stream with returned values
    */
-  Stream<T1> streamNoClose();
+  Stream<@NonNull T1> streamNoClose();
 }

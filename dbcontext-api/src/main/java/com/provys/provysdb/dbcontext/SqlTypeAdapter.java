@@ -1,6 +1,7 @@
 package com.provys.provysdb.dbcontext;
 
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -42,7 +43,7 @@ public interface SqlTypeAdapter<T> {
    * @param columnIndex is column value should be read from
    * @return read column value
    */
-  T readNonnullValue(DbResultSet resultSet, int columnIndex);
+  @NonNull T readNonnullValue(DbResultSet resultSet, int columnIndex);
 
   /**
    * Read value from result set. Throw exception when value in given column is null.
@@ -51,7 +52,7 @@ public interface SqlTypeAdapter<T> {
    * @param columnLabel is name of column value should be read from
    * @return read column value
    */
-  T readNonnullValue(DbResultSet resultSet, String columnLabel);
+  @NonNull T readNonnullValue(DbResultSet resultSet, String columnLabel);
 
   /**
    * Read value from result set, allow reading null values.
@@ -78,7 +79,7 @@ public interface SqlTypeAdapter<T> {
    * @param columnIndex is column value should be read from
    * @return read column value
    */
-  default Optional<T> readOptionalValue(DbResultSet resultSet, int columnIndex) {
+  default Optional<@NonNull T> readOptionalValue(DbResultSet resultSet, int columnIndex) {
     return Optional.ofNullable(readNullableValue(resultSet, columnIndex));
   }
 
@@ -89,7 +90,7 @@ public interface SqlTypeAdapter<T> {
    * @param columnLabel is name of column value should be read from
    * @return read column value
    */
-  default Optional<T> readOptionalValue(DbResultSet resultSet, String columnLabel) {
+  default Optional<@NonNull T> readOptionalValue(DbResultSet resultSet, String columnLabel) {
     return Optional.ofNullable(readNullableValue(resultSet, columnLabel));
   }
 

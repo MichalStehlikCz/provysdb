@@ -7,6 +7,7 @@ import com.provys.common.datatype.DtUid;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.SqlException;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.NullnessUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -39,9 +41,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 class ProvysResultSet implements DbResultSet {
 
   private final ResultSet resultSet;
+  private final SqlTypeMap sqlTypeMap;
 
-  ProvysResultSet(ResultSet resultSet) {
+  ProvysResultSet(ResultSet resultSet, SqlTypeMap sqlTypeMap) {
     this.resultSet = resultSet;
+    this.sqlTypeMap = sqlTypeMap;
   }
 
   @Override
@@ -1661,6 +1665,36 @@ class ProvysResultSet implements DbResultSet {
   @Override
   public Optional<DtUid> getOptionalDtUid(String columnLabel) {
     return Optional.ofNullable(getNullableDtUid(columnLabel));
+  }
+
+  @Override
+  public <T> @NonNull T getNonnullValue(int columnIndex, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readNonnullValue(this, columnIndex);
+  }
+
+  @Override
+  public <T> @NonNull T getNonnullValue(String columnLabel, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readNonnullValue(this, columnLabel);
+  }
+
+  @Override
+  public <T> @Nullable T getNullableValue(int columnIndex, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readNullableValue(this, columnIndex);
+  }
+
+  @Override
+  public <T> @Nullable T getNullableValue(String columnLabel, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readNullableValue(this, columnLabel);
+  }
+
+  @Override
+  public <T> Optional<@NonNull T> getOptionalValue(int columnIndex, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readOptionalValue(this, columnIndex);
+  }
+
+  @Override
+  public <T> Optional<@NonNull T> getOptionalValue(String columnLabel, Class<T> type) {
+    return sqlTypeMap.getAdapter(type).readOptionalValue(this, columnLabel);
   }
 
   @Override

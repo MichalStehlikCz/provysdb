@@ -12,6 +12,8 @@ class SqlTypeAdapterDtUid implements SqlTypeAdapter<DtUid> {
   private static final SqlTypeAdapterDtUid INSTANCE = new SqlTypeAdapterDtUid();
 
   /**
+   * Instance of DtUid type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterDtUid getInstance() {

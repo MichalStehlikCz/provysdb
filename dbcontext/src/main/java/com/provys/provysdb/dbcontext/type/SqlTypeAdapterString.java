@@ -11,6 +11,8 @@ class SqlTypeAdapterString extends SqlTypeAdapterBase<String> {
   private static final SqlTypeAdapterString INSTANCE = new SqlTypeAdapterString();
 
   /**
+   * Instance of String type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterString getInstance() {
@@ -18,7 +20,8 @@ class SqlTypeAdapterString extends SqlTypeAdapterBase<String> {
   }
 
   @Override
-  protected @Nullable String readValueInternal(DbResultSet resultSet, int columnIndex) throws SQLException {
+  protected @Nullable String readValueInternal(DbResultSet resultSet, int columnIndex)
+      throws SQLException {
     return resultSet.getString(columnIndex);
   }
 

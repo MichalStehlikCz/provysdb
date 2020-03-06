@@ -15,6 +15,8 @@ class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
   private static final SqlTypeAdapterBigInteger INSTANCE = new SqlTypeAdapterBigInteger();
 
   /**
+   * Instance of BigInteger type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterBigInteger getInstance() {
@@ -33,8 +35,8 @@ class SqlTypeAdapterBigInteger extends SqlTypeAdapterBase<BigInteger> {
       return value.toBigIntegerExact();
     } catch (ArithmeticException e) {
       throw new InternalException(
-          "Fractional part encountered when reading BigInteger, column index " +
-              columnIndex, e);
+          "Fractional part encountered when reading BigInteger, column index "
+              + columnIndex, e);
     }
   }
 

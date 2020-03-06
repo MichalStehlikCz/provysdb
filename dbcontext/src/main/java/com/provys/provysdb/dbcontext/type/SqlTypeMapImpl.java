@@ -79,7 +79,8 @@ class SqlTypeMapImpl implements SqlTypeMap {
 
   @Override
   public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
-    // first try to find in supertype... mostly successful so better to try it before heavy weight search
+    // first try to find in supertype... mostly successful so better to try it before heavy weight
+    // search
     var result = getAdapterSuper(type, adaptersByClass);
     // next go through class hierarchy once more, but this time use interfaces
     if (result == null) {

@@ -10,6 +10,8 @@ class SqlTypeAdapterInteger extends SqlTypeAdapterBase<Integer> {
   private static final SqlTypeAdapterInteger INSTANCE = new SqlTypeAdapterInteger();
 
   /**
+   * Instance of Integer type adapter.
+   *
    * @return instance of this type adapter
    */
   static SqlTypeAdapterInteger getInstance() {

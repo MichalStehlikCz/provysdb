@@ -126,7 +126,7 @@ class ProvysConnection implements DbConnection {
   @Override
   public DbStatement createStatement() {
     try {
-      return new ProvysStatement<>(connection.createStatement());
+      return new ProvysStatement<>(connection.createStatement(), sqlTypeMap);
     } catch (SQLException e) {
       throw new SqlException("Failed to create statement", e);
     }
@@ -135,7 +135,8 @@ class ProvysConnection implements DbConnection {
   @Override
   public DbStatement createStatement(int resultSetType, int resultSetConcurrency) {
     try {
-      return new ProvysStatement<>(connection.createStatement(resultSetType, resultSetConcurrency));
+      return new ProvysStatement<>(connection.createStatement(resultSetType, resultSetConcurrency),
+          sqlTypeMap);
     } catch (SQLException e) {
       throw new SqlException("Failed to create statement", e);
     }
@@ -146,7 +147,8 @@ class ProvysConnection implements DbConnection {
       int resultSetHoldability) {
     try {
       return new ProvysStatement<>(
-          connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability));
+          connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability),
+          sqlTypeMap);
     } catch (SQLException e) {
       throw new SqlException("Failed to create statement", e);
     }

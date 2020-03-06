@@ -2,11 +2,11 @@ package com.provys.provysdb.dbcontext.impl;
 
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.DbStatement;
+import com.provys.provysdb.dbcontext.SqlTypeMap;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
-import java.util.Objects;
 
 /**
  * Wrapper around Statement, adds Provys specific functionality. Mostly used via subclasses ({@link
@@ -17,9 +17,11 @@ import java.util.Objects;
 class ProvysStatement<T extends Statement> implements DbStatement {
 
   private final T statement;
+  private final SqlTypeMap sqlTypeMap;
 
-  ProvysStatement(T statement) {
-    this.statement = Objects.requireNonNull(statement);
+  ProvysStatement(T statement, SqlTypeMap sqlTypeMap) {
+    this.statement = statement;
+    this.sqlTypeMap = sqlTypeMap;
   }
 
   /**
@@ -31,9 +33,18 @@ class ProvysStatement<T extends Statement> implements DbStatement {
     return statement;
   }
 
+  /**
+   * Value of field sqlTypeMap.
+   *
+   * @return value of field sqlTypeMap
+   */
+  protected SqlTypeMap getSqlTypeMap() {
+    return sqlTypeMap;
+  }
+
   @Override
   public DbResultSet executeQuery(String sql) throws SQLException {
-    return new ProvysResultSet(statement.executeQuery(sql));
+    return new ProvysResultSet(statement.executeQuery(sql), getSqlTypeMap());
   }
 
   @Override
@@ -138,7 +149,7 @@ class ProvysStatement<T extends Statement> implements DbStatement {
 
   @Override
   public DbResultSet getResultSet() throws SQLException {
-    return new ProvysResultSet(statement.getResultSet());
+    return new ProvysResultSet(statement.getResultSet(), getSqlTypeMap());
   }
 
   @Override
@@ -208,7 +219,7 @@ class ProvysStatement<T extends Statement> implements DbStatement {
 
   @Override
   public DbResultSet getGeneratedKeys() throws SQLException {
-    return new ProvysResultSet(statement.getGeneratedKeys());
+    return new ProvysResultSet(statement.getGeneratedKeys(), getSqlTypeMap());
   }
 
   @Override

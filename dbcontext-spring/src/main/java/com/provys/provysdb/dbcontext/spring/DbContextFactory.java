@@ -8,20 +8,24 @@ import com.provys.provysdb.dbcontext.impl.ProvysDbContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Nonnull;
-
+/**
+ * Spring factory class, producing beans for DbContext library.
+ */
 @Configuration
 public class DbContextFactory {
 
-    @Bean
-    @Nonnull
-    ProvysConnectionPoolDataSource provysDbDataSource(ProvysDbConfiguration dbConfiguration) {
-        return new ProvysConnectionPoolDataSourceImpl(dbConfiguration);
-    }
+  @Bean
+  ProvysConnectionPoolDataSource provysDbDataSource(ProvysDbConfiguration dbConfiguration) {
+    return new ProvysConnectionPoolDataSourceImpl(dbConfiguration);
+  }
 
-    @Bean
-    @Nonnull
-    DbContext provysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
-        return new ProvysDbContext(provysDataSource);
-    }
+  @Bean
+  DbContext provysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
+    return new ProvysDbContext(provysDataSource);
+  }
+
+  @Override
+  public String toString() {
+    return "DbContextFactory{}";
+  }
 }

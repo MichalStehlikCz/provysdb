@@ -18,7 +18,7 @@ public class SqlTypeFactory {
   );
 
   /**
-   * Retrieve sql type adapter map, containing sql type adapters, defined in this library:
+   * Retrieve sql type adapter map, containing sql type adapters, defined in this library.
    * BigDecimal, BigInteger, Boolean (converts boolean to Y/N according to Provys conventions),
    * Byte, Integer, String, DtUid
    *

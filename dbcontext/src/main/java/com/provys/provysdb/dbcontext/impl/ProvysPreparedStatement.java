@@ -40,12 +40,10 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
     implements DbPreparedStatement {
 
   private final String sql;
-  private final SqlTypeMap sqlTypeMap;
 
   ProvysPreparedStatement(String sql, T preparedStatement, SqlTypeMap sqlTypeMap) {
-    super(preparedStatement);
+    super(preparedStatement, sqlTypeMap);
     this.sql = sql;
-    this.sqlTypeMap = sqlTypeMap;
   }
 
   /**
@@ -58,18 +56,9 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
     return sql;
   }
 
-  /**
-   * Value of field sqlTypeMap.
-   *
-   * @return value of field sqlTypeMap
-   */
-  SqlTypeMap getSqlTypeMap() {
-    return sqlTypeMap;
-  }
-
   @Override
   public DbResultSet executeQuery() throws SQLException {
-    return new ProvysResultSet(getStatement().executeQuery());
+    return new ProvysResultSet(getStatement().executeQuery(), getSqlTypeMap());
   }
 
   @Override
@@ -454,7 +443,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
   public void setNonnullValue(int parameterIndex, Object value) {
     // we know that we get adapter for proper type... there is just no way to express it
     @SuppressWarnings("unchecked")
-    var adapter = (SqlTypeAdapter<Object>) sqlTypeMap.getAdapter(value.getClass());
+    var adapter = (SqlTypeAdapter<Object>) getSqlTypeMap().getAdapter(value.getClass());
     adapter.bindValue(this, parameterIndex, value);
   }
 
@@ -465,7 +454,7 @@ class ProvysPreparedStatement<T extends PreparedStatement> extends ProvysStateme
 
   @Override
   public <V> void setNullableValue(int parameterIndex, @Nullable V value, Class<V> type) {
-    sqlTypeMap.getAdapter(type).bindValue(this, parameterIndex, value);
+    getSqlTypeMap().getAdapter(type).bindValue(this, parameterIndex, value);
   }
 
   @Override
