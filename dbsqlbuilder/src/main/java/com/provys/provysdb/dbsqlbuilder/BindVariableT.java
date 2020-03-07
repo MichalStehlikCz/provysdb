@@ -1,10 +1,10 @@
 package com.provys.provysdb.dbsqlbuilder;
 
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValueT;
+import com.provys.provysdb.sqlbuilder.BindValue;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface BindVariableT<T> extends BindVariable, BindValueT<T> {
+public interface BindVariableT<T> extends BindVariable, BindValue<T> {
 
   /**
    * Return bind value with the same name and type, but with new value. Used as part of bind value

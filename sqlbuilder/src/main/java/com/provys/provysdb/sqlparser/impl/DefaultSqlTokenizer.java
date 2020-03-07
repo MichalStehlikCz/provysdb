@@ -10,7 +10,7 @@ import com.provys.common.exception.InternalException;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlFactory;
-import com.provys.provysdb.sqlbuilder.impl.CodeBuilderImpl;
+import com.provys.provysdb.sqlbuilder.codebuilder.CodeBuilderImpl;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlKeyword;
 import com.provys.provysdb.sqlparser.SqlParsedToken;
@@ -162,7 +162,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
      * Position on current line.
      *
      * @return position on current line; position in tokenizer is one indexed, as when displayed to
-     * users, it makes more sense, moreover it is what SQL users are used to
+     *     users, it makes more sense, moreover it is what SQL users are used to
      */
     private int getPos() {
       if (currentLine == null) {

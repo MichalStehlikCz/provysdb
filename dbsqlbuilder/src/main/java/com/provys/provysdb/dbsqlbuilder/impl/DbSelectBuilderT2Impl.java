@@ -4,7 +4,7 @@ import com.provys.provysdb.dbsqlbuilder.DbSelectBuilderT2;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderT2Impl;
@@ -15,7 +15,7 @@ class DbSelectBuilderT2Impl<T1, T2>
     DbSelectBuilderBaseImpl<DbSelectBuilderT2Impl<T1, T2>, SelectBuilderT2Impl<DbSql, T1, T2>>
     implements DbSelectBuilderT2<T1, T2> {
 
-  DbSelectBuilderT2Impl(DbSql sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
+  DbSelectBuilderT2Impl(DbSql sql, SqlColumn<T1> column1, SqlColumn<T2> column2) {
     super(new SelectBuilderT2Impl<>(sql, column1, column2));
   }
 
@@ -34,7 +34,7 @@ class DbSelectBuilderT2Impl<T1, T2>
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(SqlColumnT<T> column) {
+  public <T> DbSelectBuilderImpl column(SqlColumn<T> column) {
     return new DbSelectBuilderImpl(getSelectBuilder().column(column));
   }
 

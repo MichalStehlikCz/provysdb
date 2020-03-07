@@ -1,7 +1,6 @@
 package com.provys.provysdb.sqlbuilder;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Represents select builder with two columns of known types added so far.
@@ -19,7 +18,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder column(SqlColumnT<T> column);
+  <T> SelectBuilder column(SqlColumn<T> column);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If
@@ -105,7 +104,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilder column(ExpressionT<T> expression, SqlIdentifier alias);
+  <T> SelectBuilder column(Expression<T> expression, SqlIdentifier alias);
 
   /**
    * Add column based on given expression.
@@ -115,7 +114,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilder column(ExpressionT<T> expression, String alias);
+  <T> SelectBuilder column(Expression<T> expression, String alias);
 
   /**
    * Add column with given SQL text.

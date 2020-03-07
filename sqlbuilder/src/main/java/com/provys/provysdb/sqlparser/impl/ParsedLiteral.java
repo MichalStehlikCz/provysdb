@@ -1,17 +1,17 @@
 package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.LiteralT;
+import com.provys.provysdb.sqlbuilder.Literal;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class ParsedLiteral<T> extends ParsedTokenBase implements LiteralT<T> {
+final class ParsedLiteral<T> extends ParsedTokenBase implements Literal<T> {
 
-  private final LiteralT<T> value;
+  private final Literal<T> value;
 
-  ParsedLiteral(int line, int pos, LiteralT<T> value) {
+  ParsedLiteral(int line, int pos, Literal<T> value) {
     super(line, pos);
     this.value = Objects.requireNonNull(value);
   }

@@ -1,18 +1,14 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
-
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.dbcontext.DbConnection;
 import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.DbRowMapper;
-import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.BindValueT;
 import com.provys.provysdb.sqlbuilder.Select;
 import com.provys.provysdb.sqlbuilder.SqlFactory;
 import java.sql.ResultSet;
@@ -24,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
@@ -42,11 +39,10 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
    * and returned to pool on close; when connection is passed to constructor, it is not held here
    * and thus not closed
    */
-  @Nullable
-  private DbConnection connection;
+  private @Nullable DbConnection connection;
   private boolean closed = false;
 
-  private static Map<String, BindWithPos> getBinds(Collection<? extends BindName> binds) {
+  private static Map<String, BindWithPos> prepareBinds(Collection<? extends BindName> binds) {
     // first construct list of positions for each supplied bind name
     int pos = 1;
     Map<BindName, List<Integer>> bindPosMap = new HashMap<>(binds.size());
@@ -72,7 +68,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       this.connection = null;
     }
     this.statement = connection.prepareStatement(sqlText);
-    this.binds = getBinds(binds);
+    this.binds = prepareBinds(binds);
   }
 
   SelectStatementTImpl(String sqlText, Collection<? extends BindName> binds,
@@ -116,7 +112,8 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     return self();
   }
 
-  public <T> S bindValue(BindValueT<T> bind, @Nullable T value) {
+  @SuppressWarnings("TypeMayBeWeakened")
+  public <T> S bindValue(BindValue<T> bind, @Nullable T value) {
     return bindValue(bind.getName(), value);
   }
 
@@ -172,21 +169,21 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
   }
 
-  private static class BindWithPos {
+  private static final class BindWithPos {
 
     private BindName bind;
     private final List<Integer> positions;
     /**
      * indicates if bind value has been modified after last time it has been bound to prepared
-     * statement
+     * statement.
      */
     private boolean modified = true;
 
     BindWithPos(BindName bind, Collection<Integer> positions) {
       if (bind instanceof BindVariable) {
         this.bind = bind;
-      } else if (bind instanceof BindValueT) {
-        this.bind = new BindVariableImpl<>((BindValueT<?>) bind);
+      } else if (bind instanceof BindValue) {
+        this.bind = new BindVariableImpl<>((BindValue<?>) bind);
       } else {
         // we do not have the value... we store bind-name and wait for value
         this.bind = bind;
@@ -195,6 +192,8 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     /**
+     * Value of field bind.
+     *
      * @return value of field bind
      */
     BindName getBind() {
@@ -202,15 +201,15 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     /**
-     * Set value to given bind
+     * Set value to given bind.
      *
      * @param value is new value to be set
      */
     public void setValue(@Nullable Object value) {
       BindName combinedBind;
       if (value == null) {
-        if (bind instanceof BindValueT) {
-          combinedBind = ((BindValueT<?>) bind).withValue(null);
+        if (bind instanceof BindValue) {
+          combinedBind = ((BindValue<?>) bind).withValue(null);
         } else {
           throw new InternalException(
               "Cannot bind null value to bind variable with unknown type " + bind);
@@ -241,12 +240,34 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     @Override
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      BindWithPos that = (BindWithPos) o;
+      return modified == that.modified
+          && Objects.equals(bind, that.bind)
+          && Objects.equals(positions, that.positions);
+    }
+
+    @Override
+    public int hashCode() {
+      int result = bind != null ? bind.hashCode() : 0;
+      result = 31 * result + (positions != null ? positions.hashCode() : 0);
+      result = 31 * result + (modified ? 1 : 0);
+      return result;
+    }
+
+    @Override
     public String toString() {
-      return "BindWithPos{" +
-          "bind=" + bind +
-          ", positions=" + positions +
-          ", modified=" + modified +
-          '}';
+      return "BindWithPos{"
+          + "bind=" + bind
+          + ", positions=" + positions
+          + ", modified=" + modified
+          + '}';
     }
   }
 
@@ -279,6 +300,22 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
   }
 
+  public <T> T fetchOne(DbRowMapper<T> rowMapper) {
+    try {
+      return fetchOneNoClose(rowMapper);
+    } finally {
+      close();
+    }
+  }
+
+  public <T> List<T> fetch(DbRowMapper<T> rowMapper) {
+    try {
+      return fetchNoClose(rowMapper);
+    } finally {
+      close();
+    }
+  }
+
   private void onCloseStream(ResultSet resultSet, boolean close) {
     // close both result and this statement
     Exception exception = null;
@@ -303,22 +340,6 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
         .onClose(() -> onCloseStream(resultSet, close));
   }
 
-  public <T> T fetchOne(DbRowMapper<T> rowMapper) {
-    try {
-      return fetchOneNoClose(rowMapper);
-    } finally {
-      close();
-    }
-  }
-
-  public <T> List<T> fetch(DbRowMapper<T> rowMapper) {
-    try {
-      return fetchNoClose(rowMapper);
-    } finally {
-      close();
-    }
-  }
-
   public <T> Stream<T> stream(DbRowMapper<T> rowMapper) {
     return stream(rowMapper, true);
   }
@@ -327,7 +348,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     return stream(rowMapper, false);
   }
 
-  private static class DbResultSetIterator<T> implements Iterator<T> {
+  private static final class DbResultSetIterator<T> implements Iterator<T> {
 
     private final DbRowMapper<T> rowMapper;
     private final DbResultSet resultSet;
@@ -366,19 +387,30 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      var result = castNonNull(next); // safe after hasNext
+      var result = Objects.requireNonNull(next); // safe after hasNext
       next = null;
       return result;
+    }
+
+    @Override
+    public String toString() {
+      return "DbResultSetIterator{"
+          + "rowMapper=" + rowMapper
+          + ", rowNumber=" + rowNumber
+          + ", finished=" + finished
+          + ", next=" + next
+          + '}';
     }
   }
 
   @Override
   public String toString() {
-    return "SelectStatementTImpl{" +
-        "sqlText='" + sqlText + '\'' +
-        ", binds=" + binds +
-        ", connection=" + connection +
-        ", closed=" + closed +
-        '}';
+    return "SelectStatementTImpl{"
+        + "sqlText='" + sqlText + '\''
+        + ", statement=" + statement
+        + ", binds=" + binds
+        + ", connection=" + connection
+        + ", closed=" + closed
+        + '}';
   }
 }

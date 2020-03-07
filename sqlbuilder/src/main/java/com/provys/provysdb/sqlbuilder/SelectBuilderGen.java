@@ -102,7 +102,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>        is type of expression / column
    * @return self to support fluent build
    */
-  <T> U column(ExpressionT<T> expression, SqlIdentifier alias);
+  <T> U column(Expression<T> expression, SqlIdentifier alias);
 
   /**
    * Add column based on given expression.
@@ -112,7 +112,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>        is type of expression / column
    * @return self to support fluent build
    */
-  <T> U column(ExpressionT<T> expression, String alias);
+  <T> U column(Expression<T> expression, String alias);
 
   /**
    * Add column with given SQL text.

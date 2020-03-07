@@ -32,7 +32,7 @@ public interface SqlTokenizer {
    *
    * @param source is source code supplied as String
    * @return CodeBuilder containing normalized text of SQL statement and binds parsed from SQL
-   * statement
+   *     statement
    */
   CodeBuilder normalize(String source);
 
@@ -41,7 +41,7 @@ public interface SqlTokenizer {
    *
    * @param scanner is source code supplied as Scanner
    * @return CodeBuilder containing normalized text of SQL statement and binds parsed from SQL
-   * statement
+   *     statement
    */
   CodeBuilder normalize(Scanner scanner);
 }

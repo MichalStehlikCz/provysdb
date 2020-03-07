@@ -17,8 +17,9 @@ import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-@SuppressWarnings("ClassReferencesSubclass")
-abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, S extends SelectBuilderBaseImpl<S, DbSql>> {
+@SuppressWarnings({"ClassReferencesSubclass", "CyclicClassDependency"})
+abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
+    S extends SelectBuilderBaseImpl<S, DbSql>> {
 
   private final S selectBuilder;
 
@@ -139,6 +140,16 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
     return self();
   }
 
+  public D from(Select select, SqlTableAlias alias) {
+    selectBuilder.from(select, alias);
+    return self();
+  }
+
+  public D from(Select select, String alias) {
+    selectBuilder.from(select, alias);
+    return self();
+  }
+
   public D fromDirect(String sqlSelect, SqlTableAlias alias) {
     selectBuilder.fromDirect(sqlSelect, alias);
     return self();
@@ -156,16 +167,6 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>, 
 
   public D fromSql(String sqlSelect, String alias) {
     selectBuilder.fromSql(sqlSelect, alias);
-    return self();
-  }
-
-  public D from(Select select, SqlTableAlias alias) {
-    selectBuilder.from(select, alias);
-    return self();
-  }
-
-  public D from(Select select, String alias) {
-    selectBuilder.from(select, alias);
     return self();
   }
 

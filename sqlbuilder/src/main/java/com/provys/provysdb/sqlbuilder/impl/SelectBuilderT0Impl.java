@@ -3,11 +3,10 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.Expression;
 import com.provys.provysdb.sqlbuilder.SelectBuilderT0;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
 import com.provys.provysdb.sqlbuilder.SqlFrom;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
@@ -49,7 +48,7 @@ public class SelectBuilderT0Impl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderT1Impl<S, T> column(SqlColumnT<T> column) {
+  public <T> SelectBuilderT1Impl<S, T> column(SqlColumn<T> column) {
     return new SelectBuilderT1Impl<>(getSql(), column, getTables(), getConditions());
   }
 
@@ -95,12 +94,12 @@ public class SelectBuilderT0Impl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderT1Impl<S, T> column(ExpressionT<T> expression, SqlIdentifier alias) {
+  public <T> SelectBuilderT1Impl<S, T> column(Expression<T> expression, SqlIdentifier alias) {
     return column(getSql().column(expression, alias));
   }
 
   @Override
-  public <T> SelectBuilderT1Impl<S, T> column(ExpressionT<T> expression, String alias) {
+  public <T> SelectBuilderT1Impl<S, T> column(Expression<T> expression, String alias) {
     return column(getSql().column(expression, alias));
   }
 

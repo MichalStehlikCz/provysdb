@@ -3,7 +3,7 @@ package com.provys.provysdb.dbsqlbuilder;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.SelectBuilderBase;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import java.util.Collection;
@@ -15,13 +15,13 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
     SelectBuilderBase<DbSelectBuilderT0, DbSelectBuilder> {
 
   /**
-   * Add column to list of columns
+   * Add column to list of columns.
    *
    * @param column is column to be added
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT1<T> column(SqlColumnT<T> column);
+  <T> DbSelectBuilderT1<T> column(SqlColumn<T> column);
 
   /**
    * Add column to list of columns; it is expected to come from last item, added to from clause. If
@@ -35,7 +35,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> column(SqlIdentifier column, Class<T> clazz);
 
   /**
-   * Add column with given name and alias
+   * Add column with given name and alias.
    *
    * @param column is name of table column to be assigned to column
    * @param alias  is alias to be sued for column
@@ -46,7 +46,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
 
   /**
-   * Add column with given table alias, name and alias
+   * Add column with given table alias, name and alias.
    *
    * @param tableAlias is alias of table column is in
    * @param column     is name of table column to be assigned to column
@@ -59,7 +59,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
       SqlIdentifier alias, Class<T> clazz);
 
   /**
-   * Add column to list of columns; it is expected to come from last item, added to from clause. If
+   * Add column to list of columns. It is expected to come from last item, added to from clause. If
    * no items were added to from clause, column is added as is, without table alias
    *
    * @param columnName is name of column; it should be column in last item, added to from clause. It
@@ -73,7 +73,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> column(String columnName, Class<T> clazz);
 
   /**
-   * Add new column; no alias is created, meaning column name will be used instead
+   * Add new column; no alias is created, meaning column name will be used instead.
    *
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
@@ -86,7 +86,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> column(String tableAlias, String columnName, Class<T> clazz);
 
   /**
-   * Add column with table alias, column name and alias
+   * Add column with table alias, column name and alias.
    *
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
@@ -101,7 +101,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
       Class<T> clazz);
 
   /**
-   * Add column with given SQL text
+   * Add column with given SQL text.
    *
    * @param columnSql is text that will be used as column definition
    * @param clazz     is type of return value of column
@@ -111,7 +111,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> columnDirect(String columnSql, Class<T> clazz);
 
   /**
-   * Add column with given SQL text and alias
+   * Add column with given SQL text and alias.
    *
    * @param columnSql is text that will be used as column definition
    * @param alias     is text that will be used as alias for new column
@@ -122,7 +122,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> columnDirect(String columnSql, String alias, Class<T> clazz);
 
   /**
-   * Add column with given SQL text, alias and binds to list of columns
+   * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param columnSql is text that will be used as column definition
    * @param alias     is text that will be used as alias for new column
@@ -135,7 +135,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
       BindName... binds);
 
   /**
-   * Add column with given SQL text, alias and binds to list of columns
+   * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param columnSql is text that will be used as column definition
    * @param alias     is text that will be used as alias for new column
@@ -148,7 +148,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
       Collection<? extends BindName> binds, Class<T> clazz);
 
   /**
-   * Add column with given SQL text, parse text for binds
+   * Add column with given SQL text, parse text for binds.
    *
    * @param columnSql is text that will be used as column definition
    * @param clazz     is type of return value of column
@@ -158,7 +158,7 @@ public interface DbSelectBuilderT0 extends DbSelectBuilderBase,
   <T> DbSelectBuilderT1<T> columnSql(String columnSql, Class<T> clazz);
 
   /**
-   * Add column with given SQL text and alias, parse text for binds
+   * Add column with given SQL text and alias, parse text for binds.
    *
    * @param columnSql is text that will be used as column definition
    * @param alias     is text that will be used as alias for new column

@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ProvysDbConfigurationImplTest {
 
-  @Autowired
   private final ProvysDbConfiguration dbConfiguration;
 
   @Autowired

@@ -4,16 +4,16 @@ import com.provys.provysdb.dbcontext.DbPreparedStatement;
 import com.provys.provysdb.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValueT;
+import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class BindVariableImpl<T> implements BindVariableT<T> {
 
-  private final BindValueT<T> bindValue;
+  private final BindValue<T> bindValue;
 
-  BindVariableImpl(BindValueT<T> bindValue) {
+  BindVariableImpl(BindValue<T> bindValue) {
     this.bindValue = bindValue;
   }
 
@@ -28,8 +28,13 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
   }
 
   @Override
+  public <U> @Nullable U getValue(Class<U> returnType) {
+    return bindValue.getValue(returnType);
+  }
+
+  @Override
   public BindVariableT<T> withValue(@Nullable Object newValue) {
-    BindValueT<T> result = bindValue.withValue(newValue);
+    BindValue<T> result = bindValue.withValue(newValue);
     if (result == this) {
       return this;
     }
@@ -37,11 +42,6 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
       return (BindVariableT<T>) result;
     }
     return new BindVariableImpl<>(result);
-  }
-
-  @Override
-  public <U> @Nullable U getValue(Class<U> returnType) {
-    return bindValue.getValue(returnType);
   }
 
   @Override
@@ -73,8 +73,8 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
       var value = getValue();
       statement.setNullableValue(parameterIndex, value, getType());
     } catch (Exception e) {
-      throw new SqlException("Error binding value " + getValue() +
-          " to variable " + getName(), e);
+      throw new SqlException("Error binding value " + getValue()
+          + " to variable " + getName(), e);
     }
   }
 

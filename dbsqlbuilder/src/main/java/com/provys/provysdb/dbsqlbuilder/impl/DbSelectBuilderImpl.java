@@ -5,13 +5,13 @@ import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Expression;
-import com.provys.provysdb.sqlbuilder.ExpressionT;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderImpl;
 import java.util.Collection;
 
+@SuppressWarnings("CyclicClassDependency")
 class DbSelectBuilderImpl extends
     DbSelectBuilderBaseImpl<DbSelectBuilderImpl, SelectBuilderImpl<DbSql>>
     implements DbSelectBuilder {
@@ -74,70 +74,13 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(ExpressionT<T> expression, SqlIdentifier alias) {
+  public <T> DbSelectBuilderImpl column(Expression<T> expression, SqlIdentifier alias) {
     return column(getSql().column(expression, alias));
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(ExpressionT<T> expression, String alias) {
+  public <T> DbSelectBuilderImpl column(Expression<T> expression, String alias) {
     return column(getSql().column(expression, alias));
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnDirect(String columnSql, Class<T> clazz) {
-    getSelectBuilder().columnDirect(columnSql, clazz);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias, Class<T> clazz) {
-    getSelectBuilder().columnDirect(sql, alias, clazz);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias, Class<T> clazz,
-      BindName... binds) {
-    getSelectBuilder().columnDirect(sql, alias, clazz, binds);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias,
-      Collection<? extends BindName> binds, Class<T> clazz) {
-    getSelectBuilder().columnDirect(sql, alias, binds, clazz);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnSql(String columnSql, Class<T> clazz) {
-    getSelectBuilder().columnSql(columnSql, clazz);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias, Class<T> clazz) {
-    getSelectBuilder().columnSql(columnSql, alias, clazz);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias, Class<T> clazz,
-      BindValue... binds) {
-    getSelectBuilder().columnSql(columnSql, alias, clazz, binds);
-    return this;
-  }
-
-  @Override
-  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias,
-      Collection<? extends BindValue> binds, Class<T> clazz) {
-    getSelectBuilder().columnSql(columnSql, alias, binds, clazz);
-    return this;
-  }
-
-  @Override
-  public DbSelectBuilderImpl copy() {
-    return new DbSelectBuilderImpl(getSelectBuilder().copy());
   }
 
   @Override
@@ -190,6 +133,32 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
+  public <T> DbSelectBuilderImpl columnDirect(String columnSql, Class<T> clazz) {
+    getSelectBuilder().columnDirect(columnSql, clazz);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias, Class<T> clazz) {
+    getSelectBuilder().columnDirect(sql, alias, clazz);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias, Class<T> clazz,
+      BindName... binds) {
+    getSelectBuilder().columnDirect(sql, alias, clazz, binds);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnDirect(String sql, String alias,
+      Collection<? extends BindName> binds, Class<T> clazz) {
+    getSelectBuilder().columnDirect(sql, alias, binds, clazz);
+    return this;
+  }
+
+  @Override
   public DbSelectBuilderImpl columnDirect(String columnSql) {
     getSelectBuilder().columnDirect(columnSql);
     return this;
@@ -211,6 +180,32 @@ class DbSelectBuilderImpl extends
   public DbSelectBuilderImpl columnDirect(String sqlColumn, String alias,
       Collection<? extends BindName> binds) {
     getSelectBuilder().columnDirect(sqlColumn, alias, binds);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnSql(String columnSql, Class<T> clazz) {
+    getSelectBuilder().columnSql(columnSql, clazz);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias, Class<T> clazz) {
+    getSelectBuilder().columnSql(columnSql, alias, clazz);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias, Class<T> clazz,
+      BindValue... binds) {
+    getSelectBuilder().columnSql(columnSql, alias, clazz, binds);
+    return this;
+  }
+
+  @Override
+  public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias,
+      Collection<? extends BindValue> binds, Class<T> clazz) {
+    getSelectBuilder().columnSql(columnSql, alias, binds, clazz);
     return this;
   }
 
@@ -237,5 +232,10 @@ class DbSelectBuilderImpl extends
       Collection<? extends BindValue> binds) {
     getSelectBuilder().columnSql(columnSql, alias, binds);
     return this;
+  }
+
+  @Override
+  public DbSelectBuilderImpl copy() {
+    return new DbSelectBuilderImpl(getSelectBuilder().copy());
   }
 }

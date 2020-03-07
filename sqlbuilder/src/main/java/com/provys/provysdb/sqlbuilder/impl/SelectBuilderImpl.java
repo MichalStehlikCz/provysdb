@@ -3,7 +3,7 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.Expression;
 import com.provys.provysdb.sqlbuilder.SelectBuilder;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
@@ -88,12 +88,12 @@ public class SelectBuilderImpl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, SqlIdentifier alias) {
+  public <T> SelectBuilderImpl<S> column(Expression<T> expression, SqlIdentifier alias) {
     return column(getSql().column(expression, alias));
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, String alias) {
+  public <T> SelectBuilderImpl<S> column(Expression<T> expression, String alias) {
     return column(getSql().column(expression, alias));
   }
 

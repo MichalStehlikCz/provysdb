@@ -42,7 +42,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return varchar literal
    */
-  public static LiteralT<String> literal(String value) {
+  public static Literal<String> literal(String value) {
     return SQL.literal(value);
   }
 
@@ -52,7 +52,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return byte literal
    */
-  public static LiteralT<Byte> literal(byte value) {
+  public static Literal<Byte> literal(byte value) {
     return SQL.literal(value);
   }
 
@@ -62,7 +62,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return short literal
    */
-  public static LiteralT<Short> literal(short value) {
+  public static Literal<Short> literal(short value) {
     return SQL.literal(value);
   }
 
@@ -72,7 +72,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return integer literal
    */
-  public static LiteralT<Integer> literal(int value) {
+  public static Literal<Integer> literal(int value) {
     return SQL.literal(value);
   }
 
@@ -82,7 +82,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return long literal
    */
-  public static LiteralT<Long> literal(long value) {
+  public static Literal<Long> literal(long value) {
     return SQL.literal(value);
   }
 
@@ -92,7 +92,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return BigInteger literal
    */
-  public static LiteralT<BigInteger> literal(BigInteger value) {
+  public static Literal<BigInteger> literal(BigInteger value) {
     return SQL.literal(value);
   }
 
@@ -102,7 +102,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return float literal
    */
-  public static LiteralT<Float> literal(float value) {
+  public static Literal<Float> literal(float value) {
     return SQL.literal(value);
   }
 
@@ -112,7 +112,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return double literal
    */
-  public static LiteralT<Double> literal(double value) {
+  public static Literal<Double> literal(double value) {
     return SQL.literal(value);
   }
 
@@ -122,7 +122,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return BigDecimal literal
    */
-  public static LiteralT<BigDecimal> literal(BigDecimal value) {
+  public static Literal<BigDecimal> literal(BigDecimal value) {
     return SQL.literal(value);
   }
 
@@ -132,7 +132,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return DtUid literal
    */
-  public static LiteralT<DtUid> literal(DtUid value) {
+  public static Literal<DtUid> literal(DtUid value) {
     return SQL.literal(value);
   }
 
@@ -142,7 +142,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return date literal
    */
-  public static LiteralT<DtDate> literal(DtDate value) {
+  public static Literal<DtDate> literal(DtDate value) {
     return SQL.literal(value);
   }
 
@@ -152,7 +152,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return datetime literal
    */
-  public static LiteralT<DtDateTime> literal(DtDateTime value) {
+  public static Literal<DtDateTime> literal(DtDateTime value) {
     return SQL.literal(value);
   }
 
@@ -162,7 +162,7 @@ public final class SqlFactory {
    * @param value is value of literal
    * @return NVarchar literal
    */
-  public static LiteralT<String> literalNVarchar(String value) {
+  public static Literal<String> literalNVarchar(String value) {
     return SQL.literalNVarchar(value);
   }
 
@@ -187,7 +187,7 @@ public final class SqlFactory {
    * @param <T>      is type of bind value
    * @return bind value with supplied name and value
    */
-  public static <T> BindValueT<T> bind(BindName bindName, @NonNull T value) {
+  public static <T> BindValue<T> bind(BindName bindName, @NonNull T value) {
     return SQL.bind(bindName, value);
   }
 
@@ -202,7 +202,7 @@ public final class SqlFactory {
    * @param <T>   is type of bind value
    * @return bind value with supplied name and value
    */
-  public static <T> BindValueT<T> bind(String name, @NonNull T value) {
+  public static <T> BindValue<T> bind(String name, @NonNull T value) {
     return SQL.bind(name, value);
   }
 
@@ -215,7 +215,7 @@ public final class SqlFactory {
    * @param <T>      is type of bind value
    * @return bind value of given type with supplied name and value
    */
-  public static <T> BindValueT<T> bind(BindName bindName, @Nullable T value, Class<T> clazz) {
+  public static <T> BindValue<T> bind(BindName bindName, @Nullable T value, Class<T> clazz) {
     return SQL.bind(bindName, value, clazz);
   }
 
@@ -228,7 +228,7 @@ public final class SqlFactory {
    * @param <T>   is type of bind value
    * @return bind value of given type with supplied name and value
    */
-  public static <T> BindValueT<T> bind(String name, @Nullable T value, Class<T> clazz) {
+  public static <T> BindValue<T> bind(String name, @Nullable T value, Class<T> clazz) {
     return SQL.bind(name, value, clazz);
   }
 
@@ -241,7 +241,7 @@ public final class SqlFactory {
    * @param <T>   is type of bind value
    * @return bind value with supplied name and type
    */
-  public static <T> BindValueT<T> bindEmpty(String name, Class<T> clazz) {
+  public static <T> BindValue<T> bindEmpty(String name, Class<T> clazz) {
     return SQL.bindEmpty(name, clazz);
   }
 
@@ -348,7 +348,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz) {
+  public static <T> SqlColumn<T> column(SqlColumn column, Class<T> clazz) {
     return SQL.column(column, clazz);
   }
 
@@ -360,7 +360,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(SqlTableColumn column, Class<T> clazz) {
+  public static <T> SqlTableColumn<T> column(SqlTableColumn column, Class<T> clazz) {
     return SQL.column(column, clazz);
   }
 
@@ -372,7 +372,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(SqlIdentifier column, Class<T> clazz) {
+  public static <T> SqlTableColumn<T> column(SqlIdentifier column, Class<T> clazz) {
     return SQL.column(column, clazz);
   }
 
@@ -385,7 +385,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(SqlIdentifier column, SqlIdentifier alias,
+  public static <T> SqlTableColumn<T> column(SqlIdentifier column, SqlIdentifier alias,
       Class<T> clazz) {
     return SQL.column(column, alias, clazz);
   }
@@ -399,7 +399,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
+  public static <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
       Class<T> clazz) {
     return SQL.column(tableAlias, column, clazz);
   }
@@ -414,7 +414,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
+  public static <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
       SqlIdentifier alias, Class<T> clazz) {
     return SQL.column(tableAlias, column, alias, clazz);
   }
@@ -429,7 +429,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(String columnName, Class<T> clazz) {
+  public static <T> SqlTableColumn<T> column(String columnName, Class<T> clazz) {
     return SQL.column(columnName, clazz);
   }
 
@@ -444,7 +444,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(String tableAlias, String columnName,
+  public static <T> SqlTableColumn<T> column(String tableAlias, String columnName,
       Class<T> clazz) {
     return SQL.column(tableAlias, columnName, clazz);
   }
@@ -461,7 +461,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumnT<T> column(String tableAlias, String columnName, String alias,
+  public static <T> SqlTableColumn<T> column(String tableAlias, String columnName, String alias,
       Class<T> clazz) {
     return SQL.column(tableAlias, columnName, alias, clazz);
   }
@@ -520,7 +520,7 @@ public final class SqlFactory {
    * @param <T>       is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnDirect(String columnSql, Class<T> clazz) {
+  public static <T> SqlColumn<T> columnDirect(String columnSql, Class<T> clazz) {
     return SQL.columnDirect(columnSql, clazz);
   }
 
@@ -533,7 +533,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz) {
+  public static <T> SqlColumn<T> columnDirect(String sql, String alias, Class<T> clazz) {
     return SQL.columnDirect(sql, alias, clazz);
   }
 
@@ -547,7 +547,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz,
+  public static <T> SqlColumn<T> columnDirect(String sql, String alias, Class<T> clazz,
       BindName... binds) {
     return SQL.columnDirect(sql, alias, clazz, binds);
   }
@@ -563,7 +563,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnDirect(String sql, String alias, List<BindName> binds,
+  public static <T> SqlColumn<T> columnDirect(String sql, String alias, List<BindName> binds,
       Class<T> clazz) {
     return SQL.columnDirect(sql, alias, binds, clazz);
   }
@@ -628,7 +628,7 @@ public final class SqlFactory {
    * @param <T>       is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnSql(String columnSql, Class<T> clazz) {
+  public static <T> SqlColumn<T> columnSql(String columnSql, Class<T> clazz) {
     return SQL.columnSql(columnSql, clazz);
   }
 
@@ -642,7 +642,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz) {
+  public static <T> SqlColumn<T> columnSql(String sql, String alias, Class<T> clazz) {
     return SQL.columnSql(sql, alias, clazz);
   }
 
@@ -657,7 +657,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz,
+  public static <T> SqlColumn<T> columnSql(String sql, String alias, Class<T> clazz,
       BindValue... binds) {
     return SQL.columnSql(sql, alias, clazz, binds);
   }
@@ -674,7 +674,7 @@ public final class SqlFactory {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlColumnT<T> columnSql(String sql, String alias, Collection<BindValue> binds,
+  public static <T> SqlColumn<T> columnSql(String sql, String alias, Collection<BindValue> binds,
       Class<T> clazz) {
     return SQL.columnSql(sql, alias, binds, clazz);
   }
@@ -925,7 +925,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition eq(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition eq(Expression<T> first, Expression<T> second) {
     return SQL.eq(first, second);
   }
 
@@ -937,7 +937,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition notEq(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition notEq(Expression<T> first, Expression<T> second) {
     return SQL.notEq(first, second);
   }
 
@@ -949,7 +949,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition lessThan(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition lessThan(Expression<T> first, Expression<T> second) {
     return SQL.lessThan(first, second);
   }
 
@@ -961,7 +961,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition lessOrEqual(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition lessOrEqual(Expression<T> first, Expression<T> second) {
     return SQL.lessOrEqual(first, second);
   }
 
@@ -973,7 +973,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition greaterThan(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition greaterThan(Expression<T> first, Expression<T> second) {
     return SQL.greaterThan(first, second);
   }
 
@@ -985,7 +985,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition greaterOrEqual(ExpressionT<T> first, ExpressionT<T> second) {
+  public static <T> Condition greaterOrEqual(Expression<T> first, Expression<T> second) {
     return SQL.greaterOrEqual(first, second);
   }
 
@@ -996,7 +996,7 @@ public final class SqlFactory {
    * @param <T>   is type of operand
    * @return created expression (boolean expression / condition)
    */
-  public static <T> Condition isNull(ExpressionT<T> first) {
+  public static <T> Condition isNull(Expression<T> first) {
     return SQL.isNull(first);
   }
 

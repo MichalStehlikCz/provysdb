@@ -10,7 +10,7 @@ public interface SqlFrom extends SqlElement {
    * Alias associated with given expression.
    *
    * @return alias this table is associated with; mandatory for element in from clause, as even
-   * though it is not required in SQL, it is enforced by PROVYS StyleGuide
+   *     though it is not required in SQL, it is enforced by PROVYS StyleGuide
    */
   SqlTableAlias getAlias();
 }

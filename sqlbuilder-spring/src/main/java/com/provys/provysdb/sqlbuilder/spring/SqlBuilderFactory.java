@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class SqlBuilderFactory {
 
-    @Bean
-    NoDbSqlImpl getNoDbSql() {
-        return new NoDbSqlImpl(new DefaultSqlTokenizer());
-    }
+  @Bean
+  NoDbSqlImpl getNoDbSql() {
+    return new NoDbSqlImpl(new DefaultSqlTokenizer());
+  }
 }

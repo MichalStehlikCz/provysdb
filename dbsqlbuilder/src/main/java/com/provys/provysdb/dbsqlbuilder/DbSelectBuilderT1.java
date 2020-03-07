@@ -3,11 +3,10 @@ package com.provys.provysdb.dbsqlbuilder;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.SelectBuilderBase;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Variant of database backed select builder interface with single typed column.
@@ -24,7 +23,7 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(SqlColumnT<T> column);
+  <T> DbSelectBuilderT2<T1, T> column(SqlColumn<T> column);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If

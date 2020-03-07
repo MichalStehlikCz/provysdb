@@ -3,7 +3,7 @@ package com.provys.provysdb.dbsqlbuilder;
 import com.provys.provysdb.dbcontext.DbResultSet;
 import com.provys.provysdb.dbcontext.DbRowMapper;
 import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValueT;
+import com.provys.provysdb.sqlbuilder.BindValue;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,7 +19,7 @@ public interface SelectStatement extends AutoCloseable {
    * Collection of bind variables, associated with this statement.
    *
    * @return collection of bind variables, associated with this statement (and available for
-   * binding)
+   *     binding)
    */
   Collection<BindName> getBinds();
 
@@ -40,7 +40,7 @@ public interface SelectStatement extends AutoCloseable {
    * @param <T>   is type of bind variable and also type of used value
    * @return self to allow chaining
    */
-  <T> SelectStatement bindValue(BindValueT<T> bind, @Nullable T value);
+  <T> SelectStatement bindValue(BindValue<T> bind, @Nullable T value);
 
   /**
    * Execute associated statement (using connection fetched from underlying DataSource) and return

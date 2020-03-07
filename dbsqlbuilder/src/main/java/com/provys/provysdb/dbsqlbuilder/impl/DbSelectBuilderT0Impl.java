@@ -6,7 +6,7 @@ import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Select;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
+import com.provys.provysdb.sqlbuilder.SqlColumn;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderT0Impl;
@@ -35,7 +35,7 @@ class DbSelectBuilderT0Impl extends
   }
 
   @Override
-  public <T> DbSelectBuilderT1Impl<T> column(SqlColumnT<T> column) {
+  public <T> DbSelectBuilderT1Impl<T> column(SqlColumn<T> column) {
     return new DbSelectBuilderT1Impl<>(getSelectBuilder().column(column));
   }
 

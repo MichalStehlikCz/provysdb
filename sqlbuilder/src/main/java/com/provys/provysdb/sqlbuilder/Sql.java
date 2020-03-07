@@ -6,7 +6,6 @@ import com.provys.common.datatype.DtUid;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.List;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -22,7 +21,7 @@ public interface Sql {
    * @param value is value of literal
    * @return varchar literal
    */
-  LiteralT<String> literal(String value);
+  Literal<String> literal(String value);
 
   /**
    * Byte literal.
@@ -30,7 +29,7 @@ public interface Sql {
    * @param value is value of literal
    * @return byte literal
    */
-  LiteralT<Byte> literal(byte value);
+  Literal<Byte> literal(byte value);
 
   /**
    * Short literal.
@@ -38,7 +37,7 @@ public interface Sql {
    * @param value is value of literal
    * @return short literal
    */
-  LiteralT<Short> literal(short value);
+  Literal<Short> literal(short value);
 
   /**
    * Integer literal.
@@ -46,7 +45,7 @@ public interface Sql {
    * @param value is value of literal
    * @return integer literal
    */
-  LiteralT<Integer> literal(int value);
+  Literal<Integer> literal(int value);
 
   /**
    * Long literal.
@@ -54,7 +53,7 @@ public interface Sql {
    * @param value is value of literal
    * @return long literal
    */
-  LiteralT<Long> literal(long value);
+  Literal<Long> literal(long value);
 
   /**
    * BigInteger literal.
@@ -62,7 +61,7 @@ public interface Sql {
    * @param value is value of literal
    * @return BigInteger literal
    */
-  LiteralT<BigInteger> literal(BigInteger value);
+  Literal<BigInteger> literal(BigInteger value);
 
   /**
    * Float literal.
@@ -70,7 +69,7 @@ public interface Sql {
    * @param value is value of literal
    * @return float literal
    */
-  LiteralT<Float> literal(float value);
+  Literal<Float> literal(float value);
 
   /**
    * Double literal.
@@ -78,7 +77,7 @@ public interface Sql {
    * @param value is value of literal
    * @return double literal
    */
-  LiteralT<Double> literal(double value);
+  Literal<Double> literal(double value);
 
   /**
    * BigDecimal literal.
@@ -86,7 +85,7 @@ public interface Sql {
    * @param value is value of literal
    * @return BigDecimal literal
    */
-  LiteralT<BigDecimal> literal(BigDecimal value);
+  Literal<BigDecimal> literal(BigDecimal value);
 
   /**
    * Boolean literal.
@@ -94,7 +93,7 @@ public interface Sql {
    * @param value is value of literal. Note that Java boolean is translated to Y/N char
    * @return boolean literal
    */
-  LiteralT<Boolean> literal(boolean value);
+  Literal<Boolean> literal(boolean value);
 
   /**
    * DtUid literal.
@@ -102,7 +101,7 @@ public interface Sql {
    * @param value is value of literal
    * @return DtUid literal
    */
-  LiteralT<DtUid> literal(DtUid value);
+  Literal<DtUid> literal(DtUid value);
 
   /**
    * DtDate literal.
@@ -110,7 +109,7 @@ public interface Sql {
    * @param value is value of literal
    * @return date literal
    */
-  LiteralT<DtDate> literal(DtDate value);
+  Literal<DtDate> literal(DtDate value);
 
   /**
    * DtDateTime literal.
@@ -118,7 +117,7 @@ public interface Sql {
    * @param value is value of literal
    * @return datetime literal
    */
-  LiteralT<DtDateTime> literal(DtDateTime value);
+  Literal<DtDateTime> literal(DtDateTime value);
 
   /**
    * String literal represented as NVARCHAR2.
@@ -126,7 +125,7 @@ public interface Sql {
    * @param value is value of literal
    * @return NVarchar literal
    */
-  LiteralT<String> literalNVarchar(String value);
+  Literal<String> literalNVarchar(String value);
 
   /**
    * Create bind name based on supplied String.
@@ -147,7 +146,7 @@ public interface Sql {
    * @param <T>      is type of bind value
    * @return bind value with supplied name and value
    */
-  <T> BindValueT<T> bind(BindName bindName, @NonNull T value);
+  <T> BindValue<T> bind(BindName bindName, @NonNull T value);
 
   /**
    * Create bind value based on supplied (non-null) value. Note that bind will take type from
@@ -160,7 +159,7 @@ public interface Sql {
    * @param <T>   is type of bind value
    * @return bind value with supplied name and value
    */
-  <T> BindValueT<T> bind(String name, @NonNull T value);
+  <T> BindValue<T> bind(String name, @NonNull T value);
 
   /**
    * Create bind value of supplied type based on supplied value. Value might be null in this variant
@@ -172,7 +171,7 @@ public interface Sql {
    * @param <T>      is type of bind value
    * @return bind value of given type with supplied name and value
    */
-  <T> BindValueT<T> bind(BindName bindName, @Nullable T value, Class<T> clazz);
+  <T> BindValue<T> bind(BindName bindName, @Nullable T value, Class<T> clazz);
 
   /**
    * Create bind value of supplied type based on supplied value. Value might be null in this variant
@@ -184,7 +183,7 @@ public interface Sql {
    * @param <T>   is type of bind value
    * @return bind value of given type with supplied name and value
    */
-  <T> BindValueT<T> bind(String name, @Nullable T value, Class<T> clazz);
+  <T> BindValue<T> bind(String name, @Nullable T value, Class<T> clazz);
 
   /**
    * Create bind value based on supplied type, without value; value is set to null and should be
@@ -195,7 +194,7 @@ public interface Sql {
    * @param <T>   is type of bind value
    * @return bind value with supplied name and type
    */
-  default <T> BindValueT<T> bindEmpty(String name, Class<T> clazz) {
+  default <T> BindValue<T> bindEmpty(String name, Class<T> clazz) {
     return bind(name, null, clazz);
   }
 
@@ -213,57 +212,26 @@ public interface Sql {
    * @param column is name of table column to be assigned to column
    * @return created column
    */
-  SqlTableColumn column(SqlIdentifier column);
+  SqlTableColumn<Object> column(SqlIdentifier column);
 
   /**
-   * Create column with given name and alias.
-   *
-   * @param column is name of table column to be assigned to column
-   * @param alias  is alias to be sued for column
-   * @return created column
-   */
-  SqlTableColumn column(SqlIdentifier column, SqlIdentifier alias);
-
-  /**
-   * Create column with given table alias, name and alias.
+   * Create column with given table alias and name.
    *
    * @param tableAlias is alias of table column is in
    * @param column     is name of table column to be assigned to column
    * @return created column
    */
-  SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column);
+  SqlTableColumn<Object> column(SqlTableAlias tableAlias, SqlIdentifier column);
 
   /**
-   * Create column with given table alias, name and alias.
-   *
-   * @param tableAlias is alias of table column is in
-   * @param column     is name of table column to be assigned to column
-   * @param alias      is alias to be sued for column
-   * @return created column
-   */
-  SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
-
-  /**
-   * Create new column. No alias is created, meaning column name will be used instead and no table
-   * spec risking ambiguity if more tables are joined
+   * Create new column. No table spec means risking ambiguity if more tables are joined
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
    *                   to add columns based on sql expressions
    * @return created column
    */
-  SqlTableColumn column(String columnName);
-
-  /**
-   * Create new column; no alias is created, meaning column name will be used instead.
-   *
-   * @param tableAlias is alias of table column is in
-   * @param columnName is name of column. It must be valid column name (in "" or first character
-   *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
-   * @return created column
-   */
-  SqlTableColumn column(String tableAlias, String columnName);
+  SqlTableColumn<Object> column(String columnName);
 
   /**
    * Create new column.
@@ -272,92 +240,31 @@ public interface Sql {
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
    *                   to add columns based on sql expressions
-   * @param alias      is alias to be used for column
    * @return created column
    */
-  SqlTableColumn column(String tableAlias, String columnName, String alias);
+  SqlTableColumn<Object> column(String tableAlias, String columnName);
 
   /**
    * Create new column based on given expression.
    *
    * @param expression is expression column should be based on
-   * @param alias      is alias used for column
+   * @param <T> is type of expression and subsequently column value
    * @return new column with given expression and alias
    */
-  SqlColumn column(Expression expression, SqlIdentifier alias);
+  <T> SqlColumn<T> column(Expression<T> expression);
 
   /**
-   * Create new column based on given expression.
-   *
-   * @param expression is expression column should be based on
-   * @param alias      is alias used for column
-   * @return new column with given expression and alias
-   */
-  SqlColumn column(Expression expression, String alias);
-
-  /**
-   * Create new column based on given expression.
-   *
-   * @param expression is expression column should be based on
-   * @param alias      is alias used for column
-   * @param <T>        is type of expression / column
-   * @return new column with given expression and alias
-   */
-  <T> SqlColumnT<T> column(ExpressionT<T> expression, @Nullable SqlIdentifier alias);
-
-  /**
-   * Create new column based on given expression.
-   *
-   * @param expression is expression column should be based on
-   * @param alias      is alias used for column
-   * @param <T>        is type of expression / column
-   * @return new column with given expression and alias
-   */
-  <T> SqlColumnT<T> column(ExpressionT<T> expression, String alias);
-
-  /**
-   * Create typed column based on non-typed column and specified type.
-   *
-   * @param column is original (likely non-typed) column
-   * @param clazz  is type of return value of column
-   * @param <T>    is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlColumnT<T> column(SqlColumn column, Class<T> clazz);
-
-  /**
-   * Create typed column based on non-typed column and specified type.
-   *
-   * @param column is original (likely non-typed) column
-   * @param clazz  is type of return value of column
-   * @param <T>    is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlTableColumnT<T> column(SqlTableColumn column, Class<T> clazz);
-
-  /**
-   * Create mandatory column with given name.
+   * Create column with given name.
    *
    * @param column is name of table column to be assigned to column
    * @param clazz  is type of return value of column
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumnT<T> column(SqlIdentifier column, Class<T> clazz);
+  <T> SqlTableColumn<T> column(SqlIdentifier column, Class<T> clazz);
 
   /**
-   * Create mandatory column with given name and alias.
-   *
-   * @param column is name of table column to be assigned to column
-   * @param alias  is alias to be sued for column
-   * @param clazz  is type of return value of column
-   * @param <T>    is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlTableColumnT<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
-
-  /**
-   * Create mandatory column with given table alias, name and alias.
+   * Create column with given table alias and name.
    *
    * @param tableAlias is alias of table column is in
    * @param column     is name of table column to be assigned to column
@@ -365,23 +272,10 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
+  <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
 
   /**
-   * Create mandatory column with given table alias, name and alias.
-   *
-   * @param tableAlias is alias of table column is in
-   * @param column     is name of table column to be assigned to column
-   * @param alias      is alias to be sued for column
-   * @param clazz      is type of return value of column
-   * @param <T>        is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlTableColumnT<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
-      Class<T> clazz);
-
-  /**
-   * Create new mandatory column; it is created without table alias, risking ambiguity.
+   * Create new column; it is created without table alias, risking ambiguity.
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
@@ -390,7 +284,7 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumnT<T> column(String columnName, Class<T> clazz);
+  <T> SqlTableColumn<T> column(String columnName, Class<T> clazz);
 
   /**
    * Create new mandatory column; no alias is created, meaning column name will be used instead.
@@ -403,105 +297,67 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumnT<T> column(String tableAlias, String columnName, Class<T> clazz);
-
-  /**
-   * Create new column.
-   *
-   * @param tableAlias is alias of table column is in
-   * @param columnName is name of column. It must be valid column name (in "" or first character
-   *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
-   * @param alias      is alias to be used for column
-   * @param clazz      is type of return value of column
-   * @param <T>        is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlTableColumnT<T> column(String tableAlias, String columnName, String alias, Class<T> clazz);
+  <T> SqlTableColumn<T> column(String tableAlias, String columnName, Class<T> clazz);
 
   /**
    * Create column with given SQL text.
    *
-   * @param columnSql is text that will be used as column definition
+   * @param sql is text that will be used as column definition
    * @return created column
    */
-  SqlColumn columnDirect(String columnSql);
-
-  /**
-   * Create column with given SQL text and alias.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @return created column
-   */
-  SqlColumn columnDirect(String sql, String alias);
+  SqlColumn<Object> columnDirect(String sql);
 
   /**
    * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
    * @param binds is list of binds used in column
    * @return created column
    */
-  SqlColumn columnDirect(String sql, String alias, BindName... binds);
+  SqlColumn<Object> columnDirect(String sql, BindValue<?>... binds);
 
   /**
    * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
    * @param binds is list of binds used in column, in proper oder, binds should be referenced using
    *              Java conventions (e.g. using ? as placeholder)
    * @return created column
    */
-  SqlColumn columnDirect(String sql, String alias, Collection<? extends BindName> binds);
+  SqlColumn<Object> columnDirect(String sql, Collection<? extends BindValue<?>> binds);
 
   /**
    * Create column with given SQL text.
    *
-   * @param columnSql is text that will be used as column definition
+   * @param sql is text that will be used as column definition
    * @param clazz     is type of return value of column
    * @param <T>       is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnDirect(String columnSql, Class<T> clazz);
-
-  /**
-   * Create column with given SQL text and alias.
-   *
-   * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
-   * @param clazz is type of return value of column
-   * @param <T>   is Java type corresponding to values in given column
-   * @return created column
-   */
-  <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz);
+  <T> SqlColumn<T> columnDirect(String sql, Class<T> clazz);
 
   /**
    * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
    * @param clazz is type of return value of column
    * @param binds is list of binds used in column
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnDirect(String sql, String alias, Class<T> clazz, BindName... binds);
+  <T> SqlColumn<T> columnDirect(String sql, Class<T> clazz, BindValue<?>... binds);
 
   /**
    * Add column with given SQL text, alias and binds to list of columns.
    *
    * @param sql   is text that will be used as column definition
-   * @param alias is text that will be used as alias for new column
    * @param binds is list of binds used in column, in proper oder, binds should be referenced using
    *              Java conventions (e.g. using ? as placeholder)
    * @param clazz is type of return value of column
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnDirect(String sql, String alias, Collection<? extends BindName> binds,
+  <T> SqlColumn<T> columnDirect(String sql, Collection<? extends BindValue<?>> binds,
       Class<T> clazz);
 
   /**
@@ -555,7 +411,7 @@ public interface Sql {
    * @param <T>       is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnSql(String columnSql, Class<T> clazz);
+  <T> SqlColumn<T> columnSql(String columnSql, Class<T> clazz);
 
   /**
    * Create column with given SQL text and alias and parse it for bind variables, expressed using
@@ -567,7 +423,7 @@ public interface Sql {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz);
+  <T> SqlColumn<T> columnSql(String sql, String alias, Class<T> clazz);
 
   /**
    * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed
@@ -580,7 +436,7 @@ public interface Sql {
    * @param <T>   is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlColumnT<T> columnSql(String sql, String alias, Class<T> clazz, BindValue... binds);
+  <T> SqlColumn<T> columnSql(String sql, String alias, Class<T> clazz, BindValue... binds);
 
   /**
    * Add mandatory column with given SQL text, alias and parse it for bind variables, expressed
@@ -594,7 +450,7 @@ public interface Sql {
    * @param clazz is type of return value of column
    * @return created column
    */
-  <T> SqlColumnT<T> columnSql(String sql, String alias, Collection<? extends BindValue> binds,
+  <T> SqlColumn<T> columnSql(String sql, String alias, Collection<? extends BindValue> binds,
       Class<T> clazz);
 
   /**
@@ -799,7 +655,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition eq(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition eq(Expression<T> first, Expression<T> second);
 
   /**
    * Create not-equal comparison {@code (first != second)}.
@@ -809,7 +665,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition notEq(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition notEq(Expression<T> first, Expression<T> second);
 
   /**
    * Create less than comparison {@code (first < second)}.
@@ -819,7 +675,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition lessThan(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition lessThan(Expression<T> first, Expression<T> second);
 
   /**
    * Create less or equal comparison {@code (first <= second)}.
@@ -829,7 +685,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition lessOrEqual(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition lessOrEqual(Expression<T> first, Expression<T> second);
 
   /**
    * Create greater than comparison {@code (first > second)}.
@@ -839,7 +695,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition greaterThan(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition greaterThan(Expression<T> first, Expression<T> second);
 
   /**
    * Create greater or equal comparison {@code (first >= second)}.
@@ -849,7 +705,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition greaterOrEqual(ExpressionT<T> first, ExpressionT<T> second);
+  <T> Condition greaterOrEqual(Expression<T> first, Expression<T> second);
 
   /**
    * Create is null expression {@code (first IS NULL)}.
@@ -858,7 +714,7 @@ public interface Sql {
    * @param <T>   is type of operand in expression
    * @return created expression (boolean expression / condition)
    */
-  <T> Condition isNull(ExpressionT<T> first);
+  <T> Condition isNull(Expression<T> first);
 
   /**
    * Retrieve SQL NVL function.
@@ -868,7 +724,7 @@ public interface Sql {
    * @param <T>    is type of the first expression, also used as type of result
    * @return NVL expression
    */
-  <T> ExpressionT<T> nvl(ExpressionT<T> first, ExpressionT<? extends T> second);
+  <T> Expression<T> nvl(Expression<T> first, Expression<? extends T> second);
 
   /**
    * Retrieve SQL COALESCE function.
@@ -880,5 +736,5 @@ public interface Sql {
    */
   @SuppressWarnings("unchecked")
   // warns about array of parametrized type, safe in this case
-  <T> ExpressionT<T> coalesce(ExpressionT<T> first, ExpressionT<? extends T>... expressions);
+  <T> Expression<T> coalesce(Expression<T> first, Expression<? extends T>... expressions);
 }

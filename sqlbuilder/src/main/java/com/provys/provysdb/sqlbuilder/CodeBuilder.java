@@ -205,7 +205,7 @@ public interface CodeBuilder {
    * @param addBind is bind variable to be added to list of binds
    * @return self to support fluent build
    */
-  CodeBuilder addBind(BindName addBind);
+  CodeBuilder addBind(BindValue addBind);
 
   /**
    * Appends list of bind variables to binds collection.
@@ -213,7 +213,7 @@ public interface CodeBuilder {
    * @param addBinds are bind variables to be added to collection of binds
    * @return self to support fluent build
    */
-  CodeBuilder addBinds(Collection<? extends BindName> addBinds);
+  CodeBuilder addBinds(Collection<? extends BindValue> addBinds);
 
   /**
    * Go through existing binds and if bind value with matching name is found in supplied

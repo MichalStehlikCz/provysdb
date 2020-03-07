@@ -3,11 +3,10 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.ExpressionT;
+import com.provys.provysdb.sqlbuilder.Expression;
 import com.provys.provysdb.sqlbuilder.SelectBuilderT2;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlColumnT;
 import com.provys.provysdb.sqlbuilder.SqlFrom;
 import com.provys.provysdb.sqlbuilder.SqlIdentifier;
 import com.provys.provysdb.sqlbuilder.SqlTableAlias;
@@ -19,8 +18,8 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
     SelectBuilderBaseImpl<SelectBuilderT2Impl<S, T1, T2>, S>
     implements SelectBuilderT2<T1, T2> {
 
-  private final SqlColumnT<T1> column1;
-  private final SqlColumnT<T2> column2;
+  private final SqlColumn<T1> column1;
+  private final SqlColumn<T2> column2;
 
   /**
    * Create new builder based on specified statement builder with two supplied columns.
@@ -29,13 +28,13 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
    * @param column1 is the first column
    * @param column2 is the second column
    */
-  public SelectBuilderT2Impl(S sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2) {
+  public SelectBuilderT2Impl(S sql, SqlColumn<T1> column1, SqlColumn<T2> column2) {
     super(sql);
     this.column1 = Objects.requireNonNull(column1);
     this.column2 = Objects.requireNonNull(column2);
   }
 
-  SelectBuilderT2Impl(S sql, SqlColumnT<T1> column1, SqlColumnT<T2> column2, List<SqlFrom> tables,
+  SelectBuilderT2Impl(S sql, SqlColumn<T1> column1, SqlColumn<T2> column2, List<SqlFrom> tables,
       Collection<Condition> conditions) {
     super(sql, List.of(column1), tables, conditions);
     this.column1 = Objects.requireNonNull(column1);
@@ -63,7 +62,7 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(SqlColumnT<T> column) {
+  public <T> SelectBuilderImpl<S> column(SqlColumn<T> column) {
     return new SelectBuilderImpl<>(getSql(), List.of(column1, column2, column), getTables(),
         getConditions());
   }
@@ -116,12 +115,12 @@ public class SelectBuilderT2Impl<S extends Sql, T1, T2> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, SqlIdentifier alias) {
+  public <T> SelectBuilderImpl<S> column(Expression<T> expression, SqlIdentifier alias) {
     return column(getSql().column(expression, alias));
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(ExpressionT<T> expression, String alias) {
+  public <T> SelectBuilderImpl<S> column(Expression<T> expression, String alias) {
     return column(getSql().column(expression, alias));
   }
 
