@@ -6,12 +6,12 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.Expression;
+import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
 import com.provys.provysdb.sqlbuilder.Select;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderBaseImpl;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +50,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return selectBuilder.getSql();
   }
 
-  public List<SqlFrom> getTables() {
+  public List<FromClause> getTables() {
     return selectBuilder.getTables();
   }
 
@@ -58,16 +58,16 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return selectBuilder.getConditions();
   }
 
-  public DbSelectBuilderImpl column(SqlIdentifier column) {
+  public DbSelectBuilderImpl column(Identifier column) {
     return new DbSelectBuilderImpl(selectBuilder.column(column));
   }
 
-  public DbSelectBuilderImpl column(SqlIdentifier column, SqlIdentifier alias) {
+  public DbSelectBuilderImpl column(Identifier column, Identifier alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(column, alias));
   }
 
-  public DbSelectBuilderImpl column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias) {
+  public DbSelectBuilderImpl column(QueryAlias tableAlias, Identifier column,
+      Identifier alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(tableAlias, column, alias));
   }
 
@@ -83,11 +83,11 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return new DbSelectBuilderImpl(selectBuilder.column(tableAlias, columnName, alias));
   }
 
-  public DbSelectBuilderImpl column(Expression expression, SqlIdentifier alias) {
+  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, Identifier alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(expression, alias));
   }
 
-  public DbSelectBuilderImpl column(Expression expression, String alias) {
+  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, String alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(expression, alias));
   }
 
@@ -125,12 +125,12 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return new DbSelectBuilderImpl(selectBuilder.columnSql(columnSql, alias, binds));
   }
 
-  public D from(SqlFrom table) {
+  public D from(FromClause table) {
     selectBuilder.from(table);
     return self();
   }
 
-  public D from(SqlIdentifier tableName, SqlTableAlias alias) {
+  public D from(Identifier tableName, QueryAlias alias) {
     selectBuilder.from(tableName, alias);
     return self();
   }
@@ -140,7 +140,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return self();
   }
 
-  public D from(Select select, SqlTableAlias alias) {
+  public D from(Select select, QueryAlias alias) {
     selectBuilder.from(select, alias);
     return self();
   }
@@ -150,7 +150,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return self();
   }
 
-  public D fromDirect(String sqlSelect, SqlTableAlias alias) {
+  public D fromDirect(String sqlSelect, QueryAlias alias) {
     selectBuilder.fromDirect(sqlSelect, alias);
     return self();
   }
@@ -160,7 +160,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return self();
   }
 
-  public D fromSql(String sqlSelect, SqlTableAlias alias) {
+  public D fromSql(String sqlSelect, QueryAlias alias) {
     selectBuilder.fromSql(sqlSelect, alias);
     return self();
   }

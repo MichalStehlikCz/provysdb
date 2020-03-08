@@ -29,7 +29,7 @@ final class LiteralDtUid extends LiteralBase<DtUid> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append(getValue().getValue().toString());
   }
 

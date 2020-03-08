@@ -4,12 +4,17 @@ import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Typed column - extends column interface with java type associated with column's content. Allows
- * to prepare typed statements.
- *
- * @param <T> is type of column (of its value)
+ * Information about column, useful for preparation to receive query results.
  */
-public interface SqlColumn<T> extends Expression<T> {
+public interface SelectColumnInfo {
+
+  /**
+   * Java type, corresponding to this expression's type.
+   *
+   * @return Java type this column should be mapped to. Used to find proper adapter for value
+   *     retrieval
+   */
+  Class<?> getType();
 
   /**
    * Alias this column is associated with.  Note that if it is simple column, its name is also used
@@ -18,22 +23,14 @@ public interface SqlColumn<T> extends Expression<T> {
    * @return alias this column is associated with. Note that if it is simple column, its name is
    *     also used as alias
    */
-  @Nullable SqlIdentifier getAlias();
+  @Nullable Identifier getAlias();
 
   /**
    * Alias this column is associated with, Optional version.
    *
    * @return alias this column is associated with, empty optional if alias is absent
    */
-  default Optional<SqlIdentifier> getOptAlias() {
+  default Optional<Identifier> getOptAlias() {
     return Optional.ofNullable(getAlias());
   }
-
-  /**
-   * Create new column with alias replaced with specified one.
-   *
-   * @param newAlias is alias that should be used for new column
-   * @return column with specified alias
-   */
-  SqlColumn<T> as(SqlIdentifier newAlias);
 }

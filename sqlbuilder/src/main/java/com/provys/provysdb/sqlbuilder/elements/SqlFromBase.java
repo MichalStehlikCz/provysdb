@@ -1,20 +1,20 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-abstract class SqlFromBase implements SqlFrom {
+abstract class SqlFromBase implements FromClause {
 
-  private final SqlTableAlias alias;
+  private final QueryAlias alias;
 
-  SqlFromBase(SqlTableAlias alias) {
+  SqlFromBase(QueryAlias alias) {
     this.alias = Objects.requireNonNull(alias);
   }
 
   @Override
-  public SqlTableAlias getAlias() {
+  public QueryAlias getAlias() {
     return alias;
   }
 

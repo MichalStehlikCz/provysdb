@@ -8,11 +8,11 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Backing functions for COALESCE SQL function.
+ * Backing for COALESCE SQL function.
  *
  * @param <T> is type of expression, as determined by the first operand
  */
-final class FuncCoalesce<T> implements Expression<T> {
+final class FuncCoalesce<T> extends ColumnExpressionBase<T> {
 
   private final Expression<T> first;
   private final List<Expression<? extends T>> expressions;
@@ -24,10 +24,10 @@ final class FuncCoalesce<T> implements Expression<T> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
-    builder.append("COALESCE(").apply(first::addSql);
+  public void appendExpression(CodeBuilder builder) {
+    builder.append("COALESCE(").apply(first::appendExpression);
     for (var expression : expressions) {
-      builder.append(", ").apply(expression::addSql);
+      builder.append(", ").apply(expression::appendExpression);
     }
     builder.append(')');
   }

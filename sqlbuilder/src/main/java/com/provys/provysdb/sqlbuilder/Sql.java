@@ -204,7 +204,7 @@ public interface Sql {
    * @param name to be created
    * @return created name object
    */
-  SqlIdentifier name(String name);
+  Identifier name(String name);
 
   /**
    * Create column with given name.
@@ -212,7 +212,7 @@ public interface Sql {
    * @param column is name of table column to be assigned to column
    * @return created column
    */
-  SqlTableColumn<Object> column(SqlIdentifier column);
+  TableColumn<Object> column(Identifier column);
 
   /**
    * Create column with given table alias and name.
@@ -221,7 +221,7 @@ public interface Sql {
    * @param column     is name of table column to be assigned to column
    * @return created column
    */
-  SqlTableColumn<Object> column(SqlTableAlias tableAlias, SqlIdentifier column);
+  TableColumn<Object> column(QueryAlias tableAlias, Identifier column);
 
   /**
    * Create new column. No table spec means risking ambiguity if more tables are joined
@@ -231,7 +231,7 @@ public interface Sql {
    *                   to add columns based on sql expressions
    * @return created column
    */
-  SqlTableColumn<Object> column(String columnName);
+  TableColumn<Object> column(String columnName);
 
   /**
    * Create new column.
@@ -242,7 +242,7 @@ public interface Sql {
    *                   to add columns based on sql expressions
    * @return created column
    */
-  SqlTableColumn<Object> column(String tableAlias, String columnName);
+  TableColumn<Object> column(String tableAlias, String columnName);
 
   /**
    * Create new column based on given expression.
@@ -251,7 +251,7 @@ public interface Sql {
    * @param <T> is type of expression and subsequently column value
    * @return new column with given expression and alias
    */
-  <T> SqlColumn<T> column(Expression<T> expression);
+  <T> SqlColumn<T> column(SelectExpressionBuilder<T> expression);
 
   /**
    * Create column with given name.
@@ -261,7 +261,7 @@ public interface Sql {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumn<T> column(SqlIdentifier column, Class<T> clazz);
+  <T> TableColumn<T> column(Identifier column, Class<T> clazz);
 
   /**
    * Create column with given table alias and name.
@@ -272,7 +272,7 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column, Class<T> clazz);
+  <T> TableColumn<T> column(QueryAlias tableAlias, Identifier column, Class<T> clazz);
 
   /**
    * Create new column; it is created without table alias, risking ambiguity.
@@ -284,7 +284,7 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumn<T> column(String columnName, Class<T> clazz);
+  <T> TableColumn<T> column(String columnName, Class<T> clazz);
 
   /**
    * Create new mandatory column; no alias is created, meaning column name will be used instead.
@@ -297,7 +297,7 @@ public interface Sql {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  <T> SqlTableColumn<T> column(String tableAlias, String columnName, Class<T> clazz);
+  <T> TableColumn<T> column(String tableAlias, String columnName, Class<T> clazz);
 
   /**
    * Create column with given SQL text.
@@ -459,7 +459,7 @@ public interface Sql {
    * @param tableAlias is alias (String value)
    * @return created alias object
    */
-  SqlTableAlias tableAlias(String tableAlias);
+  QueryAlias tableAlias(String tableAlias);
 
   /**
    * Create from clause based on table.
@@ -468,7 +468,7 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom from(SqlIdentifier tableName, SqlTableAlias alias);
+  FromClause from(Identifier tableName, QueryAlias alias);
 
   /**
    * Create from clause based on table; String version.
@@ -477,7 +477,7 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom from(String tableName, String alias);
+  FromClause from(String tableName, String alias);
 
   /**
    * Add sql expression to from clause of the statement.
@@ -486,7 +486,7 @@ public interface Sql {
    * @param alias  as alias to be assigned to given expression
    * @return created from clause
    */
-  SqlFrom from(Select select, SqlTableAlias alias);
+  FromClause from(Select select, QueryAlias alias);
 
   /**
    * Add sql expression to from clause of the statement.
@@ -495,7 +495,7 @@ public interface Sql {
    * @param alias  as alias to be assigned to given expression
    * @return created from clause
    */
-  SqlFrom from(Select select, String alias);
+  FromClause from(Select select, String alias);
 
   /**
    * Create from clause based on Sql expression, directly passed to evaluation without parsing.
@@ -504,7 +504,7 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom fromDirect(String sqlSelect, SqlTableAlias alias);
+  FromClause fromDirect(String sqlSelect, QueryAlias alias);
 
   /**
    * Create from clause based on Sql expression, directly pass to evaluation without parsing. Alias
@@ -514,7 +514,7 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom fromDirect(String sqlSelect, String alias);
+  FromClause fromDirect(String sqlSelect, String alias);
 
   /**
    * Create from clause based on Sql expression; parses expression to retrieve binds.
@@ -523,7 +523,7 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom fromSql(String sqlSelect, SqlTableAlias alias);
+  FromClause fromSql(String sqlSelect, QueryAlias alias);
 
   /**
    * Create from clause based on Sql expression; parses expression to retrieve binds.
@@ -532,14 +532,14 @@ public interface Sql {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  SqlFrom fromSql(String sqlSelect, String alias);
+  FromClause fromSql(String sqlSelect, String alias);
 
   /**
    * Create from clause for pseudo-table dual.
    *
    * @return clause from pseudo-table dual
    */
-  SqlFrom fromDual();
+  FromClause fromDual();
 
   /**
    * Create where condition.
@@ -655,7 +655,7 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition eq(Expression<T> first, Expression<T> second);
+  <T> Condition eq(SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create not-equal comparison {@code (first != second)}.
@@ -665,7 +665,8 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition notEq(Expression<T> first, Expression<T> second);
+  <T> Condition notEq(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create less than comparison {@code (first < second)}.
@@ -675,7 +676,8 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition lessThan(Expression<T> first, Expression<T> second);
+  <T> Condition lessThan(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create less or equal comparison {@code (first <= second)}.
@@ -685,7 +687,8 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition lessOrEqual(Expression<T> first, Expression<T> second);
+  <T> Condition lessOrEqual(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create greater than comparison {@code (first > second)}.
@@ -695,7 +698,8 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition greaterThan(Expression<T> first, Expression<T> second);
+  <T> Condition greaterThan(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create greater or equal comparison {@code (first >= second)}.
@@ -705,7 +709,8 @@ public interface Sql {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  <T> Condition greaterOrEqual(Expression<T> first, Expression<T> second);
+  <T> Condition greaterOrEqual(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second);
 
   /**
    * Create is null expression {@code (first IS NULL)}.
@@ -714,7 +719,7 @@ public interface Sql {
    * @param <T>   is type of operand in expression
    * @return created expression (boolean expression / condition)
    */
-  <T> Condition isNull(Expression<T> first);
+  <T> Condition isNull(SelectExpressionBuilder<T> first);
 
   /**
    * Retrieve SQL NVL function.
@@ -724,7 +729,8 @@ public interface Sql {
    * @param <T>    is type of the first expression, also used as type of result
    * @return NVL expression
    */
-  <T> Expression<T> nvl(Expression<T> first, Expression<? extends T> second);
+  <T> SelectExpressionBuilder<T> nvl(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<? extends T> second);
 
   /**
    * Retrieve SQL COALESCE function.
@@ -736,5 +742,6 @@ public interface Sql {
    */
   @SuppressWarnings("unchecked")
   // warns about array of parametrized type, safe in this case
-  <T> Expression<T> coalesce(Expression<T> first, Expression<? extends T>... expressions);
+  <T> SelectExpressionBuilder<T> coalesce(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<? extends T>... expressions);
 }

@@ -7,15 +7,15 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
 import com.provys.provysdb.sqlbuilder.ConditionJoiner;
-import com.provys.provysdb.sqlbuilder.Expression;
+import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
 import com.provys.provysdb.sqlbuilder.Literal;
 import com.provys.provysdb.sqlbuilder.Select;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
-import com.provys.provysdb.sqlbuilder.SqlTableColumn;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
+import com.provys.provysdb.sqlbuilder.TableColumn;
 import com.provys.provysdb.sqlparser.SqlSymbol;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -127,63 +127,63 @@ public abstract class ElementFactory implements Sql {
   }
 
   @Override
-  public SqlIdentifierImpl name(String name) {
-    return SqlIdentifierImpl.parse(name);
+  public IdentifierImpl name(String name) {
+    return IdentifierImpl.parse(name);
   }
 
   @Override
-  public SqlTableColumn column(SqlIdentifier column) {
+  public TableColumn column(Identifier column) {
     return new SqlColumnSimple(null, column, null);
   }
 
   @Override
-  public SqlTableColumn column(SqlIdentifier column, @Nullable SqlIdentifier alias) {
+  public TableColumn column(Identifier column, @Nullable Identifier alias) {
     return new SqlColumnSimple(null, column, alias);
   }
 
   @Override
-  public SqlTableColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column) {
+  public TableColumn column(@Nullable QueryAlias tableAlias, Identifier column) {
     return new SqlColumnSimple(tableAlias, column, null);
   }
 
   @Override
-  public SqlTableColumn column(@Nullable SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias) {
+  public TableColumn column(@Nullable QueryAlias tableAlias, Identifier column,
+      Identifier alias) {
     return new SqlColumnSimple(tableAlias, column, alias);
   }
 
   @Override
-  public SqlTableColumn column(String columnName) {
+  public TableColumn column(String columnName) {
     return new SqlColumnSimple(null, name(columnName), null);
   }
 
   @Override
-  public SqlTableColumn column(String tableAlias, String columnName) {
+  public TableColumn column(String tableAlias, String columnName) {
     return new SqlColumnSimple(tableAlias(tableAlias), name(columnName), null);
   }
 
   @Override
-  public SqlTableColumn column(String tableAlias, String columnName, String alias) {
+  public TableColumn column(String tableAlias, String columnName, String alias) {
     return column(tableAlias(tableAlias), name(columnName), name(alias));
   }
 
   @Override
-  public SqlColumn column(Expression expression, SqlIdentifier alias) {
+  public SqlColumn column(SelectExpressionBuilder expression, Identifier alias) {
     return new SqlColumnExpression(expression, alias);
   }
 
   @Override
-  public SqlColumn column(Expression expression, String alias) {
+  public SqlColumn column(SelectExpressionBuilder expression, String alias) {
     return column(expression, name(alias));
   }
 
   @Override
-  public <T> SqlColumn<T> column(Expression<T> expression, @Nullable SqlIdentifier alias) {
+  public <T> SqlColumn<T> column(SelectExpressionBuilder<T> expression, @Nullable Identifier alias) {
     return new SqlColumnExpression<>(expression, alias);
   }
 
   @Override
-  public <T> SqlColumn<T> column(Expression<T> expression, String alias) {
+  public <T> SqlColumn<T> column(SelectExpressionBuilder<T> expression, String alias) {
     return column(expression, name(alias));
   }
 
@@ -193,44 +193,44 @@ public abstract class ElementFactory implements Sql {
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(SqlTableColumn column, Class<T> clazz) {
+  public <T> TableColumn<T> column(TableColumn column, Class<T> clazz) {
     return new SqlTableColumnTImpl<>(column, clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(SqlIdentifier column, Class<T> clazz) {
+  public <T> TableColumn<T> column(Identifier column, Class<T> clazz) {
     return column(column(column), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz) {
+  public <T> TableColumn<T> column(Identifier column, Identifier alias, Class<T> clazz) {
     return column(column(column, alias), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
+  public <T> TableColumn<T> column(QueryAlias tableAlias, Identifier column,
       Class<T> clazz) {
     return column(column(tableAlias, column), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias, Class<T> clazz) {
+  public <T> TableColumn<T> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias, Class<T> clazz) {
     return column(column(tableAlias, column, alias), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(String columnName, Class<T> clazz) {
+  public <T> TableColumn<T> column(String columnName, Class<T> clazz) {
     return column(column(columnName), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(String tableAlias, String columnName, Class<T> clazz) {
+  public <T> TableColumn<T> column(String tableAlias, String columnName, Class<T> clazz) {
     return column(column(tableAlias, columnName), clazz);
   }
 
   @Override
-  public <T> SqlTableColumn<T> column(String tableAlias, String columnName, String alias,
+  public <T> TableColumn<T> column(String tableAlias, String columnName, String alias,
       Class<T> clazz) {
     return column(column(tableAlias, columnName, alias), clazz);
   }
@@ -280,48 +280,48 @@ public abstract class ElementFactory implements Sql {
   }
 
   @Override
-  public SqlTableAlias tableAlias(String tableAlias) {
-    return new SqlTableAliasImpl(tableAlias);
+  public QueryAlias tableAlias(String tableAlias) {
+    return new QueryAliasImpl(tableAlias);
   }
 
   @Override
-  public SqlFrom from(SqlIdentifier tableName, SqlTableAlias alias) {
+  public FromClause from(Identifier tableName, QueryAlias alias) {
     return new SqlFromSimple(tableName, alias);
   }
 
   @Override
-  public SqlFrom from(String tableName, String alias) {
+  public FromClause from(String tableName, String alias) {
     return from(name(tableName), tableAlias(alias));
   }
 
   @Override
-  public SqlFrom from(Select select, SqlTableAlias alias) {
+  public FromClause from(Select select, QueryAlias alias) {
     return new SqlFromSelect(select, alias);
   }
 
   @Override
-  public SqlFrom from(Select select, String alias) {
+  public FromClause from(Select select, String alias) {
     return new SqlFromSelect(select, tableAlias(alias));
   }
 
   @Override
-  public SqlFrom fromDirect(String sqlSelect, SqlTableAlias alias) {
+  public FromClause fromDirect(String sqlSelect, QueryAlias alias) {
     return new SqlFromSql(sqlSelect, alias);
   }
 
   @Override
-  public SqlFrom fromDirect(String sqlSelect, String alias) {
+  public FromClause fromDirect(String sqlSelect, String alias) {
     return fromDirect(sqlSelect, tableAlias(alias));
   }
 
   @Override
-  public SqlFrom fromDual() {
+  public FromClause fromDual() {
     return SqlFromDual.getInstance();
   }
 
   @Override
   public Condition conditionDirect(String conditionSql) {
-    return new ConditionSimple(conditionSql);
+    return new ConditionSql(conditionSql);
   }
 
   @Override
@@ -342,12 +342,12 @@ public abstract class ElementFactory implements Sql {
   @Override
   public Condition conditionAnd(Collection<Condition> whereConditions) {
     // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
-    return new ConditionJoinerImpl(SqlConditionOperator.AND, whereConditions).build();
+    return new ConditionJoinerImpl(ConditionOperator.AND, whereConditions).build();
   }
 
   @Override
   public ConditionJoiner conditionAndJoiner() {
-    return new ConditionJoinerImpl(SqlConditionOperator.AND);
+    return new ConditionJoinerImpl(ConditionOperator.AND);
   }
 
   @Override
@@ -358,63 +358,70 @@ public abstract class ElementFactory implements Sql {
   @Override
   public Condition conditionOr(Collection<Condition> whereConditions) {
     // joiner removes empty conditions and might remove lists when only 0 or 1 items are present
-    return new ConditionJoinerImpl(SqlConditionOperator.OR, whereConditions).build();
+    return new ConditionJoinerImpl(ConditionOperator.OR, whereConditions).build();
   }
 
   @Override
   public ConditionJoiner conditionOrJoiner() {
-    return new ConditionJoinerImpl(SqlConditionOperator.OR);
+    return new ConditionJoinerImpl(ConditionOperator.OR);
   }
 
-  private static <T> Condition compare(Expression<T> first, Expression<T> second,
+  private static <T> Condition compare(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second,
       SqlSymbol comparison) {
     return new ConditionCompare<>(first, second, comparison);
   }
 
   @Override
-  public <T> Condition eq(Expression<T> first, Expression<T> second) {
+  public <T> Condition eq(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.EQUAL);
   }
 
   @Override
-  public <T> Condition notEq(Expression<T> first, Expression<T> second) {
+  public <T> Condition notEq(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.NOT_EQUAL);
   }
 
   @Override
-  public <T> Condition lessThan(Expression<T> first, Expression<T> second) {
+  public <T> Condition lessThan(SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.LESS_THAN);
   }
 
   @Override
-  public <T> Condition lessOrEqual(Expression<T> first, Expression<T> second) {
+  public <T> Condition lessOrEqual(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.LESS_OR_EQUAL);
   }
 
   @Override
-  public <T> Condition greaterThan(Expression<T> first, Expression<T> second) {
+  public <T> Condition greaterThan(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.GRATER_THAN);
   }
 
   @Override
-  public <T> Condition greaterOrEqual(Expression<T> first, Expression<T> second) {
+  public <T> Condition greaterOrEqual(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return compare(first, second, SqlSymbol.GREATER_OR_EQUAL);
   }
 
   @Override
-  public <T> Condition isNull(Expression<T> first) {
+  public <T> Condition isNull(SelectExpressionBuilder<T> first) {
     return new ConditionIsNull(first);
   }
 
   @Override
-  public <T> Expression<T> nvl(Expression<T> first, Expression<? extends T> second) {
+  public <T> SelectExpressionBuilder<T> nvl(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<? extends T> second) {
     return new FuncNvl<>(first, second);
   }
 
   @Override
   @SafeVarargs
-  public final <T> Expression<T> coalesce(Expression<T> first,
-      Expression<? extends T>... expressions) {
+  public final <T> SelectExpressionBuilder<T> coalesce(SelectExpressionBuilder<T> first,
+      SelectExpressionBuilder<? extends T>... expressions) {
     return new FuncCoalesce<>(first, expressions);
   }
 

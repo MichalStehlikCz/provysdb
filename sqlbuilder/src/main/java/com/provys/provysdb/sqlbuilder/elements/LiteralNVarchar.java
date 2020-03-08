@@ -19,7 +19,7 @@ final class LiteralNVarchar extends LiteralBase<String> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append("N'").append(getValue().replace("'", "''")).append('\'');
   }
 

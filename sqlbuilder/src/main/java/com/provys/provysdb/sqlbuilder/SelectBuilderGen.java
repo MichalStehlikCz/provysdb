@@ -28,7 +28,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>    is type of column being added
    * @return self to support fluent build
    */
-  <T> U column(SqlIdentifier column, Class<T> clazz);
+  <T> U column(Identifier column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -39,7 +39,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>    is type of column being added
    * @return self to support fluent build
    */
-  <T> U column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> U column(Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -51,7 +51,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>        is type of column being added
    * @return self to support fluent build
    */
-  <T> U column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> U column(QueryAlias tableAlias, Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If
@@ -102,7 +102,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>        is type of expression / column
    * @return self to support fluent build
    */
-  <T> U column(Expression<T> expression, SqlIdentifier alias);
+  <T> U column(SelectExpressionBuilder<T> expression, Identifier alias);
 
   /**
    * Add column based on given expression.
@@ -112,7 +112,7 @@ public interface SelectBuilderGen<U extends SelectBuilderGen<U>> extends SelectB
    * @param <T>        is type of expression / column
    * @return self to support fluent build
    */
-  <T> U column(Expression<T> expression, String alias);
+  <T> U column(SelectExpressionBuilder<T> expression, String alias);
 
   /**
    * Add column with given SQL text.

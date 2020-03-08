@@ -21,7 +21,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    *
    * @return list of already defined columns
    */
-  List<SqlColumn> getColumns();
+  List<SelectColumn<?>> getColumns();
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If
@@ -30,7 +30,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param column is name of table column to be assigned to column
    * @return self to support fluent build
    */
-  U column(SqlIdentifier column);
+  U column(Identifier column);
 
   /**
    * Add column with given name and alias.
@@ -39,7 +39,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias  is alias to be sued for column
    * @return self to support fluent build
    */
-  U column(SqlIdentifier column, SqlIdentifier alias);
+  U column(Identifier column, Identifier alias);
 
   /**
    * Add column with given table alias, name and alias.
@@ -49,7 +49,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias      is alias to be sued for column
    * @return self to support fluent build
    */
-  U column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias);
+  U column(QueryAlias tableAlias, Identifier column, Identifier alias);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If
@@ -93,7 +93,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias      is alias used for column
    * @return self to support fluent build
    */
-  U column(Expression expression, SqlIdentifier alias);
+  U column(SelectExpressionBuilder expression, Identifier alias);
 
   /**
    * Add column based on given expression.
@@ -102,7 +102,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias      is alias used for column
    * @return self to support fluent build
    */
-  U column(Expression expression, String alias);
+  U column(SelectExpressionBuilder expression, String alias);
 
   /**
    * Add column with given SQL text.
@@ -186,7 +186,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param table is table definition (potentially with join condition)
    * @return self to support fluent build
    */
-  T from(SqlFrom table);
+  T from(FromClause table);
 
   /**
    * Create from clause based on table.
@@ -195,7 +195,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias     is alias new table will get
    * @return self to support fluent build
    */
-  T from(SqlIdentifier tableName, SqlTableAlias alias);
+  T from(Identifier tableName, QueryAlias alias);
 
   /**
    * Create from clause based on table. String version
@@ -213,7 +213,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias  as alias to be assigned to given expression
    * @return self to support fluent build
    */
-  T from(Select select, SqlTableAlias alias);
+  T from(Select select, QueryAlias alias);
 
   /**
    * Add sql expression to from clause of the statement.
@@ -231,7 +231,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias     is alias new table will get
    * @return self to support fluent build
    */
-  T fromDirect(String sqlSelect, SqlTableAlias alias);
+  T fromDirect(String sqlSelect, QueryAlias alias);
 
   /**
    * Create from clause based on Sql expression. String version
@@ -249,7 +249,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param alias     is alias new table will get
    * @return self to support fluent build
    */
-  T fromSql(String sqlSelect, SqlTableAlias alias);
+  T fromSql(String sqlSelect, QueryAlias alias);
 
   /**
    * Create from clause based on Sql expression; String version.

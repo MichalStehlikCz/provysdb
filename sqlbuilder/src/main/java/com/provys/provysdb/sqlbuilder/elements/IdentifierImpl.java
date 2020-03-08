@@ -1,7 +1,7 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.Identifier;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * non-mutable. Does normalisation of supplied text, thus equals on sql identifiers is equivalent to
  * two identifiers pointing to the same object
  */
-final class SqlIdentifierImpl implements SqlIdentifier {
+final class IdentifierImpl implements Identifier {
 
   private static final Pattern PATTERN_ORDINARY = Pattern.compile("([A-Z][A-Z0-9_#$]*)");
   private static final Pattern PATTERN_DELIMITED = Pattern.compile("(\"(?:[^\"]|\"\")*\")");
@@ -23,7 +23,7 @@ final class SqlIdentifierImpl implements SqlIdentifier {
    * @param text is supplied sql text
    * @return parsed identifier
    */
-  static SqlIdentifierImpl parse(String text) {
+  static IdentifierImpl parse(String text) {
     var result = text.trim();
     if (result.charAt(0) == '"') {
       // delimited identifier
@@ -40,7 +40,7 @@ final class SqlIdentifierImpl implements SqlIdentifier {
             "Invalid text supplied for ordinary identifier: " + text);
       }
     }
-    return new SqlIdentifierImpl(result);
+    return new IdentifierImpl(result);
   }
 
   private static String validate(String name) {
@@ -57,7 +57,7 @@ final class SqlIdentifierImpl implements SqlIdentifier {
   private final String dbName;
   private final boolean delimited;
 
-  private SqlIdentifierImpl(String dbName) {
+  private IdentifierImpl(String dbName) {
     this.dbName = validate(dbName);
     delimited = !PATTERN_ORDINARY.matcher(this.dbName).matches();
   }
@@ -83,7 +83,7 @@ final class SqlIdentifierImpl implements SqlIdentifier {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlIdentifierImpl that = (SqlIdentifierImpl) o;
+    IdentifierImpl that = (IdentifierImpl) o;
     return delimited == that.delimited
         && Objects.equals(dbName, that.dbName);
   }

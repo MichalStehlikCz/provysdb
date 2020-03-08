@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.Select;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -10,7 +10,7 @@ final class SqlFromSelect extends SqlFromBase {
 
   private final Select select;
 
-  SqlFromSelect(Select select, SqlTableAlias alias) {
+  SqlFromSelect(Select select, QueryAlias alias) {
     super(alias);
     this.select = Objects.requireNonNull(select);
   }

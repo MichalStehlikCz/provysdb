@@ -1,8 +1,8 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -11,9 +11,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class SqlFromSimple extends SqlFromBase {
 
-  private final SqlIdentifier tableName;
+  private final Identifier tableName;
 
-  SqlFromSimple(SqlIdentifier tableName, SqlTableAlias alias) {
+  SqlFromSimple(Identifier tableName, QueryAlias alias) {
     super(alias);
     this.tableName = Objects.requireNonNull(tableName);
   }

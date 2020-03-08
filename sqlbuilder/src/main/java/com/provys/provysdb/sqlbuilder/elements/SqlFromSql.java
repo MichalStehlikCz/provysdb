@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,13 +14,13 @@ final class SqlFromSql extends SqlFromBase {
   private final String sql;
   private final List<BindName> binds;
 
-  SqlFromSql(String sql, SqlTableAlias alias) {
+  SqlFromSql(String sql, QueryAlias alias) {
     super(alias);
     this.sql = Objects.requireNonNull(sql);
     this.binds = Collections.emptyList();
   }
 
-  SqlFromSql(String sql, SqlTableAlias alias, Collection<BindName> binds) {
+  SqlFromSql(String sql, QueryAlias alias, Collection<BindName> binds) {
     super(alias);
     this.sql = Objects.requireNonNull(sql);
     this.binds = List.copyOf(binds);

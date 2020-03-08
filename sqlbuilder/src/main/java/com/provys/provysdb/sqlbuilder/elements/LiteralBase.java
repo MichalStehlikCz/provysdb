@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Common ancestor for literal classes.
  */
-abstract class LiteralBase<T> implements Literal<T> {
+abstract class LiteralBase<T> extends ColumnExpressionBase<T> implements Literal<T> {
 
   private final T value;
 

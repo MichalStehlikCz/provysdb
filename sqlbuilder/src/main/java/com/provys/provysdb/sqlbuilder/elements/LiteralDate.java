@@ -23,7 +23,7 @@ final class LiteralDate extends LiteralBase<DtDate> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append("DATE'").append(getValue().toIso()).append("'");
   }
 

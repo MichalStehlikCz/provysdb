@@ -7,21 +7,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is type of value this bind variable can hold
  */
-public interface BindValue<T> extends Expression<T> {
-
-  /**
-   * Bind name.
-   *
-   * @return bind name
-   */
-  BindName getBindName();
-
-  /**
-   * Bind name as string.
-   *
-   * @return bind name as string
-   */
-  String getName();
+public interface BindValue<T> extends SelectExpressionBuilder<T>, BindWithType {
 
   /**
    * Value assigned to bind variable.
@@ -41,23 +27,33 @@ public interface BindValue<T> extends Expression<T> {
   <U> @Nullable U getValue(Class<U> returnType);
 
   /**
-   * Limits bind value to specified type. If current value is not compatible with required type,
-   * fails. Type must be specialisation of current type.
+   * Combine type of this bind value with supplied type. Can only specialize type and checks it in
+   * runtime. Also verifies that supplied type is compatible with bind value's current value. If
+   * supplied type is parent of current type, operation is ignored and returns self
    *
-   * @param newType is required new type
-   * @param <U> is type parameter representing new type
-   * @return bind value with clarified type
+   * @param newType is new type bind should have
+   * @param <U> is type parameter, denoting required type
+   * @return bind value with required type and same name and value as a current one
    */
   <U extends T> BindValue<U> type(Class<U> newType);
 
   /**
-   * Return bind value with the same name and type, but with new value. Used as part of bind value
-   * method
+   * Return bind value with the same name and type, but with the new value.
    *
    * @param newValue is value to be assigned to new bind
    * @return bind variable with the same name as old one, but with the new value
    */
   BindValue<T> value(@Nullable T newValue);
+
+  /**
+   * Return bind value with the same name and type, but with the new value. Unsafe version, used
+   * when bind variable type is not known, performs type checking at runtime. Only to be used when
+   * variable type has been lost, for example because it has been stored in list in the meantime
+   *
+   * @param newValue is value to be assigned to new bind
+   * @return bind variable with the same name as old one, but with the new value
+   */
+  BindValue<T> valueUnsafe(@Nullable Object newValue);
 
   /**
    * Method can be used when constructing statement and merging its parts. It combines two bind

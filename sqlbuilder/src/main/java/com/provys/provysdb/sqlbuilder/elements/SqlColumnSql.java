@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SqlColumnSql<T> extends SqlColumnType<T> {
+final class SqlColumnSql<T> extends ColumnExpressionBaseWithType<T> {
 
   private final String sql;
   private final List<BindName> binds;

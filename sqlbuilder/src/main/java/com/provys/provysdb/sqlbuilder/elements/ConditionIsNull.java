@@ -8,9 +8,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class ConditionIsNull implements Condition {
 
-  private final Expression expression;
+  private final Expression<?> expression;
 
-  ConditionIsNull(Expression expression) {
+  ConditionIsNull(Expression<?> expression) {
     this.expression = Objects.requireNonNull(expression);
   }
 
@@ -20,9 +20,9 @@ final class ConditionIsNull implements Condition {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append('(');
-    expression.addSql(builder);
+    expression.appendExpression(builder);
     builder.append(" IS NULL)");
   }
 

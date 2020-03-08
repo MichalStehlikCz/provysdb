@@ -29,7 +29,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder column(SqlIdentifier column, Class<T> clazz);
+  <T> SelectBuilder column(Identifier column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -40,7 +40,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> SelectBuilder column(Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -52,7 +52,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>        is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+  <T> SelectBuilder column(QueryAlias tableAlias, Identifier column, Identifier alias,
       Class<T> clazz);
 
   /**
@@ -104,7 +104,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilder column(Expression<T> expression, SqlIdentifier alias);
+  <T> SelectBuilder column(SelectExpressionBuilder<T> expression, Identifier alias);
 
   /**
    * Add column based on given expression.
@@ -114,7 +114,7 @@ public interface SelectBuilderT2<T1, T2> extends
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilder column(Expression<T> expression, String alias);
+  <T> SelectBuilder column(SelectExpressionBuilder<T> expression, String alias);
 
   /**
    * Add column with given SQL text.

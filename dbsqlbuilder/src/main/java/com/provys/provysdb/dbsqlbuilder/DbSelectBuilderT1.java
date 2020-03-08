@@ -4,8 +4,8 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.SelectBuilderBase;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Collection;
 
 /**
@@ -34,7 +34,7 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(SqlIdentifier column, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(Identifier column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -45,7 +45,7 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -57,8 +57,8 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>        is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias, Class<T> clazz);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If

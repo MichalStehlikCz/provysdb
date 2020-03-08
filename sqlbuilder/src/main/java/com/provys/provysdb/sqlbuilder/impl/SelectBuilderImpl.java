@@ -3,13 +3,13 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.Expression;
+import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
 import com.provys.provysdb.sqlbuilder.SelectBuilder;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class SelectBuilderImpl<S extends Sql> extends
     columns = new ArrayList<>(5);
   }
 
-  SelectBuilderImpl(S sql, List<SqlColumn> columns, List<SqlFrom> tables,
+  SelectBuilderImpl(S sql, List<SqlColumn> columns, List<FromClause> tables,
       Collection<Condition> conditions) {
     super(sql, columns, tables, conditions);
     this.columns = new ArrayList<>(columns);
@@ -55,19 +55,19 @@ public class SelectBuilderImpl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(SqlIdentifier column, Class<T> clazz) {
+  public <T> SelectBuilderImpl<S> column(Identifier column, Class<T> clazz) {
     return column(column);
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(SqlIdentifier column, SqlIdentifier alias,
+  public <T> SelectBuilderImpl<S> column(Identifier column, Identifier alias,
       Class<T> clazz) {
     return column(column, alias);
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias, Class<T> clazz) {
+  public <T> SelectBuilderImpl<S> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias, Class<T> clazz) {
     return column(tableAlias, column, alias);
   }
 
@@ -88,12 +88,12 @@ public class SelectBuilderImpl<S extends Sql> extends
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(Expression<T> expression, SqlIdentifier alias) {
+  public <T> SelectBuilderImpl<S> column(SelectExpressionBuilder<T> expression, Identifier alias) {
     return column(getSql().column(expression, alias));
   }
 
   @Override
-  public <T> SelectBuilderImpl<S> column(Expression<T> expression, String alias) {
+  public <T> SelectBuilderImpl<S> column(SelectExpressionBuilder<T> expression, String alias) {
     return column(getSql().column(expression, alias));
   }
 

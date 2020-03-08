@@ -10,19 +10,23 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is type, defined by the first operand
  */
-final class FuncNvl<T> implements Expression<T> {
+final class FuncNvl<T> extends ColumnExpressionBase<T> {
 
   private final Expression<T> first;
   private final Expression<? extends T> second;
 
   FuncNvl(Expression<T> first, Expression<? extends T> second) {
-    this.first = Objects.requireNonNull(first);
-    this.second = Objects.requireNonNull(second);
+    this.first = first;
+    this.second = second;
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
-    builder.append("NVL(").apply(first::addSql).append(", ").apply(second::addSql).append(')');
+  public void appendExpression(CodeBuilder builder) {
+    builder.append("NVL(")
+        .apply(first::appendExpression)
+        .append(", ")
+        .apply(second::appendExpression)
+        .append(')');
   }
 
   @Override

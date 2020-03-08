@@ -7,8 +7,8 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Select;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import com.provys.provysdb.sqlbuilder.impl.SelectBuilderT0Impl;
 import java.util.Collection;
 
@@ -40,19 +40,19 @@ class DbSelectBuilderT0Impl extends
   }
 
   @Override
-  public <T> DbSelectBuilderT1Impl<T> column(SqlIdentifier column, Class<T> clazz) {
+  public <T> DbSelectBuilderT1Impl<T> column(Identifier column, Class<T> clazz) {
     return new DbSelectBuilderT1Impl<>(getSelectBuilder().column(column, clazz));
   }
 
   @Override
-  public <T> DbSelectBuilderT1Impl<T> column(SqlIdentifier column, SqlIdentifier alias,
+  public <T> DbSelectBuilderT1Impl<T> column(Identifier column, Identifier alias,
       Class<T> clazz) {
     return new DbSelectBuilderT1Impl<>(getSelectBuilder().column(column, alias, clazz));
   }
 
   @Override
-  public <T> DbSelectBuilderT1Impl<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias, Class<T> clazz) {
+  public <T> DbSelectBuilderT1Impl<T> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias, Class<T> clazz) {
     return new DbSelectBuilderT1Impl<>(getSelectBuilder().column(tableAlias, column, alias, clazz));
   }
 

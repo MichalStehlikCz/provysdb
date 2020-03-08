@@ -3,8 +3,8 @@ package com.provys.provysdb.sqlbuilder.impl;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.Condition;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import com.provys.provysdb.sqlbuilder.elements.ElementFactory;
 import com.provys.provysdb.sqlbuilder.elements.SqlColumnExpressionT;
 import com.provys.provysdb.sqlparser.SqlTokenizer;
@@ -68,13 +68,13 @@ public abstract class SqlImpl extends ElementFactory {
   }
 
   @Override
-  public SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
+  public FromClause fromSql(String sqlSelect, QueryAlias alias) {
     var builder = tokenizer.normalize(sqlSelect);
     return fromDirect(builder.build(), alias, builder.getBinds());
   }
 
   @Override
-  public SqlFrom fromSql(String sqlSelect, String alias) {
+  public FromClause fromSql(String sqlSelect, String alias) {
     return fromSql(sqlSelect, tableAlias(alias));
   }
 

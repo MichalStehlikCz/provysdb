@@ -5,20 +5,16 @@ import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.CodeIdent;
 import com.provys.provysdb.sqlbuilder.CodeIdentBuilder;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.math.BigInteger;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of code builder - tool to build SQL text with formatting.
@@ -28,7 +24,7 @@ import java.util.stream.Collectors;
 public class CodeBuilderImpl implements CodeBuilder {
 
   private final StringBuilder builder;
-  private final List<BindName> binds = new ArrayList<>(1);
+  private final Map<BindName, BindValue<?>> bindByName = new ConcurrentHashMap<>(1);
   private boolean newLine = true;
   private CodeIdent currentIdent = CodeIdentVoid.getInstance();
   private final Deque<CodeIdent> tempIdents = new ArrayDeque<>(5);
@@ -66,12 +62,12 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
-  public CodeBuilder append(SqlIdentifier name) {
+  public CodeBuilder append(Identifier name) {
     return append(name.getText());
   }
 
   @Override
-  public CodeBuilder append(SqlTableAlias alias) {
+  public CodeBuilder append(QueryAlias alias) {
     return append(alias.getAlias());
   }
 
@@ -199,28 +195,25 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
-  public CodeBuilder addBind(BindName addBind) {
-    binds.add(Objects.requireNonNull(addBind));
+  public CodeBuilder addBind(BindValue<?> addBind) {
+    bindByName.merge(addBind.getBindName(), addBind, BindValue::combine);
     return this;
   }
 
   @Override
-  public CodeBuilder addBinds(Collection<? extends BindName> addBinds) {
-    binds.addAll(addBinds);
+  public CodeBuilder addBinds(Collection<? extends BindValue<?>> addBinds) {
+    for (var addBind : addBinds) {
+      addBind(addBind);
+    }
     return this;
   }
 
-  private static BindName replaceBindName(Map<String, ? extends BindValue> bindMap,
-      BindName bindName) {
-    var bindValue = bindMap.get(bindName.getName());
-    return (bindValue == null) ? bindName : bindName.combine(bindValue);
-  }
-
   @Override
-  public CodeBuilder applyBindValues(Collection<? extends BindValue> bindValues) {
-    final var bindMap = bindValues.stream()
-        .collect(Collectors.toConcurrentMap(BindName::getName, Function.identity()));
-    binds.replaceAll(bindName -> replaceBindName(bindMap, bindName));
+  public CodeBuilder applyBinds(Collection<? extends BindValue<?>> bindValues) {
+    for (var bindValue : bindValues) {
+      bindByName.computeIfPresent(bindValue.getBindName(),
+          (bindName, oldBind) -> oldBind.combine(bindValue));
+    }
     return this;
   }
 
@@ -230,15 +223,15 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
-  public List<BindName> getBinds() {
-    return Collections.unmodifiableList(binds);
+  public <T> T visit(Visitor<T> visitor) {
+    return visitor.apply(build(), Collections.unmodifiableCollection(bindByName.values()));
   }
 
   @Override
   public String toString() {
     return "CodeBuilderImpl{"
         + "builder=" + builder
-        + ", binds=" + binds
+        + ", bindByName=" + bindByName
         + ", newLine=" + newLine
         + ", currentIdent=" + currentIdent
         + ", tempIdents=" + tempIdents

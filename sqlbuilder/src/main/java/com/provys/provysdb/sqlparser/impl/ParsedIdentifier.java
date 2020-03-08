@@ -2,7 +2,7 @@ package com.provys.provysdb.sqlparser.impl;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlFactory;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.Identifier;
 import com.provys.provysdb.sqlparser.SpaceMode;
 import com.provys.provysdb.sqlparser.SqlTokenType;
 import java.util.Objects;
@@ -12,16 +12,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents name or keyword. Ordinary identifier is one that is not surrounded by double quotation
  * marks
  */
-final class ParsedIdentifier extends ParsedTokenBase implements SqlIdentifier {
+final class ParsedIdentifier extends ParsedTokenBase implements Identifier {
 
-  private final SqlIdentifier identifier;
+  private final Identifier identifier;
 
   ParsedIdentifier(int line, int pos, String name) {
     super(line, pos);
     this.identifier = SqlFactory.name(name);
   }
 
-  ParsedIdentifier(int line, int pos, SqlIdentifier identifier) {
+  ParsedIdentifier(int line, int pos, Identifier identifier) {
     super(line, pos);
     this.identifier = Objects.requireNonNull(identifier);
   }

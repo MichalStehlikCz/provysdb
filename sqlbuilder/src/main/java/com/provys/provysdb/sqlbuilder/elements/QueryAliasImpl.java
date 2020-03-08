@@ -1,13 +1,13 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.common.exception.InternalException;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SqlTableAliasImpl implements SqlTableAlias {
+final class QueryAliasImpl implements QueryAlias {
 
   private static final Pattern PATTERN = Pattern
       .compile("(?:[a-zA-Z][a-zA-Z0-9_#$]*)|(?:\"[^\"]*\")|(?:<<[0-9]+>>)");
@@ -28,7 +28,7 @@ final class SqlTableAliasImpl implements SqlTableAlias {
 
   private final String alias;
 
-  SqlTableAliasImpl(String alias) {
+  QueryAliasImpl(String alias) {
     this.alias = validate(alias);
   }
 
@@ -45,7 +45,7 @@ final class SqlTableAliasImpl implements SqlTableAlias {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlTableAliasImpl that = (SqlTableAliasImpl) o;
+    QueryAliasImpl that = (QueryAliasImpl) o;
     return Objects.equals(alias, that.alias);
   }
 

@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
 
 final class ConditionJoinerImpl implements ConditionJoiner {
 
-  private final SqlConditionOperator operator;
+  private final ConditionOperator operator;
   private final List<Condition> conditions;
 
-  ConditionJoinerImpl(SqlConditionOperator operator) {
+  ConditionJoinerImpl(ConditionOperator operator) {
     this.operator = Objects.requireNonNull(operator);
     this.conditions = new ArrayList<>(4);
   }
 
-  ConditionJoinerImpl(SqlConditionOperator operator, Collection<Condition> conditions) {
+  ConditionJoinerImpl(ConditionOperator operator, Collection<Condition> conditions) {
     this.operator = Objects.requireNonNull(operator);
-    if (operator == SqlConditionOperator.AND) {
+    if (operator == ConditionOperator.AND) {
       // in AND, we skip trivial condition
       this.conditions = conditions.stream().filter(condition -> !condition.isEmpty())
           .collect(Collectors.toList());
@@ -34,7 +34,7 @@ final class ConditionJoinerImpl implements ConditionJoiner {
   @Override
   public ConditionJoiner add(Condition condition) {
     // in case of OR, trivial condition is handled in build; in AND, we can just skip it
-    if (!condition.isEmpty() || (operator == SqlConditionOperator.OR)) {
+    if (!condition.isEmpty() || (operator == ConditionOperator.OR)) {
       conditions.add(condition);
     }
     return this;
@@ -49,7 +49,7 @@ final class ConditionJoinerImpl implements ConditionJoiner {
       return conditions.get(0);
     }
     // in case of OR, we handle trivial condition here...
-    if ((operator == SqlConditionOperator.OR) && conditions.stream().anyMatch(Condition::isEmpty)) {
+    if ((operator == ConditionOperator.OR) && conditions.stream().anyMatch(Condition::isEmpty)) {
       return ConditionEmpty.getInstance();
     }
     return new ConditionJoined(operator, conditions);

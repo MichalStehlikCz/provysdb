@@ -17,7 +17,7 @@ final class LiteralBoolean extends LiteralBase<Boolean> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append('\'').append(DtBoolean.toProvysDb(getValue())).append('\'');
   }
 

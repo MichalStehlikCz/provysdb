@@ -5,16 +5,16 @@ import com.provys.provysdb.sqlbuilder.Condition;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class ConditionSimple implements Condition {
+final class ConditionSql implements Condition {
 
   private final String sql;
 
-  ConditionSimple(String sql) {
+  ConditionSql(String sql) {
     this.sql = sql;
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append('(').append(sql).append(')');
   }
 
@@ -31,7 +31,7 @@ final class ConditionSimple implements Condition {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ConditionSimple that = (ConditionSimple) o;
+    ConditionSql that = (ConditionSql) o;
     return Objects.equals(sql, that.sql);
   }
 

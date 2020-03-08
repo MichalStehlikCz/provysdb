@@ -1,13 +1,13 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
-import com.provys.provysdb.sqlbuilder.SqlTableColumn;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
+import com.provys.provysdb.sqlbuilder.TableColumn;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SqlTableColumnAliasWrapper<T> implements SqlTableColumn<T> {
+final class SqlTableColumnAliasWrapper<T> implements TableColumn<T> {
 
   /**
    * Used to construct wrapper around column with specified alias
@@ -17,7 +17,7 @@ final class SqlTableColumnAliasWrapper<T> implements SqlTableColumn<T> {
    * @return column with same expression as column, but with specified alias
    * @param <U> is type of expression, represented by column
    */
-  static <U> SqlTableColumn<U> of(SqlTableColumn<U> column, SqlIdentifier alias) {
+  static <U> TableColumn<U> of(TableColumn<U> column, Identifier alias) {
     if (column.getOptAlias().filter(oldAlias -> oldAlias.equals(alias)).isPresent()) {
       return column;
     }
@@ -27,21 +27,21 @@ final class SqlTableColumnAliasWrapper<T> implements SqlTableColumn<T> {
     return new SqlTableColumnAliasWrapper<>(column, alias);
   }
 
-  private final SqlTableColumn<T> column;
-  private final SqlIdentifier alias;
+  private final TableColumn<T> column;
+  private final Identifier alias;
 
-  private SqlTableColumnAliasWrapper(SqlTableColumn<T> column, SqlIdentifier alias) {
+  private SqlTableColumnAliasWrapper(TableColumn<T> column, Identifier alias) {
     this.column = column;
     this.alias = alias;
   }
 
   @Override
-  public SqlIdentifier getAlias() {
+  public Identifier getAlias() {
     return alias;
   }
 
   @Override
-  public SqlTableColumn<T> as(SqlIdentifier newAlias) {
+  public TableColumn<T> as(Identifier newAlias) {
     if (alias.equals(newAlias)) {
       return this;
     }
@@ -49,7 +49,7 @@ final class SqlTableColumnAliasWrapper<T> implements SqlTableColumn<T> {
   }
 
   @Override
-  public SqlTableColumn<T> withTableAlias(SqlTableAlias newTableAlias) {
+  public TableColumn<T> withTableAlias(QueryAlias newTableAlias) {
     return of(column.withTableAlias(newTableAlias), alias);
   }
 

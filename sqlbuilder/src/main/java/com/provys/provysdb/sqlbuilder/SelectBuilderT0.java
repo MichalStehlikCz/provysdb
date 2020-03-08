@@ -25,7 +25,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilderT1<T> column(SqlIdentifier column, Class<T> clazz);
+  <T> SelectBuilderT1<T> column(Identifier column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -36,7 +36,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilderT1<T> column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> SelectBuilderT1<T> column(Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -48,7 +48,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @param <T>        is type of column being added
    * @return resulting select builder
    */
-  <T> SelectBuilderT1<T> column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+  <T> SelectBuilderT1<T> column(QueryAlias tableAlias, Identifier column, Identifier alias,
       Class<T> clazz);
 
   /**
@@ -100,7 +100,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilderT1<T> column(Expression<T> expression, SqlIdentifier alias);
+  <T> SelectBuilderT1<T> column(SelectExpressionBuilder<T> expression, Identifier alias);
 
   /**
    * Add column based on given expression.
@@ -110,7 +110,7 @@ public interface SelectBuilderT0 extends SelectBuilderBase<SelectBuilderT0, Sele
    * @param <T>        is type of expression / column
    * @return resulting select builder
    */
-  <T> SelectBuilderT1<T> column(Expression<T> expression, String alias);
+  <T> SelectBuilderT1<T> column(SelectExpressionBuilder<T> expression, String alias);
 
   /**
    * Add column with given SQL text.

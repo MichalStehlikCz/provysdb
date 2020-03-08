@@ -2,27 +2,26 @@ package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.impl.SqlConditionOperator;
 import java.util.Collection;
 import java.util.List;
 
 final class ConditionJoined implements Condition {
 
-  private final SqlConditionOperator operator;
+  private final ConditionOperator operator;
   private final List<Condition> conditions;
 
-  ConditionJoined(SqlConditionOperator operator, Collection<Condition> conditions) {
+  ConditionJoined(ConditionOperator operator, Collection<Condition> conditions) {
     this.operator = operator;
     this.conditions = List.copyOf(conditions);
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     if (conditions.size() > 1) {
       builder.append('(').appendLine().increasedIdent("", operator.toString() + ' ', 2);
     }
     for (var condition : conditions) {
-      condition.addSql(builder);
+      condition.appendExpression(builder);
       builder.appendLine();
     }
     if (conditions.size() > 1) {
@@ -30,7 +29,7 @@ final class ConditionJoined implements Condition {
     }
   }
 
-  SqlConditionOperator getOperator() {
+  ConditionOperator getOperator() {
     return operator;
   }
 

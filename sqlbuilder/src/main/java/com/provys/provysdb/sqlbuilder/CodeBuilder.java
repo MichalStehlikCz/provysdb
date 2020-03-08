@@ -2,7 +2,6 @@ package com.provys.provysdb.sqlbuilder;
 
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -52,7 +51,7 @@ public interface CodeBuilder {
    * @param name contains text to be added
    * @return self to support fluent build
    */
-  CodeBuilder append(SqlIdentifier name);
+  CodeBuilder append(Identifier name);
 
   /**
    * Appends piece of text to already existing code; SqlTableAlias variant.
@@ -60,7 +59,7 @@ public interface CodeBuilder {
    * @param alias contains text to be added
    * @return self to support fluent build
    */
-  CodeBuilder append(SqlTableAlias alias);
+  CodeBuilder append(QueryAlias alias);
 
   /**
    * Use function that appends some text to this builder. Note that it should not be used for
@@ -205,24 +204,26 @@ public interface CodeBuilder {
    * @param addBind is bind variable to be added to list of binds
    * @return self to support fluent build
    */
-  CodeBuilder addBind(BindValue addBind);
+  CodeBuilder addBind(BindValue<?> addBind);
 
   /**
-   * Appends list of bind variables to binds collection.
+   * Appends list of bind variables to binds collection. If bind with given name is found, combine
+   * them
    *
-   * @param addBinds are bind variables to be added to collection of binds
+   * @param addBinds are bind variables to be added / combined with collection of binds
    * @return self to support fluent build
    */
-  CodeBuilder addBinds(Collection<? extends BindValue> addBinds);
+  CodeBuilder addBinds(Collection<? extends BindValue<?>> addBinds);
 
   /**
    * Go through existing binds and if bind value with matching name is found in supplied
-   * collection, combine bind with supplied value.
+   * collection, combine bind with supplied value. Ignore items that are not found in existing bind
+   * collection
    *
    * @param bindValues are variables supplied to add type and value to binds
    * @return self to support fluent build
    */
-  CodeBuilder applyBindValues(Collection<? extends BindValue> bindValues);
+  CodeBuilder applyBinds(Collection<? extends BindValue<?>> bindValues);
 
   /**
    * Method retrieves code, produced by CodeBuilder.
@@ -231,10 +232,17 @@ public interface CodeBuilder {
    */
   String build();
 
+  @FunctionalInterface
+  interface Visitor<T> {
+    T apply(String code, Collection<BindValue<?>> binds);
+  }
+
   /**
-   * List of binds, collected in builder.
+   * Let visitor use this code builder's results.
    *
-   * @return list of binds, collected in builder
+   * @param visitor is visitor, used to access this code builder's internal objects
+   * @param <T> is return type of visitor
+   * @return result of visit
    */
-  List<BindName> getBinds();
+  <T> T visit(Visitor<T> visitor);
 }

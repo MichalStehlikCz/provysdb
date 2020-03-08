@@ -251,7 +251,7 @@ public final class SqlFactory {
    * @param name to be created
    * @return created name object
    */
-  public static SqlIdentifier name(String name) {
+  public static Identifier name(String name) {
     return SQL.name(name);
   }
 
@@ -261,7 +261,7 @@ public final class SqlFactory {
    * @param column is name of table column to be assigned to column
    * @return created column
    */
-  public static SqlTableColumn column(SqlIdentifier column) {
+  public static TableColumn column(Identifier column) {
     return SQL.column(column);
   }
 
@@ -272,7 +272,7 @@ public final class SqlFactory {
    * @param alias  is alias to be sued for column
    * @return created column
    */
-  public static SqlTableColumn column(SqlIdentifier column, SqlIdentifier alias) {
+  public static TableColumn column(Identifier column, Identifier alias) {
     return SQL.column(column, alias);
   }
 
@@ -283,7 +283,7 @@ public final class SqlFactory {
    * @param column     is name of table column to be assigned to column
    * @return created column
    */
-  public static SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column) {
+  public static TableColumn column(QueryAlias tableAlias, Identifier column) {
     return SQL.column(tableAlias, column);
   }
 
@@ -295,8 +295,8 @@ public final class SqlFactory {
    * @param alias      is alias to be sued for column
    * @return created column
    */
-  public static SqlTableColumn column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias) {
+  public static TableColumn column(QueryAlias tableAlias, Identifier column,
+      Identifier alias) {
     return SQL.column(tableAlias, column, alias);
   }
 
@@ -309,7 +309,7 @@ public final class SqlFactory {
    *                   to add columns based on sql expressions
    * @return created column
    */
-  public static SqlTableColumn column(String columnName) {
+  public static TableColumn column(String columnName) {
     return SQL.column(columnName);
   }
 
@@ -322,7 +322,7 @@ public final class SqlFactory {
    *                   to add columns based on sql expressions
    * @return created column
    */
-  public static SqlTableColumn column(String tableAlias, String columnName) {
+  public static TableColumn column(String tableAlias, String columnName) {
     return SQL.column(tableAlias, columnName);
   }
 
@@ -336,7 +336,7 @@ public final class SqlFactory {
    * @param alias      is alias to be used for column
    * @return created column
    */
-  public static SqlTableColumn column(String tableAlias, String columnName, String alias) {
+  public static TableColumn column(String tableAlias, String columnName, String alias) {
     return SQL.column(tableAlias, columnName, alias);
   }
 
@@ -360,7 +360,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(SqlTableColumn column, Class<T> clazz) {
+  public static <T> TableColumn<T> column(TableColumn column, Class<T> clazz) {
     return SQL.column(column, clazz);
   }
 
@@ -372,7 +372,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(SqlIdentifier column, Class<T> clazz) {
+  public static <T> TableColumn<T> column(Identifier column, Class<T> clazz) {
     return SQL.column(column, clazz);
   }
 
@@ -385,7 +385,7 @@ public final class SqlFactory {
    * @param <T>    is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(SqlIdentifier column, SqlIdentifier alias,
+  public static <T> TableColumn<T> column(Identifier column, Identifier alias,
       Class<T> clazz) {
     return SQL.column(column, alias, clazz);
   }
@@ -399,7 +399,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
+  public static <T> TableColumn<T> column(QueryAlias tableAlias, Identifier column,
       Class<T> clazz) {
     return SQL.column(tableAlias, column, clazz);
   }
@@ -414,8 +414,8 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias, Class<T> clazz) {
+  public static <T> TableColumn<T> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias, Class<T> clazz) {
     return SQL.column(tableAlias, column, alias, clazz);
   }
 
@@ -429,7 +429,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(String columnName, Class<T> clazz) {
+  public static <T> TableColumn<T> column(String columnName, Class<T> clazz) {
     return SQL.column(columnName, clazz);
   }
 
@@ -444,7 +444,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(String tableAlias, String columnName,
+  public static <T> TableColumn<T> column(String tableAlias, String columnName,
       Class<T> clazz) {
     return SQL.column(tableAlias, columnName, clazz);
   }
@@ -461,7 +461,7 @@ public final class SqlFactory {
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
    */
-  public static <T> SqlTableColumn<T> column(String tableAlias, String columnName, String alias,
+  public static <T> TableColumn<T> column(String tableAlias, String columnName, String alias,
       Class<T> clazz) {
     return SQL.column(tableAlias, columnName, alias, clazz);
   }
@@ -685,7 +685,7 @@ public final class SqlFactory {
    * @param tableAlias is alias (String value)
    * @return created alias object
    */
-  public static SqlTableAlias tableAlias(String tableAlias) {
+  public static QueryAlias tableAlias(String tableAlias) {
     return SQL.tableAlias(tableAlias);
   }
 
@@ -696,7 +696,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom from(SqlIdentifier tableName, SqlTableAlias alias) {
+  public static FromClause from(Identifier tableName, QueryAlias alias) {
     return SQL.from(tableName, alias);
   }
 
@@ -707,7 +707,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom from(String tableName, String alias) {
+  public static FromClause from(String tableName, String alias) {
     return SQL.from(tableName, alias);
   }
 
@@ -718,7 +718,7 @@ public final class SqlFactory {
    * @param alias  as alias to be assigned to given expression
    * @return created from clause
    */
-  public static SqlFrom from(Select select, SqlTableAlias alias) {
+  public static FromClause from(Select select, QueryAlias alias) {
     return SQL.from(select, alias);
   }
 
@@ -729,7 +729,7 @@ public final class SqlFactory {
    * @param alias  as alias to be assigned to given expression
    * @return created from clause
    */
-  public static SqlFrom from(Select select, String alias) {
+  public static FromClause from(Select select, String alias) {
     return SQL.from(select, alias);
   }
 
@@ -740,7 +740,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom fromDirect(String sqlSelect, SqlTableAlias alias) {
+  public static FromClause fromDirect(String sqlSelect, QueryAlias alias) {
     return SQL.fromDirect(sqlSelect, alias);
   }
 
@@ -752,7 +752,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom fromDirect(String sqlSelect, String alias) {
+  public static FromClause fromDirect(String sqlSelect, String alias) {
     return SQL.fromDirect(sqlSelect, alias);
   }
 
@@ -763,7 +763,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom fromSql(String sqlSelect, SqlTableAlias alias) {
+  public static FromClause fromSql(String sqlSelect, QueryAlias alias) {
     return SQL.fromSql(sqlSelect, alias);
   }
 
@@ -774,7 +774,7 @@ public final class SqlFactory {
    * @param alias     is alias new table will get
    * @return created from clause
    */
-  public static SqlFrom fromSql(String sqlSelect, String alias) {
+  public static FromClause fromSql(String sqlSelect, String alias) {
     return SQL.fromSql(sqlSelect, alias);
   }
 
@@ -783,7 +783,7 @@ public final class SqlFactory {
    *
    * @return clause fro pseudo-table dual
    */
-  public static SqlFrom fromDual() {
+  public static FromClause fromDual() {
     return SQL.fromDual();
   }
 
@@ -925,7 +925,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition eq(Expression<T> first, Expression<T> second) {
+  public static <T> Condition eq(SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.eq(first, second);
   }
 
@@ -937,7 +937,8 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition notEq(Expression<T> first, Expression<T> second) {
+  public static <T> Condition notEq(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.notEq(first, second);
   }
 
@@ -949,7 +950,8 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition lessThan(Expression<T> first, Expression<T> second) {
+  public static <T> Condition lessThan(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.lessThan(first, second);
   }
 
@@ -961,7 +963,8 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition lessOrEqual(Expression<T> first, Expression<T> second) {
+  public static <T> Condition lessOrEqual(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.lessOrEqual(first, second);
   }
 
@@ -973,7 +976,8 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition greaterThan(Expression<T> first, Expression<T> second) {
+  public static <T> Condition greaterThan(
+      SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.greaterThan(first, second);
   }
 
@@ -985,7 +989,7 @@ public final class SqlFactory {
    * @param <T>    is type of operands in comparison
    * @return created comparison (boolean expression / condition)
    */
-  public static <T> Condition greaterOrEqual(Expression<T> first, Expression<T> second) {
+  public static <T> Condition greaterOrEqual(SelectExpressionBuilder<T> first, SelectExpressionBuilder<T> second) {
     return SQL.greaterOrEqual(first, second);
   }
 
@@ -996,7 +1000,7 @@ public final class SqlFactory {
    * @param <T>   is type of operand
    * @return created expression (boolean expression / condition)
    */
-  public static <T> Condition isNull(Expression<T> first) {
+  public static <T> Condition isNull(SelectExpressionBuilder<T> first) {
     return SQL.isNull(first);
   }
 

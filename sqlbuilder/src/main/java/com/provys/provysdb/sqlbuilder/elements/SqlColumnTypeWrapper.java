@@ -2,11 +2,11 @@ package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
+import com.provys.provysdb.sqlbuilder.Identifier;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SqlColumnTypeWrapper<T> extends SqlColumnBase<T> {
+final class SqlColumnTypeWrapper<T> extends ColumnExpressionBase<T> {
 
   static <U> SqlColumn<U> of(SqlColumn<?> column, Class<U> type) {
     if (type.isAssignableFrom(column.getType())) {
@@ -31,7 +31,7 @@ final class SqlColumnTypeWrapper<T> extends SqlColumnBase<T> {
   }
 
   @Override
-  public @Nullable SqlIdentifier getAlias() {
+  public @Nullable Identifier getAlias() {
     return column.getAlias();
   }
 

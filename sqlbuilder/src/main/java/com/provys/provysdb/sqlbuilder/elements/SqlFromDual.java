@@ -11,7 +11,7 @@ final class SqlFromDual extends SqlFromBase {
   }
 
   private SqlFromDual() {
-    super(new SqlTableAliasImpl("dual"));
+    super(new QueryAliasImpl("dual"));
   }
 
   @Override

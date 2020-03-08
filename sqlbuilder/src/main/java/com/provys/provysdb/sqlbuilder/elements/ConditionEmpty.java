@@ -15,7 +15,7 @@ final class ConditionEmpty implements Condition {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     // we are expected to insert condition...
     builder.append("(1=1)");
   }

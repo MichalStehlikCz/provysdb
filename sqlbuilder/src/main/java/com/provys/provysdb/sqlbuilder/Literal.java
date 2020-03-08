@@ -5,7 +5,7 @@ package com.provys.provysdb.sqlbuilder;
  *
  * @param <T> is type of literal's value
  */
-public interface Literal<T> extends Expression<T> {
+public interface Literal<T> extends SelectExpressionBuilder<T> {
 
   /**
    * Value represented by literal.

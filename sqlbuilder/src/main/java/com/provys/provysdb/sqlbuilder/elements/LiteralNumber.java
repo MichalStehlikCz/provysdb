@@ -2,6 +2,11 @@ package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 
+/**
+ * Common ancestor for number literals.
+ *
+ * @param <T> is Java type whose value is used in this literal.
+ */
 abstract class LiteralNumber<T extends Number> extends LiteralBase<T> {
 
   LiteralNumber(T value) {
@@ -9,7 +14,7 @@ abstract class LiteralNumber<T extends Number> extends LiteralBase<T> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append(getValue().toString());
   }
 }

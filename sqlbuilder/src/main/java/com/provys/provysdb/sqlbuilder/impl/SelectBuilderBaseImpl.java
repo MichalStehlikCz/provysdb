@@ -5,13 +5,13 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.Expression;
+import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
 import com.provys.provysdb.sqlbuilder.Select;
 import com.provys.provysdb.sqlbuilder.Sql;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlFrom;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.FromClause;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import com.provys.provysdb.sqlbuilder.codebuilder.CodeBuilderImpl;
 import com.provys.provysdb.sqlbuilder.elements.ConditionJoined;
 import com.provys.provysdb.sqlbuilder.elements.SqlConditionOperator;
@@ -31,9 +31,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S>, S extends Sql> {
 
   private final S sql;
-  private final Map<SqlIdentifier, SqlColumn> columnByName;
-  private final List<SqlFrom> tables;
-  private final Map<SqlTableAlias, SqlFrom> tableByAlias;
+  private final Map<Identifier, SqlColumn> columnByName;
+  private final List<FromClause> tables;
+  private final Map<QueryAlias, FromClause> tableByAlias;
   private final List<Condition> conditions;
 
   SelectBuilderBaseImpl(S sql) {
@@ -44,7 +44,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     conditions = new ArrayList<>(5);
   }
 
-  SelectBuilderBaseImpl(S sql, Collection<SqlColumn> columns, List<SqlFrom> tables,
+  SelectBuilderBaseImpl(S sql, Collection<SqlColumn> columns, List<FromClause> tables,
       Collection<Condition> conditions) {
     this.sql = Objects.requireNonNull(sql);
     this.columnByName = columns.stream()
@@ -53,11 +53,11 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
             .toConcurrentMap(column -> column.getOptAlias().orElseThrow(), Function.identity()));
     this.tables = new ArrayList<>(tables);
     this.tableByAlias = tables.stream()
-        .collect(Collectors.toConcurrentMap(SqlFrom::getAlias, Function.identity()));
+        .collect(Collectors.toConcurrentMap(FromClause::getAlias, Function.identity()));
     this.conditions = new ArrayList<>(conditions);
   }
 
-  void mapColumn(SqlIdentifier alias, SqlColumn column) {
+  void mapColumn(Identifier alias, SqlColumn column) {
     if (columnByName.putIfAbsent(alias, column) != null) {
       throw new InternalException(
           "Attempt to insert duplicate column to column list (" + alias.getText()
@@ -79,7 +79,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
    *
    * @return value of field tables
    */
-  public List<SqlFrom> getTables() {
+  public List<FromClause> getTables() {
     return Collections.unmodifiableList(tables);
   }
 
@@ -99,7 +99,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
    *
    * @return alias of table that has been added last, empty Optional if there are no tables.
    */
-  Optional<SqlTableAlias> getLastTableAlias() {
+  Optional<QueryAlias> getLastTableAlias() {
     if (getTables().isEmpty()) {
       return Optional.empty();
     }
@@ -119,16 +119,16 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
         Collections.unmodifiableList(conditions));
   }
 
-  public SelectBuilderImpl<S> column(SqlIdentifier column) {
+  public SelectBuilderImpl<S> column(Identifier column) {
     return columnUntyped(sql.column(column));
   }
 
-  public SelectBuilderImpl<S> column(SqlIdentifier column, SqlIdentifier alias) {
+  public SelectBuilderImpl<S> column(Identifier column, Identifier alias) {
     return columnUntyped(sql.column(column, alias));
   }
 
-  public SelectBuilderImpl<S> column(SqlTableAlias tableAlias, SqlIdentifier column,
-      SqlIdentifier alias) {
+  public SelectBuilderImpl<S> column(QueryAlias tableAlias, Identifier column,
+      Identifier alias) {
     return columnUntyped(sql.column(tableAlias, column, alias));
   }
 
@@ -156,11 +156,11 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return columnUntyped(sql.column(tableAlias, columnName, alias));
   }
 
-  public SelectBuilderImpl<S> column(Expression expression, SqlIdentifier alias) {
+  public SelectBuilderImpl<S> column(SelectExpressionBuilder expression, Identifier alias) {
     return columnUntyped(sql.column(expression, alias));
   }
 
-  public SelectBuilderImpl<S> column(Expression expression, String alias) {
+  public SelectBuilderImpl<S> column(SelectExpressionBuilder expression, String alias) {
     return columnUntyped(sql.column(expression, alias));
   }
 
@@ -198,7 +198,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return columnUntyped(sql.columnSql(columnSql, alias, binds));
   }
 
-  private void mapTable(SqlTableAlias alias, SqlFrom table) {
+  private void mapTable(QueryAlias alias, FromClause table) {
     if (tableByAlias.putIfAbsent(alias, table) != null) {
       throw new InternalException(
           "Attempt to insert duplicate table to from list (" + alias.getAlias()
@@ -212,13 +212,13 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
    * @param table is table definition (potentially with join condition)
    * @return self to support fluent build
    */
-  public T from(SqlFrom table) {
+  public T from(FromClause table) {
     mapTable(table.getAlias(), table);
     tables.add(table);
     return self();
   }
 
-  public T from(SqlIdentifier tableName, SqlTableAlias alias) {
+  public T from(Identifier tableName, QueryAlias alias) {
     return from(sql.from(tableName, alias));
   }
 
@@ -226,7 +226,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return from(sql.from(tableName, alias));
   }
 
-  public T from(Select select, SqlTableAlias alias) {
+  public T from(Select select, QueryAlias alias) {
     return from(sql.from(select, alias));
   }
 
@@ -234,7 +234,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return from(sql.from(select, alias));
   }
 
-  public T fromDirect(String sqlSelect, SqlTableAlias alias) {
+  public T fromDirect(String sqlSelect, QueryAlias alias) {
     return from(sql.fromDirect(sqlSelect, alias));
   }
 
@@ -242,7 +242,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
     return from(sql.fromDirect(sqlSelect, alias));
   }
 
-  public T fromSql(String sqlSelect, SqlTableAlias alias) {
+  public T fromSql(String sqlSelect, QueryAlias alias) {
     return from(sql.fromSql(sqlSelect, alias));
   }
 

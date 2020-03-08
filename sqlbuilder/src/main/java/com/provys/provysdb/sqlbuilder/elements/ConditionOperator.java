@@ -1,6 +1,6 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
-enum SqlConditionOperator {
+enum ConditionOperator {
   AND,
   OR
 }

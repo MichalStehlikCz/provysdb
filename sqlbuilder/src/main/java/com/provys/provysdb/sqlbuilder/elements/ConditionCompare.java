@@ -15,8 +15,8 @@ final class ConditionCompare<T> implements Condition {
   private final SqlSymbol comparison;
 
   ConditionCompare(Expression<T> first, Expression<T> second, SqlSymbol comparison) {
-    this.first = Objects.requireNonNull(first);
-    this.second = Objects.requireNonNull(second);
+    this.first = first;
+    this.second = second;
     if (!comparison.isComparison()) {
       throw new InternalException(
           "Invalid comparison - symbol " + comparison.getSymbol() + "not valid");
@@ -30,11 +30,11 @@ final class ConditionCompare<T> implements Condition {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append('(');
-    first.addSql(builder);
+    first.appendExpression(builder);
     builder.append(comparison.getSymbol());
-    second.addSql(builder);
+    second.appendExpression(builder);
     builder.append(')');
   }
 

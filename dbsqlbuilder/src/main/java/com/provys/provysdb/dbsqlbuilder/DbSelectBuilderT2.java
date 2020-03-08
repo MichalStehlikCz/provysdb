@@ -4,8 +4,8 @@ import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
 import com.provys.provysdb.sqlbuilder.SelectBuilderBase;
 import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
 import java.util.Collection;
 
 /**
@@ -35,7 +35,7 @@ public interface DbSelectBuilderT2<T1, T2>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilder column(SqlIdentifier column, Class<T> clazz);
+  <T> DbSelectBuilder column(Identifier column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -46,7 +46,7 @@ public interface DbSelectBuilderT2<T1, T2>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilder column(SqlIdentifier column, SqlIdentifier alias, Class<T> clazz);
+  <T> DbSelectBuilder column(Identifier column, Identifier alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -58,7 +58,7 @@ public interface DbSelectBuilderT2<T1, T2>
    * @param <T>        is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilder column(SqlTableAlias tableAlias, SqlIdentifier column, SqlIdentifier alias,
+  <T> DbSelectBuilder column(QueryAlias tableAlias, Identifier column, Identifier alias,
       Class<T> clazz);
 
   /**

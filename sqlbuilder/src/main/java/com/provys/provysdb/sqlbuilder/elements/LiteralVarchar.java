@@ -22,8 +22,12 @@ final class LiteralVarchar extends LiteralBase<String> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
-    builder.append('\'').append(getValue().replace("'", "''")).append('\'');
+  public void appendExpression(CodeBuilder builder) {
+    builder.append('\'')
+        .append(getValue()
+            .replace("'", "''")
+            .replace("\n", "' || CHR(10) || '"))
+        .append('\'');
   }
 
   @Override

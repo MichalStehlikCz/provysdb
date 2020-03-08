@@ -1,13 +1,13 @@
 package com.provys.provysdb.sqlbuilder.elements;
 
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.SqlIdentifier;
-import com.provys.provysdb.sqlbuilder.SqlTableAlias;
-import com.provys.provysdb.sqlbuilder.SqlTableColumn;
+import com.provys.provysdb.sqlbuilder.Identifier;
+import com.provys.provysdb.sqlbuilder.QueryAlias;
+import com.provys.provysdb.sqlbuilder.TableColumn;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class SqlColumnSimple<T> extends SqlColumnType<T> implements SqlTableColumn<T> {
+final class SqlColumnSimple<T> extends ColumnExpressionBaseWithType<T> implements TableColumn<T> {
 
   /**
    * Creates simple column without type specification.
@@ -16,7 +16,7 @@ final class SqlColumnSimple<T> extends SqlColumnType<T> implements SqlTableColum
    * @param column is name of column
    * @return created column with required table alias and column name
    */
-  static SqlColumnSimple<Object> of(@Nullable SqlTableAlias tableAlias, SqlIdentifier column) {
+  static SqlColumnSimple<Object> of(@Nullable QueryAlias tableAlias, Identifier column) {
     return new SqlColumnSimple<>(tableAlias, column, Object.class);
   }
 
@@ -29,14 +29,14 @@ final class SqlColumnSimple<T> extends SqlColumnType<T> implements SqlTableColum
    * @return created column with required table alias and column name
    * @param <U> is type parameter representing type of created column value
    */
-  static <U> SqlColumnSimple<U> of(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, Class<U> type) {
+  static <U> SqlColumnSimple<U> of(@Nullable QueryAlias tableAlias, Identifier column, Class<U> type) {
     return new SqlColumnSimple<>(tableAlias, column, type);
   }
 
-  private final @Nullable SqlTableAlias tableAlias;
-  private final SqlIdentifier column;
+  private final @Nullable QueryAlias tableAlias;
+  private final Identifier column;
 
-  private SqlColumnSimple(@Nullable SqlTableAlias tableAlias, SqlIdentifier column, Class<T> type) {
+  private SqlColumnSimple(@Nullable QueryAlias tableAlias, Identifier column, Class<T> type) {
     super(type);
     this.tableAlias = tableAlias;
     this.column = column;
@@ -51,7 +51,7 @@ final class SqlColumnSimple<T> extends SqlColumnType<T> implements SqlTableColum
   }
 
   @Override
-  public SqlTableColumn<T> withTableAlias(SqlTableAlias newTableAlias) {
+  public TableColumn<T> withTableAlias(QueryAlias newTableAlias) {
     if (newTableAlias.equals(this.tableAlias)) {
       return this;
     }

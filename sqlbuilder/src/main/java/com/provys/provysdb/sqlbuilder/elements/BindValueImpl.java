@@ -3,6 +3,7 @@ package com.provys.provysdb.sqlbuilder.elements;
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sqlbuilder.BindName;
 import com.provys.provysdb.sqlbuilder.BindValue;
+import com.provys.provysdb.sqlbuilder.BindWithType;
 import com.provys.provysdb.sqlbuilder.CodeBuilder;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -11,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents variable connected with select statement, its type and value.
  */
-final class BindValueImpl<T> implements BindValue<T> {
+final class BindValueImpl<T> extends ColumnExpressionBaseWithType<T> implements BindValue<T> {
 
   /**
    * Get bind variable with specified name and value. Type of variable is deferred from supplied
@@ -66,7 +67,6 @@ final class BindValueImpl<T> implements BindValue<T> {
   }
 
   private final BindName bindName;
-  private final Class<T> type;
   private final @Nullable T value;
 
   @SuppressWarnings("unchecked")
@@ -79,12 +79,12 @@ final class BindValueImpl<T> implements BindValue<T> {
   }
 
   private BindValueImpl(BindName bindName, Class<T> type, @Nullable T value) {
+    super(type);
     this.bindName = bindName;
     if ((value != null) && !type.isInstance(value)) {
       throw new InternalException("Incorrect type of bind value for variable " + bindName.getName()
           + " (type " + type + ", value " + value.getClass() + ')');
     }
-    this.type = type;
     this.value = value;
   }
 
@@ -99,20 +99,15 @@ final class BindValueImpl<T> implements BindValue<T> {
   }
 
   @Override
-  public Class<T> getType() {
-    return type;
-  }
-
-  @Override
   public @Nullable T getValue() {
     return value;
   }
 
   @Override
   public <U> @Nullable U getValue(Class<U> returnType) {
-    if (!returnType.isAssignableFrom(type)) {
+    if (!returnType.isAssignableFrom(getType())) {
       throw new InternalException("Cannot convert value of bind variable " + getName() + " from "
-          + this.type + " to " + type);
+          + this.getType() + " to " + returnType);
     }
     @SuppressWarnings("unchecked")
     U result = (U) value;
@@ -121,7 +116,7 @@ final class BindValueImpl<T> implements BindValue<T> {
 
   @Override
   public <U extends T> BindValue<U> type(Class<U> newType) {
-    if (!type.isAssignableFrom(newType) || ((value != null) && !newType.isInstance(value))) {
+    if (!getType().isAssignableFrom(newType) || ((value != null) && !newType.isInstance(value))) {
       throw new InternalException("Cannot cast bind value " + this + " to type " + newType);
     }
     // safe after checking type of value against newType
@@ -132,16 +127,21 @@ final class BindValueImpl<T> implements BindValue<T> {
 
   @Override
   public BindValue<T> value(@Nullable T newValue) {
+    return valueUnsafe(newValue);
+  }
+
+  @Override
+  public BindValue<T> valueUnsafe(@Nullable Object newValue) {
     if (Objects.equals(value, newValue)) {
       return this;
     }
-    if (!getType().isInstance(newValue)) {
+    if ((newValue != null) && !getType().isInstance(newValue)) {
       throw new InternalException("Cannot bind value " + newValue + " to bind variable " + this);
     }
-    return new BindValueImpl<>(bindName, type, value);
+    return new BindValueImpl<>(bindName, getType(), value);
   }
 
-  private void combineName(BindValue<?> other) {
+  private void combineName(BindWithType other) {
     if (!getName().equals(other.getName())) {
       throw new InternalException(
           "Cannot combine bind variables with different names (" + getName() + "!=" + other
@@ -150,21 +150,21 @@ final class BindValueImpl<T> implements BindValue<T> {
   }
 
   private Class<T> combineType(BindValue<?> other) {
-    if (other.getType().isAssignableFrom(type)) {
-      return type;
+    if (other.getType().isAssignableFrom(getType())) {
+      return getType();
     }
-    if (type.isAssignableFrom(other.getType())) {
+    if (getType().isAssignableFrom(other.getType())) {
       // assignable to Class<T> -> no risk
       @SuppressWarnings("unchecked")
       var tempType = (Class<T>) other.getType();
       return tempType;
     }
     throw new InternalException(
-        "Cannot combine bind variables with different types (" + type + "!=" + other.getType()
+        "Cannot combine bind variables with different types (" + getType() + "!=" + other.getType()
             + ')');
   }
 
-  private T combineValue(BindValue<T> other) {
+  private T combineValue(BindValue<? extends T> other) {
     var otherValue = other.getValue();
     if ((otherValue == null) || otherValue.equals(value)) {
       return value;
@@ -183,14 +183,14 @@ final class BindValueImpl<T> implements BindValue<T> {
     }
     combineName(other);
     /* if we are specialisation of type and other does not have value or values are same */
-    if (other.getType().isAssignableFrom(type)) {
+    if (other.getType().isAssignableFrom(getType())) {
       var otherValue = other.getValue();
       if ((otherValue == null) || otherValue.equals(value)) {
         return this;
       }
     }
     /* other is specialisation of our type and we do not have value or values are the same */
-    if (type.isAssignableFrom(other.getType())
+    if (getType().isAssignableFrom(other.getType())
       && ((value == null) || value.equals(other.getValue()))) {
       @SuppressWarnings("unchecked")
       var result = (BindValue<T>) other;
@@ -205,7 +205,7 @@ final class BindValueImpl<T> implements BindValue<T> {
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
+  public void appendExpression(CodeBuilder builder) {
     builder.append('?');
     builder.addBind(this);
   }
@@ -218,16 +218,18 @@ final class BindValueImpl<T> implements BindValue<T> {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    if (!super.equals(o)) {
+      return false;
+    }
     BindValueImpl<?> bindValue = (BindValueImpl<?>) o;
     return Objects.equals(bindName, bindValue.bindName)
-        && Objects.equals(type, bindValue.type)
         && Objects.equals(value, bindValue.value);
   }
 
   @Override
   public int hashCode() {
-    int result = bindName != null ? bindName.hashCode() : 0;
-    result = 31 * result + (type != null ? type.hashCode() : 0);
+    int result = super.hashCode();
+    result = 31 * result + (bindName != null ? bindName.hashCode() : 0);
     result = 31 * result + (value != null ? value.hashCode() : 0);
     return result;
   }
@@ -236,8 +238,7 @@ final class BindValueImpl<T> implements BindValue<T> {
   public String toString() {
     return "BindValueImpl{"
         + "bindName=" + bindName
-        + ", type=" + type
         + ", value=" + value
-        + '}';
+        + ", " + super.toString() + '}';
   }
 }

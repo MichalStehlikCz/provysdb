@@ -4,15 +4,15 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Adds support for keeping information about column type.
+ * Adds support for keeping explicit information about column expression type.
  *
  * @param <T> is type of value, represented by column
  */
-abstract class SqlColumnType<T> extends SqlColumnBase<T> {
+abstract class ColumnExpressionBaseWithType<T> extends ColumnExpressionBase<T> {
 
   private final Class<T> type;
 
-  SqlColumnType(Class<T> type) {
+  ColumnExpressionBaseWithType(Class<T> type) {
     this.type = type;
   }
 
@@ -29,7 +29,7 @@ abstract class SqlColumnType<T> extends SqlColumnBase<T> {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlColumnType<?> that = (SqlColumnType<?>) o;
+    ColumnExpressionBaseWithType<?> that = (ColumnExpressionBaseWithType<?>) o;
     return Objects.equals(type, that.type);
   }
 
@@ -40,7 +40,7 @@ abstract class SqlColumnType<T> extends SqlColumnBase<T> {
 
   @Override
   public String toString() {
-    return "SqlColumnType{"
+    return "ColumnExpressionBaseWithType{"
         + "type=" + type
         + ", " + super.toString() + '}';
   }
