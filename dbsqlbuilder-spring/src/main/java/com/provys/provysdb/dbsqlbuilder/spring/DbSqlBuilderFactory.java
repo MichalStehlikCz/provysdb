@@ -1,6 +1,6 @@
 package com.provys.provysdb.dbsqlbuilder.spring;
 
-import com.provys.provysdb.dbcontext.DbContext;
+import com.provys.db.dbcontext.DbContext;
 import com.provys.provysdb.dbsqlbuilder.impl.SqlAdminImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

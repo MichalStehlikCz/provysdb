@@ -2,13 +2,13 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.provysdb.dbsqlbuilder.DbSelectBuilder;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
-import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.Identifier;
-import com.provys.provysdb.sqlbuilder.QueryAlias;
-import com.provys.provysdb.sqlbuilder.impl.SelectBuilderImpl;
+import com.provys.provysdb.sql.BindName;
+import sqlbuilder.BindValueBuilder;
+import sqlbuilder.SelectExpressionBuilder;
+import com.provys.provysdb.builder.sqlbuilder.SqlColumn;
+import com.provys.provysdb.sql.SimpleName;
+import sqlbuilder.QueryAlias;
+import sqlbuilder.impl.SelectBuilderImpl;
 import java.util.Collection;
 
 @SuppressWarnings("CyclicClassDependency")
@@ -36,20 +36,20 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(Identifier column, Class<T> clazz) {
+  public <T> DbSelectBuilderImpl column(SimpleName column, Class<T> clazz) {
     getSelectBuilder().column(column, clazz);
     return this;
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(Identifier column, Identifier alias, Class<T> clazz) {
+  public <T> DbSelectBuilderImpl column(SimpleName column, SimpleName alias, Class<T> clazz) {
     getSelectBuilder().column(column, alias, clazz);
     return this;
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(QueryAlias tableAlias, Identifier column,
-      Identifier alias, Class<T> clazz) {
+  public <T> DbSelectBuilderImpl column(QueryAlias tableAlias, SimpleName column,
+      SimpleName alias, Class<T> clazz) {
     getSelectBuilder().column(tableAlias, column, alias, clazz);
     return this;
   }
@@ -74,7 +74,7 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public <T> DbSelectBuilderImpl column(SelectExpressionBuilder<T> expression, Identifier alias) {
+  public <T> DbSelectBuilderImpl column(SelectExpressionBuilder<T> expression, SimpleName alias) {
     return column(getSql().column(expression, alias));
   }
 
@@ -84,20 +84,20 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public DbSelectBuilderImpl column(Identifier column) {
+  public DbSelectBuilderImpl column(SimpleName column) {
     getSelectBuilder().column(column);
     return this;
   }
 
   @Override
-  public DbSelectBuilderImpl column(Identifier column, Identifier alias) {
+  public DbSelectBuilderImpl column(SimpleName column, SimpleName alias) {
     getSelectBuilder().column(column, alias);
     return this;
   }
 
   @Override
-  public DbSelectBuilderImpl column(QueryAlias tableAlias, Identifier column,
-      Identifier alias) {
+  public DbSelectBuilderImpl column(QueryAlias tableAlias, SimpleName column,
+      SimpleName alias) {
     getSelectBuilder().column(tableAlias, column, alias);
     return this;
   }
@@ -121,7 +121,7 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, Identifier alias) {
+  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, SimpleName alias) {
     getSelectBuilder().column(expression, alias);
     return this;
   }
@@ -197,14 +197,14 @@ class DbSelectBuilderImpl extends
 
   @Override
   public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias, Class<T> clazz,
-      BindValue... binds) {
+      BindValueBuilder... binds) {
     getSelectBuilder().columnSql(columnSql, alias, clazz, binds);
     return this;
   }
 
   @Override
   public <T> DbSelectBuilderImpl columnSql(String columnSql, String alias,
-      Collection<? extends BindValue> binds, Class<T> clazz) {
+      Collection<? extends BindValueBuilder> binds, Class<T> clazz) {
     getSelectBuilder().columnSql(columnSql, alias, binds, clazz);
     return this;
   }
@@ -222,14 +222,14 @@ class DbSelectBuilderImpl extends
   }
 
   @Override
-  public DbSelectBuilderImpl columnSql(String columnSql, String alias, BindValue... binds) {
+  public DbSelectBuilderImpl columnSql(String columnSql, String alias, BindValueBuilder... binds) {
     getSelectBuilder().columnSql(columnSql, alias, binds);
     return this;
   }
 
   @Override
   public DbSelectBuilderImpl columnSql(String columnSql, String alias,
-      Collection<? extends BindValue> binds) {
+      Collection<? extends BindValueBuilder> binds) {
     getSelectBuilder().columnSql(columnSql, alias, binds);
     return this;
   }

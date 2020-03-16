@@ -1,6 +1,6 @@
 package com.provys.provysdb.dbsqlbuilder;
 
-import com.provys.provysdb.sqlbuilder.SelectBuilderGen;
+import sqlbuilder.SelectBuilderGen;
 
 /**
  * Basic version of database backed select builder, with no information about columns and their

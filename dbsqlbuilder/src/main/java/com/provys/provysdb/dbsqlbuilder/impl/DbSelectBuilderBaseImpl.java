@@ -2,17 +2,17 @@ package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import com.provys.provysdb.dbsqlbuilder.SelectStatement;
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
-import com.provys.provysdb.sqlbuilder.Condition;
-import com.provys.provysdb.sqlbuilder.SelectExpressionBuilder;
-import com.provys.provysdb.sqlbuilder.Select;
-import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.FromClause;
-import com.provys.provysdb.sqlbuilder.Identifier;
-import com.provys.provysdb.sqlbuilder.QueryAlias;
-import com.provys.provysdb.sqlbuilder.impl.SelectBuilderBaseImpl;
+import com.provys.provysdb.sql.BindName;
+import sqlbuilder.BindValueBuilder;
+import com.provys.provysdb.sql.CodeBuilder;
+import sqlbuilder.Condition;
+import sqlbuilder.SelectExpressionBuilder;
+import com.provys.provysdb.sql.Select;
+import com.provys.provysdb.builder.sqlbuilder.SqlColumn;
+import sqlbuilder.FromClause;
+import com.provys.provysdb.sql.SimpleName;
+import sqlbuilder.QueryAlias;
+import sqlbuilder.impl.SelectBuilderBaseImpl;
 import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -58,16 +58,16 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return selectBuilder.getConditions();
   }
 
-  public DbSelectBuilderImpl column(Identifier column) {
+  public DbSelectBuilderImpl column(SimpleName column) {
     return new DbSelectBuilderImpl(selectBuilder.column(column));
   }
 
-  public DbSelectBuilderImpl column(Identifier column, Identifier alias) {
+  public DbSelectBuilderImpl column(SimpleName column, SimpleName alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(column, alias));
   }
 
-  public DbSelectBuilderImpl column(QueryAlias tableAlias, Identifier column,
-      Identifier alias) {
+  public DbSelectBuilderImpl column(QueryAlias tableAlias, SimpleName column,
+      SimpleName alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(tableAlias, column, alias));
   }
 
@@ -83,7 +83,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return new DbSelectBuilderImpl(selectBuilder.column(tableAlias, columnName, alias));
   }
 
-  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, Identifier alias) {
+  public DbSelectBuilderImpl column(SelectExpressionBuilder expression, SimpleName alias) {
     return new DbSelectBuilderImpl(selectBuilder.column(expression, alias));
   }
 
@@ -116,12 +116,12 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return new DbSelectBuilderImpl(selectBuilder.columnSql(columnSql, alias));
   }
 
-  public DbSelectBuilderImpl columnSql(String columnSql, String alias, BindValue... binds) {
+  public DbSelectBuilderImpl columnSql(String columnSql, String alias, BindValueBuilder... binds) {
     return new DbSelectBuilderImpl(selectBuilder.columnSql(columnSql, alias, binds));
   }
 
   public DbSelectBuilderImpl columnSql(String columnSql, String alias,
-      Collection<? extends BindValue> binds) {
+      Collection<? extends BindValueBuilder> binds) {
     return new DbSelectBuilderImpl(selectBuilder.columnSql(columnSql, alias, binds));
   }
 
@@ -130,7 +130,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return self();
   }
 
-  public D from(Identifier tableName, QueryAlias alias) {
+  public D from(SimpleName tableName, QueryAlias alias) {
     selectBuilder.from(tableName, alias);
     return self();
   }
@@ -200,12 +200,12 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
     return self();
   }
 
-  public D whereSql(String conditionSql, BindValue... binds) {
+  public D whereSql(String conditionSql, BindValueBuilder... binds) {
     selectBuilder.whereSql(conditionSql, binds);
     return self();
   }
 
-  public D whereSql(String conditionSql, Collection<? extends BindValue> binds) {
+  public D whereSql(String conditionSql, Collection<? extends BindValueBuilder> binds) {
     selectBuilder.whereSql(conditionSql, binds);
     return self();
   }
@@ -240,7 +240,7 @@ abstract class DbSelectBuilderBaseImpl<D extends DbSelectBuilderBaseImpl<D, S>,
 
   public SelectStatement prepare() {
     var codeBuilder = builder();
-    return new SelectStatementImpl(codeBuilder.build(), codeBuilder.getBinds(), getSql());
+    return new SelectStatementImpl(codeBuilder.build(), codeBuilder.getBindsWithPos(), getSql());
   }
 
   @Override

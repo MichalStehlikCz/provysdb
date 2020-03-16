@@ -1,40 +1,40 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.SqlException;
+import com.provys.db.dbcontext.DbPreparedStatement;
+import com.provys.db.dbcontext.SqlException;
 import com.provys.provysdb.dbsqlbuilder.BindVariableT;
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.CodeBuilder;
+import com.provys.provysdb.sql.BindName;
+import sqlbuilder.BindValueBuilder;
+import com.provys.provysdb.sql.CodeBuilder;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class BindVariableImpl<T> implements BindVariableT<T> {
 
-  private final BindValue<T> bindValue;
+  private final BindValueBuilder<T> bindValueBuilder;
 
-  BindVariableImpl(BindValue<T> bindValue) {
-    this.bindValue = bindValue;
+  BindVariableImpl(BindValueBuilder<T> bindValueBuilder) {
+    this.bindValueBuilder = bindValueBuilder;
   }
 
   @Override
   public Class<T> getType() {
-    return bindValue.getType();
+    return bindValueBuilder.getType();
   }
 
   @Override
   public @Nullable T getValue() {
-    return bindValue.getValue();
+    return bindValueBuilder.getValue();
   }
 
   @Override
   public <U> @Nullable U getValue(Class<U> returnType) {
-    return bindValue.getValue(returnType);
+    return bindValueBuilder.getValue(returnType);
   }
 
   @Override
   public BindVariableT<T> withValue(@Nullable Object newValue) {
-    BindValue<T> result = bindValue.withValue(newValue);
+    BindValueBuilder<T> result = bindValueBuilder.withValue(newValue);
     if (result == this) {
       return this;
     }
@@ -46,7 +46,7 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
 
   @Override
   public BindVariableT<T> combine(BindName other) {
-    var result = bindValue.combine(other);
+    var result = bindValueBuilder.combine(other);
     //noinspection ObjectEquality - intentional
     if (result == this) {
       return this;
@@ -59,12 +59,12 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
 
   @Override
   public String getName() {
-    return bindValue.getName();
+    return bindValueBuilder.getName();
   }
 
   @Override
   public void addSql(CodeBuilder builder) {
-    bindValue.addSql(builder);
+    bindValueBuilder.addSql(builder);
   }
 
   @Override
@@ -87,18 +87,18 @@ final class BindVariableImpl<T> implements BindVariableT<T> {
       return false;
     }
     BindVariableImpl<?> that = (BindVariableImpl<?>) o;
-    return Objects.equals(bindValue, that.bindValue);
+    return Objects.equals(bindValueBuilder, that.bindValueBuilder);
   }
 
   @Override
   public int hashCode() {
-    return bindValue != null ? bindValue.hashCode() : 0;
+    return bindValueBuilder != null ? bindValueBuilder.hashCode() : 0;
   }
 
   @Override
   public String toString() {
     return "BindVariableImpl{"
-        + "bindValue=" + bindValue
+        + "bindValue=" + bindValueBuilder
         + '}';
   }
 }

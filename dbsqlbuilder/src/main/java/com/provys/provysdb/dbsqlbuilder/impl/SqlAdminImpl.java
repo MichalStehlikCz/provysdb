@@ -1,7 +1,7 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import com.provys.provysdb.dbcontext.DbConnection;
-import com.provys.provysdb.dbcontext.DbContext;
+import com.provys.db.dbcontext.DbConnection;
+import com.provys.db.dbcontext.DbContext;
 import com.provys.provysdb.dbsqlbuilder.SqlAdmin;
 
 /**

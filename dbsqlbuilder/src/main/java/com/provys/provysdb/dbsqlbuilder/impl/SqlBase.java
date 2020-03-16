@@ -1,12 +1,12 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import com.provys.provysdb.dbcontext.DbContext;
-import com.provys.provysdb.dbcontext.SqlTypeMap;
+import com.provys.db.dbcontext.DbContext;
+import com.provys.db.dbcontext.SqlTypeMap;
 import com.provys.provysdb.dbsqlbuilder.DbSelectBuilderT0;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
-import com.provys.provysdb.sqlbuilder.impl.SqlImpl;
-import com.provys.provysdb.sqlparser.SqlTokenizer;
-import com.provys.provysdb.sqlparser.impl.DefaultSqlTokenizer;
+import sqlbuilder.impl.SqlImpl;
+import sqlparser.SqlTokenizer;
+import sqlparser.impl.DefaultSqlTokenizer;
 import java.util.Objects;
 
 abstract class SqlBase extends SqlImpl implements DbSql {

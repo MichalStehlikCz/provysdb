@@ -1,11 +1,11 @@
 package com.provys.provysdb.dbsqlbuilder;
 
-import com.provys.provysdb.sqlbuilder.BindName;
-import com.provys.provysdb.sqlbuilder.BindValue;
-import com.provys.provysdb.sqlbuilder.SelectBuilderBase;
-import com.provys.provysdb.sqlbuilder.SqlColumn;
-import com.provys.provysdb.sqlbuilder.Identifier;
-import com.provys.provysdb.sqlbuilder.QueryAlias;
+import com.provys.provysdb.sql.BindName;
+import sqlbuilder.BindValueBuilder;
+import sqlbuilder.SelectBuilderBase;
+import com.provys.provysdb.builder.sqlbuilder.SqlColumn;
+import com.provys.provysdb.sql.SimpleName;
+import sqlbuilder.QueryAlias;
 import java.util.Collection;
 
 /**
@@ -34,7 +34,7 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(Identifier column, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(SimpleName column, Class<T> clazz);
 
   /**
    * Add column with given name and alias.
@@ -45,7 +45,7 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>    is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(Identifier column, Identifier alias, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(SimpleName column, SimpleName alias, Class<T> clazz);
 
   /**
    * Add column with given table alias, name and alias.
@@ -57,8 +57,8 @@ public interface DbSelectBuilderT1<T1>
    * @param <T>        is type of column being added
    * @return resulting select builder
    */
-  <T> DbSelectBuilderT2<T1, T> column(QueryAlias tableAlias, Identifier column,
-      Identifier alias, Class<T> clazz);
+  <T> DbSelectBuilderT2<T1, T> column(QueryAlias tableAlias, SimpleName column,
+      SimpleName alias, Class<T> clazz);
 
   /**
    * Add column to list of columns. It is expected to come from last item, added to from clause. If
@@ -182,7 +182,7 @@ public interface DbSelectBuilderT1<T1>
    * @return resulting select builder
    */
   <T> DbSelectBuilderT2<T1, T> columnSql(String columnSql, String alias, Class<T> clazz,
-      BindValue... binds);
+      BindValueBuilder... binds);
 
   /**
    * Add column with given SQL text and alias. Parse text for binds; use supplied bind variables to
@@ -196,5 +196,5 @@ public interface DbSelectBuilderT1<T1>
    * @return resulting select builder
    */
   <T> DbSelectBuilderT2<T1, T> columnSql(String columnSql, String alias,
-      Collection<? extends BindValue> binds, Class<T> clazz);
+      Collection<? extends BindValueBuilder> binds, Class<T> clazz);
 }

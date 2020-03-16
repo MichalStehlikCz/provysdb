@@ -1,8 +1,8 @@
 package com.provys.provysdb.dbsqlbuilder;
 
-import com.provys.provysdb.dbcontext.DbConnection;
-import com.provys.provysdb.dbcontext.SqlTypeMap;
-import com.provys.provysdb.sqlbuilder.Sql;
+import com.provys.db.dbcontext.DbConnection;
+import com.provys.db.dbcontext.SqlTypeMap;
+import sqlbuilder.Sql;
 
 /**
  * Interface defining root factory class for all objects, used for building Sql statements.

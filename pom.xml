@@ -4,28 +4,26 @@
     <parent>
         <groupId>com.provys.parent</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
-    <groupId>com.provys.provysdb</groupId>
-    <artifactId>provysdb</artifactId>
-    <name>ProvysDB</name>
+    <groupId>com.provys.db</groupId>
+    <name>DB</name>
+    <artifactId>parent</artifactId>
     <version>1.5.5-SNAPSHOT</version>
     <modules>
-        <module>dbcontext-api</module>
-        <module>dbcontext</module>
-        <module>dbcontext-spring</module>
-        <module>dbcontext-jakarta</module>
+        <module>db-api</module>
+        <module>sqldb</module>
+        <module>provysdb</module>
+        <module>provysdb-spring</module>
         <module>sqlbuilder</module>
-        <module>sqlbuilder-jakarta</module>
         <module>sqlbuilder-spring</module>
         <module>dbsqlbuilder</module>
-        <module>dbsqlbuilder-jakarta</module>
         <module>dbsqlbuilder-spring</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.version>2.0.0</common.version>
+        <common.version>2.1.0</common.version>
     </properties>
     <scm>
         <developerConnection>scm:git:https://github.com/MichalStehlikCz/provysdb.git</developerConnection>

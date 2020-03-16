@@ -1,13 +1,12 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.provys.provysdb.dbcontext.DbConnection;
-import com.provys.provysdb.dbcontext.DbPreparedStatement;
-import com.provys.provysdb.dbcontext.DbResultSet;
+import com.provys.db.dbcontext.DbConnection;
+import com.provys.db.dbcontext.DbPreparedStatement;
+import com.provys.db.dbcontext.DbResultSet;
 import com.provys.provysdb.dbsqlbuilder.BindVariable;
-import com.provys.provysdb.sqlbuilder.BindName;
+import com.provys.provysdb.sql.BindName;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
