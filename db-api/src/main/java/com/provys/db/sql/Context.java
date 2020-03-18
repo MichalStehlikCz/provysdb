@@ -79,9 +79,10 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    *
    * @param function is function to be invoked
    * @param argument is list of arguments to be passed to function
+   * @param bindMap if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, Expression... argument);
+  E function(Function function, Expression[] argument, @Nullable BindMap bindMap);
 
   /**
    * Call to function specified by enum. Supplied expressions must correspond to supported arguments
@@ -89,9 +90,10 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    *
    * @param function is function to be invoked
    * @param argument is list of arguments to be passed to function
+   * @param bindMap if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, List<Expression> argument);
+  E function(Function function, List<? extends Expression> argument, @Nullable BindMap bindMap);
 
   /**
    * Create select statement with specified select clause and from clause.

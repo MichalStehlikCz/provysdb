@@ -59,14 +59,24 @@ public final class BindMap {
   }
 
   /**
+   * Indicates if given map is superset of supplied collection.
+   *
+   * @param subset is collection we want to check is subset of this bind map
+   * @return true if subset is subset of this map, false otherwise
+   */
+  public boolean isSupersetOf(Collection<BindVariable> subset) {
+    return subset.stream()
+        .allMatch(sub -> Objects.equals(sub, bindsByName.get(sub.getName())));
+  }
+
+  /**
    * Indicates if given map is superset of supplied map.
    *
    * @param subset is map we want to check is subset of this bind map
    * @return true if subset is subset of this map, false otherwise
    */
   public boolean isSupersetOf(Map<BindName, BindVariable> subset) {
-    return subset.values().stream()
-        .allMatch(sub -> Objects.equals(sub, bindsByName.get(sub.getName())));
+    return isSupersetOf(subset.values());
   }
 
   @Override
