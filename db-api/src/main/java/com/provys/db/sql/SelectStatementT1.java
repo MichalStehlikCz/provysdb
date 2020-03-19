@@ -73,7 +73,7 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return stream with returned values
    */
-  Stream<@Nullable T1> streamNullable();
+  Stream<Optional<T1>> streamOptional();
 
   /**
    * Execute associated statement (using connection fetched from underlying DataSource) and return
@@ -133,5 +133,5 @@ public interface SelectStatementT1<T1> extends SelectStatement {
    *
    * @return stream with returned values
    */
-  Stream<@Nullable T1> streamNullableNoClose();
+  Stream<Optional<T1>> streamOptionalNoClose();
 }

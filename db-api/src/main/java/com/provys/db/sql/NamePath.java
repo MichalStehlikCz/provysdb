@@ -1,11 +1,15 @@
 package com.provys.db.sql;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 /**
  * Path to database object, consisting of multiple identifiers chained together. Identifier itself
  * is special case of identifier path.
  */
+@JsonSerialize(using = NamePathSerializer.class)
+@JsonDeserialize(using = NamePathDeserializer.class)
 public interface NamePath {
 
   /**

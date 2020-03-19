@@ -47,6 +47,15 @@ public interface CodeBuilder {
   CodeBuilder append(BigInteger number);
 
   /**
+   * Append text contained in given builder, use identation for wrapping (e.g. appendWrapped).
+   * Append builders binds as well.
+   *
+   * @param appendBuilder is builder whose content should be appended
+   * @return self to support fluent build
+   */
+  CodeBuilder append(CodeBuilder appendBuilder);
+
+  /**
    * Use function that appends some text to this builder. Note that it should not be used for
    * function implementation, as it would lead to circular dependence. Construct is to allow use of
    * element's append functions in fluent build of statement via CodeBuilder

@@ -4,13 +4,17 @@ import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.SqlTypeMap;
 import com.provys.db.sql.BindMap;
+import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Condition;
 import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromClause;
 import com.provys.db.sql.Function;
+import com.provys.db.sql.NamePath;
 import com.provys.db.sql.SelectClause;
+import com.provys.db.sql.SimpleName;
 import com.provys.db.sqldb.dbcontext.NoDbContext;
 import java.util.List;
+import java.util.function.Consumer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -55,45 +59,9 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
   }
 
   @Override
-  public SqlExpression literal(Object value) {
-    return new SqlLiteral(this, value);
-  }
-
-  @Override
-  public SqlExpression literalNVarchar(String value) {
-    return new SqlLiteralNVarchar(this, value);
-  }
-
-  /**
-   * Call to function specified by enum. Supplied expressions must correspond to supported arguments
-   * of function. Resulting expression has value of type, corresponding to function result type
-   *
-   * @param function is function to be invoked
-   * @param argument is list of arguments to be passed to function
-   * @return expression that evaluates to call to CHR function applied on code
-   */
-  @Override
-  public SqlExpression function(Function function, Expression... argument) {
-    return null;
-  }
-
-  /**
-   * Call to function specified by enum. Supplied expressions must correspond to supported arguments
-   * of function. Resulting expression has value of type, corresponding to function result type
-   *
-   * @param function is function to be invoked
-   * @param argument is list of arguments to be passed to function
-   * @return expression that evaluates to call to CHR function applied on code
-   */
-  @Override
-  public SqlExpression function(Function function, List<Expression> argument) {
-    return null;
-  }
-
-  @Override
   public SqlSelect select(SelectClause selectClause, FromClause fromClause,
       @Nullable BindMap bindMap) {
-    return new SqlSelectImpl(this, selectClause, fromClause, null,  bindMap);
+    return new SqlSelectImpl(this, selectClause, fromClause, null, bindMap);
   }
 
   @Override
@@ -103,8 +71,41 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
   }
 
   @Override
+  public SqlFromElement from(NamePath tableName, @Nullable SimpleName alias) {
+    return new SqlFromTable(this, tableName, alias);
+  }
+
+  @Override
+  public SqlExpression literal(Object value) {
+    return new SqlLiteral(this, value);
+  }
+
+  @Override
+  public SqlExpression literalNVarchar(String value) {
+    return new SqlLiteralNVarchar(this, value);
+  }
+
+  @Override
+  public SqlExpression function(Function function, Expression[] arguments,
+      @Nullable BindMap bindMap) {
+    return new SqlFunction(this, function, arguments, bindMap);
+  }
+
+  @Override
+  public SqlExpression function(Function function, List<? extends Expression> arguments,
+      @Nullable BindMap bindMap) {
+    return new SqlFunction(this, function, arguments, bindMap);
+  }
+
+  @Override
   public String getFunctionTemplate(Function function) {
     return functionMap.getTemplate(function);
+  }
+
+  @Override
+  public void append(Function function, List<? extends Consumer<CodeBuilder>> argumentAppend,
+      CodeBuilder builder) {
+    functionMap.append(function, argumentAppend, builder);
   }
 
   @Override

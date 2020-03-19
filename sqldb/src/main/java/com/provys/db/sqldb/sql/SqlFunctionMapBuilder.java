@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Allows to either build {@link SqlFunctionMap} from ground up or adopt existing function map,
  * modify selected function templates and build new one.
  */
-public class SqlFunctionMapBuilder {
+public final class SqlFunctionMapBuilder {
 
   private final Map<Function, String> templateByFunction;
 

@@ -19,11 +19,11 @@ class CodeIdentVoidTest {
     var builder = new StringBuilder();
     codeIdent.use(builder);
     assertThat(builder.toString()).isEmpty();
-    builder.append("a");
+    builder.append('a');
     assertThat(codeIdent.get()).isEmpty();
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("a");
-    builder.append("b");
+    builder.append('b');
     assertThat(codeIdent.get()).isEmpty();
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("ab");

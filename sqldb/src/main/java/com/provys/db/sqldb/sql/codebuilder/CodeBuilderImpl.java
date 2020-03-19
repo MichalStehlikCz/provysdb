@@ -68,6 +68,13 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
+  public CodeBuilder append(CodeBuilder appendBuilder) {
+    appendWrapped(appendBuilder.build());
+    addBindsWithPos(appendBuilder.getBindsWithPos());
+    return this;
+  }
+
+  @Override
   public CodeBuilder apply(Consumer<? super CodeBuilder> appendFunction) {
     appendFunction.accept(this);
     return this;

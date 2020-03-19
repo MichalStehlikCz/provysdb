@@ -60,6 +60,11 @@
                 <artifactId>common-datatype</artifactId>
                 <version>${common.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.provys.common</groupId>
+                <artifactId>common-jackson</artifactId>
+                <version>${common.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

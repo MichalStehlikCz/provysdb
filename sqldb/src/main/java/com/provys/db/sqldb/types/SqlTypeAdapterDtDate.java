@@ -74,7 +74,7 @@ public class SqlTypeAdapterDtDate implements SqlTypeAdapter<DtDate> {
   }
 
   @Override
-  public void appendLiteral(@Nullable DtDate value, StringBuilder builder) {
+  public void appendLiteral(StringBuilder builder, @Nullable DtDate value) {
     if (value == null) {
       builder.append("NULL");
     } else {

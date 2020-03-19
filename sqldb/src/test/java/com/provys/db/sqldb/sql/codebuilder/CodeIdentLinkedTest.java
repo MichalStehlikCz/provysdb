@@ -23,11 +23,11 @@ class CodeIdentLinkedTest {
     var builder = new StringBuilder();
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("1aaa");
-    builder.append("x");
+    builder.append('x');
     assertThat(codeIdent.get()).isEqualTo("2bb");
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("1aaax2bb");
-    builder.append("y");
+    builder.append('y');
     assertThat(codeIdent.get()).isEqualTo("2bb");
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("1aaax2bby2bb");

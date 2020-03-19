@@ -1,5 +1,8 @@
 package com.provys.db.sqldb.sql;
 
+import static com.provys.db.sql.Function.STRING_CHR;
+import static com.provys.db.sql.Function.STRING_CONCAT;
+
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
@@ -29,13 +32,13 @@ final class SqlLiteralNVarchar implements SqlExpression {
       if (first) {
         first = false;
       } else {
-        parts.add(context.chr(context.literal(10)));
+        parts.add(context.function(STRING_CHR, new SqlExpression[]{context.literal(10)}, null));
       }
       if (!stringPart.isEmpty()) {
         parts.add(context.literalNVarchar(stringPart));
       }
     }
-    return context.concat(parts);
+    return context.function(STRING_CONCAT, parts, null);
   }
 
   SqlLiteralNVarchar(SqlContext<?, ?, ?, ?, ?, ?, ?> context, String value) {

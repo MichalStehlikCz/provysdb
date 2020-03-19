@@ -11,16 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class SqlFunction implements SqlExpression {
-
-  /**
-   * Used to specify type in list-to-array conversion.
-   */
-  public static final Expression[] EXPRESSION0 = new SqlExpression[]{};
 
   private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
   private final Function function;
@@ -55,20 +50,20 @@ final class SqlFunction implements SqlExpression {
     }
   }
 
-  SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function, Expression[] arguments,
-      @Nullable BindMap bindMap) {
+  SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function,
+      Collection<? extends Expression> arguments, @Nullable BindMap bindMap) {
     this.context = context;
     this.function = function;
-    this.arguments = new ArrayList<>(arguments.length);
+    this.arguments = new ArrayList<>(arguments.size());
     for (Expression argument : arguments) {
       this.arguments.add(argument.transfer(context, bindMap));
     }
     verifyArguments();
   }
 
-  SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function,
-      List<Expression> arguments, @Nullable BindMap bindMap) {
-    this(context, function, arguments.toArray(EXPRESSION0), bindMap);
+  SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function, Expression[] arguments,
+      @Nullable BindMap bindMap) {
+    this(context, function, Arrays.asList(arguments), bindMap);
   }
 
   @Override
@@ -97,31 +92,31 @@ final class SqlFunction implements SqlExpression {
 
   @Override
   public Collection<BindVariable> getBinds() {
-    return Arrays.stream(arguments)
+    return arguments.stream()
         .flatMap(argument -> argument.getBinds().stream())
         .collect(Collectors.toUnmodifiableList());
   }
 
-  /**
-   * Append expression to code builder. Used to append expression to its default place; some
-   * elements might also have secondary place (e.g. join clause might want to add additional hint).
-   * Such situations are solved by additional procedures, specific for given type of statement.
-   *
-   * @param builder is code builder to which sql text should be appended
-   */
+  private static class ArgumentAppender implements Consumer<CodeBuilder> {
+
+    private final SqlExpression argument;
+
+    ArgumentAppender(SqlExpression argument) {
+      this.argument = argument;
+    }
+
+    @Override
+    public void accept(CodeBuilder builder) {
+      argument.append(builder);
+    }
+  }
+
   @Override
   public void append(CodeBuilder builder) {
-    var template = context.getFunctionTemplate(function);
-    var argumentsInTemplate = function.getArguments().size();
-    var result = template;
-    for (var i = 0; i < argumentsInTemplate; i++) {
-      var argumentBuilder = CodeBuilderFactory.getCodeBuilder();
-      arguments[i].append
-      result = result.replace('{' + Integer.toString(i) + '}', )
-    }
-    if (function.lastArgumentRepeatable()) {
-
-    }
+    List<Consumer<CodeBuilder>> argumentsAppend = arguments.stream()
+        .map(ArgumentAppender::new)
+        .collect(Collectors.toList());
+    context.append(function, argumentsAppend, builder);
   }
 
   @Override
@@ -133,16 +128,16 @@ final class SqlFunction implements SqlExpression {
       return false;
     }
     SqlFunction that = (SqlFunction) o;
-    return Objects.equals(context, that.context)
+    return context.equals(that.context)
         && function == that.function
-        && Arrays.equals(arguments, that.arguments);
+        && arguments.equals(that.arguments);
   }
 
   @Override
   public int hashCode() {
-    int result = context != null ? context.hashCode() : 0;
+    int result = context.hashCode();
     result = 31 * result + (function != null ? function.hashCode() : 0);
-    result = 31 * result + Arrays.hashCode(arguments);
+    result = 31 * result + arguments.hashCode();
     return result;
   }
 
@@ -151,7 +146,7 @@ final class SqlFunction implements SqlExpression {
     return "SqlFunction{"
         + "context=" + context
         + ", function=" + function
-        + ", arguments=" + Arrays.toString(arguments)
+        + ", arguments=" + arguments
         + '}';
   }
 }

@@ -3,7 +3,7 @@ package com.provys.db.sql;
 /**
  * Implements common methods that can have default implementation.
  */
-abstract class NamePathBase implements NamePath {
+public abstract class NamePathBase implements NamePath {
 
   @Override
   public boolean match(NamePath other) {

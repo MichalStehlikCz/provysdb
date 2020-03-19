@@ -117,7 +117,7 @@ class SqlTypeAdapterDtDateTimeTest {
   @MethodSource("getLiteralTest")
   void appendLiteralTest(@Nullable DtDateTime value, String result) {
     var builder = new StringBuilder();
-    adapter.appendLiteral(value, builder);
+    adapter.appendLiteral(builder, value);
     assertThat(builder.toString()).isEqualTo(result);
   }
 }

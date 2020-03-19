@@ -1,5 +1,7 @@
 package com.provys.db.sql;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.provys.common.exception.InternalException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +13,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Name, built from several segments, delimited by ..
  */
+@JsonSerialize(using = SegmentedNameSerializer.class)
+@JsonDeserialize(using = SegmentedNameDeserializer.class)
 public final class SegmentedName extends NamePathBase {
 
   /**
@@ -29,7 +33,7 @@ public final class SegmentedName extends NamePathBase {
    * @param text is text, representing segmented name, with individual segments delimited by .
    * @return segmented name, representing supplied text
    */
-  public static SegmentedName ofValue(String text) {
+  public static SegmentedName valueOf(String text) {
     if (text.charAt(text.length() - 1) == '.') {
       throw new IllegalArgumentException("Segmented name cannot end with . (" + text + ')');
     }
@@ -40,7 +44,7 @@ public final class SegmentedName extends NamePathBase {
     }
     var segments = new ArrayList<SimpleName>(stringSegments.length);
     for (var stringSegment : stringSegments) {
-      segments.add(SimpleName.ofValue(stringSegment));
+      segments.add(SimpleName.valueOf(stringSegment));
     }
     return ofSegments(segments);
   }

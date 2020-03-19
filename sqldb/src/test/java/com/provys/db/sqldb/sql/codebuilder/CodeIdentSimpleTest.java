@@ -19,11 +19,11 @@ class CodeIdentSimpleTest {
     var builder = new StringBuilder();
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("--");
-    builder.append("a");
+    builder.append('a');
     assertThat(codeIdent.get()).isEqualTo("--");
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("--a--");
-    builder.append("b");
+    builder.append('b');
     assertThat(codeIdent.get()).isEqualTo("--");
     codeIdent.use(builder);
     assertThat(builder.toString()).isEqualTo("--a--b--");

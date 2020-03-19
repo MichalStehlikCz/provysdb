@@ -3,11 +3,13 @@ package com.provys.db.sql;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.common.exception.InternalException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Supported functions.
  */
 public enum Function {
+
   STRING_CHR(String.class, Integer.class),
   STRING_CONCAT(String.class, String.class, String.class),
   DATE_SYSDATE(DtDateTime.class),
@@ -25,6 +27,7 @@ public enum Function {
    * the first argument has same type as result - system allows to repeat second argument of such
    * function, resulting in nested calls. This is also used for operators.
    */
+  @SuppressWarnings("ImmutableEnumChecker") // it is initialized with immutable list - List.of
   private final List<Class<?>> arguments;
 
   Function(Class<?> result, int resultAsArgument, Class<?>... arguments) {

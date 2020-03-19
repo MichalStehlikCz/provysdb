@@ -22,7 +22,7 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * @return identifier corresponding to supplied text
    */
   default SimpleName name(String text) {
-    return SimpleName.ofValue(text);
+    return SimpleName.valueOf(text);
   }
 
   /**
@@ -42,7 +42,7 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * @return path corresponding to supplied text
    */
   default NamePath path(String text) {
-    return SegmentedName.ofValue(text);
+    return SegmentedName.valueOf(text);
   }
 
   /**
@@ -54,6 +54,37 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
   default BindName bind(String name) {
     return BindName.ofValue(name);
   }
+
+  /**
+   * Create select statement with specified select clause and from clause.
+   *
+   * @param selectClause defines projection of from clause to results
+   * @param fromClause   defines data sources
+   * @param bindMap      if specified, replace bind variables with ones found in this map
+   * @return select based on supplied clauses
+   */
+  S select(SelectClause selectClause, FromClause fromClause, @Nullable BindMap bindMap);
+
+  /**
+   * Create select statement with specified select clause, from clause and where clause.
+   *
+   * @param selectClause defines projection of from clause to results
+   * @param fromClause   defines data sources
+   * @param whereClause  defines filtering criteria
+   * @param bindMap      if specified, replace bind variables with ones found in this map
+   * @return select based on supplied clauses
+   */
+  S select(SelectClause selectClause, FromClause fromClause,
+      @Nullable Condition whereClause, @Nullable BindMap bindMap);
+
+  /**
+   * Add from clause built on table, no join - usable for the first table or Oracle-style join.
+   *
+   * @param tableName is table name, potentially with scheme etc.
+   * @param alias is alias (optional, if not specified, no alias will be used)
+   * @return from element based on specified table and alias
+   */
+  J from(NamePath tableName, @Nullable SimpleName alias);
 
   /**
    * Create literal. Note that system does not check if given type of literal is supported in this
@@ -77,43 +108,21 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * Call to function specified by enum. Supplied expressions must correspond to supported arguments
    * of function. Resulting expression has value of type, corresponding to function result type
    *
-   * @param function is function to be invoked
-   * @param argument is list of arguments to be passed to function
-   * @param bindMap if specified, replace bind variables with ones found in this map
+   * @param function  is function to be invoked
+   * @param arguments is list of arguments to be passed to function
+   * @param bindMap   if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, Expression[] argument, @Nullable BindMap bindMap);
+  E function(Function function, Expression[] arguments, @Nullable BindMap bindMap);
 
   /**
    * Call to function specified by enum. Supplied expressions must correspond to supported arguments
    * of function. Resulting expression has value of type, corresponding to function result type
    *
-   * @param function is function to be invoked
-   * @param argument is list of arguments to be passed to function
-   * @param bindMap if specified, replace bind variables with ones found in this map
+   * @param function  is function to be invoked
+   * @param arguments is list of arguments to be passed to function
+   * @param bindMap   if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, List<? extends Expression> argument, @Nullable BindMap bindMap);
-
-  /**
-   * Create select statement with specified select clause and from clause.
-   *
-   * @param selectClause defines projection of from clause to results
-   * @param fromClause   defines data sources
-   * @param bindMap if specified, replace bind variables with ones found in this map
-   * @return select based on supplied clauses
-   */
-  S select(SelectClause selectClause, FromClause fromClause, @Nullable BindMap bindMap);
-
-  /**
-   * Create select statement with specified select clause, from clause and where clause.
-   *
-   * @param selectClause defines projection of from clause to results
-   * @param fromClause   defines data sources
-   * @param whereClause  defines filtering criteria
-   * @param bindMap if specified, replace bind variables with ones found in this map
-   * @return select based on supplied clauses
-   */
-  S select(SelectClause selectClause, FromClause fromClause,
-      @Nullable Condition whereClause, @Nullable BindMap bindMap);
+  E function(Function function, List<? extends Expression> arguments, @Nullable BindMap bindMap);
 }

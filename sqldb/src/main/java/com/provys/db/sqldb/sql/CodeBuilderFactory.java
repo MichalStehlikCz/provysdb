@@ -6,7 +6,7 @@ import com.provys.db.sql.CodeBuilder;
 /**
  * Static factory class.
  */
-public class CodeBuilderFactory {
+public final class CodeBuilderFactory {
 
   /**
    * Create new CodeBuilder instance.

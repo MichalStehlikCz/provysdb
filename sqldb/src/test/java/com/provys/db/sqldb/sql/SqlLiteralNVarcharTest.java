@@ -59,18 +59,15 @@ class SqlLiteralNVarcharTest {
     return Stream.of(
         new Object[]{"test6", "N'test6'"}
         , new Object[]{"first'second", "N'first''second'"}
-        , new Object[]{DtDate.PRIV, "DATE'1000-01-02'"}
-        , new Object[]{DtDate.ME, "DATE'1000-01-01'"}
-        , new Object[]{DtDate.MIN, "DATE'1000-01-03'"}
-        , new Object[]{DtDate.MAX, "DATE'5000-01-01'"}
-        , new @Nullable Object[]{null, "NULL"}
+        , new Object[]{"first\nsecond", "N'first'||CHR(10)||N'second'"}
+        , new Object[]{"\nfirst\nsecond\n", "CHR(10)||N'first'||CHR(10)||N'second'||CHR(10)"}
     );
   }
 
   @ParameterizedTest
   @MethodSource
   void appendTest(String text, String result) {
-    var context = mock(SqlContext.class);
+    var context = SqlContextImpl.getNoDbInstance();
     var literal = new SqlLiteralNVarchar(context, text);
     var builder = CodeBuilderFactory.getCodeBuilder();
     literal.append(builder);

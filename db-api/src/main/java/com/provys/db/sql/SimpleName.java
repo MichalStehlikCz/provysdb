@@ -1,5 +1,7 @@
 package com.provys.db.sql;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.provys.common.exception.InternalException;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +16,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * immutable. Parse function does normalisation of supplied text, thus equals on sql identifiers is
  * equivalent to two identifiers pointing to the same object (excluding possible path)
  */
+@JsonSerialize(using = SimpleNameSerializer.class)
+@JsonDeserialize(using = SimpleNameDeserializer.class)
 public final class SimpleName extends NamePathBase {
 
   private static final Pattern PATTERN_ORDINARY = Pattern.compile("([A-Z][A-Z0-9_#$]*)");
@@ -25,7 +29,7 @@ public final class SimpleName extends NamePathBase {
    * @param text is supplied sql text
    * @return parsed identifier
    */
-  public static SimpleName ofValue(String text) {
+  public static SimpleName valueOf(String text) {
     return new SimpleName(text);
   }
 
