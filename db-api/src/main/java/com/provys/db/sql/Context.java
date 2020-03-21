@@ -56,6 +56,17 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
   }
 
   /**
+   * Get unknown from context, that allows any source table, but does not contain any from elements.
+   * Context is used for selects, embedded in expression or condition that are created without
+   * context.
+   *
+   * @return default unknown context
+   */
+  default FromContext getUnknownFromContext() {
+    return UnknownFromContext.getInstance();
+  }
+
+  /**
    * Create select statement with specified select clause and from clause.
    *
    * @param selectClause defines projection of from clause to results
@@ -63,7 +74,9 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * @param bindMap      if specified, replace bind variables with ones found in this map
    * @return select based on supplied clauses
    */
-  S select(SelectClause selectClause, FromClause fromClause, @Nullable BindMap bindMap);
+  default S select(SelectClause selectClause, FromClause fromClause, @Nullable BindMap bindMap) {
+    return select(selectClause, fromClause, null, bindMap);
+  }
 
   /**
    * Create select statement with specified select clause, from clause and where clause.
@@ -74,14 +87,31 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * @param bindMap      if specified, replace bind variables with ones found in this map
    * @return select based on supplied clauses
    */
-  S select(SelectClause selectClause, FromClause fromClause,
-      @Nullable Condition whereClause, @Nullable BindMap bindMap);
+  default S select(SelectClause selectClause, FromClause fromClause,
+      @Nullable Condition whereClause, @Nullable BindMap bindMap) {
+    return select(selectClause, fromClause, whereClause, null, bindMap);
+  }
+
+  /**
+   * Create select statement with specified select clause and from clause. Variant for sub-select
+   * which can reference items from super's from clause.
+   *
+   * @param selectClause defines projection of from clause to results
+   * @param fromClause   defines data sources
+   * @param whereClause  defines filtering criteria
+   * @param parentFrom   is from context from parent select, used in case of sub-selects (sub-select
+   *                     used as expression or in EXISTS / IN clause)
+   * @param bindMap      if specified, replace bind variables with ones found in this map
+   * @return select based on supplied clauses
+   */
+  S select(SelectClause selectClause, FromClause fromClause, @Nullable Condition whereClause,
+      @Nullable FromContext parentFrom, @Nullable BindMap bindMap);
 
   /**
    * Add from clause built on table, no join - usable for the first table or Oracle-style join.
    *
    * @param tableName is table name, potentially with scheme etc.
-   * @param alias is alias (optional, if not specified, no alias will be used)
+   * @param alias     is alias (optional, if not specified, no alias will be used)
    * @return from element based on specified table and alias
    */
   J from(NamePath tableName, @Nullable SimpleName alias);
@@ -108,21 +138,39 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * Call to function specified by enum. Supplied expressions must correspond to supported arguments
    * of function. Resulting expression has value of type, corresponding to function result type
    *
-   * @param function  is function to be invoked
-   * @param arguments is list of arguments to be passed to function
-   * @param bindMap   if specified, replace bind variables with ones found in this map
+   * @param function    is function to be invoked
+   * @param arguments   is list of arguments to be passed to function
+   * @param fromContext is from context of enclosing select statement
+   * @param bindMap     if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, Expression[] arguments, @Nullable BindMap bindMap);
+  E function(Function function, Expression[] arguments, @Nullable FromContext fromContext,
+      @Nullable BindMap bindMap);
 
   /**
    * Call to function specified by enum. Supplied expressions must correspond to supported arguments
    * of function. Resulting expression has value of type, corresponding to function result type
    *
-   * @param function  is function to be invoked
-   * @param arguments is list of arguments to be passed to function
-   * @param bindMap   if specified, replace bind variables with ones found in this map
+   * @param function    is function to be invoked
+   * @param arguments   is list of arguments to be passed to function
+   * @param fromContext is from context of enclosing select statement
+   * @param bindMap     if specified, replace bind variables with ones found in this map
    * @return expression that evaluates to call to CHR function applied on code
    */
-  E function(Function function, List<? extends Expression> arguments, @Nullable BindMap bindMap);
+  E function(Function function, List<? extends Expression> arguments,
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap);
+
+  /**
+   * Expression that references table column (source property).
+   *
+   * @param table       is alias of source from element; will be validated against fromContext,
+   *                    generally might not be in default form
+   * @param column      is name of column
+   * @param type        is type of data contained in column
+   * @param fromContext is from context (e.g. available from elements) in which column is used
+   * @param bindMap     is map of bind names to variables
+   * @return expression in this context, representing column
+   */
+  E tableColumn(@Nullable NamePath table, SimpleName column, Class<?> type,
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap);
 }

@@ -9,17 +9,6 @@ public interface SelectClause extends Element {
    * Transfer select clause to specified context.
    *
    * @param targetContext is target context
-   * @param <E> is subtype of {@code SelectClause} cloning will result in based on target context
-   * @return select clause cloned to specified context
-   */
-  default <E extends SelectClause> E transfer(Context<?, E, ?, ?, ?, ?, ?> targetContext) {
-    return transfer(targetContext, null);
-  }
-
-  /**
-   * Transfer select clause to specified context.
-   *
-   * @param targetContext is target context
    * @param bindMap is new mapping of bind variables; when not specified, bind variables are left as
    *               they are
    * @param <E> is subtype of {@code SelectClause} cloning will result in based on target context

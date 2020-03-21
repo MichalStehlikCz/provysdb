@@ -57,6 +57,11 @@
       <artifactId>common-datatype</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.provys.common</groupId>
+      <artifactId>common-jackson</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.provys.db</groupId>
       <artifactId>db-api</artifactId>
       <version>${project.version}</version>

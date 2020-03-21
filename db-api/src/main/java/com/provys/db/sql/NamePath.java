@@ -20,6 +20,13 @@ public interface NamePath {
   String getText();
 
   /**
+   * List of segments this path consists of.
+   *
+   * @return list of segments this path consists of
+   */
+  List<SimpleName> getSegments();
+
+  /**
    * List of identifiers forming this path in their base (database) form.
    *
    * @return list of identifiers forming this path in their base (database) form

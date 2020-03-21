@@ -48,13 +48,13 @@ final class SqlFromTable implements SqlFromElement {
   }
 
   @Override
+  public void validateColumn(SimpleName column, Class<?> type) {
+    // intentionally empty - cannot check columns
+  }
+
+  @Override
   public <J extends FromElement> J transfer(Context<?, ?, ?, ?, J, ?, ?> targetContext,
       @Nullable BindMap bindMap) {
-    if (context.equals(targetContext)) {
-      @SuppressWarnings("unchecked")
-      var result = (J) this;
-      return result;
-    }
     return targetContext.from(tableName, alias);
   }
 

@@ -8,6 +8,7 @@ import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Context;
 import com.provys.db.sql.Expression;
+import com.provys.db.sql.FromContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,13 +33,14 @@ final class SqlLiteralNVarchar implements SqlExpression {
       if (first) {
         first = false;
       } else {
-        parts.add(context.function(STRING_CHR, new SqlExpression[]{context.literal(10)}, null));
+        parts.add(
+            context.function(STRING_CHR, new SqlExpression[]{context.literal(10)}, null, null));
       }
       if (!stringPart.isEmpty()) {
         parts.add(context.literalNVarchar(stringPart));
       }
     }
-    return context.function(STRING_CONCAT, parts, null);
+    return context.function(STRING_CONCAT, parts, null, null);
   }
 
   SqlLiteralNVarchar(SqlContext<?, ?, ?, ?, ?, ?, ?> context, String value) {
@@ -54,7 +56,7 @@ final class SqlLiteralNVarchar implements SqlExpression {
 
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
-      @Nullable BindMap bindMap) {
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
     if (context.equals(targetContext)) {
       @SuppressWarnings("unchecked")
       var result = (E) this;

@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.provys.parent</groupId>
         <artifactId>parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.4</version>
     </parent>
     <groupId>com.provys.db</groupId>
     <name>DB</name>
@@ -23,7 +23,7 @@
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <common.version>2.1.0</common.version>
+        <common.version>2.1.1</common.version>
     </properties>
     <scm>
         <developerConnection>scm:git:https://github.com/MichalStehlikCz/provysdb.git</developerConnection>

@@ -85,6 +85,11 @@ public final class SimpleName extends NamePathBase {
   }
 
   @Override
+  public List<SimpleName> getSegments() {
+    return List.of(this);
+  }
+
+  @Override
   public List<String> getDbNames() {
     return List.of(getDbName());
   }

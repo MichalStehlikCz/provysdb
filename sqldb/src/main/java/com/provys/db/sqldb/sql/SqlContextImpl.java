@@ -8,6 +8,7 @@ import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Condition;
 import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromClause;
+import com.provys.db.sql.FromContext;
 import com.provys.db.sql.Function;
 import com.provys.db.sql.NamePath;
 import com.provys.db.sql.SelectClause;
@@ -61,13 +62,21 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
   @Override
   public SqlSelect select(SelectClause selectClause, FromClause fromClause,
       @Nullable BindMap bindMap) {
-    return new SqlSelectImpl(this, selectClause, fromClause, null, bindMap);
+    return select(selectClause, fromClause, null, bindMap);
   }
 
   @Override
   public SqlSelect select(SelectClause selectClause, FromClause fromClause,
       @Nullable Condition whereClause, @Nullable BindMap bindMap) {
-    return new SqlSelectImpl(this, selectClause, fromClause, whereClause, bindMap);
+    return select(selectClause, fromClause, whereClause, null, bindMap);
+  }
+
+  @Override
+  public SqlSelect select(SelectClause selectClause, FromClause fromClause,
+      @Nullable Condition whereClause, @Nullable FromContext parentFrom,
+      @Nullable BindMap bindMap) {
+    return new SqlSelectImpl(this, selectClause, fromClause, whereClause, parentFrom,
+        bindMap);
   }
 
   @Override
@@ -87,14 +96,20 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
 
   @Override
   public SqlExpression function(Function function, Expression[] arguments,
-      @Nullable BindMap bindMap) {
-    return new SqlFunction(this, function, arguments, bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    return new SqlFunction(this, function, arguments, fromContext, bindMap);
   }
 
   @Override
   public SqlExpression function(Function function, List<? extends Expression> arguments,
-      @Nullable BindMap bindMap) {
-    return new SqlFunction(this, function, arguments, bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    return new SqlFunction(this, function, arguments, fromContext, bindMap);
+  }
+
+  @Override
+  public SqlExpression tableColumn(@Nullable NamePath table, SimpleName column, Class<?> type,
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    return new SqlExpressionColumn(this, table, column, type, fromContext);
   }
 
   @Override

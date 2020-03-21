@@ -6,6 +6,7 @@ import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Context;
 import com.provys.db.sql.Expression;
+import com.provys.db.sql.FromContext;
 import com.provys.db.sql.Function;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,19 +52,20 @@ final class SqlFunction implements SqlExpression {
   }
 
   SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function,
-      Collection<? extends Expression> arguments, @Nullable BindMap bindMap) {
+      Collection<? extends Expression> arguments, @Nullable FromContext fromContext,
+      @Nullable BindMap bindMap) {
     this.context = context;
     this.function = function;
     this.arguments = new ArrayList<>(arguments.size());
     for (Expression argument : arguments) {
-      this.arguments.add(argument.transfer(context, bindMap));
+      this.arguments.add(argument.transfer(context, fromContext, bindMap));
     }
     verifyArguments();
   }
 
   SqlFunction(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Function function, Expression[] arguments,
-      @Nullable BindMap bindMap) {
-    this(context, function, Arrays.asList(arguments), bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    this(context, function, Arrays.asList(arguments), fromContext, bindMap);
   }
 
   @Override
@@ -76,13 +78,8 @@ final class SqlFunction implements SqlExpression {
 
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
-      @Nullable BindMap bindMap) {
-    if (context.equals(targetContext) && ((bindMap == null) || bindMap.isSupersetOf(getBinds()))) {
-      @SuppressWarnings("unchecked")
-      var result = (E) this;
-      return result;
-    }
-    return targetContext.function(function, arguments, bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    return targetContext.function(function, arguments, fromContext, bindMap);
   }
 
   @Override

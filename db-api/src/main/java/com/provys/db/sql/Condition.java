@@ -7,18 +7,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface Condition extends Element {
 
   /**
-   * Transfer condition to specified context.
-   *
-   * @param targetContext is target context
-   * @param <O>           is subtype of {@code Condition} cloning will result in based on target
-   *                      context
-   * @return condition cloned to specified context
-   */
-  default <O extends Condition> O transfer(Context<?, ?, ?, ?, ?, O, ?> targetContext) {
-    return transfer(targetContext, null);
-  }
-
-  /**
    * Transfer condition to specified context, replacing bind variables in progress.
    *
    * @param targetContext is target context

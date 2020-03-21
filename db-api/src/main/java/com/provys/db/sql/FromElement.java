@@ -31,16 +31,14 @@ public interface FromElement extends Element {
   }
 
   /**
-   * Transfer from element to specified context.
+   * Verify if given column is available in this data source. It should throw exception in case it
+   * knows column does not exist or has incompatible type (including type conversions supported by
+   * given source). Checks should only be performed if they are cheap.
    *
-   * @param targetContext is target context
-   * @param <J>           is subtype of {@code FromElement} cloning will result in based on target
-   *                      context
-   * @return from element cloned to specified context
+   * @param column is column name
+   * @param type   is type column should have
    */
-  default <J extends FromElement> J transfer(Context<?, ?, ?, ?, J, ?, ?> targetContext) {
-    return transfer(targetContext, null);
-  }
+  void validateColumn(SimpleName column, Class<?> type);
 
   /**
    * Transfer from element to specified context.

@@ -21,22 +21,12 @@ public interface Expression extends Element {
    * Transfer expression to specified context.
    *
    * @param targetContext is target context
-   * @param <E> is subtype of {@code Expression} cloning will result in based on target context
-   * @return expression cloned to specified context
-   */
-  default <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext) {
-    return transfer(targetContext, null);
-  }
-
-  /**
-   * Transfer expression to specified context.
-   *
-   * @param targetContext is target context
+   * @param fromContext is from context to which expression is being migrated
    * @param bindMap is new mapping of bind variables; when not specified, bind variables are left as
    *               they are
    * @param <E> is subtype of {@code Expression} cloning will result in based on target context
    * @return expression cloned to specified context
    */
   <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
-      @Nullable BindMap bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap);
 }

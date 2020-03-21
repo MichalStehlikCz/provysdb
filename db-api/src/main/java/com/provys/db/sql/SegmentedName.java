@@ -74,6 +74,11 @@ public final class SegmentedName extends NamePathBase {
   }
 
   @Override
+  public List<SimpleName> getSegments() {
+    return segments;
+  }
+
+  @Override
   public List<String> getDbNames() {
     return segments.stream().map(SimpleName::getDbName).collect(Collectors.toList());
   }

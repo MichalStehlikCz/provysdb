@@ -27,6 +27,11 @@ class NamePathBaseTest {
     }
 
     @Override
+    public List<SimpleName> getSegments() {
+      throw new InternalException("Not implemented in this test class");
+    }
+
+    @Override
     public List<String> getDbNames() {
       return dbNames;
     }
@@ -38,6 +43,8 @@ class NamePathBaseTest {
         , new Object[]{List.of("BRC", "BRC_RECORD_TB"), List.of("BRC_RECORD_TB"), true}
         , new Object[]{List.of("BRC_RECORD_TB"), List.of("BRC", "BRC_RECORD_TB"), false}
         , new Object[]{List.of("BRC_RECORD_TB"), List.of("BRC_RECORD_TB"), true}
+        , new Object[]{List.of("ARC", "BRC_RECORD_TB"), List.of("BRC", "BRC_RECORD_TB"), false}
+        , new Object[]{List.of("BRC", "BRC_PROG_TB"), List.of("BRC", "BRC_RECORD_TB"), false}
     );
   }
 

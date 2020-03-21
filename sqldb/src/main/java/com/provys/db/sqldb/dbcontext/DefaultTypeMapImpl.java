@@ -82,8 +82,9 @@ public class DefaultTypeMapImpl implements SqlTypeMap {
     while (currentType != null) {
       var result = adapterMap.get(currentType);
       if (result != null) {
-        //noinspection unchecked
-        return (SqlTypeAdapter<T>) result;
+        @SuppressWarnings("unchecked")
+        var finalResult = (SqlTypeAdapter<T>) result;
+        return finalResult;
       }
       currentType = currentType.getSuperclass();
     }

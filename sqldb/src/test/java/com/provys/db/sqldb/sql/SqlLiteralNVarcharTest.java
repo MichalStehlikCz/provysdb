@@ -26,7 +26,7 @@ class SqlLiteralNVarcharTest {
     @SuppressWarnings("unchecked")
     var context = (SqlContext<?, ?, ?, ?, ?, ?, SqlExpression>) mock(SqlContext.class);
     var literal = new SqlLiteralNVarchar(context, "test2");
-    assertThat(literal.transfer(context)).isSameAs(literal);
+    assertThat(literal.transfer(context, null, null)).isSameAs(literal);
   }
 
   @Test
@@ -38,7 +38,7 @@ class SqlLiteralNVarcharTest {
     var targetContext = (Context<?, ?, ?, ?, ?, ?, Expression>) mock(Context.class);
     var clone = mock(Expression.class);
     when(targetContext.literalNVarchar(text)).thenReturn(clone);
-    assertThat(literal.transfer(targetContext)).isEqualTo(clone);
+    assertThat(literal.transfer(targetContext, null, null)).isEqualTo(clone);
   }
 
   @Test
