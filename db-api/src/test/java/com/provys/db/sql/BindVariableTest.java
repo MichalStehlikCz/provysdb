@@ -8,7 +8,7 @@ class BindVariableTest {
 
   @Test
   void constructorTest() {
-    var name = BindName.ofValue("name");
+    var name = BindName.valueOf("name");
     var bind = new BindVariable(name, Integer.class, 5);
     assertThat(bind.getName()).isEqualTo(name);
     assertThat(bind.getType()).isSameAs(Integer.class);
@@ -18,7 +18,7 @@ class BindVariableTest {
   @Test
   void constructor2Test() {
     var bind = new BindVariable("MujNazev", Double.class, null);
-    assertThat(bind.getName()).isEqualTo(BindName.ofValue("mujnazev"));
+    assertThat(bind.getName()).isEqualTo(BindName.valueOf("mujnazev"));
     assertThat(bind.getType()).isSameAs(Double.class);
     assertThat(bind.getValue()).isNull();
   }

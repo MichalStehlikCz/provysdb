@@ -36,6 +36,11 @@ public class SqlTypeAdapterBigInteger implements SqlTypeAdapter<BigInteger> {
   }
 
   @Override
+  public String getName() {
+    return "BIGINTEGER";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.BIGINT;
   }

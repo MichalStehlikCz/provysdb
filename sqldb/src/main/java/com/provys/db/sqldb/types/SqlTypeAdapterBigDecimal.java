@@ -36,6 +36,11 @@ public class SqlTypeAdapterBigDecimal implements SqlTypeAdapter<BigDecimal> {
   }
 
   @Override
+  public String getName() {
+    return "BIGNUMBER";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.NUMERIC;
   }

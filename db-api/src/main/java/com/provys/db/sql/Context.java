@@ -52,7 +52,7 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    * @return bind name
    */
   default BindName bind(String name) {
-    return BindName.ofValue(name);
+    return BindName.valueOf(name);
   }
 
   /**
@@ -106,6 +106,15 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    */
   S select(SelectClause selectClause, FromClause fromClause, @Nullable Condition whereClause,
       @Nullable FromContext parentFrom, @Nullable BindMap bindMap);
+
+  /**
+   * Create from clause, containing specified elements.
+   *
+   * @param fromElements is list of from elements contained in from clause
+   * @param bindMap is map of bind name to bind variables in target statement
+   * @return from clause in this context containing specified elements
+   */
+  F fromClause(List<? extends FromElement> fromElements, @Nullable BindMap bindMap);
 
   /**
    * Add from clause built on table, no join - usable for the first table or Oracle-style join.

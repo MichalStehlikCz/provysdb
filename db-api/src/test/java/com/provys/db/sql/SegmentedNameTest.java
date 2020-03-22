@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.jackson.JacksonMappers;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -43,6 +44,25 @@ class SegmentedNameTest {
   @MethodSource
   void valueOfFailTest(String text) {
     assertThatThrownBy(() -> SegmentedName.valueOf(text));
+  }
+
+  @Test
+  void isSimpleTrueTest() {
+    assertThat(SegmentedName.ofSegments(List.of(SimpleName.valueOf("test"))).isSimple()).isTrue();
+  }
+
+  @Test
+  void isSimpleFalseTest() {
+    assertThat(
+        SegmentedName.ofSegments(List.of(SimpleName.valueOf("test"), SimpleName.valueOf("test")))
+            .isSimple()).isFalse();
+  }
+
+  @Test
+  void getSegmentsTest() {
+    var value = SimpleName.valueOf("testName");
+    assertThat(SegmentedName.ofSegments(List.of(value, value)).getSegments())
+        .containsExactly(value, value);
   }
 
   @XmlRootElement(name = "SegmentedNameElement")

@@ -29,7 +29,7 @@ public final class BindName {
    * @param name is name of bind
    * @return bind name based on supplied string
    */
-  public static BindName ofValue(String name) {
+  public static BindName valueOf(String name) {
     return new BindName(name);
   }
 

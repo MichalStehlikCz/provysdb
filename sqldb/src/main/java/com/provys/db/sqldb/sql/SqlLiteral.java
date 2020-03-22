@@ -1,38 +1,41 @@
 package com.provys.db.sqldb.sql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Context;
 import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromContext;
+import com.provys.db.sqldb.dbcontext.DefaultJsonIdTypeResolver;
+import com.provys.db.sqldb.dbcontext.DefaultJsonObjectDeserializer;
+import com.provys.db.sqldb.dbcontext.DefaultJsonObjectSerializer;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-@SuppressWarnings("ValidExternallyBoundObject")
-@XmlAccessorType(XmlAccessType.NONE)
-@XmlType(
-    propOrder = {"value"}
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE,
+    getterVisibility = Visibility.NONE,
+    isGetterVisibility = Visibility.NONE,
+    creatorVisibility = Visibility.NONE
 )
-@XmlRootElement(
-    name = "LITERAL"
-)
+@JsonRootName("LITERAL")
 final class SqlLiteral implements SqlExpression {
 
-  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
-  @XmlElement(
-      name = "VALUE"
-  )
   private final Object value;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
   SqlLiteral(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Object value) {
     this.context = context;
@@ -40,10 +43,13 @@ final class SqlLiteral implements SqlExpression {
   }
 
   @JsonCreator
-  SqlLiteral(@JsonProperty("VALUE") Object value) {
+  SqlLiteral(@JsonProperty("VALUE") @JsonDeserialize(using = DefaultJsonObjectDeserializer.class)
+      Object value) {
     this(SqlContextImpl.getNoDbInstance(), value);
   }
 
+  @JsonProperty("VALUE")
+  @JsonSerialize(using = DefaultJsonObjectSerializer.class)
   Object getValue() {
     return value;
   }
@@ -84,22 +90,22 @@ final class SqlLiteral implements SqlExpression {
       return false;
     }
     SqlLiteral that = (SqlLiteral) o;
-    return Objects.equals(context, that.context)
-        && Objects.equals(value, that.value);
+    return value.equals(that.value)
+        && context.equals(that.context);
   }
 
   @Override
   public int hashCode() {
-    int result = context != null ? context.hashCode() : 0;
-    result = 31 * result + (value != null ? value.hashCode() : 0);
+    int result = value.hashCode();
+    result = 31 * result + context.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
     return "SqlLiteral{"
-        + "context=" + context
-        + ", value=" + value
+        + "value=" + value
+        + ", context=" + context
         + '}';
   }
 }

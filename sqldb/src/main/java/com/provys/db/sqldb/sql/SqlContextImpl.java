@@ -9,6 +9,7 @@ import com.provys.db.sql.Condition;
 import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromClause;
 import com.provys.db.sql.FromContext;
+import com.provys.db.sql.FromElement;
 import com.provys.db.sql.Function;
 import com.provys.db.sql.NamePath;
 import com.provys.db.sql.SelectClause;
@@ -77,6 +78,12 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
       @Nullable BindMap bindMap) {
     return new SqlSelectImpl(this, selectClause, fromClause, whereClause, parentFrom,
         bindMap);
+  }
+
+  @Override
+  public SqlFromClause fromClause(List<? extends FromElement> fromElements,
+      @Nullable BindMap bindMap) {
+    return new SqlFromClauseImpl(this, fromElements, bindMap);
   }
 
   @Override

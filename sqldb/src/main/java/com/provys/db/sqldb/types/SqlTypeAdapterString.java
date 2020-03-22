@@ -35,6 +35,11 @@ public class SqlTypeAdapterString implements SqlTypeAdapter<String> {
   }
 
   @Override
+  public String getName() {
+    return "STRING";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.VARCHAR;
   }

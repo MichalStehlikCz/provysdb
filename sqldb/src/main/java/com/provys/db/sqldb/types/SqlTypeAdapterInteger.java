@@ -35,6 +35,11 @@ public class SqlTypeAdapterInteger implements SqlTypeAdapter<Integer> {
   }
 
   @Override
+  public String getName() {
+    return "INTEGER";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.INTEGER;
   }

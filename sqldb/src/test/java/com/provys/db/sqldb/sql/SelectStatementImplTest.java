@@ -25,9 +25,9 @@ class SelectStatementImplTest {
 
   @Test
   void getBindsTest() {
-    var bindName1 = BindName.ofValue("first");
+    var bindName1 = BindName.valueOf("first");
     var bind1 = new BindWithPos(bindName1, Integer.class, List.of(1, 3));
-    var bindName2 = BindName.ofValue("second");
+    var bindName2 = BindName.valueOf("second");
     var bind2 = new BindWithPos(bindName2, String.class, List.of(2));
     var connection = mock(DbConnection.class);
     var preparedStatement = mock(DbPreparedStatement.class);
@@ -40,9 +40,9 @@ class SelectStatementImplTest {
 
   @Test
   void bindValueFailTest() {
-    var bindName1 = BindName.ofValue("first");
+    var bindName1 = BindName.valueOf("first");
     var bind1 = new BindWithPos(bindName1, Integer.class, List.of(1, 3));
-    var bindName2 = BindName.ofValue("second");
+    var bindName2 = BindName.valueOf("second");
     var bind2 = new BindWithPos(bindName2, String.class, List.of(2));
     var connection = mock(DbConnection.class);
     var preparedStatement = mock(DbPreparedStatement.class);
@@ -63,9 +63,9 @@ class SelectStatementImplTest {
 
   @Test
   void executeTest() throws SQLException {
-    var bindName1 = BindName.ofValue("first");
+    var bindName1 = BindName.valueOf("first");
     var bind1 = new BindWithPos(bindName1, Integer.class, List.of(1, 3));
-    var bindName2 = BindName.ofValue("second");
+    var bindName2 = BindName.valueOf("second");
     var bind2 = new BindWithPos(bindName2, String.class, List.of(2));
     var connection = mock(DbConnection.class);
     var preparedStatement = mock(DbPreparedStatement.class);

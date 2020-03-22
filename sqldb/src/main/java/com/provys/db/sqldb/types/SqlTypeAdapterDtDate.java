@@ -35,6 +35,16 @@ public class SqlTypeAdapterDtDate implements SqlTypeAdapter<DtDate> {
     return DtDate.class;
   }
 
+  /**
+   * Name of type, used for serialisation / deserialisation.
+   *
+   * @return name of type
+   */
+  @Override
+  public String getName() {
+    return "DATE";
+  }
+
   @Override
   public int getSqlType() {
     return Types.DATE;

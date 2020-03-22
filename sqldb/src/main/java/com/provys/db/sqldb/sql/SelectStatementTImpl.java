@@ -100,7 +100,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
   }
 
   public S bindValue(String name, @Nullable Object value) {
-    return bindValue(BindName.ofValue(name), value);
+    return bindValue(BindName.valueOf(name), value);
   }
 
   public Collection<BindName> getBinds() {

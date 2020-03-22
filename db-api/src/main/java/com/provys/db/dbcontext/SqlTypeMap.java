@@ -19,6 +19,22 @@ public interface SqlTypeMap {
   <T> SqlTypeAdapter<T> getAdapter(Class<T> type);
 
   /**
+   * Retrieve class information for specified name.
+   *
+   * @param name is supplied name of type
+   * @return type (class) this name represents (found via adapter lookup)
+   */
+  Class<?> getTypeByName(String name);
+
+  /**
+   * Retrieve name for specified class.
+   *
+   * @param type is supplied type
+   * @return name supplied by adapter for given class
+   */
+  String getName(Class<?> type);
+
+  /**
    * Sql type associated with supplied Java type.
    *
    * @param type is Java type we ask about

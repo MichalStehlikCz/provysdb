@@ -40,7 +40,7 @@ public final class BindVariable {
    * @param value is default value for bind variable
    */
   public BindVariable(String name, Class<?> type, @Nullable Object value) {
-    this(BindName.ofValue(name), type, value);
+    this(BindName.valueOf(name), type, value);
   }
 
   /**

@@ -39,6 +39,11 @@ public class SqlTypeAdapterBoolean implements SqlTypeAdapter<Boolean> {
   }
 
   @Override
+  public String getName() {
+    return "BOOLEAN";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.CHAR;
   }

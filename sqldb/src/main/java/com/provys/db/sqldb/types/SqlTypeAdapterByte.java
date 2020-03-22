@@ -35,6 +35,11 @@ public class SqlTypeAdapterByte implements SqlTypeAdapter<Byte> {
   }
 
   @Override
+  public String getName() {
+    return "BYTE";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.TINYINT;
   }

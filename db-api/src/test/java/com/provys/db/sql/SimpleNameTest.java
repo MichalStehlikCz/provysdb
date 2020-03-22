@@ -53,6 +53,17 @@ class SimpleNameTest {
     assertThatThrownBy(() -> SimpleName.valueOf(name)).hasMessageContainingAll(name, message);
   }
 
+  @Test
+  void isSimpleTest() {
+    assertThat(SimpleName.valueOf("test").isSimple()).isTrue();
+  }
+
+  @Test
+  void getSegmentsTest() {
+    var value = SimpleName.valueOf("testName");
+    assertThat(value.getSegments()).containsExactly(value);
+  }
+
   @XmlRootElement(name = "SimpleNameElement")
   public static final class SimpleNameElement {
 

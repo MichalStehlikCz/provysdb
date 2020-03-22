@@ -74,6 +74,11 @@ public final class SegmentedName extends NamePathBase {
   }
 
   @Override
+  public boolean isSimple() {
+    return segments.size() == 1;
+  }
+
+  @Override
   public List<SimpleName> getSegments() {
     return segments;
   }

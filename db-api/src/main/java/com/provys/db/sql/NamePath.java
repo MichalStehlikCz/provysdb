@@ -20,6 +20,13 @@ public interface NamePath {
   String getText();
 
   /**
+   * Identifies if this name is simple (has exactly one segment).
+   *
+   * @return true if name path has one segment, false if it has more segments
+   */
+  boolean isSimple();
+
+  /**
    * List of segments this path consists of.
    *
    * @return list of segments this path consists of

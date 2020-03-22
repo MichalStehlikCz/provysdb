@@ -20,6 +20,13 @@ public interface SqlTypeAdapter<T> {
   Class<T> getType();
 
   /**
+   * Name of type, used for serialisation / deserialisation.
+   *
+   * @return name of type
+   */
+  String getName();
+
+  /**
    * Sql type associated with this adapter.
    *
    * @return sql type associated with this adapter

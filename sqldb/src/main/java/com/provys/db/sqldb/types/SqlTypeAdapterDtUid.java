@@ -36,6 +36,11 @@ public class SqlTypeAdapterDtUid implements SqlTypeAdapter<DtUid> {
   }
 
   @Override
+  public String getName() {
+    return "UID";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.BIGINT;
   }

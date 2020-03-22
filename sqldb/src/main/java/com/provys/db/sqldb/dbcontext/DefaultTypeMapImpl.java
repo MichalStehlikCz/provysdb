@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Default implementation of type map. Uses types of supplied adapters as their mapping, inheritance
  * primarily via superclasses, interfaces are checked afterwards.
  */
-public class DefaultTypeMapImpl implements SqlTypeMap {
+public final class DefaultTypeMapImpl implements SqlTypeMap {
 
   private static final SqlTypeMap DEFAULT_MAP = new DefaultTypeMapImpl(
       SqlTypeAdapterBoolean.getInstance(),
@@ -53,7 +54,8 @@ public class DefaultTypeMapImpl implements SqlTypeMap {
 
   private static final Logger LOG = LogManager.getLogger(DefaultTypeMapImpl.class);
 
-  private final Map<Class<?>, SqlTypeAdapter<?>> adaptersByClass;
+  private final Map<Class<?>, SqlTypeAdapter<?>> adaptersByType;
+  private final Map<String, Class<?>> typesByName;
 
   /**
    * Create new type map with supplied adapters.
@@ -61,12 +63,19 @@ public class DefaultTypeMapImpl implements SqlTypeMap {
    * @param adapters are adapters that should form this adapter map
    */
   public DefaultTypeMapImpl(Collection<? extends SqlTypeAdapter<?>> adapters) {
-    adaptersByClass = new ConcurrentHashMap<>(adapters.size());
+    adaptersByType = new ConcurrentHashMap<>(adapters.size());
+    typesByName = new ConcurrentHashMap<>(adapters.size());
     for (var adapter : adapters) {
-      var old = adaptersByClass.put(adapter.getType(), Objects.requireNonNull(adapter));
+      var old = adaptersByType.put(adapter.getType(), Objects.requireNonNull(adapter));
       if ((old != null) && !adapter.equals(old)) {
         LOG.warn("Replaced mapping of Sql type adapter for class {}; old {}, new {}",
             adapter::getType, old::toString, adapter::toString);
+      }
+      var oldClass = typesByName.put(adapter.getName(), adapter.getType());
+      if ((oldClass != null) && (adapter.getType() != oldClass)) {
+        LOG.warn("Replaced mapping of Sql type adapter class for name {}; old {}, new {}",
+            adapter::getName, oldClass::getCanonicalName,
+            () -> adapter.getType().getCanonicalName());
       }
     }
   }
@@ -120,15 +129,29 @@ public class DefaultTypeMapImpl implements SqlTypeMap {
   public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
     // first try to find in supertype... mostly successful so better to try it before heavy weight
     // search
-    var result = getAdapterSuper(type, adaptersByClass);
+    var result = getAdapterSuper(type, adaptersByType);
     // next go through class hierarchy once more, but this time use interfaces
     if (result == null) {
-      result = getAdapterInterface(type, adaptersByClass);
+      result = getAdapterInterface(type, adaptersByType);
       if (result == null) {
         throw new InternalException("No sql type adapter found for class " + type);
       }
     }
     return result;
+  }
+
+  @Override
+  public Class<?> getTypeByName(String name) {
+    var result = typesByName.get(name);
+    if (result == null) {
+      throw new NoSuchElementException("Class corresponding to name " + name + "not found");
+    }
+    return result;
+  }
+
+  @Override
+  public String getName(Class<?> type) {
+    return getAdapter(type).getName();
   }
 
   @Override
@@ -230,7 +253,7 @@ public class DefaultTypeMapImpl implements SqlTypeMap {
   @Override
   public String toString() {
     return "SqlTypeMapImpl{"
-        + "adaptersByClass=" + adaptersByClass
+        + "adaptersByClass=" + adaptersByType
         + '}';
   }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.provys.common.exception.InternalException;
+import com.provys.common.exception.NotImplementedException;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,12 +24,17 @@ class NamePathBaseTest {
 
     @Override
     public String getText() {
-      throw new InternalException("Not implemented in this test class");
+      throw new NotImplementedException(TestNamePathBase.class);
+    }
+
+    @Override
+    public boolean isSimple() {
+      throw new NotImplementedException(TestNamePathBase.class);
     }
 
     @Override
     public List<SimpleName> getSegments() {
-      throw new InternalException("Not implemented in this test class");
+      throw new NotImplementedException(TestNamePathBase.class);
     }
 
     @Override

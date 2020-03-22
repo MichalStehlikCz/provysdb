@@ -1,5 +1,6 @@
 package com.provys.db.sql;
 
+import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -43,7 +44,8 @@ public interface FromContext {
   default NamePath getDefaultAlias(NamePath alias) {
     var fromElement = getFromElement(alias);
     if (fromElement != null) {
-      return getDefaultAlias(fromElement);
+      return Objects.requireNonNull(getDefaultAlias(fromElement),
+          "Unexpected null default alias for element, retrieved using alias");
     }
     return alias;
   }

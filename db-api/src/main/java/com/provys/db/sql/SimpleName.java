@@ -85,6 +85,11 @@ public final class SimpleName extends NamePathBase {
   }
 
   @Override
+  public boolean isSimple() {
+    return true;
+  }
+
+  @Override
   public List<SimpleName> getSegments() {
     return List.of(this);
   }

@@ -36,6 +36,11 @@ public class SqlTypeAdapterDtDateTime implements SqlTypeAdapter<DtDateTime> {
   }
 
   @Override
+  public String getName() {
+    return "DATETIME";
+  }
+
+  @Override
   public int getSqlType() {
     return Types.TIMESTAMP;
   }

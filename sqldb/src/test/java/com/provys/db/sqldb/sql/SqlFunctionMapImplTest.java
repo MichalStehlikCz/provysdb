@@ -30,8 +30,8 @@ class SqlFunctionMapImplTest {
         .hasMessageContaining("Template not found");
   }
 
-  private static final BindName bindName1 = BindName.ofValue("name1");
-  private static final BindName bindName2 = BindName.ofValue("name2");
+  private static final BindName bindName1 = BindName.valueOf("name1");
+  private static final BindName bindName2 = BindName.valueOf("name2");
 
   private static void appendArg0(CodeBuilder builder) {
     builder.append("arg0");
