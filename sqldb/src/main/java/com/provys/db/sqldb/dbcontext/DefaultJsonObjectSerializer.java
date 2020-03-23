@@ -33,9 +33,7 @@ public class DefaultJsonObjectSerializer extends JsonSerializer<Object> {
   public void serialize(Object o, JsonGenerator generator,
       SerializerProvider serializerProvider) throws IOException {
     generator.writeStartObject();
-    var type = sqlTypeMap.getName(o.getClass());
-    generator.writeObjectField("type", type);
-    generator.writeObjectField("value", o);
+    generator.writeObjectField(sqlTypeMap.getName(o.getClass()), o);
     generator.writeEndObject();
   }
 

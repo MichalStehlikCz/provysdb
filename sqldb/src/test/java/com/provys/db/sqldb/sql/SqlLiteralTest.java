@@ -18,17 +18,17 @@ class SqlLiteralTest {
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
         new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), "testString"),
-            "{\"VALUE\":{\"type\":\"STRING\",\"value\":\"testString\"}}",
+            "{\"VALUE\":{\"STRING\":\"testString\"}}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><type>STRING</type><value>testString</value></VALUE></LITERAL>"}
+                + "<LITERAL><VALUE><STRING>testString</STRING></VALUE></LITERAL>"}
         , new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), 5),
-            "{\"VALUE\":{\"type\":\"INTEGER\",\"value\":5}}",
+            "{\"VALUE\":{\"INTEGER\":5}}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><type>INTEGER</type><value>5</value></VALUE></LITERAL>"}
+                + "<LITERAL><VALUE><INTEGER>5</INTEGER></VALUE></LITERAL>"}
         , new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), DtUid.valueOf("123456")),
-            "{\"VALUE\":{\"type\":\"UID\",\"value\":123456}}",
+            "{\"VALUE\":{\"UID\":123456}}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><type>UID</type><value>123456</value></VALUE></LITERAL>"}
+                + "<LITERAL><VALUE><UID>123456</UID></VALUE></LITERAL>"}
     );
   }
 
