@@ -1,14 +1,20 @@
 package com.provys.db.sql;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import java.io.IOException;
 
 /**
  * Jackson serializer for {@link SegmentedName} class.
  */
-public class SegmentedNameSerializer extends JsonSerializer<SegmentedName> {
+public class SegmentedNameSerializer extends StdScalarSerializer<SegmentedName> {
+
+  private static final long serialVersionUID = 8329354958617894765L;
+
+  protected SegmentedNameSerializer() {
+    super(SegmentedName.class);
+  }
 
   @Override
   public void serialize(SegmentedName segmentedName, JsonGenerator jsonGenerator,

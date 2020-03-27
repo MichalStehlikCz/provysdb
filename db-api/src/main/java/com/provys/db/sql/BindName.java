@@ -3,6 +3,8 @@ package com.provys.db.sql;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.provys.common.exception.InternalException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
@@ -62,17 +64,26 @@ public final class BindName implements Serializable {
     return new SerializationProxy(this);
   }
 
+  /**
+   * Should be serialized via proxy, thus no direct deserialization should occur.
+   *
+   * @param stream is stream from which object is to be read
+   * @throws InvalidObjectException always
+   */
+  private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    throw new InvalidObjectException("Use Serialization Proxy instead.");
+  }
+
   private static final class SerializationProxy implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+    private static final long serialVersionUID = -8330342720996564435L;
     private @Nullable String name;
 
     SerializationProxy() {
     }
 
-    SerializationProxy(BindName bindName) {
-      this.name = bindName.getName();
+    SerializationProxy(BindName value) {
+      this.name = value.getName();
     }
 
     private Object readResolve() {

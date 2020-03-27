@@ -99,13 +99,12 @@ final class SqlSelectImpl implements SqlSelect, FromContext {
 
   @Override
   public void append(CodeBuilder builder) {
-    builder.appendLine("SELECT");
     selectClause.append(builder);
-    builder.appendLine("FROM");
     fromClause.append(builder);
     if (whereClause != null) {
-      builder.append("WHERE");
+      builder.append("WHERE").increasedIdent(2);
       whereClause.append(builder);
+      builder.popIdent();
     }
   }
 

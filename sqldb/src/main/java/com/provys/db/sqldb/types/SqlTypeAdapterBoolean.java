@@ -16,6 +16,7 @@ public class SqlTypeAdapterBoolean implements SqlTypeAdapter<Boolean> {
   private static final String LITERAL_FALSE = '\'' + DtBoolean.toProvysDb(false) + '\'';
 
   private static final SqlTypeAdapterBoolean INSTANCE = new SqlTypeAdapterBoolean();
+  private static final long serialVersionUID = 2845824887138807807L;
 
   /**
    * Instance of boolean type adapter.
@@ -81,6 +82,10 @@ public class SqlTypeAdapterBoolean implements SqlTypeAdapter<Boolean> {
       return "NULL";
     }
     return value ? LITERAL_TRUE : LITERAL_FALSE;
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

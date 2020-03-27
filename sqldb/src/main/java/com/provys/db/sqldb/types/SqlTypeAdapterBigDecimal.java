@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterBigDecimal implements SqlTypeAdapter<BigDecimal> {
 
   private static final SqlTypeAdapterBigDecimal INSTANCE = new SqlTypeAdapterBigDecimal();
+  private static final long serialVersionUID = -1990683305372391066L;
 
   /**
    * Instance of BigDecimal type adapter.
@@ -77,6 +78,10 @@ public class SqlTypeAdapterBigDecimal implements SqlTypeAdapter<BigDecimal> {
       return "NULL";
     }
     return value.toPlainString();
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

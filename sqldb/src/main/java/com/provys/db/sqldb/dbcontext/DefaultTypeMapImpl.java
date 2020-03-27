@@ -11,11 +11,15 @@ import com.provys.db.sqldb.types.SqlTypeAdapterBigDecimal;
 import com.provys.db.sqldb.types.SqlTypeAdapterBigInteger;
 import com.provys.db.sqldb.types.SqlTypeAdapterBoolean;
 import com.provys.db.sqldb.types.SqlTypeAdapterByte;
+import com.provys.db.sqldb.types.SqlTypeAdapterDouble;
 import com.provys.db.sqldb.types.SqlTypeAdapterDtDate;
 import com.provys.db.sqldb.types.SqlTypeAdapterDtDateTime;
 import com.provys.db.sqldb.types.SqlTypeAdapterDtUid;
 import com.provys.db.sqldb.types.SqlTypeAdapterInteger;
 import com.provys.db.sqldb.types.SqlTypeAdapterString;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +44,7 @@ public final class DefaultTypeMapImpl implements SqlTypeMap {
       SqlTypeAdapterBoolean.getInstance(),
       SqlTypeAdapterByte.getInstance(),
       SqlTypeAdapterInteger.getInstance(),
+      SqlTypeAdapterDouble.getInstance(),
       SqlTypeAdapterString.getInstance(),
       SqlTypeAdapterBigDecimal.getInstance(),
       SqlTypeAdapterBigInteger.getInstance(),
@@ -248,6 +253,63 @@ public final class DefaultTypeMapImpl implements SqlTypeMap {
     @SuppressWarnings("unchecked")
     Class<Object> type = (Class<Object>) value.getClass();
     appendLiteral(builder, value, type);
+  }
+
+  /**
+   * Supports serialization via SerializationProxy.
+   *
+   * @return proxy, corresponding to this DefaultTypeMapImpl
+   */
+  private Object writeReplace() {
+    return new SerializationProxy(this);
+  }
+
+  /**
+   * Should be serialized via proxy, thus no direct deserialization should occur.
+   *
+   * @param stream is stream from which object is to be read
+   * @throws InvalidObjectException always
+   */
+  private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    throw new InvalidObjectException("Use Serialization Proxy instead.");
+  }
+
+  private static final class SerializationProxy implements Serializable {
+
+    private static final long serialVersionUID = -526122726670289167L;
+    private @Nullable Collection<SqlTypeAdapter<?>> adapters;
+
+    SerializationProxy() {
+    }
+
+    SerializationProxy(DefaultTypeMapImpl value) {
+      this.adapters = value.adaptersByType.values();
+    }
+
+    private Object readResolve() {
+      var value = new DefaultTypeMapImpl(Objects.requireNonNull(adapters));
+      if (value.equals(DEFAULT_MAP)) {
+        return DEFAULT_MAP;
+      }
+      return value;
+    }
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DefaultTypeMapImpl that = (DefaultTypeMapImpl) o;
+    return adaptersByType.equals(that.adaptersByType);
+  }
+
+  @Override
+  public int hashCode() {
+    return adaptersByType.hashCode();
   }
 
   @Override

@@ -7,12 +7,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Used when select statement is used in expression or condition, but target context for given
  * expression / condition is not known.
  */
-class UnknownFromContext implements FromContext {
+final class UnknownFromContext implements FromContext {
 
   private static final UnknownFromContext INSTANCE = new UnknownFromContext();
 
   static UnknownFromContext getInstance() {
     return INSTANCE;
+  }
+
+  private UnknownFromContext() {
   }
 
   @Override

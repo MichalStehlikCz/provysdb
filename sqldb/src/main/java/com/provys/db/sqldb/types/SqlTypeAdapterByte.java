@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterByte implements SqlTypeAdapter<Byte> {
 
   private static final SqlTypeAdapterByte INSTANCE = new SqlTypeAdapterByte();
+  private static final long serialVersionUID = -2402498755542208902L;
 
   /**
    * Instance of Byte type adapter.
@@ -76,6 +77,10 @@ public class SqlTypeAdapterByte implements SqlTypeAdapter<Byte> {
       return "NULL";
     }
     return value.toString();
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

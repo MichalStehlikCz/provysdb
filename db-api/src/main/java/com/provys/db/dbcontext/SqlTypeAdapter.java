@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext;
 
+import java.io.Serializable;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -10,7 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is type this adapter is associated with
  */
-public interface SqlTypeAdapter<T> {
+public interface SqlTypeAdapter<T> extends Serializable {
 
   /**
    * Class this adapter converts to database values.

@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext;
 
+import java.io.Serializable;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -7,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Used to hold set of {link SqlTypeAdapter} and retrieve particular adapter for given class.
  */
-public interface SqlTypeMap {
+public interface SqlTypeMap extends Serializable {
 
   /**
    * Retrieve adapter for given class.

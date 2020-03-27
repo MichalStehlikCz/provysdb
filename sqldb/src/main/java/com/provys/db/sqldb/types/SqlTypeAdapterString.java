@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterString implements SqlTypeAdapter<String> {
 
   private static final SqlTypeAdapterString INSTANCE = new SqlTypeAdapterString();
+  private static final long serialVersionUID = -6054974313349658918L;
 
   /**
    * Instance of String type adapter.
@@ -78,6 +79,10 @@ public class SqlTypeAdapterString implements SqlTypeAdapter<String> {
     return '\'' + value
         .replace("'", "''")
         .replace("\n", "'||CHR(10)||'") + '\'';
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

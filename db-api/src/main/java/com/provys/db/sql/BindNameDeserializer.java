@@ -10,6 +10,8 @@ import java.io.IOException;
  */
 public class BindNameDeserializer extends StdScalarDeserializer<BindName> {
 
+  private static final long serialVersionUID = 4166600761822068313L;
+
   protected BindNameDeserializer() {
     super(BindName.class);
   }

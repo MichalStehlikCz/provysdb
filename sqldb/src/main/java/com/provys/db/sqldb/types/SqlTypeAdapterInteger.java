@@ -12,6 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterInteger implements SqlTypeAdapter<Integer> {
 
   private static final SqlTypeAdapterInteger INSTANCE = new SqlTypeAdapterInteger();
+  private static final long serialVersionUID = 1756354633001560592L;
 
   /**
    * Instance of Integer type adapter.
@@ -73,6 +74,10 @@ public class SqlTypeAdapterInteger implements SqlTypeAdapter<Integer> {
   @Override
   public String getLiteral(@Nullable Integer value) {
     return (value == null) ? "NULL" : value.toString();
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

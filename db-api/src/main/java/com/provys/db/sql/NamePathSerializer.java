@@ -10,6 +10,8 @@ import java.io.IOException;
  */
 public class NamePathSerializer extends StdScalarSerializer<NamePath> {
 
+  private static final long serialVersionUID = -623708646400338457L;
+
   protected NamePathSerializer() {
     super(NamePath.class);
   }

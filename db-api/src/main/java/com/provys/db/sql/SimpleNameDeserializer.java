@@ -10,6 +10,8 @@ import java.io.IOException;
  */
 public class SimpleNameDeserializer extends StdScalarDeserializer<SimpleName> {
 
+  private static final long serialVersionUID = -5788020750047992892L;
+
   protected SimpleNameDeserializer() {
     super(SimpleName.class);
   }

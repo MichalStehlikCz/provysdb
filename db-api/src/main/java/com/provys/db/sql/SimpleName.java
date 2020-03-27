@@ -3,6 +3,9 @@ package com.provys.db.sql;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.provys.common.exception.InternalException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -99,6 +102,42 @@ public final class SimpleName extends NamePathBase {
     return List.of(getDbName());
   }
 
+  /**
+   * Supports serialization via SerializationProxy.
+   *
+   * @return proxy, corresponding to this SimpleName
+   */
+  private Object writeReplace() {
+    return new SerializationProxy(this);
+  }
+
+  /**
+   * Should be serialized via proxy, thus no direct deserialization should occur.
+   *
+   * @param stream is stream from which object is to be read
+   * @throws InvalidObjectException always
+   */
+  private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+    throw new InvalidObjectException("Use Serialization Proxy instead.");
+  }
+
+  private static final class SerializationProxy implements Serializable {
+
+    private static final long serialVersionUID = 4943844360741067489L;
+    private @Nullable String text;
+
+    SerializationProxy() {
+    }
+
+    SerializationProxy(NamePath value) {
+      this.text = value.getText();
+    }
+
+    private Object readResolve() {
+      return SimpleName.valueOf(Objects.requireNonNull(text));
+    }
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
@@ -109,12 +148,12 @@ public final class SimpleName extends NamePathBase {
     }
     SimpleName that = (SimpleName) o;
     return delimited == that.delimited
-        && Objects.equals(dbName, that.dbName);
+        && dbName.equals(that.dbName);
   }
 
   @Override
   public int hashCode() {
-    int result = dbName != null ? dbName.hashCode() : 0;
+    int result = dbName.hashCode();
     result = 31 * result + (delimited ? 1 : 0);
     return result;
   }

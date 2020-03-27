@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterDtDateTime implements SqlTypeAdapter<DtDateTime> {
 
   private static final SqlTypeAdapterDtDateTime INSTANCE = new SqlTypeAdapterDtDateTime();
+  private static final long serialVersionUID = 1233606164740718260L;
 
   /**
    * Instance of DtDateTime type adapter.
@@ -86,6 +87,10 @@ public class SqlTypeAdapterDtDateTime implements SqlTypeAdapter<DtDateTime> {
     } else {
       builder.append("TO_DATE('").append(value.toIso()).append("', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
     }
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override

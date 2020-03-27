@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class SqlTypeAdapterDtUid implements SqlTypeAdapter<DtUid> {
 
   private static final SqlTypeAdapterDtUid INSTANCE = new SqlTypeAdapterDtUid();
+  private static final long serialVersionUID = -5507184803038258988L;
 
   /**
    * Instance of DtUid type adapter.
@@ -76,6 +77,10 @@ public class SqlTypeAdapterDtUid implements SqlTypeAdapter<DtUid> {
       return "NULL";
     }
     return value.getValue().toString();
+  }
+
+  protected Object readResolve() {
+    return getInstance();
   }
 
   @Override
