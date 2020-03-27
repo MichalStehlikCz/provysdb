@@ -1,7 +1,7 @@
 package com.provys.db.sqldb.sql;
 
-import com.provys.db.sqldb.sql.codebuilder.CodeBuilderImpl;
 import com.provys.db.sql.CodeBuilder;
+import com.provys.db.sqldb.sql.codebuilder.CodeBuilderImpl;
 
 /**
  * Static factory class.

@@ -3,9 +3,13 @@ package com.provys.db.sqldb.sql;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.datatype.DtDate;
+import com.provys.common.datatype.DtUid;
+import com.provys.common.jackson.JacksonMappers;
 import com.provys.db.sql.Context;
 import com.provys.db.sql.Expression;
+import java.io.IOException;
 import java.util.stream.Stream;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
@@ -72,5 +76,50 @@ class SqlLiteralNVarcharTest {
     var builder = CodeBuilderFactory.getCodeBuilder();
     literal.append(builder);
     assertThat(builder.build()).isEqualTo(result);
+  }
+
+  static Stream<Object[]> jacksonTest() {
+    return Stream.of(
+        new Object[]{new SqlLiteralNVarchar(SqlContextImpl.getNoDbInstance(), "testString"),
+            "{\"VALUE\":\"testString\"}",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<LITERALNVARCHAR><VALUE>testString</VALUE></LITERALNVARCHAR>"}
+        , new Object[]{new SqlLiteralNVarchar("\nfirst\nsecond\n"),
+            "{\"VALUE\":\"\\nfirst\\nsecond\\n\"}",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<LITERALNVARCHAR><VALUE>\nfirst\nsecond\n</VALUE></LITERALNVARCHAR>"}
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void serializeToJsonTest(SqlLiteralNVarchar value, String json, String xml)
+      throws JsonProcessingException {
+    assertThat(JacksonMappers.getJsonMapper().writeValueAsString(value))
+        .isEqualTo(json);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void deserializeFromJsonTest(SqlLiteralNVarchar value, String json, String xml)
+      throws IOException {
+    assertThat(JacksonMappers.getJsonMapper().readValue(json, SqlLiteralNVarchar.class))
+        .isEqualTo(value);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void serializeToXmlTest(SqlLiteralNVarchar value, String json, String xml)
+      throws JsonProcessingException {
+    assertThat(JacksonMappers.getXmlMapper().writeValueAsString(value))
+        .isEqualTo(xml);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void deserializeFromXmlTest(SqlLiteralNVarchar value, String json, String xml)
+      throws IOException {
+    assertThat(JacksonMappers.getXmlMapper().readValue(xml, SqlLiteralNVarchar.class))
+        .isEqualTo(value);
   }
 }

@@ -3,6 +3,13 @@ package com.provys.db.sqldb.sql;
 import static com.provys.db.sql.Function.STRING_CHR;
 import static com.provys.db.sql.Function.STRING_CONCAT;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
@@ -12,14 +19,23 @@ import com.provys.db.sql.FromContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE,
+    getterVisibility = Visibility.NONE,
+    isGetterVisibility = Visibility.NONE,
+    creatorVisibility = Visibility.NONE
+)
+@JsonRootName("LITERALNVARCHAR")
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 final class SqlLiteralNVarchar implements SqlExpression {
 
-  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
+  @JsonProperty("VALUE")
   private final String value;
   private final @Nullable SqlExpression expression;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
   private static <E extends SqlExpression> @Nullable SqlExpression evalExpression(
       SqlContext<?, ?, ?, ?, ?, ?, E> context, String value) {
@@ -49,9 +65,28 @@ final class SqlLiteralNVarchar implements SqlExpression {
     this.expression = evalExpression(context, value);
   }
 
+  /**
+   * Constructor used for deserialisation.
+   *
+   * @param value is string value, represented by this literal
+   */
+  @JsonCreator
+  SqlLiteralNVarchar(@JsonProperty("VALUE") String value) {
+    this(SqlContextImpl.getNoDbInstance(), value);
+  }
+
   @Override
   public Class<?> getType() {
     return String.class;
+  }
+
+  /**
+   * Value of field value.
+   *
+   * @return value of field value
+   */
+  String getValue() {
+    return value;
   }
 
   @Override
@@ -96,22 +131,22 @@ final class SqlLiteralNVarchar implements SqlExpression {
       return false;
     }
     SqlLiteralNVarchar that = (SqlLiteralNVarchar) o;
-    return Objects.equals(context, that.context)
-        && Objects.equals(value, that.value);
+    return value.equals(that.value)
+        && context.equals(that.context);
   }
 
   @Override
   public int hashCode() {
-    int result = context != null ? context.hashCode() : 0;
-    result = 31 * result + (value != null ? value.hashCode() : 0);
+    int result = value.hashCode();
+    result = 31 * result + context.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
     return "SqlLiteralNVarchar{"
-        + "context=" + context
-        + ", value='" + value + '\''
+        + "value='" + value + '\''
+        + ", context=" + context
         + '}';
   }
 }

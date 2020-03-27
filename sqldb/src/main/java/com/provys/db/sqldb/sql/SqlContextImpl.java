@@ -4,6 +4,7 @@ import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.SqlTypeMap;
 import com.provys.db.sql.BindMap;
+import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Condition;
 import com.provys.db.sql.Expression;
@@ -117,6 +118,11 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
   public SqlExpression tableColumn(@Nullable NamePath table, SimpleName column, Class<?> type,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
     return new SqlExpressionColumn(this, table, column, type, fromContext);
+  }
+
+  @Override
+  public SqlExpression bindExpression(BindVariable bindVariable) {
+    return new SqlExpressionBind(this, bindVariable);
   }
 
   @Override

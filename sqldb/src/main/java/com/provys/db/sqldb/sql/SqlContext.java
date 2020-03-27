@@ -25,9 +25,11 @@ public interface SqlContext<S extends SqlSelect, A extends SqlSelectClause,
 
   /**
    * Append evaluated template to builder.
-   *  @param function is function to be applied
+   *
+   * @param function       is function to be applied
    * @param argumentAppend is procedure that appends given argument to builder
-   * @param builder is builder where whole expression should be appended
+   * @param builder        is builder where whole expression should be appended
    */
-  void append(Function function, List<? extends Consumer<CodeBuilder>> argumentAppend, CodeBuilder builder);
+  void append(Function function, List<? extends Consumer<CodeBuilder>> argumentAppend,
+      CodeBuilder builder);
 }

@@ -3,7 +3,6 @@ package com.provys.db.sql;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.common.exception.InternalException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Supported functions.

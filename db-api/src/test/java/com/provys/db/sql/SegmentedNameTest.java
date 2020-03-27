@@ -5,8 +5,12 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.jackson.JacksonMappers;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -63,6 +67,23 @@ class SegmentedNameTest {
     var value = SimpleName.valueOf("testName");
     assertThat(SegmentedName.ofSegments(List.of(value, value)).getSegments())
         .containsExactly(value, value);
+  }
+
+  static Stream<@Nullable Object[]> appendTest() {
+    return Stream.of(
+        new Object[]{SegmentedName.valueOf("sys.v$session"), "sys.v$session"}
+        , new Object[]{SegmentedName.valueOf("v$session"), "v$session"}
+        , new Object[]{SegmentedName.valueOf("schema.\"Test\""), "schema.\"Test\""}
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void appendTest(NamePathBase value, String result) {
+    CodeBuilder builder = new TestCodeBuilder();
+    value.append(builder);
+    assertThat(builder.build()).isEqualTo(result);
+    assertThat(builder.getBindsWithPos()).isEmpty();
   }
 
   @XmlRootElement(name = "SegmentedNameElement")

@@ -18,17 +18,17 @@ class SqlLiteralTest {
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
         new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), "testString"),
-            "{\"VALUE\":{\"STRING\":\"testString\"}}",
+            "{\"STRING\":\"testString\"}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><STRING>testString</STRING></VALUE></LITERAL>"}
+                + "<LITERAL><STRING>testString</STRING></LITERAL>"}
         , new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), 5),
-            "{\"VALUE\":{\"INTEGER\":5}}",
+            "{\"INTEGER\":5}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><INTEGER>5</INTEGER></VALUE></LITERAL>"}
+                + "<LITERAL><INTEGER>5</INTEGER></LITERAL>"}
         , new Object[]{new SqlLiteral(SqlContextImpl.getNoDbInstance(), DtUid.valueOf("123456")),
-            "{\"VALUE\":{\"UID\":123456}}",
+            "{\"UID\":123456}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<LITERAL><VALUE><UID>123456</UID></VALUE></LITERAL>"}
+                + "<LITERAL><UID>123456</UID></LITERAL>"}
     );
   }
 

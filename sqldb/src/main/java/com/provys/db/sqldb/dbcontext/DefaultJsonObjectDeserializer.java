@@ -7,14 +7,26 @@ import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.SqlTypeMap;
 import java.io.IOException;
 
+/**
+ * Deserializer for deserialization of Json objects of unknown type, using class name translated
+ * to type via type map.
+ */
 public class DefaultJsonObjectDeserializer extends JsonDeserializer<Object> {
 
   private final SqlTypeMap sqlTypeMap;
 
+  /**
+   * Create deserializer using specified type map.
+   *
+   * @param sqlTypeMap is type map that will be used to look up class based on name
+   */
   public DefaultJsonObjectDeserializer(SqlTypeMap sqlTypeMap) {
     this.sqlTypeMap = sqlTypeMap;
   }
 
+  /**
+   * Create deserializer using default type map.
+   */
   public DefaultJsonObjectDeserializer() {
     this(DefaultTypeMapImpl.getDefaultMap());
   }

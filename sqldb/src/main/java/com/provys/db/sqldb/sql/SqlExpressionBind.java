@@ -2,11 +2,12 @@ package com.provys.db.sqldb.sql;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
@@ -14,7 +15,7 @@ import com.provys.db.sql.Context;
 import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromContext;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @JsonAutoDetect(
@@ -24,42 +25,42 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     isGetterVisibility = Visibility.NONE,
     creatorVisibility = Visibility.NONE
 )
-@JsonRootName("LITERAL")
+@JsonRootName("BINDEXPRESSION")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
-@JsonSerialize(using = SqlLiteralSerializer.class)
-@JsonDeserialize(using = SqlLiteralDeserializer.class)
-final class SqlLiteral implements SqlExpression {
+final class SqlExpressionBind implements SqlExpression {
 
-  private final Object value;
+  @JsonUnwrapped
+  private final BindVariable bindVariable;
   private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
-  SqlLiteral(SqlContext<?, ?, ?, ?, ?, ?, ?> context, Object value) {
+  SqlExpressionBind(SqlContext<?, ?, ?, ?, ?, ?, ?> context, BindVariable bindVariable) {
     this.context = context;
-    this.value = value;
+    this.bindVariable = bindVariable;
   }
 
-  SqlLiteral(Object value) {
-    this(SqlContextImpl.getNoDbInstance(), value);
-  }
-
-  Object getValue() {
-    return value;
+  @JsonCreator
+  SqlExpressionBind(@JsonUnwrapped BindVariable bindVariable) {
+    this(SqlContextImpl.getNoDbInstance(), bindVariable);
   }
 
   @Override
   public Class<?> getType() {
-    return value.getClass();
+    return bindVariable.getType();
   }
 
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
-    if (targetContext.equals(context)) {
+    if (targetContext.equals(context)
+        && ((bindMap == null) || bindMap.get(bindVariable.getName()).equals(bindVariable))) {
       @SuppressWarnings("unchecked")
       var result = (E) this;
       return result;
     }
-    return targetContext.literal(value);
+    if (bindMap != null) {
+      return targetContext.bindExpression(bindVariable.getName(), bindMap);
+    }
+    return targetContext.bindExpression(bindVariable);
   }
 
   @Override
@@ -69,13 +70,13 @@ final class SqlLiteral implements SqlExpression {
 
   @Override
   public Collection<BindVariable> getBinds() {
-    return Collections.emptyList();
+    return List.of(bindVariable);
   }
 
   @Override
   public void append(CodeBuilder builder) {
-    builder
-        .applyString(stringBuilder -> context.getSqlTypeMap().appendLiteral(stringBuilder, value));
+    builder.append('?');
+    builder.addBind(bindVariable);
   }
 
   @Override
@@ -86,22 +87,22 @@ final class SqlLiteral implements SqlExpression {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlLiteral that = (SqlLiteral) o;
-    return value.equals(that.value)
+    SqlExpressionBind that = (SqlExpressionBind) o;
+    return bindVariable.equals(that.bindVariable)
         && context.equals(that.context);
   }
 
   @Override
   public int hashCode() {
-    int result = value.hashCode();
+    int result = bindVariable.hashCode();
     result = 31 * result + context.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
-    return "SqlLiteral{"
-        + "value=" + value
+    return "SqlExpressionBind{"
+        + "bindVariable=" + bindVariable
         + ", context=" + context
         + '}';
   }

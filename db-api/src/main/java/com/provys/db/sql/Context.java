@@ -56,6 +56,56 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
   }
 
   /**
+   * Create bind variable with supplied name, type and value.
+   *
+   * @param name is name of bind variable
+   * @param type is type of bind variable (java class)
+   * @param value is initial value of bind variable
+   * @param <T> represents type of value
+   * @return new bind variable with supplied characteristics
+   */
+  default <T> BindVariable bindVariable(BindName name, Class<T> type, @Nullable Object value) {
+    return new BindVariable(name, type, value);
+  }
+
+  /**
+   * Create bind variable with supplied name and type.
+   *
+   * @param name is name of bind variable
+   * @param type is type of bind variable (java class)
+   * @param <T> represents type of value
+   * @return new bind variable with supplied characteristics
+   */
+  default <T> BindVariable bindVariable(BindName name, Class<T> type) {
+    return bindVariable(name, type, null);
+  }
+
+  /**
+   * Create bind variable with supplied name, type and value.
+   *
+   * @param name is name of bind variable
+   * @param type is type of bind variable (java class)
+   * @param value is initial value of bind variable
+   * @param <T> represents type of value
+   * @return new bind variable with supplied characteristics
+   */
+  default <T> BindVariable bindVariable(String name, Class<T> type, @Nullable Object value) {
+    return new BindVariable(name, type, value);
+  }
+
+  /**
+   * Create bind variable with supplied name and type.
+   *
+   * @param name is name of bind variable
+   * @param type is type of bind variable (java class)
+   * @param <T> represents type of value
+   * @return new bind variable with supplied characteristics
+   */
+  default <T> BindVariable bindVariable(String name, Class<T> type) {
+    return bindVariable(name, type, null);
+  }
+
+  /**
    * Get unknown from context, that allows any source table, but does not contain any from elements.
    * Context is used for selects, embedded in expression or condition that are created without
    * context.
@@ -182,4 +232,26 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
    */
   E tableColumn(@Nullable NamePath table, SimpleName column, Class<?> type,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap);
+
+  /**
+   * Create bind expression based on supplied bind variable. Note that whenever BindMap is
+   * available, it is strongly recommended to use BindMap based version of this function to ensure
+   * sharing of BindVariables in statement.
+   *
+   * @param bindVariable is bind variable expression is built on
+   * @return expression built on bind variable
+   */
+  E bindExpression(BindVariable bindVariable);
+
+  /**
+   * Create bind expression based on supplied bind name and map. Expression will be built on bind
+   * variable from map, corresponding to given name.
+   *
+   * @param name is name of bind new expression is to be built on
+   * @param bindMap is used for lookup of variable based on name
+   * @return expression built on bind variable
+   */
+  default E bindExpression(BindName name, BindMap bindMap) {
+    return bindExpression(bindMap.get(name));
+  }
 }

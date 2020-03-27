@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Json serializer, using type name as available in Sql type map.
  */
-public class DefaultJsonObjectSerializer extends JsonSerializer<Object> {
+public class DefaultJsonClassSerializer extends JsonSerializer<Class<?>> {
 
   private final SqlTypeMap sqlTypeMap;
 
@@ -18,34 +18,26 @@ public class DefaultJsonObjectSerializer extends JsonSerializer<Object> {
    *
    * @param sqlTypeMap is type map used for translation of object type to name
    */
-  public DefaultJsonObjectSerializer(SqlTypeMap sqlTypeMap) {
+  public DefaultJsonClassSerializer(SqlTypeMap sqlTypeMap) {
     this.sqlTypeMap = sqlTypeMap;
   }
 
   /**
    * Create serializer using default map.
    */
-  public DefaultJsonObjectSerializer() {
+  public DefaultJsonClassSerializer() {
     this(DefaultTypeMapImpl.getDefaultMap());
   }
 
   @Override
-  public void serialize(Object o, JsonGenerator generator,
+  public void serialize(Class<?> type, JsonGenerator generator,
       SerializerProvider serializerProvider) throws IOException {
-    var inObject = true;
-    if (!generator.getOutputContext().inObject()) {
-      inObject = false;
-      generator.writeStartObject();
-    }
-    generator.writeObjectField(sqlTypeMap.getName(o.getClass()), o);
-    if (!inObject) {
-      generator.writeEndObject();
-    }
+    generator.writeString(sqlTypeMap.getName(type));
   }
 
   @Override
   public String toString() {
-    return "DefaultJsonObjectSerializer{"
+    return "DefaultJsonClassSerializer{"
         + "sqlTypeMap=" + sqlTypeMap + '}';
   }
 }

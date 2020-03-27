@@ -1,6 +1,9 @@
 package com.provys.db.sqldb.sql;
 
-import static com.provys.db.sql.Function.*;
+import static com.provys.db.sql.Function.ANY_NVL;
+import static com.provys.db.sql.Function.DATE_SYSDATE;
+import static com.provys.db.sql.Function.STRING_CHR;
+import static com.provys.db.sql.Function.STRING_CONCAT;
 
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.Function;
@@ -14,7 +17,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class SqlFunctionMapImpl implements SqlFunctionMap {
 
   /**
-   * Matcher to match arguments in template
+   * Matcher to match arguments in template.
    */
   private static final Pattern ARGUMENT_PATTERN = Pattern.compile("(\\{[0-9]+})");
 

@@ -1,5 +1,14 @@
 package com.provys.db.sqldb.sql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.provys.common.exception.InternalException;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
@@ -16,11 +25,24 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE,
+    getterVisibility = Visibility.NONE,
+    isGetterVisibility = Visibility.NONE,
+    creatorVisibility = Visibility.NONE
+)
+@JsonRootName("FUNCTION")
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 final class SqlFunction implements SqlExpression {
 
-  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
+  @JsonProperty("FUNCTION")
   private final Function function;
+  @JsonProperty("ARGUMENTS")
+  @JacksonXmlProperty(localName = "ARGUMENT")
+  @JacksonXmlElementWrapper(localName = "ARGUMENTS", useWrapping = true)
   private final List<SqlExpression> arguments;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
   private void verifyArguments() {
     var argumentTypes = function.getArguments();
@@ -68,6 +90,12 @@ final class SqlFunction implements SqlExpression {
     this(context, function, Arrays.asList(arguments), fromContext, bindMap);
   }
 
+  @JsonCreator
+  SqlFunction(@JsonProperty("FUNCTION") Function function,
+      @JsonProperty("ARGUMENTS") Collection<? extends SqlExpression> arguments) {
+    this(SqlContextImpl.getNoDbInstance(), function, arguments, null, null);
+  }
+
   @Override
   public Class<?> getType() {
     if (function.getResultAsArgument() >= 0) {
@@ -79,6 +107,11 @@ final class SqlFunction implements SqlExpression {
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    if (targetContext.equals(context) && (fromContext == null) && (bindMap == null)) {
+      @SuppressWarnings("unchecked")
+      var result = (E) this;
+      return result;
+    }
     return targetContext.function(function, arguments, fromContext, bindMap);
   }
 
@@ -125,25 +158,25 @@ final class SqlFunction implements SqlExpression {
       return false;
     }
     SqlFunction that = (SqlFunction) o;
-    return context.equals(that.context)
-        && function == that.function
-        && arguments.equals(that.arguments);
+    return function == that.function
+        && arguments.equals(that.arguments)
+        && context.equals(that.context);
   }
 
   @Override
   public int hashCode() {
-    int result = context.hashCode();
-    result = 31 * result + (function != null ? function.hashCode() : 0);
+    int result = function != null ? function.hashCode() : 0;
     result = 31 * result + arguments.hashCode();
+    result = 31 * result + context.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
     return "SqlFunction{"
-        + "context=" + context
-        + ", function=" + function
+        + "function=" + function
         + ", arguments=" + arguments
+        + ", context=" + context
         + '}';
   }
 }

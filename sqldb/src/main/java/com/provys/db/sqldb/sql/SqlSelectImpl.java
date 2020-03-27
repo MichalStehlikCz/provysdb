@@ -8,6 +8,8 @@ import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindName;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
+import com.provys.db.sql.Context;
+import com.provys.db.sql.Condition;
 import com.provys.db.sql.FromClause;
 import com.provys.db.sql.FromContext;
 import com.provys.db.sql.FromElement;
@@ -16,8 +18,6 @@ import com.provys.db.sql.SegmentedName;
 import com.provys.db.sql.Select;
 import com.provys.db.sql.SelectClause;
 import com.provys.db.sql.SelectStatement;
-import com.provys.db.sql.Context;
-import com.provys.db.sql.Condition;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -31,12 +31,12 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 final class SqlSelectImpl implements SqlSelect, FromContext {
 
-  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
   private final @Nullable FromContext parentContext;
   private final SqlSelectClause selectClause;
   private final SqlFromClause fromClause;
   private final @Nullable SqlCondition whereClause;
   private final Map<BindName, BindVariable> bindsByName;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
   SqlSelectImpl(SqlContext<?, ?, ?, ?, ?, ?, ?> context, SelectClause selectClause,
       FromClause fromClause, @Nullable Condition whereClause, @Nullable FromContext parentContext,
@@ -126,40 +126,6 @@ final class SqlSelectImpl implements SqlSelect, FromContext {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SqlSelectImpl sqlSelect = (SqlSelectImpl) o;
-    return Objects.equals(context, sqlSelect.context)
-        && Objects.equals(selectClause, sqlSelect.selectClause)
-        && Objects.equals(fromClause, sqlSelect.fromClause)
-        && Objects.equals(whereClause, sqlSelect.whereClause);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = context != null ? context.hashCode() : 0;
-    result = 31 * result + (selectClause != null ? selectClause.hashCode() : 0);
-    result = 31 * result + (fromClause != null ? fromClause.hashCode() : 0);
-    result = 31 * result + (whereClause != null ? whereClause.hashCode() : 0);
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return "SqlSelectImpl{"
-        + "context=" + context
-        + ", selectClause=" + selectClause
-        + ", fromClause=" + fromClause
-        + ", whereClause=" + whereClause
-        + '}';
-  }
-
-  @Override
   public @Nullable FromElement getFromElement(NamePath alias) {
     // try to find alias in from clause
     var element = fromClause.getElementByAlias(alias);
@@ -211,8 +177,8 @@ final class SqlSelectImpl implements SqlSelect, FromContext {
       // no alias only allowed when only single element is in from clause
       var elements = fromClause.getElements();
       if ((elements.size() != 1) || !elements.get(0).equals(fromElement)) {
-        throw new InternalException("Cannot use from element without alias in query with " +
-            "multiple elements");
+        throw new InternalException("Cannot use from element without alias in query with "
+            + "multiple elements");
       }
       return null;
     }
@@ -243,5 +209,39 @@ final class SqlSelectImpl implements SqlSelect, FromContext {
     }
     castNonNull(parentContext); // inFrom is set to false in if with parentContext!=null...
     return getDefaultAliasFromParent(alias, fromElement);
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SqlSelectImpl sqlSelect = (SqlSelectImpl) o;
+    return Objects.equals(context, sqlSelect.context)
+        && Objects.equals(selectClause, sqlSelect.selectClause)
+        && Objects.equals(fromClause, sqlSelect.fromClause)
+        && Objects.equals(whereClause, sqlSelect.whereClause);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = context != null ? context.hashCode() : 0;
+    result = 31 * result + (selectClause != null ? selectClause.hashCode() : 0);
+    result = 31 * result + (fromClause != null ? fromClause.hashCode() : 0);
+    result = 31 * result + (whereClause != null ? whereClause.hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "SqlSelectImpl{"
+        + "context=" + context
+        + ", selectClause=" + selectClause
+        + ", fromClause=" + fromClause
+        + ", whereClause=" + whereClause
+        + '}';
   }
 }

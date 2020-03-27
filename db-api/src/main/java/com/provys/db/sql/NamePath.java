@@ -2,6 +2,7 @@ package com.provys.db.sql;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @JsonSerialize(using = NamePathSerializer.class)
 @JsonDeserialize(using = NamePathDeserializer.class)
-public interface NamePath {
+public interface NamePath extends Serializable {
 
   /**
    * Textual representation of identifier(s) delimited by .

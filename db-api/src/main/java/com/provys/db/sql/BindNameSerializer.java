@@ -6,17 +6,17 @@ import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import java.io.IOException;
 
 /**
- * Jackson serializer for {@link SimpleName} class.
+ * Jackson serializer for {@link BindName} class.
  */
-public class SimpleNameSerializer extends StdScalarSerializer<SimpleName> {
+public class BindNameSerializer extends StdScalarSerializer<BindName> {
 
-  protected SimpleNameSerializer() {
-    super(SimpleName.class);
+  protected BindNameSerializer() {
+    super(BindName.class);
   }
 
   @Override
-  public void serialize(SimpleName simpleName, JsonGenerator jsonGenerator,
+  public void serialize(BindName bindName, JsonGenerator jsonGenerator,
       SerializerProvider serializerProvider) throws IOException {
-    jsonGenerator.writeString(simpleName.getText());
+    jsonGenerator.writeString(bindName.getName());
   }
 }

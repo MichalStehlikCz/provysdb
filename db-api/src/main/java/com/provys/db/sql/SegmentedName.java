@@ -17,6 +17,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonDeserialize(using = SegmentedNameDeserializer.class)
 public final class SegmentedName extends NamePathBase {
 
+  private static final long serialVersionUID = 361395813659206613L;
+
   /**
    * Create segmented name from segments.
    *
@@ -90,7 +92,13 @@ public final class SegmentedName extends NamePathBase {
 
   @Override
   public void append(CodeBuilder builder) {
+    var first = true;
     for (var segment : segments) {
+      if (first) {
+        first = false;
+      } else {
+        builder.append('.');
+      }
       builder.append(segment.getText());
     }
   }

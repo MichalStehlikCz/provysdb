@@ -205,7 +205,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     /**
-     * Set value of field value
+     * Set value of field value.
      *
      * @param newValue is new value to be set
      */

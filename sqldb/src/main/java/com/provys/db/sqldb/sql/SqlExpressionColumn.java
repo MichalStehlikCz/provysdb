@@ -1,5 +1,14 @@
 package com.provys.db.sqldb.sql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.CodeBuilder;
@@ -8,17 +17,32 @@ import com.provys.db.sql.Expression;
 import com.provys.db.sql.FromContext;
 import com.provys.db.sql.NamePath;
 import com.provys.db.sql.SimpleName;
+import com.provys.db.sqldb.dbcontext.DefaultJsonClassDeserializer;
+import com.provys.db.sqldb.dbcontext.DefaultJsonClassSerializer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE,
+    getterVisibility = Visibility.NONE,
+    isGetterVisibility = Visibility.NONE,
+    creatorVisibility = Visibility.NONE
+)
+@JsonRootName("COLUMN")
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 final class SqlExpressionColumn implements SqlExpression {
 
-  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
+  @JsonProperty("TABLE")
   private final @Nullable NamePath  table;
+  @JsonProperty("COLUMN")
   private final SimpleName column;
+  @JsonProperty("TYPE")
+  @JsonSerialize(using = DefaultJsonClassSerializer.class)
   private final Class<?> type;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
   SqlExpressionColumn(SqlContext<?, ?, ?, ?, ?, ?, ?> context,
       @Nullable NamePath table, SimpleName column, Class<?> type,
@@ -40,6 +64,14 @@ final class SqlExpressionColumn implements SqlExpression {
     }
     this.column = column;
     this.type = type;
+  }
+
+  @JsonCreator
+  SqlExpressionColumn(@JsonProperty("TABLE") @Nullable NamePath table,
+      @JsonProperty("COLUMN") SimpleName column,
+      @JsonProperty("TYPE") @JsonDeserialize(using = DefaultJsonClassDeserializer.class)
+          Class<?> type) {
+    this(SqlContextImpl.getNoDbInstance(), table, column, type, null);
   }
 
   @Override
@@ -69,6 +101,11 @@ final class SqlExpressionColumn implements SqlExpression {
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
+    if (targetContext.equals(context) && (fromContext == null) && (bindMap == null)) {
+      @SuppressWarnings("unchecked")
+      var result = (E) this;
+      return result;
+    }
     return targetContext.tableColumn(table, column, type, fromContext, bindMap);
   }
 
@@ -81,28 +118,28 @@ final class SqlExpressionColumn implements SqlExpression {
       return false;
     }
     SqlExpressionColumn that = (SqlExpressionColumn) o;
-    return context.equals(that.context)
-        && Objects.equals(table, that.table)
+    return Objects.equals(table, that.table)
         && column.equals(that.column)
-        && (type == that.type);
+        && (type == that.type)
+        && context.equals(that.context);
   }
 
   @Override
   public int hashCode() {
-    int result = context.hashCode();
-    result = 31 * result + (table != null ? table.hashCode() : 0);
+    int result = table != null ? table.hashCode() : 0;
     result = 31 * result + column.hashCode();
     result = 31 * result + type.hashCode();
+    result = 31 * result + context.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
     return "SqlExpressionColumn{"
-        + "context=" + context
-        + ", table=" + table
+        + "table=" + table
         + ", column=" + column
         + ", type=" + type
+        + ", context=" + context
         + '}';
   }
 }

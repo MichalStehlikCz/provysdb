@@ -6,17 +6,17 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import java.io.IOException;
 
 /**
- * Jackson deserializer for {@link SimpleName} class.
+ * Jackson deserializer for {@link BindName} class.
  */
-public class SimpleNameDeserializer extends StdScalarDeserializer<SimpleName> {
+public class BindNameDeserializer extends StdScalarDeserializer<BindName> {
 
-  protected SimpleNameDeserializer() {
-    super(SimpleName.class);
+  protected BindNameDeserializer() {
+    super(BindName.class);
   }
 
   @Override
-  public SimpleName deserialize(JsonParser jsonParser,
+  public BindName deserialize(JsonParser jsonParser,
       DeserializationContext deserializationContext) throws IOException {
-    return SimpleName.valueOf(jsonParser.getText());
+    return BindName.valueOf(jsonParser.getText());
   }
 }

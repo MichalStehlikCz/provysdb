@@ -1,16 +1,19 @@
 package com.provys.db.sql;
 
 import com.provys.common.exception.InternalException;
+import java.io.Serializable;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Immutable data class representing bind variable in SQL statement.
- * Note that while BindVariable strives to be immutable, this contract might be broken if mutable
- * object is assigned as value. System does not restrict assignment of such object, but it is
- * generally only recommended to assign value objects to bind variables.
+ * Immutable data class representing bind variable in SQL statement. Note that while BindVariable
+ * strives to be immutable, this contract might be broken if mutable object is assigned as value.
+ * System does not restrict assignment of such object, but it is generally only recommended to
+ * assign value objects to bind variables.
  */
-public final class BindVariable {
+public final class BindVariable implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private final BindName name;
   private final Class<?> type;
@@ -19,8 +22,8 @@ public final class BindVariable {
   /**
    * Create new bind variable.
    *
-   * @param name is name of new bind variable
-   * @param type is type of new bind variable
+   * @param name  is name of new bind variable
+   * @param type  is type of new bind variable
    * @param value is default value for bind variable
    */
   public BindVariable(BindName name, Class<?> type, @Nullable Object value) {
@@ -35,8 +38,8 @@ public final class BindVariable {
   /**
    * Create new bind variable.
    *
-   * @param name is name of new bind variable
-   * @param type is type of new bind variable
+   * @param name  is name of new bind variable
+   * @param type  is type of new bind variable
    * @param value is default value for bind variable
    */
   public BindVariable(String name, Class<?> type, @Nullable Object value) {
@@ -69,6 +72,39 @@ public final class BindVariable {
    */
   public @Nullable Object getValue() {
     return value;
+  }
+
+  /**
+   * Supports serialization via SerializationProxy.
+   *
+   * @return proxy, corresponding to this BindVariable
+   */
+  private Object writeReplace() {
+    return new SerializationProxy(this);
+  }
+
+  private static final class SerializationProxy implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private @Nullable BindName name;
+    private @Nullable Class<?> type;
+    // we know that serialization might fail... and we do not care, at least not at the moment
+    @SuppressWarnings({"java:S1948", "NonSerializableFieldInSerializableClass"})
+    private @Nullable Object value;
+
+    SerializationProxy() {
+    }
+
+    SerializationProxy(BindVariable bindVariable) {
+      this.name = bindVariable.getName();
+      this.type = bindVariable.getType();
+      this.value = bindVariable.getValue();
+    }
+
+    private Object readResolve() {
+      return new BindVariable(Objects.requireNonNull(name), Objects.requireNonNull(type), value);
+    }
   }
 
   @Override
