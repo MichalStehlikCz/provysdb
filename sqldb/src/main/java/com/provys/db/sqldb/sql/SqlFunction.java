@@ -107,7 +107,7 @@ final class SqlFunction implements SqlExpression {
   @Override
   public <E extends Expression> E transfer(Context<?, ?, ?, ?, ?, ?, E> targetContext,
       @Nullable FromContext fromContext, @Nullable BindMap bindMap) {
-    if (targetContext.equals(context) && (fromContext == null) && (bindMap == null)) {
+    if ((fromContext == null) && (bindMap == null) && targetContext.equals(context)) {
       @SuppressWarnings("unchecked")
       var result = (E) this;
       return result;

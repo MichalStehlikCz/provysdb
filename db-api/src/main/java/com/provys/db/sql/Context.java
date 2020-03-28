@@ -158,6 +158,18 @@ public interface Context<S extends Select, A extends SelectClause, C extends Sel
       @Nullable FromContext parentFrom, @Nullable BindMap bindMap);
 
   /**
+   * Create column based on specified expression.
+   *
+   * @param expression is expression column is based on
+   * @param alias is column alias, optional
+   * @param fromContext is used to validate / translate supplied expression
+   * @param bindMap is used to translate bind variables in supplied expression
+   * @return column based on specified expression
+   */
+  C column(Expression expression, @Nullable SimpleName alias, @Nullable FromContext fromContext,
+      @Nullable BindMap bindMap);
+
+  /**
    * Create from clause, containing specified elements.
    *
    * @param fromElements is list of from elements contained in from clause

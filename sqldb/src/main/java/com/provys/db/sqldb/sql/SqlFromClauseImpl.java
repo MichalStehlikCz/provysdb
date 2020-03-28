@@ -1,5 +1,16 @@
 package com.provys.db.sqldb.sql;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.provys.common.exception.InternalException;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindVariable;
@@ -19,8 +30,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * separated list, each from element on separate line. Implementation assumes that list is
  * relatively small, thus it is not necessary to index list by alias for faster access.
  */
+@JsonAutoDetect(
+    fieldVisibility = Visibility.NONE,
+    setterVisibility = Visibility.NONE,
+    getterVisibility = Visibility.NONE,
+    isGetterVisibility = Visibility.NONE,
+    creatorVisibility = Visibility.NONE
+)
+@JsonRootName("FROMCLAUSE")
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
+@JsonSerialize(using = SqlFromClauseImplSerializer.class)
+@JsonDeserialize(using = SqlFromClauseImplDeserializer.class)
 final class SqlFromClauseImpl implements SqlFromClause {
 
+  //@JsonProperty("ELEMS")
+  //@JacksonXmlElementWrapper(useWrapping = false)
   private final List<SqlFromElement> fromElements;
   private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
@@ -30,6 +54,15 @@ final class SqlFromClauseImpl implements SqlFromClause {
     this.fromElements = fromElements.stream()
         .map(fromElement -> fromElement.transfer(context, bindMap))
         .collect(Collectors.toUnmodifiableList());
+  }
+
+  /**
+   * Constructor used for deserialization from Json / Xml.
+   *
+   * @param fromElements is collection of from elements in new clause
+   */
+  SqlFromClauseImpl(Collection<? extends FromElement> fromElements) {
+    this(SqlContextImpl.getNoDbInstance(), fromElements, null);
   }
 
   @Override
@@ -65,6 +98,11 @@ final class SqlFromClauseImpl implements SqlFromClause {
   @Override
   public List<FromElement> getElements() {
     return Collections.unmodifiableList(fromElements);
+  }
+
+  @SuppressWarnings("SuspiciousGetterSetter") // intentional, as normal getter uses inherited type
+  List<SqlFromElement> getSqlElements() {
+    return fromElements;
   }
 
   @Override

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 /**
  * Class contains Jackson annotation for {@link SqlExpression}. This way, we avoid cyclical
  * dependency between SqlExpression and its implementations (even though it is only formal... if we
- * create another implementation of SqlExpression, it will fail on de-serialisation)
+ * create another implementation of SqlExpression, it will fail on serialisation)
  */
 @SuppressWarnings("MarkerInterface")
 @JsonRootName("EXPRESSION")

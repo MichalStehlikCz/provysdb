@@ -24,6 +24,8 @@ public class JacksonModule extends SimpleModule {
   public JacksonModule() {
     super("ProvysSqlElementModule");
     setMixInAnnotation(BindVariable.class, BindVariableMixIn.class);
+    setMixInAnnotation(SqlSelectColumn.class, SqlSelectColumnMixIn.class);
+    setMixInAnnotation(SqlFromElement.class, SqlFromElementMixIn.class);
     setMixInAnnotation(SqlExpression.class, SqlExpressionMixIn.class);
     setDeserializerModifier(new XmlBeanDeserializerModifier());
   }

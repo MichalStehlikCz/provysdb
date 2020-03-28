@@ -4,14 +4,19 @@ import static org.assertj.core.api.Assertions.*;
 import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
 import static org.mockito.Mockito.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.provys.common.jackson.JacksonMappers;
 import com.provys.db.sql.BindMap;
 import com.provys.db.sql.BindName;
 import com.provys.db.sql.BindVariable;
 import com.provys.db.sql.BindWithPos;
 import com.provys.db.sql.CodeBuilder;
 import com.provys.db.sql.SegmentedName;
+import com.provys.db.sql.SimpleName;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -223,5 +228,63 @@ class SqlFromClauseImplTest {
     assertThat(builder.build()).isEqualTo("FROM\n    table1\n  , table2\n");
     assertThat(builder.getBindsWithPos())
         .containsExactly(new BindWithPos(BindName.valueOf("name1"), String.class, List.of(1)));
+  }
+
+  static Stream<Object[]> jacksonTest() {
+    return Stream.of(
+        new Object[]{
+            new SqlFromClauseImpl(SqlContextImpl.getNoDbInstance(), List.of(
+                new SqlFromTable(SqlContextImpl.getNoDbInstance(),
+                    SimpleName.valueOf("brc_record_tb"),
+                    SimpleName.valueOf("rec"))), null),
+            "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}}]",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROMCLAUSE><ELEM>"
+                + "<FROMTABLE><TABLENAME>brc_record_tb</TABLENAME><ALIAS>rec</ALIAS></FROMTABLE>"
+                + "</ELEM></FROMCLAUSE>"}
+        , new Object[]{new SqlFromClauseImpl(SqlContextImpl.getNoDbInstance(), List.of(
+            new SqlFromTable(SqlContextImpl.getNoDbInstance(), SimpleName.valueOf("brc_record_tb"),
+                SimpleName.valueOf("rec")), new SqlFromTable(SqlContextImpl.getNoDbInstance(),
+                SegmentedName.valueOf("brc.brc_record_tb"), null)), null),
+            "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}},"
+                + "{\"FROMTABLE\":{\"TABLENAME\":\"brc.brc_record_tb\"}}]",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROMCLAUSE><ELEM>"
+                + "<FROMTABLE><TABLENAME>brc_record_tb</TABLENAME><ALIAS>rec</ALIAS></FROMTABLE>"
+                + "</ELEM><ELEM>"
+                + "<FROMTABLE><TABLENAME>brc.brc_record_tb</TABLENAME><ALIAS/></FROMTABLE>"
+                + "</ELEM></FROMCLAUSE>"
+        }
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void serializeToJsonTest(SqlFromClauseImpl value, String json, String xml)
+      throws JsonProcessingException {
+    assertThat(JacksonMappers.getJsonMapper().writeValueAsString(value))
+        .isEqualTo(json);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void deserializeFromJsonTest(SqlFromClauseImpl value, String json, String xml)
+      throws IOException {
+    assertThat(JacksonMappers.getJsonMapper().readValue(json, SqlFromClauseImpl.class))
+        .isEqualTo(value);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void serializeToXmlTest(SqlFromClauseImpl value, String json, String xml)
+      throws JsonProcessingException {
+    assertThat(JacksonMappers.getXmlMapper().writeValueAsString(value))
+        .isEqualTo(xml);
+  }
+
+  @ParameterizedTest
+  @MethodSource("jacksonTest")
+  void deserializeFromXmlTest(SqlFromClauseImpl value, String json, String xml)
+      throws IOException {
+    assertThat(JacksonMappers.getXmlMapper().readValue(xml, SqlFromClauseImpl.class))
+        .isEqualTo(value);
   }
 }

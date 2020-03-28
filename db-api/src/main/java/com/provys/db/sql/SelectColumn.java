@@ -14,5 +14,5 @@ public interface SelectColumn extends Element {
    * @return select column cloned to specified context
    */
   <C extends SelectColumn> C transfer(Context<?, ?, C, ?, ?, ?, ?> targetContext,
-      @Nullable BindMap bindMap);
+      @Nullable FromContext fromContext, @Nullable BindMap bindMap);
 }

@@ -44,6 +44,7 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
    *
    * @param dbContext   is database context that will provide connections
    * @param functionMap is mapping of sql functions to templates
+   * @return Sql context, wrapping supplied database context and function map
    */
   public static SqlContextImpl forDbContext(DbContext dbContext, SqlFunctionMap functionMap) {
     if (dbContext.equals(NoDbContext.getInstance())
