@@ -2,9 +2,9 @@ package com.provys.db.sqldb.sql;
 
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindWithPos;
-import com.provys.db.sql.SelectStatement;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindWithPos;
+import com.provys.db.query.SelectStatement;
 import java.util.Collection;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;

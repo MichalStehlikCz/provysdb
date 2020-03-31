@@ -21,7 +21,7 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
   /**
    * Sql statement this prepared statement is built on.
    *
-   * @return sql statement this prepared statement is built on
+   * @return com.provys.db.sql statement this prepared statement is built on
    */
   String getSql();
 

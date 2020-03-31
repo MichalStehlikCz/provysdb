@@ -1,12 +1,12 @@
 package com.provys.db.sqldb.sql;
 
-import static com.provys.db.sql.Function.ANY_NVL;
-import static com.provys.db.sql.Function.DATE_SYSDATE;
-import static com.provys.db.sql.Function.STRING_CHR;
-import static com.provys.db.sql.Function.STRING_CONCAT;
+import static com.provys.db.query.Function.ANY_NVL;
+import static com.provys.db.query.Function.DATE_SYSDATE;
+import static com.provys.db.query.Function.STRING_CHR;
+import static com.provys.db.query.Function.STRING_CONCAT;
 
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Function;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Function;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;

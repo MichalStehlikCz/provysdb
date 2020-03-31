@@ -44,7 +44,7 @@ public interface DbContext {
   /**
    * Sql type map to be used with connections, retrieved from this database context.
    *
-   * @return sql type adapter map used in given database context
+   * @return com.provys.db.sql type adapter map used in given database context
    */
   SqlTypeMap getSqlTypeMap();
 }

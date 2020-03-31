@@ -32,7 +32,7 @@ public interface FromClause {
   /**
    * Appends from clause.
    *
-   * @param builder is CodeBuilder, used to construct sql text
+   * @param builder is CodeBuilder, used to construct com.provys.db.sql text
    */
   void appendFrom(CodeBuilder builder);
 }

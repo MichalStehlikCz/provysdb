@@ -1,7 +1,7 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.CodeIdent;
-import com.provys.db.sql.CodeIdentBuilder;
+import com.provys.db.query.CodeIdent;
+import com.provys.db.query.CodeIdentBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class CodeIdentBuilderImpl implements CodeIdentBuilder {

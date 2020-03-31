@@ -7,8 +7,8 @@ import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindWithPos;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindWithPos;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 class SelectStatementImplTest {
 
   /**
-   * Used in this package instead of executed sql statement.
+   * Used in this package instead of executed com.provys.db.sql statement.
    */
   private static final String SQL = "test query";
 

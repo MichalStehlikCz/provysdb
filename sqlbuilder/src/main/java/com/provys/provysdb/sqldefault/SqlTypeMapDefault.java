@@ -13,7 +13,7 @@ public class SqlTypeMapDefault implements SqlTypeMap {
 
   @Override
   public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
-    throw new InternalException("No sql type adapter found for class " + type);
+    throw new InternalException("No com.provys.db.sql type adapter found for class " + type);
   }
 
   @Override

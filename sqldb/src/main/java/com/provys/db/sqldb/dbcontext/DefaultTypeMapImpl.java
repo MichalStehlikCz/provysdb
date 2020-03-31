@@ -139,7 +139,7 @@ public final class DefaultTypeMapImpl implements SqlTypeMap {
     if (result == null) {
       result = getAdapterInterface(type, adaptersByType);
       if (result == null) {
-        throw new InternalException("No sql type adapter found for class " + type);
+        throw new InternalException("No com.provys.db.sql type adapter found for class " + type);
       }
     }
     return result;

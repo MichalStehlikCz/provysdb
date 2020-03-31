@@ -1,11 +1,7 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.BindWithPos;
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.CodeIdent;
-import com.provys.db.sql.CodeIdentBuilder;
+import com.provys.db.sqldb.sql.CodeBuilder;
+import com.provys.db.sqldb.sql.CodeIdent;
 import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -65,6 +61,19 @@ public class CodeBuilderImpl implements CodeBuilder {
   @Override
   public CodeBuilder append(BigInteger number) {
     return append(number.toString());
+  }
+
+  @Override
+  public void append(NamePath name) {
+    var first = true;
+    for (var segment : name.getSegments()) {
+      if (first) {
+        first = false;
+      } else {
+        builder.append('.');
+      }
+      builder.append(segment.getText());
+    }
   }
 
   @Override

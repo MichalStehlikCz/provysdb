@@ -1,6 +1,6 @@
 package com.provys.db.sqldb.sql;
 
-import com.provys.db.sql.Function;
+import com.provys.db.query.Function;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;

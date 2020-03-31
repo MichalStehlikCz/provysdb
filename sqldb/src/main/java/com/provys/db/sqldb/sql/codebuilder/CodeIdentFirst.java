@@ -1,6 +1,6 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.CodeIdent;
+import com.provys.db.query.CodeIdent;
 
 /**
  * Ident that has different prefix on the first line and subsequent lines. Note that unlike other

@@ -182,9 +182,9 @@ class SqlFactoryDefaultTest {
   @Test
   void eq() {
     var builder = CodeBuilderFactory.getCodeBuilder();
-    var first = sql.literal(100);
-    var second = sql.literal(200);
-    var condition = sql.eq(first, second);
+    var first = com.provys.db.sql.literal(100);
+    var second = com.provys.db.sql.literal(200);
+    var condition = com.provys.db.sql.eq(first, second);
     assertThat(condition.isEmpty()).isFalse();
     condition.addSql(builder);
     assertThat(builder.build()).isEqualTo("(100=200)");
@@ -194,17 +194,17 @@ class SqlFactoryDefaultTest {
   @Test
   void eqSame() {
     var builder = CodeBuilderFactory.getCodeBuilder();
-    var first = sql.literal(100);
-    var second = sql.literal(100);
-    var condition = sql.eq(first, second);
+    var first = com.provys.db.sql.literal(100);
+    var second = com.provys.db.sql.literal(100);
+    var condition = com.provys.db.sql.eq(first, second);
     assertThat(condition.isEmpty()).isTrue();
   }
 
   @Test
   void isNull() {
     var builder = CodeBuilderFactory.getCodeBuilder();
-    var expression = sql.literal(100);
-    var condition = sql.isNull(expression);
+    var expression = com.provys.db.sql.literal(100);
+    var condition = com.provys.db.sql.isNull(expression);
     assertThat(condition.isEmpty()).isFalse();
     condition.addSql(builder);
     assertThat(builder.build()).isEqualTo("(100 IS NULL)");
@@ -214,9 +214,9 @@ class SqlFactoryDefaultTest {
   @Test
   void nvl() {
     var builder = CodeBuilderFactory.getCodeBuilder();
-    var first = sql.literal(100);
-    var second = sql.column("second", Integer.class);
-    var nvl = sql.nvl(first, second);
+    var first = com.provys.db.sql.literal(100);
+    var second = com.provys.db.sql.column("second", Integer.class);
+    var nvl = com.provys.db.sql.nvl(first, second);
     assertThat(nvl.getType()).isEqualTo(Integer.class);
     nvl.addSql(builder);
     assertThat(builder.build()).isEqualTo("NVL(100, second)");
@@ -226,10 +226,10 @@ class SqlFactoryDefaultTest {
   @Test
   void coalesce() {
     var builder = CodeBuilderFactory.getCodeBuilder();
-    var first = sql.literal(100);
-    var second = sql.column("second", Integer.class);
-    var third = sql.literal(555);
-    var coalesce = sql.coalesce(first, second, third);
+    var first = com.provys.db.sql.literal(100);
+    var second = com.provys.db.sql.column("second", Integer.class);
+    var third = com.provys.db.sql.literal(555);
+    var coalesce = com.provys.db.sql.coalesce(first, second, third);
     assertThat(coalesce.getType()).isEqualTo(Integer.class);
     coalesce.addSql(builder);
     assertThat(builder.build()).isEqualTo("COALESCE(100, second, 555)");

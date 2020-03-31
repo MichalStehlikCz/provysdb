@@ -66,9 +66,9 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
   }
 
   /**
-   * Value of field sql.
+   * Value of field com.provys.db.sql.
    *
-   * @return value of field sql
+   * @return value of field com.provys.db.sql
    */
   public S getSql() {
     return sql;
@@ -139,7 +139,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
    * @param columnName is name of column; it should be column in last item, added to from clause. It
    *                   must be valid column name (in "" or first character letter and remaining
    *                   letters, numbers and characters $ and #). Use columnSql to add columns based
-   *                   on sql expressions
+   *                   on com.provys.db.sql expressions
    * @return self to support fluent build
    */
   public SelectBuilderImpl<S> column(String columnName) {
@@ -257,7 +257,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
   /**
    * Add where condition.
    *
-   * @param where is sql where condition to be added (or null, in tht case nothing is added)
+   * @param where is com.provys.db.sql where condition to be added (or null, in tht case nothing is added)
    * @return self to support fluent build
    */
   public T where(@Nullable Condition where) {
@@ -367,7 +367,7 @@ public abstract class SelectBuilderBaseImpl<T extends SelectBuilderBaseImpl<T, S
   @Override
   public String toString() {
     return "SelectBuilderBaseImpl{"
-        + "sql=" + sql
+        + "com.provys.db.sql=" + sql
         + ", columnByName=" + columnByName
         + ", tables=" + tables
         + ", tableByAlias=" + tableByAlias

@@ -2,11 +2,11 @@ package com.provys.db.sqldb.sql;
 
 import static org.assertj.core.api.Assertions.*;
 
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.BindWithPos;
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Function;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.BindWithPos;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Function;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;

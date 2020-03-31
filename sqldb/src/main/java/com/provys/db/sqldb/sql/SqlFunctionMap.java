@@ -1,13 +1,13 @@
 package com.provys.db.sqldb.sql;
 
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Function;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Function;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Supports translation of function expression to its sql representation via templates.
+ * Supports translation of function expression to its com.provys.db.sql representation via templates.
  */
 public interface SqlFunctionMap {
 

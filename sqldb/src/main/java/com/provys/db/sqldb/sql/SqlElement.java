@@ -1,7 +1,7 @@
 package com.provys.db.sqldb.sql;
 
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Element;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Element;
 
 /**
  * Usually used on descendants ofs {@link Element}, adds ability to append statement to
@@ -14,7 +14,7 @@ public interface SqlElement {
    * elements might also have secondary place (e.g. join clause might want to add additional hint).
    * Such situations are solved by additional procedures, specific for given type of statement.
    *
-   * @param builder is code builder to which sql text should be appended
+   * @param builder is code builder to which com.provys.db.sql text should be appended
    */
   void append(CodeBuilder builder);
 }

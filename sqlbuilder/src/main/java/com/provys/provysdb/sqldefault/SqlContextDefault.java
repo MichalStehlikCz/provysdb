@@ -19,12 +19,12 @@ public class SqlContextDefault implements SqlContext {
 
   @Override
   public DbConnection getConnection() {
-    throw new InternalException("Cannot retrieve connection from no-db sql context");
+    throw new InternalException("Cannot retrieve connection from no-db com.provys.db.sql context");
   }
 
   @Override
   public DbConnection getConnection(String dbToken) {
-    throw new InternalException("Cannot retrieve connection from no-db sql context");
+    throw new InternalException("Cannot retrieve connection from no-db com.provys.db.sql context");
   }
 
   @Override

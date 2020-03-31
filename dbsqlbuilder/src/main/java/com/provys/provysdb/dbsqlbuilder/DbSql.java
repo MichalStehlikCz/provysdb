@@ -19,7 +19,7 @@ public interface DbSql extends Sql {
   /**
    * Used Sql type adapter map.
    *
-   * @return used sql type adapter map (taken from underlying datasource)
+   * @return used com.provys.db.sql type adapter map (taken from underlying datasource)
    */
   SqlTypeMap getSqlTypeMap();
 

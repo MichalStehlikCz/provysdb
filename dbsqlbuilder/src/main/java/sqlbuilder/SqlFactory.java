@@ -310,7 +310,7 @@ public final class SqlFactory {
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @return created column
    */
   public static TableColumn column(String columnName) {
@@ -323,7 +323,7 @@ public final class SqlFactory {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @return created column
    */
   public static TableColumn column(String tableAlias, String columnName) {
@@ -336,7 +336,7 @@ public final class SqlFactory {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param alias      is alias to be used for column
    * @return created column
    */
@@ -428,7 +428,7 @@ public final class SqlFactory {
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
@@ -443,7 +443,7 @@ public final class SqlFactory {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
@@ -459,7 +459,7 @@ public final class SqlFactory {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param alias      is alias to be used for column
    * @param clazz      is type of return value of column
    * @param <T>        is Java type corresponding to values in given column
@@ -716,7 +716,7 @@ public final class SqlFactory {
   }
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression
@@ -727,7 +727,7 @@ public final class SqlFactory {
   }
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression

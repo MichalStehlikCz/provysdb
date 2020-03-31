@@ -58,7 +58,7 @@ final class SqlColumnSql<T> extends ColumnExpressionBaseWithType<T> {
   @Override
   public String toString() {
     return "SqlColumnSql{"
-        + "sql='" + sql + '\''
+        + "com.provys.db.sql='" + sql + '\''
         + ", binds=" + binds
         + ", " + super.toString() + '}';
   }

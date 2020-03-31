@@ -6,8 +6,8 @@ import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import com.provys.db.dbcontext.DbRowMapper;
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindWithPos;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindWithPos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -254,7 +254,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       }
       return result;
     } catch (SQLException e) {
-      throw new InternalException("Exception thrown by sql statement " + this, e);
+      throw new InternalException("Exception thrown by com.provys.db.sql statement " + this, e);
     }
   }
 
@@ -267,7 +267,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       }
       return result;
     } catch (SQLException e) {
-      throw new InternalException("Exception thrown by sql statement " + this, e);
+      throw new InternalException("Exception thrown by com.provys.db.sql statement " + this, e);
     }
   }
 

@@ -1,6 +1,6 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.CodeIdent;
+import com.provys.db.query.CodeIdent;
 
 /**
  * Enables ident to use prefix from previous ident and mark its first line as used. Note that linked

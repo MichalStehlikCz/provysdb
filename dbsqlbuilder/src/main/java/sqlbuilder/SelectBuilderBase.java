@@ -61,7 +61,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param columnName is name of column; it should be column in last item, added to from clause. It
    *                   must be valid column name (in "" or first character letter and remaining
    *                   letters, numbers and characters $ and #). Use columnSql to add columns based
-   *                   on sql expressions
+   *                   on com.provys.db.sql expressions
    * @return self to support fluent build
    */
   U column(String columnName);
@@ -72,7 +72,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param alias      is alias to be used for column
    * @return self to support fluent build
    */
@@ -84,7 +84,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @return self to support fluent build
    */
   U column(String tableAlias, String columnName);
@@ -210,7 +210,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
   T from(String tableName, String alias);
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression
@@ -219,7 +219,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
   T from(Select select, QueryAlias alias);
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression
@@ -273,7 +273,7 @@ public interface SelectBuilderBase<T extends SelectBuilderBase<T, U>,
   /**
    * Add where condition.
    *
-   * @param where is sql where condition to be added (or null, in tht case nothing is added)
+   * @param where is com.provys.db.sql where condition to be added (or null, in tht case nothing is added)
    * @return self to support fluent build
    */
   T where(@Nullable Condition where);

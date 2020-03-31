@@ -1,7 +1,7 @@
 package com.provys.db.sqldb.sql;
 
-import static com.provys.db.sql.Function.STRING_CHR;
-import static com.provys.db.sql.Function.STRING_CONCAT;
+import static com.provys.db.query.Function.STRING_CHR;
+import static com.provys.db.query.Function.STRING_CONCAT;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -10,12 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.provys.db.sql.BindMap;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Context;
-import com.provys.db.sql.Expression;
-import com.provys.db.sql.FromContext;
+import com.provys.db.query.BindMap;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Context;
+import com.provys.db.query.Expression;
+import com.provys.db.query.FromContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

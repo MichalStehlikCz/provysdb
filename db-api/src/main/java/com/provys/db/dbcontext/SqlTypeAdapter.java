@@ -30,7 +30,7 @@ public interface SqlTypeAdapter<T> extends Serializable {
   /**
    * Sql type associated with this adapter.
    *
-   * @return sql type associated with this adapter
+   * @return com.provys.db.sql type associated with this adapter
    */
   int getSqlType();
 

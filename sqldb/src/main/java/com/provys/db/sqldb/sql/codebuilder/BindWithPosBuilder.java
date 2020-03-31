@@ -1,8 +1,8 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.BindWithPos;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.BindWithPos;
 import java.util.ArrayList;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;

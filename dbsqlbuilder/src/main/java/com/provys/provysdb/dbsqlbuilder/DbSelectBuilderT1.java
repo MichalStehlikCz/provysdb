@@ -67,7 +67,7 @@ public interface DbSelectBuilderT1<T1>
    * @param columnName is name of column; it should be column in last item, added to from clause. It
    *                   must be valid column name (in "" or first character letter and remaining
    *                   letters, numbers and characters $ and #). Use columnSql to add columns based
-   *                   on sql expressions
+   *                   on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is type of column being added
    * @return resulting select builder
@@ -80,7 +80,7 @@ public interface DbSelectBuilderT1<T1>
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is type of column being added
    * @return resulting select builder
@@ -93,7 +93,7 @@ public interface DbSelectBuilderT1<T1>
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param alias      is alias to be used for column
    * @param clazz      is type of return value of column
    * @param <T>        is type of column being added

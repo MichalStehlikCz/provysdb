@@ -1,6 +1,6 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.CodeIdent;
+import com.provys.db.query.CodeIdent;
 
 /**
  * This ident does exactly nothing when used - it can be used as default ident.

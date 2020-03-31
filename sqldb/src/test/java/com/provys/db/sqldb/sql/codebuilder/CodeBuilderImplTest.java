@@ -2,8 +2,12 @@ package com.provys.db.sqldb.sql.codebuilder;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 import java.math.BigInteger;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class CodeBuilderImplTest {
 
@@ -26,6 +30,23 @@ class CodeBuilderImplTest {
   void append4Test() {
     assertThat(new CodeBuilderImpl().append(BigInteger.valueOf(125874698)).build())
         .isEqualTo("125874698");
+  }
+
+  static Stream<@Nullable Object[]> appendTest() {
+    return Stream.of(
+        new Object[]{SegmentedName.valueOf("sys.v$session"), "sys.v$session"}
+        , new Object[]{SegmentedName.valueOf("v$session"), "v$session"}
+        , new Object[]{SegmentedName.valueOf("schema.\"Test\""), "schema.\"Test\""}
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void appendTest(NamePath value, String result) {
+    CodeBuilder builder = new TestCodeBuilder();
+    value.append(builder);
+    assertThat(builder.build()).isEqualTo(result);
+    assertThat(builder.getBindsWithPos()).isEmpty();
   }
 
   @Test

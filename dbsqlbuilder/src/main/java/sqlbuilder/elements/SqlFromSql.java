@@ -59,7 +59,7 @@ final class SqlFromSql extends SqlFromBase {
   @Override
   public String toString() {
     return "SqlFromSql{"
-        + "sql='" + sql + '\''
+        + "com.provys.db.sql='" + sql + '\''
         + ", binds=" + binds
         + ", " + super.toString() + '}';
   }

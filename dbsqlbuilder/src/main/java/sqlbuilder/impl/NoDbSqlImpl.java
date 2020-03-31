@@ -13,7 +13,7 @@ import sqlparser.impl.DefaultSqlTokenizer;
 public class NoDbSqlImpl extends SqlImpl implements NoDbSql {
 
   /**
-   * Create sql builder with supplied tokenizer.
+   * Create com.provys.db.sql builder with supplied tokenizer.
    *
    * @param tokenizer is used to parse parts of statement supplied as string
    */

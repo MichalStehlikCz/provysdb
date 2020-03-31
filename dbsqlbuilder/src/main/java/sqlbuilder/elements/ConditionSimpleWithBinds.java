@@ -52,7 +52,7 @@ final class ConditionSimpleWithBinds implements Condition {
   @Override
   public String toString() {
     return "ConditionSimpleWithBinds{"
-        + "sql='" + sql + '\''
+        + "com.provys.db.sql='" + sql + '\''
         + ", binds=" + binds
         + '}';
   }

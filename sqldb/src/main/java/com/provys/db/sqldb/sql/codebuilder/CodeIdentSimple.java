@@ -1,6 +1,6 @@
 package com.provys.db.sqldb.sql.codebuilder;
 
-import com.provys.db.sql.CodeIdent;
+import com.provys.db.query.CodeIdent;
 
 /**
  * Simple ident (all lines with the same prefix).

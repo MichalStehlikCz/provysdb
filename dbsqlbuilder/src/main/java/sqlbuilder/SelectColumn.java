@@ -21,10 +21,10 @@ public interface SelectColumn<T> extends SelectColumnInfo {
   Class<T> getType();
 
   /**
-   * Appends column sql to code builder, used to construct statement. Unlike addColumnSql, does
+   * Appends column com.provys.db.sql to code builder, used to construct statement. Unlike addColumnSql, does
    * not append column alias. Also adds associated binds. Used to generate column list of statement.
    *
-   * @param builder is CodeBuilder, used to construct sql text
+   * @param builder is CodeBuilder, used to construct com.provys.db.sql text
    */
   void addColumn(CodeBuilder builder);
 }

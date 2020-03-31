@@ -43,7 +43,7 @@ final class ConditionSql implements Condition {
   @Override
   public String toString() {
     return "ConditionSimple{"
-        + "sql='" + sql + '\''
+        + "com.provys.db.sql='" + sql + '\''
         + '}';
   }
 }

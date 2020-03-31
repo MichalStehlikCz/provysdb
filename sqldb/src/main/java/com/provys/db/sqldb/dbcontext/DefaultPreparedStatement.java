@@ -57,9 +57,9 @@ public class DefaultPreparedStatement<T extends PreparedStatement> extends Defau
   }
 
   /**
-   * Value of field sql.
+   * Value of field com.provys.db.sql.
    *
-   * @return value of field sql
+   * @return value of field com.provys.db.sql
    */
   @Override
   public String getSql() {
@@ -388,7 +388,7 @@ public class DefaultPreparedStatement<T extends PreparedStatement> extends Defau
    *
    * @param parameterIndex is index of parameter to be set to null
    * @param type           is java class representing the value
-   * @param sqlType        is sql type corresponding to bind variable
+   * @param sqlType        is com.provys.db.sql type corresponding to bind variable
    */
   private void setNullInternal(int parameterIndex, Class<?> type, int sqlType) {
     try {
@@ -668,7 +668,7 @@ public class DefaultPreparedStatement<T extends PreparedStatement> extends Defau
   @Override
   public String toString() {
     return "DefaultPreparedStatement{"
-        + "sql='" + sql + '\''
+        + "com.provys.db.sql='" + sql + '\''
         + ", " + super.toString() + '}';
   }
 }

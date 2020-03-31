@@ -3,18 +3,18 @@ package com.provys.db.sqldb.sql;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.SqlTypeMap;
-import com.provys.db.sql.BindMap;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Condition;
-import com.provys.db.sql.Expression;
-import com.provys.db.sql.FromClause;
-import com.provys.db.sql.FromContext;
-import com.provys.db.sql.FromElement;
-import com.provys.db.sql.Function;
-import com.provys.db.sql.NamePath;
-import com.provys.db.sql.SelectClause;
-import com.provys.db.sql.SimpleName;
+import com.provys.db.query.BindMap;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Condition;
+import com.provys.db.query.Expression;
+import com.provys.db.query.FromClause;
+import com.provys.db.query.FromContext;
+import com.provys.db.query.FromElement;
+import com.provys.db.query.Function;
+import com.provys.db.query.NamePath;
+import com.provys.db.query.SelectClause;
+import com.provys.db.query.SimpleName;
 import com.provys.db.sqldb.dbcontext.NoDbContext;
 import java.util.List;
 import java.util.function.Consumer;
@@ -31,19 +31,19 @@ public final class SqlContextImpl implements SqlContext<SqlSelect, SqlSelectClau
       SqlFunctionMapImpl.getDefault());
 
   /**
-   * Instance of generic sql factory without database connectivity.
+   * Instance of generic com.provys.db.sql factory without database connectivity.
    *
-   * @return instance of generic sql factory without database connectivity
+   * @return instance of generic com.provys.db.sql factory without database connectivity
    */
   public static SqlContextImpl getNoDbInstance() {
     return NO_DB_INSTANCE;
   }
 
   /**
-   * Create sql context wrapping specified database context.
+   * Create com.provys.db.sql context wrapping specified database context.
    *
    * @param dbContext   is database context that will provide connections
-   * @param functionMap is mapping of sql functions to templates
+   * @param functionMap is mapping of com.provys.db.sql functions to templates
    * @return Sql context, wrapping supplied database context and function map
    */
   public static SqlContextImpl forDbContext(DbContext dbContext, SqlFunctionMap functionMap) {

@@ -1,8 +1,8 @@
 package com.provys.db.sqldb.sql;
 
-import com.provys.db.sql.CodeBuilder;
-import com.provys.db.sql.Context;
-import com.provys.db.sql.Function;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Context;
+import com.provys.db.query.Function;
 import java.util.List;
 import java.util.function.Consumer;
 

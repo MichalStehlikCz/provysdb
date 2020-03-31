@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.jackson.JacksonMappers;
-import com.provys.db.sql.BindName;
-import com.provys.db.sql.BindVariable;
-import com.provys.db.sql.BindWithPos;
-import com.provys.db.sql.SegmentedName;
-import com.provys.db.sql.SimpleName;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.BindWithPos;
+import com.provys.db.query.SegmentedName;
+import com.provys.db.query.SimpleName;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -44,52 +44,5 @@ class SqlExpressionBindTest {
     assertThat(builder.build()).isEqualTo(result);
     assertThat(builder.getBindsWithPos()).containsExactlyInAnyOrder(bindsWithPos);
     assertThat(builder.getBindValues()).containsExactlyInAnyOrderEntriesOf(bindValues);
-  }
-
-  static Stream<Object[]> jacksonTest() {
-    return Stream.of(
-        new Object[]{new SqlExpressionBind(SqlContextImpl.getNoDbInstance(),
-            new BindVariable("name1", Integer.class, 5)),
-            "{\"NAME\":\"NAME1\",\"TYPE\":\"INTEGER\",\"VALUE\":5}",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><BINDEXPRESSION><NAME>NAME1</NAME>"
-                + "<TYPE>INTEGER</TYPE><VALUE>5</VALUE></BINDEXPRESSION>"}
-        , new Object[]{new SqlExpressionBind(SqlContextImpl.getNoDbInstance(),
-            new BindVariable("name2", String.class, null)),
-            "{\"NAME\":\"NAME2\",\"TYPE\":\"STRING\"}",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><BINDEXPRESSION><NAME>NAME2</NAME>"
-                + "<TYPE>STRING</TYPE><VALUE/></BINDEXPRESSION>"}
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("jacksonTest")
-  void serializeToJsonTest(SqlExpressionBind value, String json, String xml)
-      throws JsonProcessingException {
-    assertThat(JacksonMappers.getJsonMapper().writeValueAsString(value))
-        .isEqualTo(json);
-  }
-
-  @ParameterizedTest
-  @MethodSource("jacksonTest")
-  void deserializeFromJsonTest(SqlExpressionBind value, String json, String xml)
-      throws IOException {
-    assertThat(JacksonMappers.getJsonMapper().readValue(json, SqlExpressionBind.class))
-        .isEqualTo(value);
-  }
-
-  @ParameterizedTest
-  @MethodSource("jacksonTest")
-  void serializeToXmlTest(SqlExpressionBind value, String json, String xml)
-      throws JsonProcessingException {
-    assertThat(JacksonMappers.getXmlMapper().writeValueAsString(value))
-        .isEqualTo(xml);
-  }
-
-  @ParameterizedTest
-  @MethodSource("jacksonTest")
-  void deserializeFromXmlTest(SqlExpressionBind value, String json, String xml)
-      throws IOException {
-    assertThat(JacksonMappers.getXmlMapper().readValue(xml, SqlExpressionBind.class))
-        .isEqualTo(value);
   }
 }

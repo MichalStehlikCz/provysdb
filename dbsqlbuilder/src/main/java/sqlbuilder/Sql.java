@@ -98,7 +98,7 @@ public interface Sql {
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @return created column
    */
   TableColumn<Object> column(String columnName);
@@ -109,7 +109,7 @@ public interface Sql {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @return created column
    */
   TableColumn<Object> column(String tableAlias, String columnName);
@@ -149,7 +149,7 @@ public interface Sql {
    *
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
@@ -162,7 +162,7 @@ public interface Sql {
    * @param tableAlias is alias of table column is in
    * @param columnName is name of column. It must be valid column name (in "" or first character
    *                   letter and remaining letters, numbers and characters $ and #). Use columnSql
-   *                   to add columns based on sql expressions
+   *                   to add columns based on com.provys.db.sql expressions
    * @param clazz      is type of return value of column
    * @param <T>        is Java type corresponding to values in given column
    * @return created column
@@ -350,7 +350,7 @@ public interface Sql {
   FromClause from(String tableName, String alias);
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression
@@ -359,7 +359,7 @@ public interface Sql {
   FromClause from(Select select, QueryAlias alias);
 
   /**
-   * Add sql expression to from clause of the statement.
+   * Add com.provys.db.sql expression to from clause of the statement.
    *
    * @param select is select statement that will be used in from clause
    * @param alias  as alias to be assigned to given expression
