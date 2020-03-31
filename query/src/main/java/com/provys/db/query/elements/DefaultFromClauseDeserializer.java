@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FromClauseImplDeserializer extends StdDeserializer<FromClauseImpl> {
+public class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
 
   private static final long serialVersionUID = 8810246829625837188L;
 
-  protected FromClauseImplDeserializer() {
-    super(FromClauseImpl.class);
+  protected DefaultFromClauseDeserializer() {
+    super(DefaultFromClause.class);
   }
 
-  private static FromClauseImpl deserializeJson(JsonParser parser)
+  private static DefaultFromClause deserializeJson(JsonParser parser)
       throws IOException {
     if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
       throw new InternalException("Start array expected deserializing from clause");
@@ -27,10 +27,10 @@ public class FromClauseImplDeserializer extends StdDeserializer<FromClauseImpl> 
     while (parser.nextToken() != JsonToken.END_ARRAY) {
       elements.add(parser.readValueAs(FromElement.class));
     }
-    return new FromClauseImpl(elements);
+    return new DefaultFromClause(elements);
   }
 
-  private static FromClauseImpl deserializeXml(JsonParser parser)
+  private static DefaultFromClause deserializeXml(JsonParser parser)
       throws IOException {
     if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
       throw new InternalException("Start object expected deserializing from clause from xml");
@@ -44,11 +44,11 @@ public class FromClauseImplDeserializer extends StdDeserializer<FromClauseImpl> 
       throw new InternalException("End object expected after last ELEM deserializing from clause"
           + " from xml");
     }
-    return new FromClauseImpl(elements);
+    return new DefaultFromClause(elements);
   }
 
   @Override
-  public FromClauseImpl deserialize(JsonParser parser,
+  public DefaultFromClause deserialize(JsonParser parser,
       DeserializationContext context) throws IOException {
     if (parser.getCodec() instanceof XmlMapper) {
       return deserializeXml(parser);

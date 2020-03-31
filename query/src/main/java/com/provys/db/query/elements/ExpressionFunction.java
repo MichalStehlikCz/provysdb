@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Expression based on built-in function.
+ *
+ * @param <T> is type of values expression produces.
+ */
 @JsonAutoDetect(
     fieldVisibility = Visibility.NONE,
     setterVisibility = Visibility.NONE,
@@ -57,7 +62,8 @@ public final class ExpressionFunction<T> implements Expression<T> {
   }
 
   /**
-   * Create function expression based on function and arguments (without required type).
+   * Create function expression based on function and arguments; type is inferred from function and
+   * supplied arguments.
    *
    * @param function  is function expression is based on
    * @param arguments is list of expressions passed as arguments to function
@@ -111,7 +117,15 @@ public final class ExpressionFunction<T> implements Expression<T> {
     }
   }
 
-  ExpressionFunction(Class<T> type, Function function,
+  /**
+   * Create function that will evaluate to supplied type, based on supplied function and using
+   * arguments. Type of function and arguments are validated against function definition.
+   *
+   * @param type is type of object expression returns
+   * @param function is built-in function, used for evaluation
+   * @param arguments are arguments to be passed to function
+   */
+  public ExpressionFunction(Class<T> type, Function function,
       Collection<? extends Expression<?>> arguments) {
     this.type = type;
     this.function = function;

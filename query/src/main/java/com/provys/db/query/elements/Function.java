@@ -5,7 +5,7 @@ import com.provys.common.exception.InternalException;
 import java.util.List;
 
 /**
- * Supported functions.
+ * Supported built-in functions.
  */
 public enum Function {
 

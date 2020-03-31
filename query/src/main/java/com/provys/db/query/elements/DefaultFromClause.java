@@ -32,24 +32,31 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("FROMCLAUSE")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
-@JsonSerialize(using = FromClauseImplSerializer.class)
-@JsonDeserialize(using = FromClauseImplDeserializer.class)
-final class FromClauseImpl implements FromClause {
+@JsonSerialize(using = DefaultFromClauseSerializer.class)
+@JsonDeserialize(using = DefaultFromClauseDeserializer.class)
+public final class DefaultFromClause implements FromClause {
 
   private final List<FromElement> fromElements;
 
-  FromClauseImpl(Collection<? extends FromElement> fromElements, @Nullable BindMap bindMap) {
+  /**
+   * Create from clause, based on supplied elements.
+   *
+   * @param fromElements are elements from clause should be based on
+   * @param bindMap can be used to map variables in from clause
+   */
+  public DefaultFromClause(Collection<? extends FromElement> fromElements,
+      @Nullable BindMap bindMap) {
     this.fromElements = fromElements.stream()
         .map(fromElement -> (bindMap == null) ? fromElement : fromElement.mapBinds(bindMap))
         .collect(Collectors.toUnmodifiableList());
   }
 
   /**
-   * Constructor used for deserialization from Json / Xml.
+   * Simplified constructor, without bind translation.
    *
    * @param fromElements is collection of from elements in new clause
    */
-  FromClauseImpl(Collection<? extends FromElement> fromElements) {
+  public DefaultFromClause(Collection<? extends FromElement> fromElements) {
     this(fromElements, null);
   }
 
@@ -105,7 +112,7 @@ final class FromClauseImpl implements FromClause {
     if (newFromElements.equals(fromElements)) {
       return this;
     }
-    return new FromClauseImpl(newFromElements);
+    return new DefaultFromClause(newFromElements);
   }
 
   @Override
@@ -116,7 +123,7 @@ final class FromClauseImpl implements FromClause {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FromClauseImpl that = (FromClauseImpl) o;
+    DefaultFromClause that = (DefaultFromClause) o;
     return fromElements.equals(that.fromElements);
   }
 

@@ -2,7 +2,6 @@ package com.provys.db.query.elements;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,7 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
-class FromClauseImplTest {
+class DefaultFromClauseTest {
 
   @Test
   void getElementByAliasNoTest() {
@@ -34,7 +33,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.getElementByAlias(alias)).isNull();
   }
@@ -52,7 +51,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.getElementByAlias(alias)).isEqualTo(fromElem2);
   }
@@ -70,7 +69,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThatThrownBy(() -> value.getElementByAlias(alias));
   }
@@ -88,7 +87,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.isUnique(alias)).isTrue();
   }
@@ -106,7 +105,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.isUnique(alias)).isTrue();
   }
@@ -124,7 +123,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.match(alias)).thenReturn(false);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.isUnique(alias)).isFalse();
   }
@@ -136,7 +135,7 @@ class FromClauseImplTest {
     var fromElem2 = mock(FromElement.class);
     var fromElem3 = mock(FromElement.class);
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.getElements()).containsExactlyInAnyOrder(fromElem1, fromElem2, fromElem3);
   }
@@ -156,7 +155,7 @@ class FromClauseImplTest {
     var fromElem3 = mock(FromElement.class);
     when(fromElem3.getBinds()).thenReturn(List.of(bind3, bind1));
     // prepare value itself
-    var value = new FromClauseImpl(List.of(fromElem1, fromElem2, fromElem3), null);
+    var value = new DefaultFromClause(List.of(fromElem1, fromElem2, fromElem3), null);
     // assert
     assertThat(value.getBinds()).containsExactlyInAnyOrder(bind1, bind2, bind3);
   }
@@ -164,14 +163,14 @@ class FromClauseImplTest {
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
         new Object[]{
-            new FromClauseImpl(List.of(
+            new DefaultFromClause(List.of(
                 new FromTable(SimpleName.valueOf("brc_record_tb"), SimpleName.valueOf("rec"))),
                 null),
             "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}}]",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROMCLAUSE><ELEM>"
                 + "<FROMTABLE><TABLENAME>brc_record_tb</TABLENAME><ALIAS>rec</ALIAS></FROMTABLE>"
                 + "</ELEM></FROMCLAUSE>"}
-        , new Object[]{new FromClauseImpl(List.of(
+        , new Object[]{new DefaultFromClause(List.of(
             new FromTable(SimpleName.valueOf("brc_record_tb"), SimpleName.valueOf("rec")),
             new FromTable(SegmentedName.valueOf("brc.brc_record_tb"), null)), null),
             "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}},"
@@ -187,7 +186,7 @@ class FromClauseImplTest {
 
   @ParameterizedTest
   @MethodSource("jacksonTest")
-  void serializeToJsonTest(FromClauseImpl value, String json, String xml)
+  void serializeToJsonTest(DefaultFromClause value, String json, String xml)
       throws JsonProcessingException {
     assertThat(JacksonMappers.getJsonMapper().writeValueAsString(value))
         .isEqualTo(json);
@@ -195,15 +194,15 @@ class FromClauseImplTest {
 
   @ParameterizedTest
   @MethodSource("jacksonTest")
-  void deserializeFromJsonTest(FromClauseImpl value, String json, String xml)
+  void deserializeFromJsonTest(DefaultFromClause value, String json, String xml)
       throws IOException {
-    assertThat(JacksonMappers.getJsonMapper().readValue(json, FromClauseImpl.class))
+    assertThat(JacksonMappers.getJsonMapper().readValue(json, DefaultFromClause.class))
         .isEqualTo(value);
   }
 
   @ParameterizedTest
   @MethodSource("jacksonTest")
-  void serializeToXmlTest(FromClauseImpl value, String json, String xml)
+  void serializeToXmlTest(DefaultFromClause value, String json, String xml)
       throws JsonProcessingException {
     assertThat(JacksonMappers.getXmlMapper().writeValueAsString(value))
         .isEqualTo(xml);
@@ -211,9 +210,9 @@ class FromClauseImplTest {
 
   @ParameterizedTest
   @MethodSource("jacksonTest")
-  void deserializeFromXmlTest(FromClauseImpl value, String json, String xml)
+  void deserializeFromXmlTest(DefaultFromClause value, String json, String xml)
       throws IOException {
-    assertThat(JacksonMappers.getXmlMapper().readValue(xml, FromClauseImpl.class))
+    assertThat(JacksonMappers.getXmlMapper().readValue(xml, DefaultFromClause.class))
         .isEqualTo(value);
   }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Class defines mapping of Sql element classes to their MixIns for proper Jackson serialisation /
+ * Class defines mapping of Element classes to their MixIns for proper Jackson serialisation /
  * deserialization.
  */
 public class JacksonModule extends SimpleModule {

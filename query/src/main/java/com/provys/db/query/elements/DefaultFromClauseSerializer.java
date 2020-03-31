@@ -7,16 +7,16 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.IOException;
 
-public class FromClauseImplSerializer extends StdSerializer<FromClauseImpl> {
+public class DefaultFromClauseSerializer extends StdSerializer<DefaultFromClause> {
 
   private static final long serialVersionUID = -489636074594048553L;
 
-  protected FromClauseImplSerializer() {
-    super(FromClauseImpl.class);
+  protected DefaultFromClauseSerializer() {
+    super(DefaultFromClause.class);
   }
 
   @Override
-  public void serialize(FromClauseImpl fromClause, JsonGenerator generator,
+  public void serialize(DefaultFromClause fromClause, JsonGenerator generator,
       SerializerProvider provider) throws IOException {
     boolean xml = generator.getCodec() instanceof XmlMapper;
     if (xml) {
