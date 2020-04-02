@@ -1,54 +1,71 @@
-package com.provys.db.query.elements;
+package com.provys.db.sqldb.queryold;
 
 import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
 
 import com.provys.common.exception.InternalException;
-import com.provys.db.query.names.BindMap;
-import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
-import com.provys.db.query.names.NamePath;
-import com.provys.db.query.names.SegmentedName;
+import com.provys.db.dbcontext.DbConnection;
+import com.provys.db.query.BindMap;
+import com.provys.db.query.BindName;
+import com.provys.db.query.BindVariable;
+import com.provys.db.query.CodeBuilder;
+import com.provys.db.query.Condition;
+import com.provys.db.query.Context;
+import com.provys.db.query.FromClause;
+import com.provys.db.query.FromContext;
+import com.provys.db.query.FromElement;
+import com.provys.db.query.NamePath;
+import com.provys.db.query.SegmentedName;
+import com.provys.db.query.Select;
+import com.provys.db.query.SelectClause;
+import com.provys.db.query.SelectStatement;
+import com.provys.db.sqldb.codebuilder.CodeBuilder;
+import com.provys.db.sqldb.codebuilder.CodeBuilderFactory;
+import com.provys.db.sqldb.query.SelectStatement;
+import com.provys.db.sqldb.query.SelectStatementImpl;
 import java.util.Collection;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Represents Sql select statement with default (= Oracle) syntax.
  */
-final class SelectImpl implements Select, FromContext {
+final class SqlSelectImpl implements SqlSelect, FromContext {
 
   private final @Nullable FromContext parentContext;
-  private final SelectClause selectClause;
-  private final FromClause fromClause;
-  private final @Nullable Condition whereClause;
+  private final SqlSelectClause selectClause;
+  private final SqlFromClause fromClause;
+  private final @Nullable SqlCondition whereClause;
+  private final Map<BindName, BindVariable> bindsByName;
+  private final SqlContext<?, ?, ?, ?, ?, ?, ?> context;
 
-  SelectImpl(SelectClause selectClause, FromClause fromClause, @Nullable Condition whereClause,
-      @Nullable FromContext parentContext, @Nullable BindMap bindMap) {
+  SqlSelectImpl(SqlContext<?, ?, ?, ?, ?, ?, ?> context, SelectClause selectClause,
+      FromClause fromClause, @Nullable Condition whereClause, @Nullable FromContext parentContext,
+      @Nullable BindMap bindMap) {
+    this.context = context;
     this.parentContext = parentContext;
-    this.fromClause = (bindMap == null) ? fromClause : fromClause.mapBinds(bindMap);
-    this.selectClause = (bindMap == null) ? selectClause : selectClause.mapBinds(bindMap);
+    this.fromClause = fromClause.transfer(context, bindMap);
+    this.selectClause = selectClause.transfer(context, bindMap);
     if (whereClause == null) {
       this.whereClause = null;
     } else {
-      this.whereClause = (bindMap == null) ? whereClause : whereClause.mapBinds(bindMap);
+      this.whereClause = whereClause.transfer(context, bindMap);
     }
+    // we need to collect binds from sub-elements, as bindMap can contain variables not present in
+    // this statement
+    this.bindsByName = Map.copyOf(new BindVariableCollector()
+        .add(selectClause)
+        .add(fromClause)
+        .add(whereClause)
+        .getBindsByName());
   }
 
   @Override
-  public SelectClause getSelectClause() {
-    return selectClause;
-  }
-
-  @Override
-  public FromClause getFromClause() {
-    return fromClause;
-  }
-
-  @Override
-  public @Nullable Condition getWhereClause() {
-    return whereClause;
+  public SqlContext<?, ?, ?, ?, ?, ?, ?> getContext() {
+    return context;
   }
 
   @Override
@@ -62,8 +79,53 @@ final class SelectImpl implements Select, FromContext {
   }
 
   @Override
-  public Select mapBinds(BindMap bindMap) {
-    return new SelectImpl(selectClause, fromClause, whereClause, parentContext, bindMap);
+  public <S extends Select> S transfer(Context<S, ?, ?, ?, ?, ?, ?> targetContext,
+      @Nullable BindMap bindMap) {
+    if (context.equals(targetContext) && ((bindMap == null) || bindMap.isSupersetOf(bindsByName))) {
+      @SuppressWarnings("unchecked")
+      var result = (S) this;
+      return result;
+    }
+    return targetContext.select(selectClause, fromClause, whereClause, bindMap);
+  }
+
+  /**
+   * Map of binds and their values.
+   *
+   * @return map of bind names and their respective values
+   */
+  Map<BindName, Object> getBindValues() {
+    return bindsByName.values().stream()
+        .filter(bindVariable -> bindVariable.getValue() != null)
+        .collect(Collectors
+            .toUnmodifiableMap(BindVariable::getName, bind -> castNonNull(bind.getValue())));
+  }
+
+  @Override
+  public void append(CodeBuilder builder) {
+    selectClause.append(builder);
+    fromClause.append(builder);
+    if (whereClause != null) {
+      builder.append("WHERE").increasedIdent(2);
+      whereClause.append(builder);
+      builder.popIdent();
+    }
+  }
+
+  @Override
+  public SelectStatement parse() {
+    var builder = CodeBuilderFactory.getCodeBuilder();
+    append(builder);
+    return new SelectStatementImpl(builder.build(), builder.getBindsWithPos(), getBindValues(),
+        context);
+  }
+
+  @Override
+  public SelectStatement parse(DbConnection connection) {
+    var builder = CodeBuilderFactory.getCodeBuilder();
+    append(builder);
+    return new SelectStatementImpl(builder.build(), builder.getBindsWithPos(), getBindValues(),
+        connection);
   }
 
   @Override
@@ -160,24 +222,27 @@ final class SelectImpl implements Select, FromContext {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SelectImpl sqlSelect = (SelectImpl) o;
-    return selectClause.equals(sqlSelect.selectClause)
-        && fromClause.equals(sqlSelect.fromClause)
+    SqlSelectImpl sqlSelect = (SqlSelectImpl) o;
+    return Objects.equals(context, sqlSelect.context)
+        && Objects.equals(selectClause, sqlSelect.selectClause)
+        && Objects.equals(fromClause, sqlSelect.fromClause)
         && Objects.equals(whereClause, sqlSelect.whereClause);
   }
 
   @Override
   public int hashCode() {
-    int result = selectClause.hashCode();
-    result = 31 * result + fromClause.hashCode();
+    int result = context != null ? context.hashCode() : 0;
+    result = 31 * result + (selectClause != null ? selectClause.hashCode() : 0);
+    result = 31 * result + (fromClause != null ? fromClause.hashCode() : 0);
     result = 31 * result + (whereClause != null ? whereClause.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
-    return "SelectImpl{"
-        + "selectClause=" + selectClause
+    return "SqlSelectImpl{"
+        + "context=" + context
+        + ", selectClause=" + selectClause
         + ", fromClause=" + fromClause
         + ", whereClause=" + whereClause
         + '}';

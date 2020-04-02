@@ -6,7 +6,7 @@ import com.provys.provysdb.builder.sqlbuilder.SqlColumn;
 import sqlbuilder.FromClause;
 import sqlbuilder.QueryAlias;
 import sqlbuilder.elements.ElementFactory;
-import com.provys.db.sqldb.sql.name.elements.SqlColumnExpressionT;
+import com.provys.db.sqldb.queryold.name.elements.SqlColumnExpressionT;
 import sqlparser.SqlTokenizer;
 import java.util.Arrays;
 import java.util.Collection;

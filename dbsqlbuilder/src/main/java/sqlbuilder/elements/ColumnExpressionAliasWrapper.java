@@ -1,7 +1,7 @@
 package sqlbuilder.elements;
 
 import com.provys.provysdb.sql.CodeBuilder;
-import com.provys.db.sqldb.sql.name.IdentifierImpl;
+import com.provys.db.sqldb.queryold.name.IdentifierImpl;
 import sqlbuilder.SelectExpressionBuilder;
 import com.provys.provysdb.sql.Expression;
 import com.provys.provysdb.sql.SimpleName;

@@ -90,6 +90,15 @@ public final class ExpressionBind<T> implements Expression<T> {
     return new ExpressionBind<>(type, newBindVariable);
   }
 
+  /**
+   * Value of field bindVariable.
+   *
+   * @return value of field bindVariable
+   */
+  public BindVariable getBindVariable() {
+    return bindVariable;
+  }
+
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

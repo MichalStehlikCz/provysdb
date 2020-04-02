@@ -10,7 +10,7 @@ import com.provys.common.exception.InternalException;
 import com.provys.common.exception.RegularException;
 import com.provys.provysdb.sql.CodeBuilder;
 import com.provys.provysdb.builder.sqlbuilder.SqlFactory;
-import com.provys.db.sqldb.sql.codebuilder.CodeBuilderImpl;
+import com.provys.db.sqldb.codebuilder.CodeBuilderImpl;
 import sqlparser.SpaceMode;
 import sqlparser.SqlKeyword;
 import sqlparser.SqlParsedToken;
