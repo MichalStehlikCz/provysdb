@@ -1,7 +1,6 @@
 package com.provys.db.sqldb.query;
 
 import com.provys.db.query.elements.Function;
-import com.provys.db.sqldb.codebuilder.CodeBuilder;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -30,10 +29,11 @@ public interface SqlFunctionMap {
 
   /**
    * Append evaluated template to builder.
+   *
    *  @param function is function to be applied
    * @param argumentAppend is procedure that appends given argument to builder
    * @param builder is builder where whole expression should be appended
    */
-  void append(Function function, List<? extends Consumer<CodeBuilder>> argumentAppend,
-      CodeBuilder builder);
+  <B extends SqlBuilder<B>> void append(Function function,
+      List<? extends Consumer<? super B>> argumentAppend, B builder);
 }

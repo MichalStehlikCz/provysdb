@@ -5,10 +5,10 @@ import com.provys.db.query.elements.Expression;
 /**
  * Expression builder allows to append expression text to code builder.
  *
- * @param <F> is specialisation of statement factory this builder can work for
- * @param <T> is type of expression builder can handle
+ * @param <B> is type of sql builder this expression builder is able to use
+ * @param <T> is type of expression this builder can handle
  */
-public interface ExpressionSqlBuilder<F extends StatementFactory, T extends Expression<?>> extends
-    ElementSqlBuilder<F, T> {
+public interface ExpressionSqlBuilder<B extends SqlBuilder<?>, T extends Expression<?>> extends
+    ElementSqlBuilder<B, T> {
 
 }

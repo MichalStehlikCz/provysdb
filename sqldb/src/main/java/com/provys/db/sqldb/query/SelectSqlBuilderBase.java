@@ -3,13 +3,13 @@ package com.provys.db.sqldb.query;
 import com.provys.db.query.elements.Select;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-abstract class SqlBuilderBase<F extends StatementFactory, Q extends Select,
+abstract class SelectSqlBuilderBase<F extends StatementFactory, Q extends Select,
     S extends SelectStatement> implements SqlBuilder<F, Q, S> {
 
   private final F statementFactory;
   private final Q query;
 
-  SqlBuilderBase(F statementFactory, Q query) {
+  SelectSqlBuilderBase(F statementFactory, Q query) {
     this.statementFactory = statementFactory;
     this.query = query;
   }
@@ -42,7 +42,7 @@ abstract class SqlBuilderBase<F extends StatementFactory, Q extends Select,
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlBuilderBase<?, ?, ?> that = (SqlBuilderBase<?, ?, ?>) o;
+    SelectSqlBuilderBase<?, ?, ?> that = (SelectSqlBuilderBase<?, ?, ?>) o;
     return statementFactory.equals(that.statementFactory)
         && query.equals(that.query);
   }

@@ -7,7 +7,6 @@ import static com.provys.db.query.elements.Function.STRING_CONCAT;
 
 import com.provys.db.query.elements.Function;
 import com.provys.db.sqldb.codebuilder.CodeBuilder;
-import com.provys.db.sqldb.codebuilder.CodeBuilderFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -53,11 +52,11 @@ public final class SqlFunctionMapImpl implements SqlFunctionMap {
     return result;
   }
 
-  private static final class CodeBuilderAppender implements Consumer<CodeBuilder> {
+  private static final class SqlBuilderAppender implements Consumer<CodeBuilder> {
 
     private final CodeBuilder appendBuilder;
 
-    CodeBuilderAppender(CodeBuilder appendBuilder) {
+    SqlBuilderAppender(CodeBuilder appendBuilder) {
       this.appendBuilder = appendBuilder;
     }
 
@@ -68,19 +67,19 @@ public final class SqlFunctionMapImpl implements SqlFunctionMap {
   }
 
   @Override
-  public void append(Function function, List<? extends Consumer<CodeBuilder>> argumentAppend,
-      CodeBuilder builder) {
+  public <B extends SqlBuilder<B>> void append(Function function,
+      List<? extends Consumer<? super B>> argumentAppend, B builder) {
     // in case of repeatable last argument, we evaluate template repeatedly
     if (function.lastArgumentRepeatable() && (argumentAppend.size() > 2)) {
       // first, we evaluate result for first two arguments
-      CodeBuilder recursiveBuilder = CodeBuilderFactory.getCodeBuilder();
-      var firstTwo = List.of(argumentAppend.get(0), argumentAppend.get(1));
+      B recursiveBuilder = builder.getClone();
+      List<? extends Consumer<? super B>> firstTwo = List.of(argumentAppend.get(0), argumentAppend.get(1));
       append(function, firstTwo, recursiveBuilder);
       // and now we recursively apply next argument
       //noinspection ForLoopReplaceableByWhile
       for (int i = 2; i < argumentAppend.size(); i++) {
-        var nextBuilder = CodeBuilderFactory.getCodeBuilder();
-        var nextTwo = List.of(new CodeBuilderAppender(recursiveBuilder), argumentAppend.get(i));
+        var nextBuilder = builder.getClone();
+        List<? extends Consumer<? super B>> nextTwo = List.of(new SqlBuilderAppender(recursiveBuilder), argumentAppend.get(i));
         append(function, nextTwo, nextBuilder);
         recursiveBuilder = nextBuilder;
       }

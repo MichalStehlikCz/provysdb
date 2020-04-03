@@ -3,7 +3,7 @@ package com.provys.db.sqldb.query;
 import com.provys.db.query.elements.ExpressionColumn;
 
 public final class ExpressionColumnSqlBuilder
-    implements ExpressionSqlBuilder<StatementFactory<?>, ExpressionColumn<?>> {
+    implements ExpressionSqlBuilder<SqlBuilder<?>, ExpressionColumn<?>> {
 
   private static final ExpressionColumnSqlBuilder INSTANCE = new ExpressionColumnSqlBuilder();
 
@@ -25,12 +25,16 @@ public final class ExpressionColumnSqlBuilder
     return (Class<ExpressionColumn<?>>) (Class<?>) ExpressionColumn.class;
   }
 
+  /**
+   * Append sql text, associated with supplied element.
+   *
+   * @param sqlBuilder is builder owning context this statement should be appended to
+   * @param element    is element that is being appended
+   */
   @Override
-  public void append(SqlBuilder<? extends StatementFactory<?>, ?, ?> sqlBuilder,
-      ExpressionColumn<?> element) {
-    var builder = sqlBuilder.getCodeBuilder();
-    element.getOptTable().ifPresent(table -> builder.append(table).append('.'));
-    builder.append(element.getColumn());
+  public void append(SqlBuilder<?> sqlBuilder, ExpressionColumn<?> element) {
+    element.getOptTable().ifPresent(table -> sqlBuilder.append(table).append('.'));
+    sqlBuilder.append(element.getColumn());
   }
 
   @Override

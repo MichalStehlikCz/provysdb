@@ -6,10 +6,9 @@ import com.provys.db.sqldb.codebuilder.CodeBuilder;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class ExpressionFunctionSqlBuilder
-    implements ExpressionSqlBuilder<StatementFactory<?>, ExpressionFunction<?>> {
+    implements ExpressionSqlBuilder<SqlBuilder<?>, ExpressionFunction<?>> {
 
   private static final ExpressionFunctionSqlBuilder INSTANCE = new ExpressionFunctionSqlBuilder();
 
@@ -31,60 +30,39 @@ public final class ExpressionFunctionSqlBuilder
     return (Class<ExpressionFunction<?>>) (Class<?>) ExpressionFunction.class;
   }
 
-  private static class ArgumentAppender implements Consumer<CodeBuilder> {
+  private static class ArgumentAppender implements Consumer<SqlBuilder<?>> {
 
-    private final SqlBuilder<? extends StatementFactory<?>, ?, ?> sqlBuilder;
+    private final SqlBuilder<?> sqlBuilder;
     private final Expression<?> argument;
 
-    ArgumentAppender(SqlBuilder<? extends StatementFactory<?>, ?, ?> sqlBuilder, Expression<?> argument) {
+    ArgumentAppender(SqlBuilder<?> sqlBuilder, Expression<?> argument) {
       this.sqlBuilder = sqlBuilder;
       this.argument = argument;
     }
 
     @Override
-    public void accept(CodeBuilder builder) {
-      sqlBuilder.getStatementFactory().getElementBuilder(argument).append(sqlBuilder, argument);
-      argument.append(builder);
+    public void accept(SqlBuilder builder) {
+      sqlBuilder.append(argument);
     }
   }
 
+  /**
+   * Append sql text, associated with supplied element.
+   *
+   * @param sqlBuilder is builder owning context and {@link CodeBuilder} statement should be
+   *                   appended to
+   * @param element    is element that is being appended
+   */
   @Override
-  public void append(SqlBuilder<? extends StatementFactory<?>, ?, ?> sqlBuilder,
-      ExpressionFunction<?> element) {
-    List<Consumer<CodeBuilder>> argumentsAppend = element.getArguments().stream()
+  public void append(SqlBuilder<?> sqlBuilder, ExpressionFunction<?> element) {
+    List<Consumer<? super SqlBuilder<?>>> argumentsAppend = element.getArguments().stream()
         .map(argument -> new ArgumentAppender(sqlBuilder, argument))
         .collect(Collectors.toList());
-    context.append(function, argumentsAppend, builder);
-  }
-
-  @Override
-  public boolean equals(@Nullable Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ExpressionFunctionSqlBuilder that = (ExpressionFunctionSqlBuilder) o;
-    return function == that.function
-        && arguments.equals(that.arguments)
-        && context.equals(that.context);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = function != null ? function.hashCode() : 0;
-    result = 31 * result + arguments.hashCode();
-    result = 31 * result + context.hashCode();
-    return result;
+    sqlBuilder.append(element.getFunction(), argumentsAppend);
   }
 
   @Override
   public String toString() {
-    return "SqlFunction{"
-        + "function=" + function
-        + ", arguments=" + arguments
-        + ", context=" + context
-        + '}';
+    return "ExpressionFunctionSqlBuilder{}";
   }
 }

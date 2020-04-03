@@ -38,7 +38,7 @@ public class DefaultStatementFactory implements StatementFactory {
   }
 
   public SqlBuilder<DefaultStatementFactory, Select, SelectStatement> getSqlBuilder(Select query) {
-    return new SqlBuilderT(this, query);
+    return new SelectSqlBuilderT(this, query);
   }
 
   @Override
