@@ -3,6 +3,7 @@ package com.provys.db.sqldb.query;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.query.elements.Select;
 import com.provys.db.sqldb.dbcontext.NoDbContext;
+import java.util.Map;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -19,6 +20,7 @@ public class DefaultStatementFactory implements StatementFactory {
 
   private final DbContext dbContext;
   private final SqlFunctionMap sqlFunctionMap;
+  private final Map<Class<?>, ElementSqlBuilder<StatementFactory, ?>> elementBuilders;
 
   public DefaultStatementFactory(DbContext dbContext, SqlFunctionMap sqlFunctionMap) {
     this.dbContext = dbContext;
@@ -35,13 +37,13 @@ public class DefaultStatementFactory implements StatementFactory {
     return sqlFunctionMap;
   }
 
-  public SqlBuilder<Select, SelectStatement> getSqlBuilder(Select query) {
+  public SqlBuilder<DefaultStatementFactory, Select, SelectStatement> getSqlBuilder(Select query) {
     return new SqlBuilderT(this, query);
   }
 
   @Override
   public SelectStatement getSelect(Select query) {
-    return null;
+    return getSqlBuilder(query).build();
   }
 
   @Override

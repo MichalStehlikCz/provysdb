@@ -45,6 +45,20 @@ final class ColumnExpression<T> implements SelectColumn<T> {
     this(expression, alias, null);
   }
 
+  /**
+   * Value of field expression.
+   *
+   * @return value of field expression
+   */
+  public Expression<T> getExpression() {
+    return expression;
+  }
+
+  @Override
+  public @Nullable SimpleName getAlias() {
+    return alias;
+  }
+
   @Override
   public Class<T> getType() {
     return expression.getType();

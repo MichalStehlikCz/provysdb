@@ -18,11 +18,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
-class ExpressionBindBuilderTest {
+class ExpressionBindSqlBuilderTest {
 
   @Test
   void getTypeTest() {
-    assertThat(ExpressionBindBuilder.getInstance().getType()).isSameAs(ExpressionBind.class);
+    assertThat(ExpressionBindSqlBuilder.getInstance().getType()).isSameAs(ExpressionBind.class);
   }
 
   static Stream<Object[]> appendTest() {
@@ -46,7 +46,7 @@ class ExpressionBindBuilderTest {
     @SuppressWarnings("unchecked")
     SqlBuilder<StatementFactory, ?, ?> sqlBuilder = mock(SqlBuilder.class);
     when(sqlBuilder.getCodeBuilder()).thenReturn(builder);
-    ExpressionBindBuilder.getInstance().append(sqlBuilder, value);
+    ExpressionBindSqlBuilder.getInstance().append(sqlBuilder, value);
     assertThat(builder.build()).isEqualTo(result);
     assertThat(builder.getBindsWithPos()).containsExactlyInAnyOrder(bindsWithPos);
     assertThat(builder.getBindValues()).containsExactlyInAnyOrderEntriesOf(bindValues);

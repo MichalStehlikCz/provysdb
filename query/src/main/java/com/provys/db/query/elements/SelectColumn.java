@@ -1,5 +1,8 @@
 package com.provys.db.query.elements;
 
+import com.provys.db.query.names.SimpleName;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Represents column in select statement. Might be either scalar or more complex.
  *
@@ -13,4 +16,11 @@ public interface SelectColumn<T> extends Element<SelectColumn<T>> {
    * @return type of values in this column
    */
   Class<T> getType();
+
+  /**
+   * Retrieve alias of this column.
+   *
+   * @return alias of this column, null when column has no alias
+   */
+  @Nullable SimpleName getAlias();
 }

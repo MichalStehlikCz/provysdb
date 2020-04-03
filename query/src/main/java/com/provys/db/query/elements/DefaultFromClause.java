@@ -108,8 +108,9 @@ public final class DefaultFromClause implements FromClause {
   public FromClause mapBinds(BindMap bindMap) {
     var newFromElements = fromElements.stream()
         .map(fromElement -> fromElement.mapBinds(bindMap))
-        .collect(Collectors.toUnmodifiableList());
-    if (newFromElements.equals(fromElements)) {
+        .collect(Collectors.toList());
+    if (newFromElements.containsAll(fromElements)) {
+      // one side comparison is sufficient, both lists have same number of items
       return this;
     }
     return new DefaultFromClause(newFromElements);
@@ -134,7 +135,7 @@ public final class DefaultFromClause implements FromClause {
 
   @Override
   public String toString() {
-    return "FromClauseImpl{"
+    return "DefaultFromClause{"
         + "fromElements=" + fromElements
         + '}';
   }

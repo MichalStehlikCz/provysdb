@@ -11,7 +11,6 @@ import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -30,11 +29,11 @@ public final class Literal<T> implements Expression<T> {
 
   private final @NonNull T value;
 
-  Literal(@NonNull T value) {
+  public Literal(@NonNull T value) {
     this.value = value;
   }
 
-  @NonNull T getValue() {
+  public @NonNull T getValue() {
     return value;
   }
 
@@ -64,12 +63,12 @@ public final class Literal<T> implements Expression<T> {
       return false;
     }
     Literal<?> literal = (Literal<?>) o;
-    return Objects.equals(value, literal.value);
+    return value.equals(literal.value);
   }
 
   @Override
   public int hashCode() {
-    return value != null ? value.hashCode() : 0;
+    return value.hashCode();
   }
 
   @Override

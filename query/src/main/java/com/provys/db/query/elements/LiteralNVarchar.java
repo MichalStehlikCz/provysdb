@@ -22,19 +22,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("LITERALNVARCHAR")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
-final class LiteralNVarchar implements Expression<String> {
+public final class LiteralNVarchar implements Expression<String> {
 
   @JsonProperty("VALUE")
   private final String value;
 
   @JsonCreator
-  LiteralNVarchar(@JsonProperty("VALUE") String value) {
+  public LiteralNVarchar(@JsonProperty("VALUE") String value) {
     this.value = value;
-  }
-
-  @Override
-  public Class<String> getType() {
-    return String.class;
   }
 
   /**
@@ -42,8 +37,13 @@ final class LiteralNVarchar implements Expression<String> {
    *
    * @return value of field value
    */
-  String getValue() {
+  public String getValue() {
     return value;
+  }
+
+  @Override
+  public Class<String> getType() {
+    return String.class;
   }
 
   @Override

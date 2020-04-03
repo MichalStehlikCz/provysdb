@@ -62,6 +62,15 @@ public final class FromTable implements FromElement {
     this.alias = alias;
   }
 
+  /**
+   * Value of field tableName.
+   *
+   * @return value of field tableName
+   */
+  public NamePath getTableName() {
+    return tableName;
+  }
+
   @Override
   public @Nullable NamePath getAlias() {
     return (alias == null) ? tableName : alias;

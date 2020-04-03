@@ -1,5 +1,6 @@
 package com.provys.db.sqldb.query;
 
+import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.Select;
 import com.provys.db.sqldb.codebuilder.CodeBuilder;
 
@@ -30,6 +31,15 @@ public interface SqlBuilder<F extends StatementFactory, Q extends Select,
    * @return code builder used to collect text and binds for this sql builder
    */
   CodeBuilder getCodeBuilder();
+
+  /**
+   * Append expression to internal code builder. Allows composed expressions to build
+   * sub-expressions
+   *
+   * @param expression is expression to be appended
+   * @return self to support fluent build
+   */
+  SqlBuilder<F, Q, S> append(Expression<?> expression);
 
   /**
    * Build statement based on supplied select query.

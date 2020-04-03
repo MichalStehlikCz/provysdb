@@ -134,6 +134,24 @@ public final class ExpressionFunction<T> implements Expression<T> {
     verifyArguments();
   }
 
+  /**
+   * Value of field function.
+   *
+   * @return value of field function
+   */
+  public Function getFunction() {
+    return function;
+  }
+
+  /**
+   * Value of field arguments.
+   *
+   * @return value of field arguments
+   */
+  public List<Expression<?>> getArguments() {
+    return arguments;
+  }
+
   @Override
   public Class<T> getType() {
     return type;

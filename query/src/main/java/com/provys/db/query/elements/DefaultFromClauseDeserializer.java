@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
+class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
 
   private static final long serialVersionUID = 8810246829625837188L;
 

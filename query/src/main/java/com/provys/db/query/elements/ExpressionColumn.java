@@ -18,6 +18,7 @@ import com.provys.db.query.names.SimpleName;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -89,6 +90,38 @@ public final class ExpressionColumn<T> implements Expression<T> {
     this(table, column, type, null);
   }
 
+  /**
+   * Value of field table.
+   *
+   * @return value of field table
+   */
+  public @Nullable NamePath getTable() {
+    return table;
+  }
+
+  /**
+   * Value of field table, as optional instead of nullable value.
+   *
+   * @return value of field table as optional
+   */
+  public Optional<NamePath> getOptTable() {
+    return Optional.ofNullable(table);
+  }
+
+  /**
+   * Value of field column.
+   *
+   * @return value of field column
+   */
+  public SimpleName getColumn() {
+    return column;
+  }
+
+  @Override
+  public Class<T> getType() {
+    return type;
+  }
+
   @Override
   public Collection<BindVariable> getBinds() {
     return Collections.emptyList();
@@ -97,11 +130,6 @@ public final class ExpressionColumn<T> implements Expression<T> {
   @Override
   public Expression<T> mapBinds(BindMap bindMap) {
     return this;
-  }
-
-  @Override
-  public Class<T> getType() {
-    return type;
   }
 
   @Override

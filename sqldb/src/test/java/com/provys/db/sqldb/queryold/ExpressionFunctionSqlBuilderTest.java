@@ -10,12 +10,13 @@ import com.provys.db.query.Function;
 import com.provys.db.sqldb.codebuilder.CodeBuilderFactory;
 import com.provys.db.sqldb.query.SqlExpressionBind;
 import com.provys.db.sqldb.query.SqlFunction;
+import com.provys.db.sqldb.query.SqlLiteral;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
-class SqlFunctionTest {
+class ExpressionFunctionSqlBuilderTest {
 
   public static final BindWithPos[] BIND_WITH_POS = new BindWithPos[]{};
 

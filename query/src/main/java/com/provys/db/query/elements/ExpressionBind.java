@@ -71,6 +71,15 @@ public final class ExpressionBind<T> implements Expression<T> {
     this.bindVariable = bindVariable;
   }
 
+  /**
+   * Value of field bindVariable.
+   *
+   * @return value of field bindVariable
+   */
+  public BindVariable getBindVariable() {
+    return bindVariable;
+  }
+
   @Override
   public Class<T> getType() {
     return type;
@@ -88,15 +97,6 @@ public final class ExpressionBind<T> implements Expression<T> {
       return this;
     }
     return new ExpressionBind<>(type, newBindVariable);
-  }
-
-  /**
-   * Value of field bindVariable.
-   *
-   * @return value of field bindVariable
-   */
-  public BindVariable getBindVariable() {
-    return bindVariable;
   }
 
   @Override

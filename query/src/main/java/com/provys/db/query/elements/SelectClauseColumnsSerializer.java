@@ -7,26 +7,26 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.IOException;
 
-class DefaultFromClauseSerializer extends StdSerializer<DefaultFromClause> {
+class SelectClauseColumnsSerializer extends StdSerializer<SelectClauseColumns> {
 
-  private static final long serialVersionUID = -489636074594048553L;
+  private static final long serialVersionUID = 8230708676543234921L;
 
-  protected DefaultFromClauseSerializer() {
-    super(DefaultFromClause.class);
+  protected SelectClauseColumnsSerializer() {
+    super(SelectClauseColumns.class);
   }
 
   @Override
-  public void serialize(DefaultFromClause fromClause, JsonGenerator generator,
+  public void serialize(SelectClauseColumns selectClause, JsonGenerator generator,
       SerializerProvider provider) throws IOException {
     boolean xml = generator.getCodec() instanceof XmlMapper;
     if (xml) {
       generator.writeStartObject();
-      generator.writeFieldName("ELEM");
+      generator.writeFieldName("COLUMN");
     }
     generator.writeStartArray();
     var codec = (ObjectMapper) generator.getCodec();
-    for (var element : fromClause.getElements()) {
-      codec.writerFor(FromElement.class).writeValue(generator, element);
+    for (var column : selectClause.getColumns()) {
+      codec.writerFor(SelectColumn.class).writeValue(generator, column);
     }
     generator.writeEndArray();
     if (xml) {
