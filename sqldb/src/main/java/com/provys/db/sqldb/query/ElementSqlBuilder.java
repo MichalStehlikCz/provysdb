@@ -3,7 +3,7 @@ package com.provys.db.sqldb.query;
 import com.provys.db.query.elements.Element;
 import com.provys.db.sqldb.codebuilder.CodeBuilder;
 
-public interface ElementSqlBuilder<F extends StatementFactory<?>, T extends Element<?>> {
+public interface ElementSqlBuilder<B extends SqlBuilder, T extends Element<?>> {
 
   /**
    * Type of element this builder can handle.
@@ -19,5 +19,5 @@ public interface ElementSqlBuilder<F extends StatementFactory<?>, T extends Elem
    *                   appended to
    * @param element    is element that is being appended
    */
-  void append(SqlBuilder<? extends F, ?, ?> sqlBuilder, T element);
+  void append(B sqlBuilder, T element);
 }

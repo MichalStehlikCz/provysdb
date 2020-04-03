@@ -1,50 +1,30 @@
 package com.provys.db.sqldb.query;
 
-import com.provys.db.query.elements.Expression;
-import com.provys.db.query.elements.Select;
+import com.provys.db.dbcontext.DbContext;
+import com.provys.db.dbcontext.SqlTypeMap;
+import com.provys.db.query.elements.Element;
 import com.provys.db.sqldb.codebuilder.CodeBuilder;
 
-/**
- * Analyses statement, builds context based on that, passes through elements and builds resulting
- * statement.
- */
-public interface SqlBuilder<F extends StatementFactory, Q extends Select,
-    S extends SelectStatement> {
+public interface SqlBuilder extends CodeBuilder {
 
   /**
-   * Factory used by this Sql builder. Gives access to function map etc.
+   * Type map, used to generate literals.
    *
-   * @return used statement factory
+   * @return type map, defines how to translate value to sql literal
    */
-  F getStatementFactory();
+  SqlTypeMap getSqlTypeMap();
 
   /**
-   * Select query this builder is used for.
+   * Sql function map this statement factory uses for rendering sql built-in functions.
    *
-   * @return select query this builder is used for
+   * @return function map used by this factory
    */
-  Q getQuery();
+  SqlFunctionMap getSqlFunctionMap();
 
   /**
-   * Access code builder that is used to build text and collect binds for this SqlBuilder.
+   * Append supplied element to this builder.
    *
-   * @return code builder used to collect text and binds for this sql builder
+   * @param element is element we want to append
    */
-  CodeBuilder getCodeBuilder();
-
-  /**
-   * Append expression to internal code builder. Allows composed expressions to build
-   * sub-expressions
-   *
-   * @param expression is expression to be appended
-   * @return self to support fluent build
-   */
-  SqlBuilder<F, Q, S> append(Expression<?> expression);
-
-  /**
-   * Build statement based on supplied select query.
-   *
-   * @return new statement, built on supplied statement
-   */
-  S build();
+  void append(Element<?> element);
 }
