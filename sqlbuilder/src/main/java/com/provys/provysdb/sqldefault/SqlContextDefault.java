@@ -2,7 +2,7 @@ package com.provys.provysdb.sqldefault;
 
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbConnection;
-import com.provys.db.dbcontext.SqlTypeMap;
+import com.provys.db.dbcontext.SqlTypeHandler;
 import com.provys.provysdb.sql.SqlContext;
 import com.provys.provysdb.sql.SqlFactory;
 
@@ -38,7 +38,7 @@ public class SqlContextDefault implements SqlContext {
   }
 
   @Override
-  public SqlTypeMap getSqlTypeMap() {
+  public SqlTypeHandler getSqlTypeMap() {
     return ;
   }
 }

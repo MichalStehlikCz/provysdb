@@ -11,8 +11,9 @@
     <version>1.5.5-SNAPSHOT</version>
     <modules>
         <module>db-api</module>
+        <module>defaultdb</module>
         <module>query</module>
-        <module>sqldb</module>
+        <module>sqlquery</module>
         <module>provysdb</module>
         <module>provysdb-spring</module>
         <module>sqlbuilder</module>

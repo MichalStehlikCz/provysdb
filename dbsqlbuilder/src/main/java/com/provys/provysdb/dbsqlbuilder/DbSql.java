@@ -1,7 +1,7 @@
 package com.provys.provysdb.dbsqlbuilder;
 
 import com.provys.db.dbcontext.DbConnection;
-import com.provys.db.dbcontext.SqlTypeMap;
+import com.provys.db.dbcontext.SqlTypeHandler;
 import sqlbuilder.Sql;
 
 /**
@@ -19,9 +19,9 @@ public interface DbSql extends Sql {
   /**
    * Used Sql type adapter map.
    *
-   * @return used com.provys.db.sql type adapter map (taken from underlying datasource)
+   * @return used sql type adapter map (taken from underlying datasource)
    */
-  SqlTypeMap getSqlTypeMap();
+  SqlTypeHandler getSqlTypeMap();
 
   /**
    * Select statement builder.

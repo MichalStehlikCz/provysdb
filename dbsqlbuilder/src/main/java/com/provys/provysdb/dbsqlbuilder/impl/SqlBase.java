@@ -1,7 +1,7 @@
 package com.provys.provysdb.dbsqlbuilder.impl;
 
 import com.provys.db.dbcontext.DbContext;
-import com.provys.db.dbcontext.SqlTypeMap;
+import com.provys.db.dbcontext.SqlTypeHandler;
 import com.provys.provysdb.dbsqlbuilder.DbSelectBuilderT0;
 import com.provys.provysdb.dbsqlbuilder.DbSql;
 import sqlbuilder.impl.SqlImpl;
@@ -27,8 +27,8 @@ abstract class SqlBase extends SqlImpl implements DbSql {
   }
 
   @Override
-  public SqlTypeMap getSqlTypeMap() {
-    return dbContext.getSqlTypeMap();
+  public SqlTypeHandler getSqlTypeMap() {
+    return dbContext.getSqlTypeHandler();
   }
 
   @Override

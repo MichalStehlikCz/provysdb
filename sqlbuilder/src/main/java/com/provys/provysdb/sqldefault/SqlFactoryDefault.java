@@ -9,7 +9,7 @@ import com.provys.provysdb.sql.NamePath;
 import com.provys.provysdb.sql.SimpleName;
 import com.provys.provysdb.sql.SqlFactory;
 import com.provys.provysdb.sqldefault.expression.ExpressionFactory;
-import com.provys.db.sqldb.queryold.name.NameFactory;
+import com.provys.db.sqlquery.queryold.name.NameFactory;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;

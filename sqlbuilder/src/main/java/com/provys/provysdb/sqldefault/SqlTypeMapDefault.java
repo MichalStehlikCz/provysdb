@@ -4,12 +4,12 @@ import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import com.provys.db.dbcontext.SqlTypeAdapter;
-import com.provys.db.dbcontext.SqlTypeMap;
+import com.provys.db.dbcontext.SqlTypeHandler;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class SqlTypeMapDefault implements SqlTypeMap {
+public class SqlTypeMapDefault implements SqlTypeHandler {
 
   @Override
   public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {

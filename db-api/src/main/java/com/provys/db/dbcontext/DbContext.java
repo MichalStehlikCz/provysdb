@@ -46,5 +46,5 @@ public interface DbContext {
    *
    * @return com.provys.db.sql type adapter map used in given database context
    */
-  SqlTypeMap getSqlTypeMap();
+  SqlTypeHandler getSqlTypeHandler();
 }

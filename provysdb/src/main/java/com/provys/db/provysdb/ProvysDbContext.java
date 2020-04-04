@@ -2,8 +2,8 @@ package com.provys.db.provysdb;
 
 import com.provys.common.exception.RegularException;
 import com.provys.db.dbcontext.DbConnection;
-import com.provys.db.sqldb.dbcontext.NoDbContext;
-import com.provys.db.sqldb.dbcontext.DefaultConnection;
+import com.provys.db.sqlquery.dbcontext.NoDbContext;
+import com.provys.db.sqlquery.dbcontext.DefaultConnection;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -30,7 +30,7 @@ public class ProvysDbContext extends NoDbContext {
   @Override
   public DbConnection getConnection() {
     try {
-      return new DefaultConnection(provysDataSource.getConnection(), getSqlTypeMap());
+      return new DefaultConnection(provysDataSource.getConnection(), getSqlTypeHandler());
     } catch (SQLException e) {
       throw new RegularException("PROVYSDB_CANNOTCONNECT", "Failed to initialize connection", e);
     }
@@ -41,7 +41,7 @@ public class ProvysDbContext extends NoDbContext {
     try {
       return new DefaultConnection(
           provysDataSource.getConnectionWithToken(Objects.requireNonNull(dbToken)),
-          getSqlTypeMap());
+          getSqlTypeHandler());
     } catch (SQLException e) {
       throw new RegularException("PROVYSDB_CANNOTCONNECTWITHTOKEN",
           "Failed to initialize connection with token", e);

@@ -2,7 +2,7 @@ package sqlbuilder.elements;
 
 import com.provys.common.exception.InternalException;
 import com.provys.provysdb.sql.BindName;
-import com.provys.db.sqldb.queryold.name.BindNameImpl;
+import com.provys.db.sqlquery.queryold.name.BindNameImpl;
 import sqlbuilder.BindValueBuilder;
 import sqlbuilder.BindWithType;
 import com.provys.provysdb.sql.CodeBuilder;

@@ -1,8 +1,8 @@
 package sqlbuilder.elements;
 
 import com.provys.provysdb.sql.BindName;
-import com.provys.db.sqldb.queryold.name.BindNameImpl;
-import com.provys.db.sqldb.queryold.name.IdentifierImpl;
+import com.provys.db.sqlquery.queryold.name.BindNameImpl;
+import com.provys.db.sqlquery.queryold.name.IdentifierImpl;
 import sqlbuilder.BindValueBuilder;
 import sqlbuilder.Condition;
 import sqlbuilder.ConditionJoiner;
