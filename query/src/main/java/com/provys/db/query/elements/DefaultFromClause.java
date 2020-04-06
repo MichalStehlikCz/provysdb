@@ -23,17 +23,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * separated list, each from element on separate line. Implementation assumes that list is
  * relatively small, thus it is not necessary to index list by alias for faster access.
  */
-@JsonAutoDetect(
-    fieldVisibility = Visibility.NONE,
-    setterVisibility = Visibility.NONE,
-    getterVisibility = Visibility.NONE,
-    isGetterVisibility = Visibility.NONE,
-    creatorVisibility = Visibility.NONE
-)
-@JsonRootName("FROMCLAUSE")
-@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
-@JsonSerialize(using = DefaultFromClauseSerializer.class)
-@JsonDeserialize(using = DefaultFromClauseDeserializer.class)
 final class DefaultFromClause implements FromClause {
 
   private final List<FromElement> fromElements;

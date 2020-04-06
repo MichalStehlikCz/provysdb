@@ -42,8 +42,9 @@ public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
       DeserializationContext context) throws IOException {
 
     if (!parser.isExpectedStartObjectToken()) {
-      return (Literal<?>) context.handleUnexpectedToken(Literal.class, parser.currentToken(), parser,
-          "Failed to deserialize com.provys.db.sql value - start object expected");
+      return (Literal<?>) context
+          .handleUnexpectedToken(Literal.class, parser.currentToken(), parser,
+              "Failed to deserialize com.provys.db.sql value - start object expected");
     }
     var typeName = parser.nextFieldName();
     if (typeName == null) {

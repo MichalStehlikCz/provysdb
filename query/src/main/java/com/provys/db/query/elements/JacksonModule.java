@@ -25,6 +25,7 @@ public class JacksonModule extends SimpleModule {
     setMixInAnnotation(SelectClause.class, SelectClauseMixIn.class);
     setMixInAnnotation(SelectColumn.class, SelectColumnMixIn.class);
     setMixInAnnotation(FromElement.class, FromElementMixIn.class);
+    setMixInAnnotation(Condition.class, ConditionMixIn.class);
     setMixInAnnotation(Expression.class, ExpressionMixIn.class);
     setDeserializerModifier(new XmlBeanDeserializerModifier());
   }

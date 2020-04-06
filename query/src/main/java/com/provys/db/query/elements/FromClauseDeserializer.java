@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
+class FromClauseDeserializer extends StdDeserializer<FromClause> {
 
   private static final long serialVersionUID = 8810246829625837188L;
 
-  protected DefaultFromClauseDeserializer() {
-    super(DefaultFromClause.class);
+  protected FromClauseDeserializer() {
+    super(FromClause.class);
   }
 
-  private static DefaultFromClause deserializeJson(JsonParser parser)
+  private static FromClause deserializeJson(JsonParser parser)
       throws IOException {
     if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
       throw new InternalException("Start array expected deserializing from clause");
@@ -30,7 +30,7 @@ class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
     return new DefaultFromClause(elements);
   }
 
-  private static DefaultFromClause deserializeXml(JsonParser parser)
+  private static FromClause deserializeXml(JsonParser parser)
       throws IOException {
     if (parser.getCurrentToken() != JsonToken.START_OBJECT) {
       throw new InternalException("Start object expected deserializing from clause from xml");
@@ -48,8 +48,8 @@ class DefaultFromClauseDeserializer extends StdDeserializer<DefaultFromClause> {
   }
 
   @Override
-  public DefaultFromClause deserialize(JsonParser parser,
-      DeserializationContext context) throws IOException {
+  public FromClause deserialize(JsonParser parser, DeserializationContext context)
+      throws IOException {
     if (parser.getCodec() instanceof XmlMapper) {
       return deserializeXml(parser);
     }

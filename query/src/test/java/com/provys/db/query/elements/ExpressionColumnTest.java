@@ -15,16 +15,15 @@ class ExpressionColumnTest {
 
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
-        new Object[]{new ExpressionColumn<>(null, SimpleName.valueOf("column"),
-            Integer.class),
-            "{\"COLUMN\":\"column\",\"TYPE\":\"INTEGER\"}",
+        new Object[]{new ExpressionColumn<>(Integer.class, null, SimpleName.valueOf("column")),
+            "{\"TYPE\":\"INTEGER\",\"COLUMN\":\"column\"}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<COLUMN><TABLE/><COLUMN>column</COLUMN><TYPE>INTEGER</TYPE></COLUMN>"}
-        , new Object[]{new ExpressionColumn<>(SegmentedName.valueOf("scheme.table"),
-            SimpleName.valueOf("column"), String.class),
-            "{\"TABLE\":\"scheme.table\",\"COLUMN\":\"column\",\"TYPE\":\"STRING\"}",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><COLUMN><TABLE>scheme.table</TABLE>"
-                + "<COLUMN>column</COLUMN><TYPE>STRING</TYPE></COLUMN>"}
+                + "<COLUMN><TYPE>INTEGER</TYPE><TABLE/><COLUMN>column</COLUMN></COLUMN>"}
+        , new Object[]{new ExpressionColumn<>(String.class, SegmentedName.valueOf("scheme.table"),
+            SimpleName.valueOf("column")),
+            "{\"TYPE\":\"STRING\",\"TABLE\":\"scheme.table\",\"COLUMN\":\"column\"}",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><COLUMN><TYPE>STRING</TYPE>"
+                + "<TABLE>scheme.table</TABLE><COLUMN>column</COLUMN></COLUMN>"}
     );
   }
 

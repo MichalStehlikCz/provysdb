@@ -10,46 +10,46 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.IOException;
 
-class SelectClauseColumnsSerializer extends StdSerializer<SelectClauseColumns> {
+class FromClauseSerializer extends StdSerializer<FromClause> {
 
-  private static final long serialVersionUID = 8230708676543234921L;
+  private static final long serialVersionUID = -489636074594048553L;
 
-  protected SelectClauseColumnsSerializer() {
-    super(SelectClauseColumns.class);
+  protected FromClauseSerializer() {
+    super(FromClause.class);
   }
 
-  private static void serializeBody(SelectClauseColumns selectClause, JsonGenerator generator)
+  private static void serializeBody(FromClause fromClause, JsonGenerator generator)
       throws IOException {
     generator.writeStartArray();
     var codec = (ObjectMapper) generator.getCodec();
-    for (var column : selectClause.getColumns()) {
-      codec.writerFor(SelectColumn.class).writeValue(generator, column);
+    for (var element : fromClause.getElements()) {
+      codec.writerFor(FromElement.class).writeValue(generator, element);
     }
     generator.writeEndArray();
   }
 
   @Override
-  public void serialize(SelectClauseColumns selectClause, JsonGenerator generator,
+  public void serialize(FromClause fromClause, JsonGenerator generator,
       SerializerProvider provider) throws IOException {
     boolean xml = generator.getCodec() instanceof XmlMapper;
     if (xml) {
       generator.writeStartObject();
-      generator.writeFieldName("COLUMN");
+      generator.writeFieldName("ELEM");
     }
-    serializeBody(selectClause, generator);
+    serializeBody(fromClause, generator);
     if (xml) {
       generator.writeEndObject();
     }
   }
 
   @Override
-  public void serializeWithType(SelectClauseColumns selectClause, JsonGenerator generator,
+  public void serializeWithType(FromClause fromClause, JsonGenerator generator,
       SerializerProvider provider, TypeSerializer typeSerializer)
       throws IOException {
-    var typeId = typeSerializer.typeId(selectClause, START_OBJECT);
+    var typeId = typeSerializer.typeId(fromClause, START_OBJECT);
     typeSerializer.writeTypePrefix(generator, typeId);
-    generator.writeFieldName("COLUMN");
-    serializeBody(selectClause, generator);
+    generator.writeFieldName("ELEM");
+    serializeBody(fromClause, generator);
     typeSerializer.writeTypeSuffix(generator, typeId);
   }
 }

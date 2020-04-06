@@ -20,12 +20,26 @@ class SelectClauseColumnsDeserializer extends StdDeserializer<SelectClauseColumn
 
   private static SelectClauseColumns deserializeJson(JsonParser parser)
       throws IOException {
+    boolean objectEnvelope = false;
+    if (parser.getCurrentToken() == JsonToken.START_OBJECT) {
+      // happens when higher level used type serialisation
+      if (!"COLUMN".equals(parser.nextFieldName())) {
+        throw new InternalException("COLUMN field expected deserializing select clause from json");
+      }
+      objectEnvelope = true;
+      parser.nextToken();
+    }
     if (parser.getCurrentToken() != JsonToken.START_ARRAY) {
       throw new InternalException("Start array expected deserializing select clause");
     }
     List<SelectColumn<?>> columns = new ArrayList<>(5);
     while (parser.nextToken() != JsonToken.END_ARRAY) {
       columns.add(parser.readValueAs(SelectColumn.class));
+    }
+    if (objectEnvelope) {
+      if (parser.nextToken() != JsonToken.END_OBJECT) {
+        throw new InternalException("End object expected deserializing select clause with type");
+      }
     }
     return new SelectClauseColumns(columns);
   }

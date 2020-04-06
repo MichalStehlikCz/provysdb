@@ -37,26 +37,27 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from Expression
 final class ExpressionColumn<T> implements Expression<T> {
 
+  @JsonProperty("TYPE")
+  @JsonSerialize(using = ProvysClassSerializer.class)
+  private final Class<T> type;
   @JsonProperty("TABLE")
   private final @Nullable NamePath table;
   @JsonProperty("COLUMN")
   private final SimpleName column;
-  @JsonProperty("TYPE")
-  @JsonSerialize(using = ProvysClassSerializer.class)
-  private final Class<T> type;
 
   /**
    * Create column expression, based on specified source (identified by alias), column name and
    * type. Expression is validated against supplied context.
    *
-   * @param table is alias identifying source
-   * @param column is name of column, evaluated in context of source
-   * @param type is type that given expression should yield
+   * @param type        is type that given expression should yield
+   * @param table       is alias identifying source
+   * @param column      is name of column, evaluated in context of source
    * @param fromContext is context in which sources are evaluated; if left empty, no validation is
-   *                   performed
+   *                    performed
    */
-  ExpressionColumn(@Nullable NamePath table, SimpleName column, Class<T> type,
+  ExpressionColumn(Class<T> type, @Nullable NamePath table, SimpleName column,
       @Nullable FromContext fromContext) {
+    this.type = type;
     if ((table != null) && (fromContext != null)) {
       var fromElement = fromContext.getFromElement(table);
       if (fromElement != null) {
@@ -72,22 +73,22 @@ final class ExpressionColumn<T> implements Expression<T> {
       this.table = table;
     }
     this.column = column;
-    this.type = type;
   }
 
   /**
    * Create column expression, based on specified source (identified by alias), column name and
    * type. Context is not supplied, thus bno validation is performed.
    *
-   * @param table is alias identifying source
+   * @param type   is type that given expression should yield
+   * @param table  is alias identifying source
    * @param column is name of column, evaluated in context of source
-   * @param type is type that given expression should yield
    */
   @JsonCreator
-  ExpressionColumn(@JsonProperty("TABLE") @Nullable NamePath table,
-      @JsonProperty("COLUMN") SimpleName column,
-      @JsonProperty("TYPE") @JsonDeserialize(using = ProvysClassDeserializer.class) Class<T> type) {
-    this(table, column, type, null);
+  ExpressionColumn(
+      @JsonProperty("TYPE") @JsonDeserialize(using = ProvysClassDeserializer.class) Class<T> type,
+      @JsonProperty("TABLE") @Nullable NamePath table,
+      @JsonProperty("COLUMN") SimpleName column) {
+    this(type, table, column, null);
   }
 
   /**
@@ -146,25 +147,25 @@ final class ExpressionColumn<T> implements Expression<T> {
       return false;
     }
     ExpressionColumn<?> that = (ExpressionColumn<?>) o;
-    return Objects.equals(table, that.table)
-        && column.equals(that.column)
-        && (type == that.type);
+    return (type == that.type)
+        && Objects.equals(table, that.table)
+        && column.equals(that.column);
   }
 
   @Override
   public int hashCode() {
-    int result = table != null ? table.hashCode() : 0;
+    int result = type.hashCode();
+    result = 31 * result + (table != null ? table.hashCode() : 0);
     result = 31 * result + column.hashCode();
-    result = 31 * result + type.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
     return "ExpressionColumn{"
-        + "table=" + table
+        + "type=" + type
+        + ", table=" + table
         + ", column=" + column
-        + ", type=" + type
         + '}';
   }
 }

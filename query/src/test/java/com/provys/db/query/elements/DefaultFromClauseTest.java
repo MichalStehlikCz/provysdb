@@ -167,19 +167,19 @@ class DefaultFromClauseTest {
                 new FromTable(SimpleName.valueOf("brc_record_tb"), SimpleName.valueOf("rec"))),
                 null),
             "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}}]",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROMCLAUSE><ELEM>"
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROM><ELEM>"
                 + "<FROMTABLE><TABLENAME>brc_record_tb</TABLENAME><ALIAS>rec</ALIAS></FROMTABLE>"
-                + "</ELEM></FROMCLAUSE>"}
+                + "</ELEM></FROM>"}
         , new Object[]{new DefaultFromClause(List.of(
             new FromTable(SimpleName.valueOf("brc_record_tb"), SimpleName.valueOf("rec")),
             new FromTable(SegmentedName.valueOf("brc.brc_record_tb"), null)), null),
             "[{\"FROMTABLE\":{\"TABLENAME\":\"brc_record_tb\",\"ALIAS\":\"rec\"}},"
                 + "{\"FROMTABLE\":{\"TABLENAME\":\"brc.brc_record_tb\"}}]",
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROMCLAUSE><ELEM>"
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><FROM><ELEM>"
                 + "<FROMTABLE><TABLENAME>brc_record_tb</TABLENAME><ALIAS>rec</ALIAS></FROMTABLE>"
                 + "</ELEM><ELEM>"
                 + "<FROMTABLE><TABLENAME>brc.brc_record_tb</TABLENAME><ALIAS/></FROMTABLE>"
-                + "</ELEM></FROMCLAUSE>"
+                + "</ELEM></FROM>"
         }
     );
   }

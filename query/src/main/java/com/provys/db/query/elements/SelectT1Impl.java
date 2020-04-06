@@ -1,7 +1,5 @@
 package com.provys.db.query.elements;
 
-import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,16 +8,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindVariableCollector;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Represents Sql select statement with default (= Oracle) syntax.
+ * Select statement with single columns.
+ *
+ * @param <T1> is type of the first and only column
  */
 @JsonAutoDetect(
     fieldVisibility = Visibility.NONE,
@@ -28,37 +27,49 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     isGetterVisibility = Visibility.NONE,
     creatorVisibility = Visibility.NONE
 )
-@JsonRootName("SELECT")
-@JsonPropertyOrder({"SELECT", "FROM", "WHERE", "PARENTCONTEXT"})
-final class SelectImpl extends SelectTImpl implements Select {
+@JsonRootName("SELECT1")
+@JsonPropertyOrder({"COLUMN", "FROM", "WHERE", "PARENTCONTEXT"})
+final class SelectT1Impl<T1> extends SelectTImpl implements SelectT1<T1> {
 
-  @JsonProperty("SELECT")
-  private final SelectClause selectClause;
+  @JsonProperty("COLUMN")
+  private final SelectColumn<T1> column1;
 
-  SelectImpl(SelectClause selectClause, FromClause fromClause, @Nullable Condition whereClause,
-      @Nullable FromContext parentContext, @Nullable BindMap bindMap) {
+  SelectT1Impl(SelectColumn<T1> column1,
+      FromClause fromClause,
+      @Nullable Condition whereClause,
+      @Nullable FromContext parentContext,
+      @Nullable BindMap bindMap) {
     super(fromClause, whereClause, parentContext, bindMap);
-    this.selectClause = (bindMap == null) ? selectClause : selectClause.mapBinds(bindMap);
+    this.column1 = (bindMap == null) ? column1 : column1.mapBinds(bindMap);
   }
 
   @JsonCreator
-  SelectImpl(@JsonProperty("SELECT") SelectClause selectClause,
-      @JsonProperty("FROM") @JsonDeserialize(using = FromClauseDeserializer.class) FromClause
-          fromClause,
+  SelectT1Impl(@JsonProperty("COLUMN") SelectColumn<T1> column1,
+      @JsonProperty("FROM") FromClause fromClause,
       @JsonProperty("WHERE") @Nullable Condition whereClause,
       @JsonProperty("PARENTCONTEXT") @Nullable FromContext parentContext) {
-    this(selectClause, Objects.requireNonNull(fromClause), whereClause, parentContext, null);
+    this(column1, fromClause, whereClause, parentContext, null);
+  }
+
+  @Override
+  public SelectColumn<T1> getColumn1() {
+    return column1;
+  }
+
+  @Override
+  public Class<T1> getType1() {
+    return column1.getType();
   }
 
   @Override
   public SelectClause getSelectClause() {
-    return selectClause;
+    return new SelectClauseColumns(List.of(column1));
   }
 
   @Override
   public Collection<BindVariable> getBinds() {
     return new BindVariableCollector()
-        .add(selectClause)
+        .add(column1)
         .add(getFromClause())
         .add(getWhereClause())
         .getBindsByName()
@@ -66,14 +77,14 @@ final class SelectImpl extends SelectTImpl implements Select {
   }
 
   @Override
-  public Select mapBinds(BindMap bindMap) {
-    return new SelectImpl(selectClause, getFromClause(), getWhereClause(), getParentContext(),
+  public SelectT1<T1> mapBinds(BindMap bindMap) {
+    return new SelectT1Impl<>(column1, getFromClause(), getWhereClause(), getParentContext(),
         bindMap);
   }
 
   @Override
   public void apply(QueryConsumer consumer) {
-    consumer.select(selectClause, getFromClause(), getWhereClause());
+    consumer.select(column1, getFromClause(), getWhereClause());
   }
 
   @Override
@@ -87,21 +98,21 @@ final class SelectImpl extends SelectTImpl implements Select {
     if (!super.equals(o)) {
       return false;
     }
-    SelectImpl select = (SelectImpl) o;
-    return selectClause.equals(select.selectClause);
+    SelectT1Impl<?> selectT1 = (SelectT1Impl<?>) o;
+    return column1.equals(selectT1.column1);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + selectClause.hashCode();
+    result = 31 * result + column1.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
-    return "SelectImpl{"
-        + "selectClause=" + selectClause
+    return "SelectT1Impl{"
+        + "column1=" + column1
         + ", " + super.toString() + '}';
   }
 }

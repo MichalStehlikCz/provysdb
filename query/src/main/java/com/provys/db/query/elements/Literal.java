@@ -37,12 +37,12 @@ final class Literal<T> implements Expression<T> {
   }
 
   @SuppressWarnings("unchecked") // not exactly correct (for generic types), but close enough...
-  private static <T> Class<T> getType(@NonNull T value) {
+  private static <T> Class<T> getTypeFromObject(@NonNull T value) {
     return (Class<T>) value.getClass();
   }
 
   Literal(@NonNull T value) {
-    this(getType(value), value);
+    this(getTypeFromObject(value), value);
   }
 
   public @Nullable T getValue() {

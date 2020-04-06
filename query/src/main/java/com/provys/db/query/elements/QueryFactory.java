@@ -40,7 +40,7 @@ public class QueryFactory {
    */
   public <T> Expression<T> column(Class<T> type, @Nullable NamePath table, SimpleName column,
       @Nullable FromContext fromContext) {
-    return new ExpressionColumn<>(table, column, type, fromContext);
+    return new ExpressionColumn<>(type, table, column, fromContext);
   }
 
   /**
@@ -142,6 +142,72 @@ public class QueryFactory {
   }
 
   /**
+   * Create select query based on supplied column, from and where clauses.
+   *
+   * @param column1     is the first and only column of query
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
+   * @param parentContext is parent context, that can define additional sources, available in query
+   * @param bindMap       is bind map, used to remap bind variables on creation
+   * @param <T1> is type of the first column
+   * @return new single column select query
+   */
+  <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
+      @Nullable Condition whereClause, @Nullable FromContext parentContext,
+      @Nullable BindMap bindMap) {
+    return new SelectT1Impl<>(column1, fromClause, whereClause, parentContext, bindMap);
+  }
+
+  /**
+   * Create select query based on supplied column, from and where clauses.
+   *
+   * @param column1     is the first and only column of query
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
+   * @param <T1> is type of the first column
+   * @return new single column select query
+   */
+  <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
+      @Nullable Condition whereClause) {
+    return select(column1, fromClause, whereClause, null, null);
+  }
+
+  /**
+   * Consume select query based on supplied columns, from and where clauses.
+   *
+   * @param column1     is the first column of query
+   * @param column2     is the second column of query
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
+   * @param parentContext is parent context, that can define additional sources, available in query
+   * @param bindMap       is bind map, used to remap bind variables on creation
+   * @param <T1> is type of the first column
+   * @param <T2> is type of the second column
+   * @return new two column select query
+   */
+  <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
+      FromClause fromClause, @Nullable Condition whereClause, @Nullable FromContext parentContext,
+      @Nullable BindMap bindMap) {
+    return new SelectT2Impl<>(column1, column2, fromClause, whereClause, parentContext, bindMap);
+  }
+
+  /**
+   * Consume select query based on supplied columns, from and where clauses.
+   *
+   * @param column1     is the first column of query
+   * @param column2     is the second column of query
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
+   * @param <T1> is type of the first column
+   * @param <T2> is type of the second column
+   * @return new two column select query
+   */
+  <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
+      FromClause fromClause, @Nullable Condition whereClause) {
+    return select(column1, column2, fromClause, whereClause, null, null);
+  }
+
+  /**
    * Create select part of query, based on supplied columns and using remapping via supplied map.
    *
    * @param columns is collection of columns to be used for result projection
@@ -222,5 +288,17 @@ public class QueryFactory {
    */
   public FromElement fromTable(NamePath tableName, @Nullable SimpleName alias) {
     return new FromTable(tableName, alias);
+  }
+
+  /**
+   * Create new condition with equals comparison of two expressions.
+   *
+   * @param expression1 is the first operand of comparison
+   * @param expression2 is the second operand of comparison
+   * @param <T> is type of items being compared
+   * @return condition evaluating equality of two operands
+   */
+  public <T> Condition eq(Expression<T> expression1, Expression<T> expression2) {
+    return new ConditionEq<>(expression1, expression2);
   }
 }

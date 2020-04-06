@@ -1,4 +1,4 @@
-package com.provys.db.sqlquery.queryold;
+package com.provys.db.sqlquery.query;
 
 import static org.assertj.core.api.Assertions.*;
 

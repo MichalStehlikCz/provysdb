@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 /**
- * Class contains Jackson annotation for {@link FromElement}. This way, we avoid cyclical
- * dependency between FromElement and its implementations (even though it is only formal... if we
- * create another implementation of FromElement, it will fail on serialisation)
+ * Class contains Jackson annotation for {@link Condition}. This way, we avoid cyclical
+ * dependency between Condition and its implementations (even though it is only formal... if we
+ * create another implementation of Condition, it will fail on serialisation)
  */
 @SuppressWarnings("MarkerInterface")
-@JsonRootName("FROMELEMENT")
+@JsonRootName("CONDITION")
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = FromTable.class, name = "FROMTABLE"),
+    @JsonSubTypes.Type(value = ConditionEq.class, name = "EQ"),
 })
-public interface FromElementMixIn {
+public interface ConditionMixIn {
 
 }
