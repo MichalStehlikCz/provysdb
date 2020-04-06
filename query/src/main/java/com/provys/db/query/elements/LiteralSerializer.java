@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.provys.common.types.ProvysObjectSerializer;
+import com.provys.common.types.TypeMap;
+import com.provys.common.types.TypeMapImpl;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -19,29 +21,36 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class LiteralSerializer extends StdSerializer<Literal<?>> {
 
-  private final ProvysObjectSerializer objectSerializer;
+  private final TypeMap typeMap;
 
   /**
    * Creates new literal serializer with supplied object serializer, that will be used for value.
    *
-   * @param objectSerializer is serializer to be used for literal value
+   * @param typeMap is type map that will be used to translate type name
    */
-  public LiteralSerializer(ProvysObjectSerializer objectSerializer) {
+  public LiteralSerializer(TypeMap typeMap) {
     super(Literal.class, true);
-    this.objectSerializer = objectSerializer;
+    this.typeMap = typeMap;
   }
 
   /**
    * Create new literal serializer, using {@link ProvysObjectSerializer} as value serializer.
    */
   public LiteralSerializer() {
-    this(new ProvysObjectSerializer());
+    this(TypeMapImpl.getDefault());
   }
 
   @Override
   public void serialize(Literal<?> literal, JsonGenerator generator,
-      SerializerProvider serializerProvider) throws IOException {
-    objectSerializer.serialize(literal.getValue(), generator, serializerProvider);
+      SerializerProvider provider) throws IOException {
+    generator.writeStartObject();
+    var value = literal.getValue();
+    if (value == null) {
+      generator.writeNullField(typeMap.getName(literal.getType()));
+    } else {
+      generator.writeObjectField(typeMap.getName(literal.getType()), value);
+    }
+    generator.writeEndObject();
   }
 
   @Override
@@ -50,7 +59,12 @@ public final class LiteralSerializer extends StdSerializer<Literal<?>> {
       throws IOException {
     var typeId = typeSerializer.typeId(literal, START_OBJECT);
     typeSerializer.writeTypePrefix(generator, typeId);
-    objectSerializer.serializeField(literal.getValue(), generator);
+    var value = literal.getValue();
+    if (value == null) {
+      generator.writeNullField(typeMap.getName(literal.getType()));
+    } else {
+      generator.writeObjectField(typeMap.getName(literal.getType()), value);
+    }
     typeSerializer.writeTypeSuffix(generator, typeId);
   }
 
@@ -75,18 +89,18 @@ public final class LiteralSerializer extends StdSerializer<Literal<?>> {
 
   private static final class SerializationProxy implements Serializable {
 
-    private static final long serialVersionUID = -5959109065173165261L;
-    private @Nullable ProvysObjectSerializer objectSerializer;
+    private static final long serialVersionUID = -2200144145253697396L;
+    private @Nullable TypeMap typeMap;
 
     SerializationProxy() {
     }
 
     SerializationProxy(LiteralSerializer value) {
-      this.objectSerializer = value.objectSerializer;
+      this.typeMap = value.typeMap;
     }
 
     private Object readResolve() {
-      return new LiteralSerializer(Objects.requireNonNull(objectSerializer));
+      return new LiteralSerializer(Objects.requireNonNull(typeMap));
     }
   }
 
@@ -99,17 +113,17 @@ public final class LiteralSerializer extends StdSerializer<Literal<?>> {
       return false;
     }
     LiteralSerializer that = (LiteralSerializer) o;
-    return objectSerializer.equals(that.objectSerializer);
+    return typeMap.equals(that.typeMap);
   }
 
   @Override
   public int hashCode() {
-    return objectSerializer.hashCode();
+    return typeMap.hashCode();
   }
 
   @Override
   public String toString() {
     return "SqlLiteralSerializer{"
-        + "objectSerializer=" + objectSerializer + '}';
+        + "typeMap=" + typeMap + '}';
   }
 }

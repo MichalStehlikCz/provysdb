@@ -80,6 +80,11 @@ final class ColumnExpression<T> implements SelectColumn<T> {
   }
 
   @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.selectColumn(expression, alias);
+  }
+
+  @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;

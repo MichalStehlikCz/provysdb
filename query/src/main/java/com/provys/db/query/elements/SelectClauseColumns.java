@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
 @JsonSerialize(using = SelectClauseColumnsSerializer.class)
 @JsonDeserialize(using = SelectClauseColumnsDeserializer.class)
-public final class SelectClauseColumns implements SelectClause {
+final class SelectClauseColumns implements SelectClause {
 
   private final List<SelectColumn<?>> columns;
 
@@ -41,7 +41,7 @@ public final class SelectClauseColumns implements SelectClause {
    * @param columns are columns select clause should be based on
    * @param bindMap can be used to map variables in columns
    */
-  public SelectClauseColumns(Collection<? extends SelectColumn<?>> columns,
+  SelectClauseColumns(Collection<? extends SelectColumn<?>> columns,
       @Nullable BindMap bindMap) {
     if (bindMap == null) {
       this.columns = List.copyOf(columns);
@@ -57,7 +57,7 @@ public final class SelectClauseColumns implements SelectClause {
    *
    * @param columns is collection of columns in new clause
    */
-  public SelectClauseColumns(Collection<? extends SelectColumn<?>> columns) {
+  SelectClauseColumns(Collection<? extends SelectColumn<?>> columns) {
     this(columns, null);
   }
 
@@ -105,6 +105,11 @@ public final class SelectClauseColumns implements SelectClause {
       return this;
     }
     return new SelectClauseColumns(newColumns);
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.selectColumns(columns);
   }
 
   @Override

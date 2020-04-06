@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Literal.class, name = "LITERAL"),
-    @JsonSubTypes.Type(value = LiteralNVarchar.class, name = "LITERALNVARCHAR"),
     @JsonSubTypes.Type(value = Function.class, name = "FUNCTION"),
     @JsonSubTypes.Type(value = ExpressionColumn.class, name = "COLUMN"),
     @JsonSubTypes.Type(value = ExpressionBind.class, name = "BIND"),

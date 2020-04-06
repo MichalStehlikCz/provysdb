@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
 @JsonSerialize(using = DefaultFromClauseSerializer.class)
 @JsonDeserialize(using = DefaultFromClauseDeserializer.class)
-public final class DefaultFromClause implements FromClause {
+final class DefaultFromClause implements FromClause {
 
   private final List<FromElement> fromElements;
 
@@ -44,7 +44,7 @@ public final class DefaultFromClause implements FromClause {
    * @param fromElements are elements from clause should be based on
    * @param bindMap can be used to map variables in from clause
    */
-  public DefaultFromClause(Collection<? extends FromElement> fromElements,
+  DefaultFromClause(Collection<? extends FromElement> fromElements,
       @Nullable BindMap bindMap) {
     this.fromElements = fromElements.stream()
         .map(fromElement -> (bindMap == null) ? fromElement : fromElement.mapBinds(bindMap))
@@ -56,7 +56,7 @@ public final class DefaultFromClause implements FromClause {
    *
    * @param fromElements is collection of from elements in new clause
    */
-  public DefaultFromClause(Collection<? extends FromElement> fromElements) {
+  DefaultFromClause(Collection<? extends FromElement> fromElements) {
     this(fromElements, null);
   }
 
@@ -114,6 +114,11 @@ public final class DefaultFromClause implements FromClause {
       return this;
     }
     return new DefaultFromClause(newFromElements);
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.from(fromElements);
   }
 
   @Override

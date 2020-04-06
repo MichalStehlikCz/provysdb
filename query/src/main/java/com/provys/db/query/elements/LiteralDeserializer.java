@@ -3,7 +3,8 @@ package com.provys.db.query.elements;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.provys.common.types.ProvysObjectDeserializer;
+import com.provys.common.types.TypeMap;
+import com.provys.common.types.TypeMapImpl;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -16,31 +17,50 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
 
-  private final ProvysObjectDeserializer objectDeserializer;
+  private final TypeMap typeMap;
 
   /**
    * Creates new literal deserializer with supplied object deserializer, that will be used for
    * value.
    *
-   * @param objectDeserializer is deserializer to be used for literal value
+   * @param typeMap is type map that will be used for type name translation
    */
-  public LiteralDeserializer(ProvysObjectDeserializer objectDeserializer) {
+  public LiteralDeserializer(TypeMap typeMap) {
     super(Literal.class);
-    this.objectDeserializer = objectDeserializer;
+    this.typeMap = typeMap;
   }
 
   /**
-   * Create new literal deserializer, using {@link ProvysObjectDeserializer} as value
-   * deserializer.
+   * Create new literal deserializer, using {@link TypeMap} for type name translation.
    */
   public LiteralDeserializer() {
-    this(new ProvysObjectDeserializer());
+    this(TypeMapImpl.getDefault());
   }
 
   @Override
   public Literal<?> deserialize(JsonParser parser,
-      DeserializationContext deserializationContext) throws IOException {
-    return new Literal<>(objectDeserializer.deserialize(parser, deserializationContext));
+      DeserializationContext context) throws IOException {
+
+    if (!parser.isExpectedStartObjectToken()) {
+      return (Literal<?>) context.handleUnexpectedToken(Literal.class, parser.currentToken(), parser,
+          "Failed to deserialize com.provys.db.sql value - start object expected");
+    }
+    var typeName = parser.nextFieldName();
+    if (typeName == null) {
+      return (Literal<?>) context.handleUnexpectedToken(Object.class, parser.currentToken(), parser,
+          "Failed to deserialize com.provys.db.sql value - field not found inside value object");
+    }
+    var type = typeMap.getType(typeName);
+    parser.nextToken();
+    var value = context.readValue(parser, type);
+    if (!parser.nextToken().isStructEnd()) {
+      return (Literal<?>) context.handleUnexpectedToken(Object.class, parser.currentToken(), parser,
+          "Failed to deserialize com.provys.db.sql value - end object expected");
+    }
+    if (value == null) {
+      return new Literal<>(type, null);
+    }
+    return new Literal<>(value);
   }
 
   /**
@@ -64,18 +84,18 @@ public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
 
   private static final class SerializationProxy implements Serializable {
 
-    private static final long serialVersionUID = -1600120462226783447L;
-    private @Nullable ProvysObjectDeserializer objectDeserializer;
+    private static final long serialVersionUID = 4298634732340784367L;
+    private @Nullable TypeMap typeMap;
 
     SerializationProxy() {
     }
 
     SerializationProxy(LiteralDeserializer value) {
-      this.objectDeserializer = value.objectDeserializer;
+      this.typeMap = value.typeMap;
     }
 
     private Object readResolve() {
-      return new LiteralDeserializer(Objects.requireNonNull(objectDeserializer));
+      return new LiteralDeserializer(Objects.requireNonNull(typeMap));
     }
   }
 
@@ -88,17 +108,17 @@ public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
       return false;
     }
     LiteralDeserializer that = (LiteralDeserializer) o;
-    return objectDeserializer.equals(that.objectDeserializer);
+    return typeMap.equals(that.typeMap);
   }
 
   @Override
   public int hashCode() {
-    return objectDeserializer.hashCode();
+    return typeMap.hashCode();
   }
 
   @Override
   public String toString() {
     return "SqlLiteralDeserializer{"
-        + "objectDeserializer=" + objectDeserializer + '}';
+        + "typeMap=" + typeMap + '}';
   }
 }

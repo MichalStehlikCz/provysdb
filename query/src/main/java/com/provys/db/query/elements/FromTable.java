@@ -29,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     creatorVisibility = Visibility.NONE
 )
 @JsonRootName("FROMTABLE")
-@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromElement
-public final class FromTable implements FromElement {
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from FromElement
+final class FromTable implements FromElement {
 
   @JsonProperty("TABLENAME")
   private final NamePath tableName;
@@ -55,7 +55,7 @@ public final class FromTable implements FromElement {
    * @param alias is alias this source shall use in query
    */
   @JsonCreator
-  public FromTable(@JsonProperty("TABLENAME") NamePath tableName,
+  FromTable(@JsonProperty("TABLENAME") NamePath tableName,
       @JsonProperty("ALIAS") @Nullable SimpleName alias) {
     validateTableName(tableName);
     this.tableName = tableName;
@@ -89,6 +89,11 @@ public final class FromTable implements FromElement {
   @Override
   public FromElement mapBinds(BindMap bindMap) {
     return this;
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.fromTable(tableName, alias);
   }
 
   @Override

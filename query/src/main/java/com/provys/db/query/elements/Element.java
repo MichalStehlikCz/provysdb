@@ -24,4 +24,12 @@ public interface Element<T extends Element<T>> {
    * @return element that is almost the same, but with bind variables replaced based on supplied map
    */
   T mapBinds(BindMap bindMap);
+
+  /**
+   * Apply this element on supplied consumer. Finds proper method this element is able to translate
+   * to and call it.
+   *
+   * @param consumer is query consumer, supplying methods that allow to apply content of element
+   */
+  void apply(QueryConsumer consumer);
 }

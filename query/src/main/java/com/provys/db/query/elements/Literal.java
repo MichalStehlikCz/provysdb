@@ -11,6 +11,7 @@ import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -25,23 +26,32 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 @JsonSerialize(using = LiteralSerializer.class)
 @JsonDeserialize(using = LiteralDeserializer.class)
-public final class Literal<T> implements Expression<T> {
+final class Literal<T> implements Expression<T> {
 
-  private final @NonNull T value;
+  private final Class<T> type;
+  private final @Nullable T value;
 
-  public Literal(@NonNull T value) {
+  Literal(Class<T> type, @Nullable T value) {
+    this.type = type;
     this.value = value;
   }
 
-  public @NonNull T getValue() {
+  @SuppressWarnings("unchecked") // not exactly correct (for generic types), but close enough...
+  private static <T> Class<T> getType(@NonNull T value) {
+    return (Class<T>) value.getClass();
+  }
+
+  Literal(@NonNull T value) {
+    this(getType(value), value);
+  }
+
+  public @Nullable T getValue() {
     return value;
   }
 
   @Override
   public Class<T> getType() {
-    @SuppressWarnings("unchecked") // we know that class of object has correct type parameter
-    var result = (Class<T>) value.getClass();
-    return result;
+    return type;
   }
 
   @Override
@@ -55,6 +65,11 @@ public final class Literal<T> implements Expression<T> {
   }
 
   @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.literal(type, value);
+  }
+
+  @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
@@ -63,18 +78,22 @@ public final class Literal<T> implements Expression<T> {
       return false;
     }
     Literal<?> literal = (Literal<?>) o;
-    return value.equals(literal.value);
+    return type == literal.type
+        && Objects.equals(value, literal.value);
   }
 
   @Override
   public int hashCode() {
-    return value.hashCode();
+    int result = type.hashCode();
+    result = 31 * result + (value != null ? value.hashCode() : 0);
+    return result;
   }
 
   @Override
   public String toString() {
     return "Literal{"
-        + "value=" + value
+        + "type=" + type
+        + ", value=" + value
         + '}';
   }
 }

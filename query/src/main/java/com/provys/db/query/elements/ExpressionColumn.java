@@ -35,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("COLUMN")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from Expression
-public final class ExpressionColumn<T> implements Expression<T> {
+final class ExpressionColumn<T> implements Expression<T> {
 
   @JsonProperty("TABLE")
   private final @Nullable NamePath table;
@@ -55,7 +55,7 @@ public final class ExpressionColumn<T> implements Expression<T> {
    * @param fromContext is context in which sources are evaluated; if left empty, no validation is
    *                   performed
    */
-  public ExpressionColumn(@Nullable NamePath table, SimpleName column, Class<T> type,
+  ExpressionColumn(@Nullable NamePath table, SimpleName column, Class<T> type,
       @Nullable FromContext fromContext) {
     if ((table != null) && (fromContext != null)) {
       var fromElement = fromContext.getFromElement(table);
@@ -84,7 +84,7 @@ public final class ExpressionColumn<T> implements Expression<T> {
    * @param type is type that given expression should yield
    */
   @JsonCreator
-  public ExpressionColumn(@JsonProperty("TABLE") @Nullable NamePath table,
+  ExpressionColumn(@JsonProperty("TABLE") @Nullable NamePath table,
       @JsonProperty("COLUMN") SimpleName column,
       @JsonProperty("TYPE") @JsonDeserialize(using = ProvysClassDeserializer.class) Class<T> type) {
     this(table, column, type, null);
@@ -130,6 +130,11 @@ public final class ExpressionColumn<T> implements Expression<T> {
   @Override
   public Expression<T> mapBinds(BindMap bindMap) {
     return this;
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.column(type, table, column);
   }
 
   @Override

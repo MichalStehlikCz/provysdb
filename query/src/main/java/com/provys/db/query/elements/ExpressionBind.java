@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("BIND")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
-public final class ExpressionBind<T> implements Expression<T> {
+final class ExpressionBind<T> implements Expression<T> {
 
   /**
    * Create expression for supplied bind variable. Type of expression is unknown at compile time, as
@@ -39,7 +39,7 @@ public final class ExpressionBind<T> implements Expression<T> {
    * @return new bind expression based on supplied variable
    */
   @JsonCreator
-  public static ExpressionBind<?> ofBindVariable(@JsonUnwrapped BindVariable bindVariable) {
+  static ExpressionBind<?> ofBindVariable(@JsonUnwrapped BindVariable bindVariable) {
     return new ExpressionBind<>(bindVariable.getType(), bindVariable);
   }
 
@@ -65,7 +65,7 @@ public final class ExpressionBind<T> implements Expression<T> {
    * @param type         is required type of expression
    * @param bindVariable is bind variable this expression represents
    */
-  public ExpressionBind(Class<T> type, BindVariable bindVariable) {
+  ExpressionBind(Class<T> type, BindVariable bindVariable) {
     verifyType(type, bindVariable);
     this.type = type;
     this.bindVariable = bindVariable;
@@ -97,6 +97,11 @@ public final class ExpressionBind<T> implements Expression<T> {
       return this;
     }
     return new ExpressionBind<>(type, newBindVariable);
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.bind(type, bindVariable);
   }
 
   @Override

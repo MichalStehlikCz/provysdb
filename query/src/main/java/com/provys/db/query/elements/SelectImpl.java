@@ -67,6 +67,11 @@ final class SelectImpl implements Select, FromContext {
   }
 
   @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.select(selectClause, fromClause, whereClause);
+  }
+
+  @Override
   public @Nullable FromElement getFromElement(NamePath alias) {
     // try to find alias in from clause
     var element = fromClause.getElementByAlias(alias);

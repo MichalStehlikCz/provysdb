@@ -46,65 +46,77 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   }
 
   @Override
-  public CodeBuilder append(String text) {
-    return codeBuilder.append(text);
+  public DefaultSqlBuilder append(String text) {
+    codeBuilder.append(text);
+    return this;
   }
 
   @Override
-  public CodeBuilder append(char character) {
-    return codeBuilder.append(character);
+  public DefaultSqlBuilder append(char character) {
+    codeBuilder.append(character);
+    return this;
   }
 
   @Override
-  public CodeBuilder append(int number) {
-    return codeBuilder.append(number);
+  public DefaultSqlBuilder append(int number) {
+    codeBuilder.append(number);
+    return this;
   }
 
   @Override
-  public CodeBuilder append(BigInteger number) {
-    return codeBuilder.append(number);
+  public DefaultSqlBuilder append(BigInteger number) {
+    codeBuilder.append(number);
+    return this;
   }
 
   @Override
-  public CodeBuilder append(NamePath name) {
-    return codeBuilder.append(name);
+  public DefaultSqlBuilder append(NamePath name) {
+    codeBuilder.append(name);
+    return this;
   }
 
   @Override
-  public CodeBuilder append(CodeBuilder appendBuilder) {
-    return codeBuilder.append(appendBuilder);
+  public DefaultSqlBuilder append(CodeBuilder appendBuilder) {
+    codeBuilder.append(appendBuilder);
+    return this;
   }
 
   @Override
-  public CodeBuilder apply(
+  public DefaultSqlBuilder apply(
       Consumer<? super CodeBuilder> appendFunction) {
-    return codeBuilder.apply(appendFunction);
+    codeBuilder.apply(appendFunction);
+    return this;
   }
 
   @Override
-  public CodeBuilder applyString(
+  public DefaultSqlBuilder applyString(
       Consumer<? super StringBuilder> appendFunction) {
-    return codeBuilder.applyString(appendFunction);
+    codeBuilder.applyString(appendFunction);
+    return this;
   }
 
   @Override
-  public CodeBuilder appendWrapped(String text, int additionalIdent) {
-    return codeBuilder.appendWrapped(text, additionalIdent);
+  public DefaultSqlBuilder appendWrapped(String text, int additionalIdent) {
+    codeBuilder.appendWrapped(text, additionalIdent);
+    return this;
   }
 
   @Override
-  public CodeBuilder appendWrapped(String text) {
-    return codeBuilder.appendWrapped(text);
+  public DefaultSqlBuilder appendWrapped(String text) {
+    codeBuilder.appendWrapped(text);
+    return this;
   }
 
   @Override
-  public CodeBuilder appendLine() {
-    return codeBuilder.appendLine();
+  public DefaultSqlBuilder appendLine() {
+    codeBuilder.appendLine();
+    return this;
   }
 
   @Override
-  public CodeBuilder appendLine(String line) {
-    return codeBuilder.appendLine(line);
+  public DefaultSqlBuilder appendLine(String line) {
+    codeBuilder.appendLine(line);
+    return this;
   }
 
   @Override
@@ -113,65 +125,77 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   }
 
   @Override
-  public CodeBuilder setIdent(CodeIdent ident) {
-    return codeBuilder.setIdent(ident);
+  public DefaultSqlBuilder setIdent(CodeIdent ident) {
+    codeBuilder.setIdent(ident);
+    return this;
   }
 
   @Override
-  public CodeBuilder setIdent(String ident) {
-    return codeBuilder.setIdent(ident);
+  public DefaultSqlBuilder setIdent(String ident) {
+    codeBuilder.setIdent(ident);
+    return this;
   }
 
   @Override
-  public CodeBuilder setIdent(String ident, int chars) {
-    return codeBuilder.setIdent(ident, chars);
+  public DefaultSqlBuilder setIdent(String ident, int chars) {
+    codeBuilder.setIdent(ident, chars);
+    return this;
   }
 
   @Override
-  public CodeBuilder setIdent(String firstIdent, String ident) {
-    return codeBuilder.setIdent(firstIdent, ident);
+  public DefaultSqlBuilder setIdent(String firstIdent, String ident) {
+    codeBuilder.setIdent(firstIdent, ident);
+    return this;
   }
 
   @Override
-  public CodeBuilder setIdent(String firstIdent, String ident, int chars) {
-    return codeBuilder.setIdent(firstIdent, ident, chars);
+  public DefaultSqlBuilder setIdent(String firstIdent, String ident, int chars) {
+    codeBuilder.setIdent(firstIdent, ident, chars);
+    return this;
   }
 
   @Override
-  public CodeBuilder increasedIdent(int increaseBy) {
-    return codeBuilder.increasedIdent(increaseBy);
+  public DefaultSqlBuilder increasedIdent(int increaseBy) {
+    codeBuilder.increasedIdent(increaseBy);
+    return this;
   }
 
   @Override
-  public CodeBuilder increasedIdent(String ident, int increaseBy) {
-    return codeBuilder.increasedIdent(ident, increaseBy);
+  public DefaultSqlBuilder increasedIdent(String ident, int increaseBy) {
+    codeBuilder.increasedIdent(ident, increaseBy);
+    return this;
   }
 
   @Override
-  public CodeBuilder increasedIdent(String firstIdent, String ident, int increaseBy) {
-    return codeBuilder.increasedIdent(firstIdent, ident, increaseBy);
+  public DefaultSqlBuilder increasedIdent(String firstIdent, String ident, int increaseBy) {
+    codeBuilder.increasedIdent(firstIdent, ident, increaseBy);
+    return this;
   }
 
   @Override
-  public CodeBuilder popIdent() {
-    return codeBuilder.popIdent();
+  public DefaultSqlBuilder popIdent() {
+    codeBuilder.popIdent();
+    return this;
   }
 
   @Override
-  public CodeBuilder addBind(BindVariable bind) {
-    return codeBuilder.addBind(bind);
+  public DefaultSqlBuilder addBind(BindVariable bind) {
+    codeBuilder.addBind(bind);
+    return this;
   }
 
   @Override
-  public CodeBuilder addBinds(
+  public DefaultSqlBuilder addBinds(
       Collection<? extends BindVariable> binds) {
-    return codeBuilder.addBinds(binds);
+    codeBuilder.addBinds(binds);
+    return this;
   }
 
   @Override
-  public CodeBuilder addBindsWithPos(
+  public DefaultSqlBuilder addBindsWithPos(
       Collection<BindWithPos> binds) {
-    return codeBuilder.addBindsWithPos(binds);
+    codeBuilder.addBindsWithPos(binds);
+    return this;
   }
 
   @Override
@@ -195,19 +219,22 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   }
 
   @Override
-  public void appendLiteral(Object value) {
+  public DefaultSqlBuilder appendLiteral(Object value) {
     this.applyString(stringBuilder -> sqlLiteralHandler.appendLiteral(stringBuilder, value));
+    return this;
   }
 
   @Override
-  public void append(Function function,
+  public DefaultSqlBuilder append(Function function,
       List<? extends Consumer<? super DefaultSqlBuilder>> argumentAppend) {
     sqlFunctionMap.append(function, argumentAppend, this);
+    return this;
   }
 
   @Override
-  public void append(Element<?> element) {
+  public DefaultSqlBuilder append(Element<?> element) {
     elementSqlBuilder.append(this, element);
+    return this;
   }
 
   @Override

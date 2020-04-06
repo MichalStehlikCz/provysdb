@@ -32,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("FUNCTION")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
-public final class ExpressionFunction<T> implements Expression<T> {
+final class ExpressionFunction<T> implements Expression<T> {
 
   /**
    * Type of resulting expression. It can be evaluated from function and arguments and thus is not
@@ -54,7 +54,7 @@ public final class ExpressionFunction<T> implements Expression<T> {
    * @param arguments is list of expressions passed as arguments to function
    * @return type of value expression evaluates to
    */
-  public static Class<?> getReturnType(Function function, List<? extends Expression<?>> arguments) {
+  static Class<?> getReturnType(Function function, List<? extends Expression<?>> arguments) {
     if (function.getResultAsArgument() >= 0) {
       return arguments.get(function.getResultAsArgument()).getType();
     }
@@ -70,7 +70,7 @@ public final class ExpressionFunction<T> implements Expression<T> {
    * @return new expression, based on supplied function and arguments
    */
   @JsonCreator
-  public static ExpressionFunction<?> ofFunction(@JsonProperty("FUNCTION") Function function,
+  static ExpressionFunction<?> ofFunction(@JsonProperty("FUNCTION") Function function,
       @JsonProperty("ARGUMENTS") List<? extends Expression<?>> arguments) {
     return new ExpressionFunction<>(getReturnType(function, arguments), function, arguments);
   }
@@ -125,7 +125,7 @@ public final class ExpressionFunction<T> implements Expression<T> {
    * @param function is built-in function, used for evaluation
    * @param arguments are arguments to be passed to function
    */
-  public ExpressionFunction(Class<T> type, Function function,
+  ExpressionFunction(Class<T> type, Function function,
       Collection<? extends Expression<?>> arguments) {
     this.type = type;
     this.function = function;
@@ -175,6 +175,11 @@ public final class ExpressionFunction<T> implements Expression<T> {
       return this;
     }
     return new ExpressionFunction<>(type, function, newArguments);
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.function(type, function, arguments);
   }
 
   /**
