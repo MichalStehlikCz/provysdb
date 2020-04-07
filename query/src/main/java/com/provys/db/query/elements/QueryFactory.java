@@ -328,6 +328,17 @@ public final class QueryFactory {
   }
 
   /**
+   * Create new from element, based on dual pseudo-table (or however no table in from is
+   * represented).
+   *
+   * @param alias is alias used to refer to this from element
+   * @return new from element, based on dual pseudo-table
+   */
+  public FromElement fromDual(@Nullable SimpleName alias) {
+    return new FromDual(alias);
+  }
+
+  /**
    * Create new condition with equals comparison of two expressions.
    *
    * @param expression1 is the first operand of comparison

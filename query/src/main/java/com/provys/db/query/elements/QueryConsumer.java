@@ -129,6 +129,14 @@ public interface QueryConsumer {
   void fromSelect(Select select, @Nullable SimpleName alias);
 
   /**
+   * Consume from element, based on dual pseudo-table (or however no table in from is
+   * represented).
+   *
+   * @param alias is alias used to refer to this from element
+   */
+  void fromDual(@Nullable SimpleName alias);
+
+  /**
    * Create new condition with equals comparison of two expressions.
    *
    * @param expression1 is the first operand of comparison
