@@ -25,6 +25,7 @@ public class JacksonModule extends SimpleModule {
     setMixInAnnotation(Select.class, SelectMixIn.class);
     setMixInAnnotation(SelectT1.class, SelectT1MixIn.class);
     setMixInAnnotation(SelectT2.class, SelectT2MixIn.class);
+    setMixInAnnotation(SelectT.class, SelectTMixIn.class);
     setMixInAnnotation(SelectClause.class, SelectClauseMixIn.class);
     setMixInAnnotation(SelectColumn.class, SelectColumnMixIn.class);
     setMixInAnnotation(FromElement.class, FromElementMixIn.class);

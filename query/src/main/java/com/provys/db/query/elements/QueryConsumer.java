@@ -126,7 +126,7 @@ public interface QueryConsumer {
    * @param select is select statement from element is based on
    * @param alias is alias used to refer to this from element
    */
-  void fromSelect(Select select, @Nullable SimpleName alias);
+  void fromSelect(SelectT<?> select, @Nullable SimpleName alias);
 
   /**
    * Consume from element, based on dual pseudo-table (or however no table in from is

@@ -1,10 +1,7 @@
 package com.provys.db.query.elements;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Class contains Jackson annotation for {@link Select}. This way, we avoid cyclical
@@ -12,13 +9,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
  * we create another implementation of Select, it will fail on serialisation)
  */
 @SuppressWarnings("MarkerInterface")
-@JsonRootName("SELECT")
-@JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = SelectImpl.class, name = "SELECT"),
-    @JsonSubTypes.Type(value = SelectT1.class, name = "SELECT1"),
-    @JsonSubTypes.Type(value = SelectT2.class, name = "SELECT2"),
-})
+@JsonSerialize(as = SelectImpl.class)
+@JsonDeserialize(as = SelectImpl.class)
 interface SelectMixIn {
 
 }

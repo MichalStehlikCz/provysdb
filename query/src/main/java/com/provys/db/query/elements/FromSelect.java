@@ -30,17 +30,17 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 final class FromSelect implements FromElement {
 
   @JsonProperty("SELECT")
-  private final Select select;
+  private final SelectT<?> select;
   @JsonProperty("ALIAS")
   private final @Nullable SimpleName alias;
 
-  FromSelect(Select select, @Nullable SimpleName alias, @Nullable BindMap bindMap) {
+  FromSelect(SelectT<?> select, @Nullable SimpleName alias, @Nullable BindMap bindMap) {
     this.select = (bindMap == null) ? select : select.mapBinds(bindMap);
     this.alias = alias;
   }
 
   @JsonCreator
-  FromSelect(@JsonProperty("SELECT") Select select,
+  FromSelect(@JsonProperty("SELECT") SelectT<?> select,
       @JsonProperty("ALIAS") @Nullable SimpleName alias) {
     this(select, alias, null);
   }

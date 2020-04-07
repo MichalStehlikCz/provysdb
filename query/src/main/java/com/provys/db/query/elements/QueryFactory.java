@@ -311,7 +311,7 @@ public final class QueryFactory {
    * @param bindMap is used to map binds in supplied select
    * @return new from element, based on select statement
    */
-  public FromElement fromSelect(Select select, @Nullable SimpleName alias,
+  public FromElement fromSelect(SelectT<?> select, @Nullable SimpleName alias,
       @Nullable BindMap bindMap) {
     return new FromSelect(select, alias, bindMap);
   }
@@ -323,7 +323,7 @@ public final class QueryFactory {
    * @param alias is alias used to refer to this from element
    * @return new from element, based on select statement
    */
-  public FromElement fromSelect(Select select, @Nullable SimpleName alias) {
+  public FromElement fromSelect(SelectT<?> select, @Nullable SimpleName alias) {
     return new FromSelect(select, alias, null);
   }
 
