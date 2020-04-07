@@ -16,10 +16,11 @@
         <module>sqlquery</module>
         <module>provysdb</module>
         <module>provysdb-spring</module>
-        <module>sqlbuilder</module>
         <module>sqlbuilder-spring</module>
         <module>dbsqlbuilder</module>
         <module>dbsqlbuilder-spring</module>
+        <module>querybuilder</module>
+        <module>sqlparser</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

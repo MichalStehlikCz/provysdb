@@ -98,6 +98,12 @@ public interface CodeBuilder {
   CodeBuilder appendWrapped(String text, int additionalIdent);
 
   /**
+   * Appends piece of text (usually name) that should not follow exactly after another text. If
+   * previous character was alphanumeric, insert separating space character before actual text.
+   */
+  CodeBuilder appendName(String text);
+
+  /**
    * Appends piece of text that might span multiple lines to already existing code. Inserts proper
    * ident to newlines in supplied text; ident uses spaces, not currently set prefix, but keeps
    * level with current length.

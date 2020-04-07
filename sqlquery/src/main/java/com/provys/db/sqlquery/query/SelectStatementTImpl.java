@@ -41,7 +41,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
   private boolean closed = false;
 
   private SelectStatementTImpl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, ? extends @Nullable Object> bindValues,
+      Map<BindName, ?> bindValues,
       @SuppressWarnings("NullableProblems") DbConnection connection,
       boolean closeConnection) {
     this.sqlText = sqlText;
@@ -58,7 +58,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
   }
 
   SelectStatementTImpl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, ? extends @Nullable Object> bindValues, DbConnection connection) {
+      Map<BindName, ?> bindValues, DbConnection connection) {
     this(sqlText, binds, bindValues, connection, false);
   }
 
@@ -67,7 +67,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
   }
 
   SelectStatementTImpl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, ? extends @Nullable Object> bindValues, DbContext dbContext) {
+      Map<BindName, ?> bindValues, DbContext dbContext) {
     this(sqlText, binds, bindValues, dbContext.getConnection(), true);
   }
 

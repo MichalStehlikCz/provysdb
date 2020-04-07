@@ -1,9 +1,10 @@
 package com.provys.db.sqlquery.codebuilder;
 
 import com.provys.common.exception.NotImplementedException;
-import com.provys.db.query.CodeBuilder;
-import com.provys.db.query.CodeIdent;
-import com.provys.db.query.CodeIdentBuilder;
+import com.provys.db.query.names.BindName;
+import com.provys.db.query.names.BindVariable;
+import com.provys.db.query.names.BindWithPos;
+import com.provys.db.query.names.NamePath;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +36,12 @@ class TestCodeBuilder implements CodeBuilder {
   @Override
   public CodeBuilder append(BigInteger number) {
     builder.append(number);
+    return this;
+  }
+
+  @Override
+  public CodeBuilder append(NamePath name) {
+    builder.append(name.getText());
     return this;
   }
 

@@ -12,7 +12,7 @@ class SelectStatementImpl extends SelectStatementTImpl<SelectStatementImpl> impl
     SelectStatement {
 
   SelectStatementImpl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, ? extends @Nullable Object> bindValues,
+      Map<BindName, ?> bindValues,
       DbConnection connection) {
     super(sqlText, binds, bindValues, connection);
   }
@@ -22,7 +22,7 @@ class SelectStatementImpl extends SelectStatementTImpl<SelectStatementImpl> impl
   }
 
   SelectStatementImpl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, ? extends @Nullable Object> bindValues, DbContext dbContext) {
+      Map<BindName, ?> bindValues, DbContext dbContext) {
     super(sqlText, binds, bindValues, dbContext);
   }
 

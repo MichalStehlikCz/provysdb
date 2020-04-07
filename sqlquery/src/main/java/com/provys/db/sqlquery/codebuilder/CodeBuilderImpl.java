@@ -13,16 +13,22 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of code builder - tool to build SQL text with formatting.
  *
  * @author stehlik
  */
-public class CodeBuilderImpl implements CodeBuilder {
+final class CodeBuilderImpl implements CodeBuilder {
 
   private final StringBuilder builder;
   private boolean newLine = true;
+  /** Marks current position as safe for insertion of identifier or number. E.g. previous item
+   * was newline or ended with non alpha-numeric character. Note that characters inserted via ident
+   * are ignored.
+   */
+  private boolean isSafe = true;
   private CodeIdent currentIdent = CodeIdentVoid.getInstance();
   private final Deque<CodeIdent> tempIdents = new ArrayDeque<>(5);
   private int bindPos = 0; // position of last bind
@@ -31,7 +37,7 @@ public class CodeBuilderImpl implements CodeBuilder {
   /**
    * Default constructor for CodeBuilder. Sets all fields to their default values.
    */
-  public CodeBuilderImpl() {
+  CodeBuilderImpl() {
     this.builder = new StringBuilder(100);
     this.bindsWithPos = new ConcurrentHashMap<>(10);
   }
@@ -40,13 +46,30 @@ public class CodeBuilderImpl implements CodeBuilder {
     if (newLine) {
       currentIdent.use(builder);
       newLine = false;
+      isSafe = true;
     }
+  }
+
+  /**
+   * In general, space is needed if previous text ends in alphanumeric character.
+   *
+   * @param character is last character of text
+   * @return true if it is safe (non-alphanumeric), false otherwise
+   */
+  private static boolean isSafe(char character) {
+    var type = Character.getType(character);
+    return (type == Character.UPPERCASE_LETTER)
+        || (type == Character.LOWERCASE_LETTER)
+        || (type == Character.DECIMAL_DIGIT_NUMBER);
   }
 
   @Override
   public CodeBuilder append(String text) {
     beforeAppend();
     builder.append(text);
+    if (!text.isEmpty()) {
+      isSafe = isSafe(text.charAt(text.length() - 1));
+    }
     return this;
   }
 
@@ -67,6 +90,7 @@ public class CodeBuilderImpl implements CodeBuilder {
 
   @Override
   public CodeBuilder append(NamePath name) {
+    beforeAppend();
     var first = true;
     for (var segment : name.getSegments()) {
       if (first) {
@@ -76,6 +100,7 @@ public class CodeBuilderImpl implements CodeBuilder {
       }
       builder.append(segment.getText());
     }
+    isSafe = false;
     return this;
   }
 
@@ -96,8 +121,7 @@ public class CodeBuilderImpl implements CodeBuilder {
   public CodeBuilder applyString(Consumer<? super StringBuilder> appendFunction) {
     var tempBuilder = new StringBuilder();
     appendFunction.accept(tempBuilder);
-    beforeAppend();
-    builder.append(tempBuilder);
+    append(tempBuilder.toString());
     return this;
   }
 
@@ -128,18 +152,24 @@ public class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
+  public CodeBuilder appendName(String text) {
+    if (!isSafe) {
+      append(' ');
+    }
+    append(text);
+    return this;
+  }
+
+  @Override
   public CodeBuilder appendWrapped(String text) {
     return appendWrapped(text, 0);
   }
 
   @Override
   public CodeBuilder appendLine() {
-    if (this.newLine) {
-      // if there is ident and line is empty, we must insert it to builder
-      append("");
-    }
+    beforeAppend();
     builder.append('\n');
-    this.newLine = true;
+    newLine = true;
     return this;
   }
 
@@ -278,6 +308,34 @@ public class CodeBuilderImpl implements CodeBuilder {
         .filter(entry -> (entry.getValue() != null) && (entry.getValue().getValue() != null))
         .map(entry -> Map.entry(entry.getKey(), entry.getValue().getValue()))
         .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CodeBuilderImpl that = (CodeBuilderImpl) o;
+    return newLine == that.newLine
+        && bindPos == that.bindPos
+        && builder.toString().equals(that.builder.toString())
+        && currentIdent.equals(that.currentIdent)
+        && tempIdents.equals(that.tempIdents)
+        && bindsWithPos.equals(that.bindsWithPos);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = builder.hashCode();
+    result = 31 * result + (newLine ? 1 : 0);
+    result = 31 * result + currentIdent.hashCode();
+    result = 31 * result + tempIdents.hashCode();
+    result = 31 * result + bindPos;
+    result = 31 * result + bindsWithPos.hashCode();
+    return result;
   }
 
   @Override

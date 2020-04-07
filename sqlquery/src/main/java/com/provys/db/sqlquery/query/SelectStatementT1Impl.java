@@ -22,14 +22,14 @@ class SelectStatementT1Impl<T1> extends SelectStatementTImpl<SelectStatementT1Im
   private final Class<T1> type1;
 
   SelectStatementT1Impl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, @Nullable Object> bindValues,
+      Map<BindName, ?> bindValues,
       DbConnection connection, Class<T1> type1) {
     super(sqlText, binds, bindValues, connection);
     this.type1 = type1;
   }
 
   SelectStatementT1Impl(String sqlText, Collection<BindWithPos> binds,
-      Map<BindName, @Nullable Object> bindValues, DbContext dbContext, Class<T1> type1) {
+      Map<BindName, ?> bindValues, DbContext dbContext, Class<T1> type1) {
     super(sqlText, binds, bindValues, dbContext);
     this.type1 = type1;
   }

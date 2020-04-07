@@ -2,48 +2,98 @@ package com.provys.db.sqlquery.query;
 
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.query.elements.Select;
-import com.provys.db.sqlquery.dbcontext.NoDbContext;
-import java.util.Map;
+import com.provys.db.query.elements.SelectT1;
+import com.provys.db.query.elements.SelectT2;
+import com.provys.db.sqlquery.literals.SqlLiteralHandler;
+import com.provys.db.sqlquery.literals.SqlLiteralTypeHandlerMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Default statement builder. Uses supplied handlers for individual types of elements.
  */
-public class DefaultStatementFactory implements StatementFactory {
-
-  private static final DefaultStatementFactory NO_DB_FACTORY = new DefaultStatementFactory(
-      NoDbContext.getInstance(), SqlFunctionMapImpl.getDefault());
-
-  public static DefaultStatementFactory getNoDbFactory() {
-    return NO_DB_FACTORY;
-  }
+public final class DefaultStatementFactory implements StatementFactory {
 
   private final DbContext dbContext;
+  private final SqlLiteralHandler sqlLiteralHandler;
   private final SqlFunctionMap sqlFunctionMap;
-  private final Map<Class<?>, ElementTypeSqlBuilder<StatementFactory, ?>> elementBuilders;
 
-  public DefaultStatementFactory(DbContext dbContext, SqlFunctionMap sqlFunctionMap) {
+  /**
+   * Create statement factory based on supplied database context, literal handler and function map.
+   *
+   * @param dbContext         is database context used as source for connections
+   * @param sqlLiteralHandler is literal handler, used to produce Sql literal values
+   * @param sqlFunctionMap    is function map, defining templates for sql built-in functions
+   */
+  public DefaultStatementFactory(DbContext dbContext, SqlLiteralHandler sqlLiteralHandler,
+      SqlFunctionMap sqlFunctionMap) {
     this.dbContext = dbContext;
+    this.sqlLiteralHandler = sqlLiteralHandler;
     this.sqlFunctionMap = sqlFunctionMap;
   }
 
-  @Override
+  /**
+   * Create statement factory based on supplied database context; use default literal handler and
+   * function map. Such setting should be compatible with Oracle database.
+   *
+   * @param dbContext is database context used as source for connections
+   */
+  public DefaultStatementFactory(DbContext dbContext) {
+    this(dbContext, SqlLiteralTypeHandlerMap.getDefaultMap(), SqlFunctionMapImpl.getDefault());
+  }
+
+  /**
+   * Value of field dbContext.
+   *
+   * @return value of field dbContext
+   */
   public DbContext getDbContext() {
     return dbContext;
   }
 
-  @Override
+  /**
+   * Value of field sqlLiteralHandler.
+   *
+   * @return value of field sqlLiteralHandler
+   */
+  public SqlLiteralHandler getSqlLiteralHandler() {
+    return sqlLiteralHandler;
+  }
+
+  /**
+   * Value of field sqlFunctionMap.
+   *
+   * @return value of field sqlFunctionMap
+   */
   public SqlFunctionMap getSqlFunctionMap() {
     return sqlFunctionMap;
   }
 
-  public SqlBuilder<DefaultStatementFactory, Select, SelectStatement> getSqlBuilder(Select query) {
-    return new SelectTSqlBuilder(this, query);
+  private DefaultSqlBuilder getSqlBuilder() {
+    return new DefaultSqlBuilder(sqlLiteralHandler, sqlFunctionMap);
   }
 
   @Override
   public SelectStatement getSelect(Select query) {
-    return getSqlBuilder(query).build();
+    var builder = getSqlBuilder();
+    query.apply(builder);
+    return new SelectStatementImpl(builder.getSql(), builder.getBindsWithPos(),
+        builder.getBindValues(), dbContext);
+  }
+
+  @Override
+  public <T1> SelectStatementT1<T1> getSelect(SelectT1<T1> query) {
+    var builder = getSqlBuilder();
+    query.apply(builder);
+    return new SelectStatementT1Impl<>(builder.getSql(), builder.getBindsWithPos(),
+        builder.getBindValues(), dbContext, query.getType1());
+  }
+
+  @Override
+  public <T1, T2> SelectStatementT2<T1, T2> getSelect(SelectT2<? extends T1, ? extends T2> query) {
+    var builder = getSqlBuilder();
+    query.apply(builder);
+    return new SelectStatementT2Impl<>(builder.getSql(), builder.getBindsWithPos(),
+        builder.getBindValues(), dbContext, query.getType1(), query.getType2());
   }
 
   @Override
@@ -56,12 +106,14 @@ public class DefaultStatementFactory implements StatementFactory {
     }
     DefaultStatementFactory that = (DefaultStatementFactory) o;
     return dbContext.equals(that.dbContext)
+        && sqlLiteralHandler.equals(that.sqlLiteralHandler)
         && sqlFunctionMap.equals(that.sqlFunctionMap);
   }
 
   @Override
   public int hashCode() {
     int result = dbContext.hashCode();
+    result = 31 * result + sqlLiteralHandler.hashCode();
     result = 31 * result + sqlFunctionMap.hashCode();
     return result;
   }
@@ -70,6 +122,7 @@ public class DefaultStatementFactory implements StatementFactory {
   public String toString() {
     return "DefaultStatementFactory{"
         + "dbContext=" + dbContext
+        + ", sqlLiteralHandler=" + sqlLiteralHandler
         + ", sqlFunctionMap=" + sqlFunctionMap
         + '}';
   }

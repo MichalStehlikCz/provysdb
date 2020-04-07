@@ -5,8 +5,10 @@ import static com.provys.db.query.elements.Function.DATE_SYSDATE;
 import static com.provys.db.query.elements.Function.STRING_CHR;
 import static com.provys.db.query.elements.Function.STRING_CONCAT;
 
+import com.provys.common.exception.InternalException;
 import com.provys.db.query.elements.Function;
 import com.provys.db.sqlquery.codebuilder.CodeBuilder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -52,49 +54,42 @@ public final class SqlFunctionMapImpl implements SqlFunctionMap {
     return result;
   }
 
-  private static final class SqlBuilderAppender implements Consumer<CodeBuilder> {
-
-    private final CodeBuilder appendBuilder;
-
-    SqlBuilderAppender(CodeBuilder appendBuilder) {
-      this.appendBuilder = appendBuilder;
-    }
-
-    @Override
-    public void accept(CodeBuilder builder) {
-      builder.append(appendBuilder);
-    }
-  }
-
   @Override
   public <B extends SqlBuilder<B>> void append(Function function,
       List<? extends Consumer<? super B>> argumentAppend, B builder) {
-    // in case of repeatable last argument, we evaluate template repeatedly
-    if (function.lastArgumentRepeatable() && (argumentAppend.size() > 2)) {
-      // first, we evaluate result for first two arguments
-      B recursiveBuilder = builder.getClone();
-      List<? extends Consumer<? super B>> firstTwo = List.of(argumentAppend.get(0), argumentAppend.get(1));
-      append(function, firstTwo, recursiveBuilder);
-      // and now we recursively apply next argument
-      //noinspection ForLoopReplaceableByWhile
-      for (int i = 2; i < argumentAppend.size(); i++) {
-        var nextBuilder = builder.getClone();
-        List<? extends Consumer<? super B>> nextTwo = List.of(new SqlBuilderAppender(recursiveBuilder), argumentAppend.get(i));
-        append(function, nextTwo, nextBuilder);
-        recursiveBuilder = nextBuilder;
-      }
-      builder.append(recursiveBuilder);
-      return;
-    }
-    // and now normal evaluation for functions without repeated arguments
     var template = getTemplate(function);
     var matcher = ARGUMENT_PATTERN.matcher(template);
     int pos = 0;
-    while (matcher.find()) {
-      builder.append(template.substring(pos, matcher.start()));
-      var argIndex = Integer.parseInt(template.substring(matcher.start() + 1, matcher.end() - 1));
-      argumentAppend.get(argIndex).accept(builder);
-      pos = matcher.end();
+    if (function.lastArgumentRepeatable() && (argumentAppend.size() > 2)) {
+      // in case of repeatable last argument, we evaluate template repeatedly
+      // we create list with all but first argument, that will be used to append second argument
+      var afterFirst = argumentAppend.subList(1, argumentAppend.size());
+      while (matcher.find()) {
+        builder.append(template.substring(pos, matcher.start()));
+        var argIndex = Integer.parseInt(template.substring(matcher.start() + 1, matcher.end() - 1));
+        switch (argIndex) {
+          case 0:
+            // append first argument
+            argumentAppend.get(0).accept(builder);
+            break;
+          case 1:
+            // append statement for rest of arguments
+            append(function, afterFirst, builder);
+            break;
+          default:
+            throw new InternalException("Invalid template " + template
+                + "; repeatable function should only have two arguments");
+        }
+        pos = matcher.end();
+      }
+    } else {
+      // and now normal evaluation for functions without repeated arguments
+      while (matcher.find()) {
+        builder.append(template.substring(pos, matcher.start()));
+        var argIndex = Integer.parseInt(template.substring(matcher.start() + 1, matcher.end() - 1));
+        argumentAppend.get(argIndex).accept(builder);
+        pos = matcher.end();
+      }
     }
     builder.append(template.substring(pos));
   }

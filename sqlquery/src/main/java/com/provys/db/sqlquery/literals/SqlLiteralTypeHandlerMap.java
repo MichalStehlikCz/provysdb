@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -19,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Provides default instance based on adapters, present in this package. At the same time, allows
  * instantiation with specified set of handlers.
  */
-public class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
+public final class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
 
   private static final SqlLiteralTypeHandlerMap DEFAULT_MAP = new SqlLiteralTypeHandlerMap(
       SqlLiteralBooleanHandler.getInstance(),
@@ -128,7 +129,7 @@ public class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
     return getHandler(type).getLiteral(value);
   }
 
-  private <T> String getLiteralT(T value) {
+  private <T> String getLiteralT(@NonNull T value) {
     @SuppressWarnings("unchecked")
     var type = (Class<T>) value.getClass();
     return getLiteral(value, type);
@@ -144,7 +145,7 @@ public class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
     getHandler(type).appendLiteral(builder, value);
   }
 
-  private <T> void appendLiteralT(StringBuilder builder, T value) {
+  private <T> void appendLiteralT(StringBuilder builder, @NonNull T value) {
     @SuppressWarnings("unchecked")
     var type = (Class<T>) value.getClass();
     appendLiteral(builder, value, type);

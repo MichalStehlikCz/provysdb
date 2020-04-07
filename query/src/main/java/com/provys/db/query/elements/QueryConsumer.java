@@ -137,11 +137,46 @@ public interface QueryConsumer {
   void fromDual(@Nullable SimpleName alias);
 
   /**
-   * Create new condition with equals comparison of two expressions.
+   * Consume condition with equals comparison of two expressions.
    *
    * @param expression1 is the first operand of comparison
    * @param expression2 is the second operand of comparison
    * @param <T> is type of items being compared
    */
   <T> void eq(Expression<T> expression1, Expression<T> expression2);
+
+  /**
+   * Consume keyword. Used by tokens produced by parsing sql using tokenizer.
+   *
+   * @param keyword is keyword to be consumed
+   */
+  void keyword(String keyword);
+
+  /**
+   * Consume name (potentially segmented). Used by tokens, produced by parsing sql using tokenizer.
+   *
+   * @param namePath is name to be processed
+   */
+  void name(NamePath namePath);
+
+  /**
+   * Consume symbol. Used by tokens, produced by parsing sql using tokenizer.
+   *
+   * @param symbol is symbol to be processed
+   */
+  void symbol(String symbol);
+
+  /**
+   * Consume simple (rest of line) comment - {@code --} in SQL.
+   *
+   * @param comment is comment text
+   */
+  void simpleComment(String comment);
+
+  /**
+   * Consume multi-line comment - {code /*} in SQL.
+   *
+   * @param comment is comment text
+   */
+  void longComment(String comment);
 }

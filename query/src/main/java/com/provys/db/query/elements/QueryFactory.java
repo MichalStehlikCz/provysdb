@@ -163,8 +163,7 @@ public final class QueryFactory {
    * @param <T1> is type of the first column
    * @return new single column select query
    */
-  @SuppressWarnings("SameParameterValue")
-  <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
+  public <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
       @Nullable Condition whereClause, @Nullable FromContext parentContext,
       @Nullable BindMap bindMap) {
     return new SelectT1Impl<>(column1, fromClause, whereClause, parentContext, bindMap);
@@ -179,7 +178,7 @@ public final class QueryFactory {
    * @param <T1> is type of the first column
    * @return new single column select query
    */
-  <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
+  public <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
       @Nullable Condition whereClause) {
     return select(column1, fromClause, whereClause, null, null);
   }
@@ -197,8 +196,7 @@ public final class QueryFactory {
    * @param <T2> is type of the second column
    * @return new two column select query
    */
-  @SuppressWarnings("SameParameterValue")
-  <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
+  public <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
       FromClause fromClause, @Nullable Condition whereClause, @Nullable FromContext parentContext,
       @Nullable BindMap bindMap) {
     return new SelectT2Impl<>(column1, column2, fromClause, whereClause, parentContext, bindMap);
@@ -215,7 +213,7 @@ public final class QueryFactory {
    * @param <T2> is type of the second column
    * @return new two column select query
    */
-  <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
+  public <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
       FromClause fromClause, @Nullable Condition whereClause) {
     return select(column1, column2, fromClause, whereClause, null, null);
   }

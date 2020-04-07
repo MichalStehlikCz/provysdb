@@ -9,6 +9,13 @@ import java.util.Map;
 public interface SqlBuilder<B extends SqlBuilder<B>> extends QueryConsumer {
 
   /**
+   * Append string to builder.
+   *
+   * @param text is text to be appended
+   */
+  void append(String text);
+
+  /**
    * Get empty clone of this builder. Can be used to assemble part of statement (for example
    * evaluate function arguments)
    *
@@ -22,7 +29,6 @@ public interface SqlBuilder<B extends SqlBuilder<B>> extends QueryConsumer {
    * @return sql text built in this builder
    */
   String getSql();
-
 
   /**
    * Retrieve list of bind variables with their positions. Positions are one indexed - we use them
