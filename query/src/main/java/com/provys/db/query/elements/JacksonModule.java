@@ -22,6 +22,9 @@ public class JacksonModule extends SimpleModule {
   @SuppressWarnings("nullness")
   public JacksonModule() {
     super("ProvysSqlElementModule");
+    setMixInAnnotation(Select.class, SelectMixIn.class);
+    setMixInAnnotation(SelectT1.class, SelectT1MixIn.class);
+    setMixInAnnotation(SelectT2.class, SelectT2MixIn.class);
     setMixInAnnotation(SelectClause.class, SelectClauseMixIn.class);
     setMixInAnnotation(SelectColumn.class, SelectColumnMixIn.class);
     setMixInAnnotation(FromElement.class, FromElementMixIn.class);

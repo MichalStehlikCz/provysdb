@@ -12,7 +12,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Allows creation of all types of query elements. Created elements are serializable and can be
  * serialized / deserialized to / from Xml using Jackson.
  */
-public class QueryFactory {
+public final class QueryFactory {
+
+  private static final QueryFactory INSTANCE = new QueryFactory();
+
+  /**
+   * Get singleton instance of query factory.
+   *
+   * @return singleton instance of query factory
+   */
+  public static QueryFactory getInstance() {
+    return INSTANCE;
+  }
 
   /**
    * Create expression, based on supplied bind variable.
@@ -152,6 +163,7 @@ public class QueryFactory {
    * @param <T1> is type of the first column
    * @return new single column select query
    */
+  @SuppressWarnings("SameParameterValue")
   <T1> SelectT1<T1> select(SelectColumn<T1> column1, FromClause fromClause,
       @Nullable Condition whereClause, @Nullable FromContext parentContext,
       @Nullable BindMap bindMap) {
@@ -185,6 +197,7 @@ public class QueryFactory {
    * @param <T2> is type of the second column
    * @return new two column select query
    */
+  @SuppressWarnings("SameParameterValue")
   <T1, T2> SelectT2<T1, T2> select(SelectColumn<T1> column1, SelectColumn<T2> column2,
       FromClause fromClause, @Nullable Condition whereClause, @Nullable FromContext parentContext,
       @Nullable BindMap bindMap) {
@@ -288,6 +301,30 @@ public class QueryFactory {
    */
   public FromElement fromTable(NamePath tableName, @Nullable SimpleName alias) {
     return new FromTable(tableName, alias);
+  }
+
+  /**
+   * Create new from element, based on select statement and optionally remap bind variables.
+   *
+   * @param select is select statement from element is based on
+   * @param alias is alias used to refer to this from element
+   * @param bindMap is used to map binds in supplied select
+   * @return new from element, based on select statement
+   */
+  public FromElement fromSelect(Select select, @Nullable SimpleName alias,
+      @Nullable BindMap bindMap) {
+    return new FromSelect(select, alias, bindMap);
+  }
+
+  /**
+   * Create new from element, based on select statement.
+   *
+   * @param select is select statement from element is based on
+   * @param alias is alias used to refer to this from element
+   * @return new from element, based on select statement
+   */
+  public FromElement fromSelect(Select select, @Nullable SimpleName alias) {
+    return new FromSelect(select, alias, null);
   }
 
   /**

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = FromTable.class, name = "FROMTABLE"),
+    @JsonSubTypes.Type(value = FromSelect.class, name = "FROMSELECT"),
 })
 public interface FromElementMixIn {
 

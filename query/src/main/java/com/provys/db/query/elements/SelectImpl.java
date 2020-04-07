@@ -30,6 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("SELECT")
 @JsonPropertyOrder({"SELECT", "FROM", "WHERE", "PARENTCONTEXT"})
+@JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from Select
 final class SelectImpl extends SelectTImpl implements Select {
 
   @JsonProperty("SELECT")

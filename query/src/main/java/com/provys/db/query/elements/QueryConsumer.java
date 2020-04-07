@@ -121,6 +121,14 @@ public interface QueryConsumer {
   void fromTable(NamePath tableName, @Nullable SimpleName alias);
 
   /**
+   * Consume from element, based on select statement.
+   *
+   * @param select is select statement from element is based on
+   * @param alias is alias used to refer to this from element
+   */
+  void fromSelect(Select select, @Nullable SimpleName alias);
+
+  /**
    * Create new condition with equals comparison of two expressions.
    *
    * @param expression1 is the first operand of comparison
