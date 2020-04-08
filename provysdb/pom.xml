@@ -70,7 +70,7 @@
         </dependency>
         <dependency>
             <groupId>com.provys.db</groupId>
-            <artifactId>sqldb</artifactId>
+            <artifactId>defaultdb</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

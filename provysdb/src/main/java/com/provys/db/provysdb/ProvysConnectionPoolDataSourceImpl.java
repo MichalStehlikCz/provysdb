@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Types;
 import java.util.Properties;
 import oracle.ucp.UniversalConnectionPoolException;
 import oracle.ucp.admin.UniversalConnectionPoolManagerImpl;
@@ -80,6 +81,13 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
     }
     // now try to get connection (to verify that connection pool parameters are valid)
     try (Connection conn = oraclePool.getConnection()) {
+      try (var callableStatement = conn.prepareCall(
+          "BEGIN\n"
+              + "  :c_User_ID:=KER_User_EP.mfw_GetUserID;\n"
+              + "END;")) {
+        callableStatement.registerOutParameter("c_User_ID", Types.NUMERIC);
+        callableStatement.execute();
+      }
       LOG.info("Verified connection to database (user {}, db {})", user, db);
     } catch (SQLException e) {
       LOG.warn(

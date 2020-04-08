@@ -2,8 +2,10 @@ package com.provys.db.provysdb;
 
 import com.provys.common.exception.RegularException;
 import com.provys.db.dbcontext.DbConnection;
-import com.provys.db.sqlquery.dbcontext.NoDbContext;
-import com.provys.db.sqlquery.dbcontext.DefaultConnection;
+import com.provys.db.dbcontext.DbContext;
+import com.provys.db.dbcontext.SqlTypeHandler;
+import com.provys.db.defaultdb.dbcontext.DefaultConnection;
+import com.provys.db.defaultdb.types.SqlTypeMap;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -14,17 +16,30 @@ import java.util.Objects;
  *
  * @author stehlik
  */
-public class ProvysDbContext extends NoDbContext {
+public class ProvysDbContext implements DbContext {
 
   private final ProvysConnectionPoolDataSource provysDataSource;
+  private final SqlTypeHandler sqlTypeHandler;
 
   /**
-   * Default creator for Provys database context.
+   * Creator for Provys database context.
+   *
+   * @param provysDataSource is DataSource used to access Provys Oracle database
+   * @param sqlTypeHandler is sql type handler to be used with this data source
+   */
+  public ProvysDbContext(ProvysConnectionPoolDataSource provysDataSource,
+      SqlTypeHandler sqlTypeHandler) {
+    this.provysDataSource = provysDataSource;
+    this.sqlTypeHandler = sqlTypeHandler;
+  }
+
+  /**
+   * Creator for Provys database context; uses default type map.
    *
    * @param provysDataSource is DataSource used to access Provys Oracle database
    */
   public ProvysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
-    this.provysDataSource = Objects.requireNonNull(provysDataSource);
+    this(provysDataSource, SqlTypeMap.getDefaultMap());
   }
 
   @Override
@@ -59,9 +74,15 @@ public class ProvysDbContext extends NoDbContext {
   }
 
   @Override
+  public SqlTypeHandler getSqlTypeHandler() {
+    return sqlTypeHandler;
+  }
+
+  @Override
   public String toString() {
     return "ProvysDbContext{"
         + "provysDataSource=" + provysDataSource
-        + ", " + super.toString() + '}';
+        + ", sqlTypeHandler=" + sqlTypeHandler
+        + '}';
   }
 }

@@ -1,10 +1,10 @@
 package com.provys.db.dbcontext.spring;
 
+import com.provys.db.dbcontext.DbContext;
 import com.provys.db.provysdb.ProvysConnectionPoolDataSource;
 import com.provys.db.provysdb.ProvysConnectionPoolDataSourceImpl;
-import com.provys.db.provysdb.ProvysDbContext;
-import com.provys.db.dbcontext.DbContext;
 import com.provys.db.provysdb.ProvysDbConfiguration;
+import com.provys.db.provysdb.ProvysDbContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
