@@ -1,9 +1,5 @@
 package com.provys.db.sqlparser.impl;
 
-import static com.provys.db.sqlparser.SpaceMode.FORCE;
-import static com.provys.db.sqlparser.SpaceMode.FORCE_NONE;
-import static com.provys.db.sqlparser.SpaceMode.NORMAL;
-
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.StringParser;
 import com.provys.common.exception.InternalException;
@@ -12,7 +8,6 @@ import com.provys.db.sqlparser.SqlKeyword;
 import com.provys.db.sqlparser.SqlParsedToken;
 import com.provys.db.sqlparser.SqlSymbol;
 import com.provys.db.sqlparser.SqlTokenizer;
-import com.provys.db.sqlparser.SpaceMode;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -22,6 +17,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -60,29 +59,19 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
   }
 
   @Override
-  public CodeBuilder normalize(String source) {
-    try (Scanner scanner = new Scanner(source)) {
-      return normalize(scanner);
-    }
+  public Stream<SqlParsedToken> stream(String source) {
+    // Scanner only has to be closed if underlying source is closeable; in case of String, close
+    // does nothing and thus we do not have to bother; if method with file instead of String is
+    // created, we will have to allow closing of scanner when stream is closed...
+    var scanner = new Scanner(source);
+    return stream(scanner);
   }
 
   @Override
-  public CodeBuilder normalize(Scanner scanner) {
-    var builder = new CodeBuilderImpl();
-    var sqlScanner = new SqlScanner(scanner);
-    SpaceMode afterPrev = null;
-    while (sqlScanner.hasNext()) {
-      var token = sqlScanner.next();
-      if ((afterPrev != null)
-          && (((token.spaceBefore() == FORCE) && (afterPrev != FORCE_NONE))
-          || ((afterPrev == FORCE) && (token.spaceBefore() != FORCE_NONE))
-          || ((token.spaceBefore() == NORMAL) && (afterPrev == NORMAL)))) {
-        builder.append(' ');
-      }
-      token.addSql(builder);
-      afterPrev = token.spaceAfter();
-    }
-    return builder;
+  public Stream<SqlParsedToken> stream(Scanner scanner) {
+    return StreamSupport.stream(
+        Spliterators.spliteratorUnknownSize(new SqlScanner(scanner), Spliterator.ORDERED),
+        false);
   }
 
   @Override
@@ -316,8 +305,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         text.append(nextChar());
       }
       nextChar();
-      return new ParsedLiteral<>(startLine, pos,
-          SqlFactory.literal(DtDate.parseIso(text.toString())));
+      return new ParsedLiteral<>(startLine, pos, DtDate.class, DtDate.parseIso(text.toString()));
     }
 
     private SqlParsedToken readLetter() {
@@ -407,7 +395,7 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
         if (peekChar() == '\'') {
           nextChar();
           if (peekChar() != '\'') {
-            return new ParsedLiteral<>(line, pos, SqlFactory.literal(value.toString()));
+            return new ParsedLiteral<>(line, pos, String.class, value.toString());
           }
           // two quotation marks are evaluated as single one
         }
@@ -421,23 +409,20 @@ public class DefaultSqlTokenizer implements SqlTokenizer {
     private SqlParsedToken createNumericLiteral(int pos, String literal, boolean dotEncountered) {
       if (dotEncountered) {
         if (literal.length() <= 16) {
-          return new ParsedLiteral<>(line, pos,
-              SqlFactory.literal(Double.parseDouble(literal)));
+          return new ParsedLiteral<>(line, pos, Double.class, Double.parseDouble(literal));
         }
-        return new ParsedLiteral<>(line, pos, SqlFactory.literal(new BigDecimal(literal)));
+        return new ParsedLiteral<>(line, pos, BigDecimal.class, new BigDecimal(literal));
       }
       if (literal.length() <= 2) {
-        return new ParsedLiteral<>(line, pos, SqlFactory.literal(Byte.parseByte(literal)));
+        return new ParsedLiteral<>(line, pos, Byte.class, Byte.parseByte(literal));
       }
       if (literal.length() <= 4) {
-        return new ParsedLiteral<>(line, pos,
-            SqlFactory.literal(Short.parseShort(literal)));
+        return new ParsedLiteral<>(line, pos, Short.class, Short.parseShort(literal));
       }
       if (literal.length() <= 9) {
-        return new ParsedLiteral<>(line, pos,
-            SqlFactory.literal(Integer.parseInt(literal)));
+        return new ParsedLiteral<>(line, pos, Integer.class, Integer.parseInt(literal));
       }
-      return new ParsedLiteral<>(line, pos, SqlFactory.literal(new BigInteger(literal)));
+      return new ParsedLiteral<>(line, pos, BigInteger.class, new BigInteger(literal));
     }
 
     private SqlParsedToken readNumericLiteral() {

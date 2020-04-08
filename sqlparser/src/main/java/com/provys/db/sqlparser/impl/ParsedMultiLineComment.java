@@ -1,8 +1,12 @@
 package com.provys.db.sqlparser.impl;
 
+import com.provys.db.query.elements.QueryConsumer;
+import com.provys.db.query.names.BindMap;
+import com.provys.db.query.names.BindVariable;
+import com.provys.db.sqlparser.SqlToken;
 import com.provys.db.sqlparser.SqlTokenType;
-import com.provys.provysdb.sql.CodeBuilder;
-import com.provys.db.sqlparser.SpaceMode;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -24,18 +28,18 @@ final class ParsedMultiLineComment extends ParsedTokenBase {
   }
 
   @Override
-  public SpaceMode spaceBefore() {
-    return SpaceMode.FORCE;
+  public Collection<BindVariable> getBinds() {
+    return Collections.emptyList();
   }
 
   @Override
-  public SpaceMode spaceAfter() {
-    return SpaceMode.FORCE;
+  public SqlToken mapBinds(BindMap bindMap) {
+    return this;
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
-    builder.append("/*").append(comment).append("*/");
+  public void apply(QueryConsumer consumer) {
+    consumer.longComment(comment);
   }
 
   @Override
@@ -50,13 +54,13 @@ final class ParsedMultiLineComment extends ParsedTokenBase {
       return false;
     }
     ParsedMultiLineComment that = (ParsedMultiLineComment) o;
-    return Objects.equals(comment, that.comment);
+    return comment.equals(that.comment);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (comment != null ? comment.hashCode() : 0);
+    result = 31 * result + comment.hashCode();
     return result;
   }
 

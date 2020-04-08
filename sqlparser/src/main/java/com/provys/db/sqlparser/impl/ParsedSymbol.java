@@ -1,9 +1,13 @@
 package com.provys.db.sqlparser.impl;
 
+import com.provys.db.query.elements.QueryConsumer;
+import com.provys.db.query.names.BindMap;
+import com.provys.db.query.names.BindVariable;
 import com.provys.db.sqlparser.SqlSymbol;
+import com.provys.db.sqlparser.SqlToken;
 import com.provys.db.sqlparser.SqlTokenType;
-import com.provys.provysdb.sql.CodeBuilder;
-import com.provys.db.sqlparser.SpaceMode;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -20,34 +24,28 @@ final class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol
   }
 
   @Override
-  public SqlTokenType getTokenType() {
-    return SqlTokenType.SYMBOL;
-  }
-
-  @Override
-  public SpaceMode spaceBefore() {
-    if (symbol == SqlSymbol.PARAM_VALUE) {
-      return SpaceMode.FORCE;
-    }
-    return SpaceMode.NONE;
-  }
-
-  @Override
-  public SpaceMode spaceAfter() {
-    if ((symbol == SqlSymbol.PARAM_VALUE) || (symbol == SqlSymbol.COMMA)) {
-      return SpaceMode.FORCE;
-    }
-    return SpaceMode.NONE;
-  }
-
-  @Override
   public SqlSymbol getSymbol() {
     return symbol;
   }
 
   @Override
-  public void addSql(CodeBuilder builder) {
-    builder.append(symbol.getSymbol());
+  public SqlTokenType getTokenType() {
+    return SqlTokenType.SYMBOL;
+  }
+
+  @Override
+  public Collection<BindVariable> getBinds() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public SqlToken mapBinds(BindMap bindMap) {
+    return this;
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    consumer.symbol(symbol.getSymbol());
   }
 
   @Override
@@ -68,7 +66,7 @@ final class ParsedSymbol extends ParsedTokenBase implements SqlParsedTokenSymbol
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
+    result = 31 * result + symbol.hashCode();
     return result;
   }
 

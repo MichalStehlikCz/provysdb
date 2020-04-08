@@ -64,7 +64,7 @@ final class ParsedBind extends ParsedTokenBase {
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result +bindVariable.hashCode();
+    result = 31 * result + bindVariable.hashCode();
     return result;
   }
 

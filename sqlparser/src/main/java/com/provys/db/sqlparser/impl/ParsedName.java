@@ -1,31 +1,39 @@
 package com.provys.db.sqlparser.impl;
 
+import com.provys.db.query.elements.QueryConsumer;
+import com.provys.db.query.names.BindMap;
+import com.provys.db.query.names.BindVariable;
+import com.provys.db.query.names.SimpleName;
+import com.provys.db.sqlparser.SqlToken;
 import com.provys.db.sqlparser.SqlTokenType;
-import com.provys.provysdb.sql.CodeBuilder;
-import com.provys.provysdb.sql.NamePath;
-import com.provys.provysdb.sql.SimpleName;
-import com.provys.provysdb.sqlfactory.Sql;
-import com.provys.db.sqlparser.SpaceMode;
-import java.util.List;
-import java.util.Objects;
+import java.util.Collection;
+import java.util.Collections;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Represents name or keyword. Ordinary identifier is one that is not surrounded by double quotation
  * marks
  */
-final class ParsedName extends ParsedTokenBase implements SimpleName {
+final class ParsedName extends ParsedTokenBase {
 
   private final SimpleName name;
 
-  ParsedName(int line, int pos, String name) {
-    super(line, pos);
-    this.name = Sql.name(name);
-  }
-
   ParsedName(int line, int pos, SimpleName name) {
     super(line, pos);
-    this.name = Objects.requireNonNull(name);
+    this.name = name;
+  }
+
+  ParsedName(int line, int pos, String name) {
+    this(line, pos, SimpleName.valueOf(name));
+  }
+
+  /**
+   * Value of field name.
+   *
+   * @return value of field name
+   */
+  public SimpleName getName() {
+    return name;
   }
 
   @Override
@@ -34,38 +42,18 @@ final class ParsedName extends ParsedTokenBase implements SimpleName {
   }
 
   @Override
-  public SpaceMode spaceBefore() {
-    return SpaceMode.NORMAL;
+  public Collection<BindVariable> getBinds() {
+    return Collections.emptyList();
   }
 
   @Override
-  public SpaceMode spaceAfter() {
-    return SpaceMode.NORMAL;
+  public SqlToken mapBinds(BindMap bindMap) {
+    return this;
   }
 
   @Override
-  public String getText() {
-    return name.getText();
-  }
-
-  @Override
-  public List<String> getDbNames() {
-    return name.getDbNames();
-  }
-
-  @Override
-  public boolean match(NamePath other) {
-    return name.match(other);
-  }
-
-  @Override
-  public void append(CodeBuilder builder) {
-    name.append(builder);
-  }
-
-  @Override
-  public String getDbName() {
-    return name.getDbName();
+  public void apply(QueryConsumer consumer) {
+    consumer.name(name);
   }
 
   @Override
@@ -80,13 +68,13 @@ final class ParsedName extends ParsedTokenBase implements SimpleName {
       return false;
     }
     ParsedName that = (ParsedName) o;
-    return Objects.equals(name, that.name);
+    return name.equals(that.name);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + name.hashCode();
     return result;
   }
 

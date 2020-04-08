@@ -9,10 +9,7 @@ import com.provys.db.sqlparser.SqlTokenType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import org.checkerframework.checker.initialization.qual.Initialized;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 
 final class ParsedKeyword extends ParsedTokenBase {
 

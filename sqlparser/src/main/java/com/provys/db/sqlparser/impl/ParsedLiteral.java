@@ -1,24 +1,27 @@
 package com.provys.db.sqlparser.impl;
 
+import com.provys.db.query.elements.Expression;
+import com.provys.db.query.elements.QueryConsumer;
+import com.provys.db.query.elements.QueryFactory;
+import com.provys.db.query.names.BindMap;
+import com.provys.db.query.names.BindVariable;
+import com.provys.db.sqlparser.SqlToken;
 import com.provys.db.sqlparser.SqlTokenType;
-import com.provys.provysdb.sql.CodeBuilder;
-import com.provys.provysdb.sql.Literal;
-import com.provys.db.sqlparser.SpaceMode;
+import java.util.Collection;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class ParsedLiteral<T> extends ParsedTokenBase implements Literal<T> {
+final class ParsedLiteral<T> extends ParsedTokenBase {
 
-  private final Literal<T> value;
+  private final Expression<T> value;
 
-  ParsedLiteral(int line, int pos, Literal<T> value) {
+  ParsedLiteral(int line, int pos, Expression<T> value) {
     super(line, pos);
     this.value = Objects.requireNonNull(value);
   }
 
-  @Override
-  public T getValue() {
-    return value.getValue();
+  ParsedLiteral(int line, int pos, Class<T> type, T value) {
+    this(line, pos, QueryFactory.getInstance().literal(type, value));
   }
 
   @Override
@@ -26,24 +29,36 @@ final class ParsedLiteral<T> extends ParsedTokenBase implements Literal<T> {
     return SqlTokenType.LITERAL;
   }
 
-  @Override
-  public SpaceMode spaceBefore() {
-    return SpaceMode.NORMAL;
-  }
-
-  @Override
-  public SpaceMode spaceAfter() {
-    return SpaceMode.NORMAL;
-  }
-
-  @Override
-  public Class<T> getType() {
+  Class<T> getType() {
     return value.getType();
   }
 
+  /**
+   * Value of field value.
+   *
+   * @return value of field value
+   */
+  Expression<T> getValue() {
+    return value;
+  }
+
   @Override
-  public void addSql(CodeBuilder builder) {
-    value.addSql(builder);
+  public Collection<BindVariable> getBinds() {
+    return value.getBinds();
+  }
+
+  @Override
+  public SqlToken mapBinds(BindMap bindMap) {
+    var newValue = value.mapBinds(bindMap);
+    if (newValue.equals(value)) {
+      return this;
+    }
+    return new ParsedLiteral<>(getLine(), getPos(), newValue);
+  }
+
+  @Override
+  public void apply(QueryConsumer consumer) {
+    value.apply(consumer);
   }
 
   @Override
@@ -58,13 +73,13 @@ final class ParsedLiteral<T> extends ParsedTokenBase implements Literal<T> {
       return false;
     }
     ParsedLiteral<?> that = (ParsedLiteral<?>) o;
-    return Objects.equals(value, that.value);
+    return value.equals(that.value);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (value != null ? value.hashCode() : 0);
+    result = 31 * result + value.hashCode();
     return result;
   }
 

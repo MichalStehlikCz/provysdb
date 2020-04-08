@@ -1,11 +1,16 @@
-package com.provys.db.impl;
+package com.provys.db.sqlparser.impl;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.provys.common.datatype.DtDate;
-import com.provys.provysdb.sql.BindName;
-import com.provys.provysdb.builder.sqlbuilder.SqlFactory;
-import com.provys.provysdb.sqlparser.SqlKeyword;
-import com.provys.provysdb.sqlparser.SqlParsedToken;
-import com.provys.provysdb.sqlparser.SqlSymbol;
+import com.provys.db.query.elements.Element;
+import com.provys.db.query.names.BindName;
+import com.provys.db.query.names.BindVariable;
+import com.provys.db.sqlparser.SqlKeyword;
+import com.provys.db.sqlparser.SqlParsedToken;
+import com.provys.db.sqlparser.SqlSymbol;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
@@ -40,7 +45,7 @@ class DefaultSqlTokenizerTest {
         , new Object[]{"a:=5;", new SqlParsedToken[]{
             new ParsedName(1, 1, "a")
             , new ParsedSymbol(1, 2, SqlSymbol.ASSIGNMENT)
-            , new ParsedLiteral<>(1, 4, SqlFactory.literal((byte) 5))
+            , new ParsedLiteral<>(1, 4, Byte.class, (byte) 5)
             , new ParsedSymbol(1, 5, SqlSymbol.SEMICOLON)}}
         , new Object[]{"arc.call(p_A => :a, p_B => :b2);", new SqlParsedToken[]{
             new ParsedName(1, 1, "arc")
@@ -58,8 +63,7 @@ class DefaultSqlTokenizerTest {
             , new ParsedSymbol(1, 32, SqlSymbol.SEMICOLON)}}
         , new Object[]{"SELECT\n    date '2018-01-12'\nFROM\n    dual", new SqlParsedToken[]{
             new ParsedKeyword(1, 1, SqlKeyword.SELECT)
-            , new ParsedLiteral<>(2, 5,
-            SqlFactory.literal(DtDate.of(2018, 1, 12)))
+            , new ParsedLiteral<>(2, 5, DtDate.class, DtDate.of(2018, 1, 12))
             , new ParsedKeyword(3, 1, SqlKeyword.FROM)
             , new ParsedName(4, 5, "dual")}}
     );
@@ -84,8 +88,7 @@ class DefaultSqlTokenizerTest {
             EMPTY_BIND_NAMES}
         , new Object[]{"a:=5;", "a:=5;", EMPTY_BIND_NAMES}
         , new Object[]{"arc.call(p_A => :a, p_B => :b2);", "arc.call(p_a => ?, p_b => ?);",
-            new BindName[]{SqlFactory.bind("a"),
-                SqlFactory.bind("b2")}}
+            new BindName[]{BindName.valueOf("a"), BindName.valueOf("b2")}}
         , new Object[]{"SELECT\n    date '2018-01-12'\nFROM\n    dual",
             "SELECT DATE'2018-01-12' FROM dual",
             EMPTY_BIND_NAMES}
@@ -94,9 +97,12 @@ class DefaultSqlTokenizerTest {
 
   @ParameterizedTest
   @MethodSource
-  void getBindsTest(String source, String parsed, BindName[] binds) {
-    var builder = new DefaultSqlTokenizer().normalize(source);
-    assertThat(builder.build()).isEqualTo(parsed);
-    assertThat(builder.getBindsWithPos()).containsExactly(binds);
+  void getBindsTest(String source, String parsed, BindName[] result) {
+    var binds = new DefaultSqlTokenizer().stream(source)
+        .map(Element::getBinds)
+        .flatMap(Collection::stream)
+        .map(BindVariable::getName)
+        .collect(Collectors.toList());
+    assertThat(binds).containsExactly(result);
   }
 }
