@@ -1,9 +1,9 @@
 package com.provys.db.querybuilder;
 
-/**
- * Simplest variant of select builder interface. This variant has no information about selected
- * columns and their types.
- */
-public interface SelectBuilder extends SelectBuilderGen<SelectBuilder> {
+import com.provys.db.query.elements.Select;
 
+/**
+ * Builder class for {@link Select}, allows step-by-step construction of whole select statement.
+ */
+public interface SelectBuilder extends SelectBuilderBase<Select, SelectBuilder> {
 }

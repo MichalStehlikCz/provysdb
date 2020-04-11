@@ -18,7 +18,7 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Represents select without from clause - in Oracle, it is formally modelled as select from
+ * Represents select without from clause. In Oracle, it is formally modelled as select from
  * pseudo-table dual, but other database engines might use different syntax
  */
 @JsonAutoDetect(
