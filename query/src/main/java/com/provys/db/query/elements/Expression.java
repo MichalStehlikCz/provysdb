@@ -1,9 +1,12 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * Expression - literal, column, bind, function call, condition or any combination of these,
  * connected by operands.
  */
+@Immutable
 public interface Expression<T1> extends Element<Expression<T1>> {
 
   /**

@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.types;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is type this adapter is associated with
  */
+@Immutable
 public interface SqlTypeAdapter<T> extends Serializable {
 
   /**

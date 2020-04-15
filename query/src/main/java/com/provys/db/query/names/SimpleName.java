@@ -133,8 +133,11 @@ public final class SimpleName extends NamePathBase {
       this.text = value.getText();
     }
 
-    private Object readResolve() {
-      return SimpleName.valueOf(Objects.requireNonNull(text));
+    private Object readResolve() throws InvalidObjectException {
+      if (text == null) {
+        throw new InvalidObjectException("Text not found during deserialization of SimpleName");
+      }
+      return valueOf(text);
     }
   }
 

@@ -1,12 +1,12 @@
 package com.provys.db.sqlquery.query;
 
-import static com.provys.db.query.elements.Function.STRING_CHR;
-import static com.provys.db.query.elements.Function.STRING_CONCAT;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.provys.db.query.elements.Element;
-import com.provys.db.query.elements.QueryFactory;
+import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindWithPos;
@@ -26,7 +26,7 @@ import java.util.stream.Stream;
     // same methods... still we want separate methods to make see where is problem when test fails
 class DefaultSqlBuilderTest {
 
-  private static final QueryFactory FACTORY = QueryFactory.getInstance();
+  private static final ElementFactory FACTORY = ElementFactory.getInstance();
   public static final BindWithPos[] BIND_WITH_POS = new BindWithPos[]{};
 
   private static DefaultSqlBuilder getBuilder() {

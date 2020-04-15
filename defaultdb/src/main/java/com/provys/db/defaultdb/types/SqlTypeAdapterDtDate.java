@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.types;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.datatype.DtDate;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
@@ -9,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Default type adapter for DtDate class.
  */
+@Immutable
 public class SqlTypeAdapterDtDate implements SqlTypeAdapter<DtDate> {
 
   private static final SqlTypeAdapterDtDate INSTANCE = new SqlTypeAdapterDtDate();

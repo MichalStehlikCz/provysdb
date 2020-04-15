@@ -25,7 +25,8 @@ public interface SelectStatementT2<T1, T2> extends SelectStatement {
 
   /**
    * Execute associated statement (using connection, fetched from underlying DataSource) and return
-   * stream of fetched values. Returned stream holds underlying statement opened and should be closed explicitly. Closes both ResultSet and this statement when stream is closed
+   * stream of fetched values. Returned stream holds underlying statement opened and should be
+   * closed explicitly. Closes both ResultSet and this statement when stream is closed
    *
    * @return stream with returned values
    */

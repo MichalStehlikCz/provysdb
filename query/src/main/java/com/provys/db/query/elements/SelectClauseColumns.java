@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -31,8 +32,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
 @JsonSerialize(using = SelectClauseColumnsSerializer.class)
 @JsonDeserialize(using = SelectClauseColumnsDeserializer.class)
+@Immutable
 final class SelectClauseColumns implements SelectClause {
 
+  // list product of copyOf or toUnmodifiable collector, SelectColumn immutable
+  @SuppressWarnings("Immutable")
   private final List<SelectColumn<?>> columns;
 
   /**

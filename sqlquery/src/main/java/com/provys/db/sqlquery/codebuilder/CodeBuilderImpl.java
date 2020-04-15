@@ -152,17 +152,17 @@ final class CodeBuilderImpl implements CodeBuilder {
   }
 
   @Override
+  public CodeBuilder appendWrapped(String text) {
+    return appendWrapped(text, 0);
+  }
+
+  @Override
   public CodeBuilder appendName(String text) {
     if (!isSafe) {
       append(' ');
     }
     append(text);
     return this;
-  }
-
-  @Override
-  public CodeBuilder appendWrapped(String text) {
-    return appendWrapped(text, 0);
   }
 
   @Override

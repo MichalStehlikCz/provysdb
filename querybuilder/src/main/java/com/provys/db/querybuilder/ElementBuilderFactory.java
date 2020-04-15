@@ -3,7 +3,7 @@ package com.provys.db.querybuilder;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
-import com.provys.db.query.elements.Function;
+import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
@@ -139,7 +139,7 @@ public final class ElementBuilderFactory {
    * @param <T>       is type parameter denoting type of expression
    * @return function, representing built-in function applied on supplied arguments
    */
-  public <T> ExpressionBuilder<T> function(Class<T> type, Function function,
+  public <T> ExpressionBuilder<T> function(Class<T> type, BuiltInFunction function,
       Collection<? extends Expression<?>> arguments) {
     return expression(elementFactory.function(type, function, arguments));
   }
@@ -154,7 +154,7 @@ public final class ElementBuilderFactory {
    * @param <T>              is type parameter denoting type of expression
    * @return function, representing built-in function applied on supplied arguments
    */
-  public <T> ExpressionBuilder<T> function(Class<T> type, Function function,
+  public <T> ExpressionBuilder<T> function(Class<T> type, BuiltInFunction function,
       ExpressionBuilder<?>... argumentBuilders) {
     var arguments = new ArrayList<Expression<?>>(argumentBuilders.length);
     for (var argumentBuilder : argumentBuilders) {

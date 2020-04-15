@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.jackson.JacksonMappers;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,8 +32,10 @@ class BindVariableTest {
   }
 
   @Test
+  @SuppressWarnings("Immutable") // intentionally ignore immutable warning even though it IS broken
   void constructorFailTest() {
-    assertThatThrownBy(() -> new BindVariable("nazev", Integer.class, "value"))
+    assertThatThrownBy(() -> new BindVariable("nazev",
+        Integer.class.asSubclass(Serializable.class), "value"))
         .hasMessageContaining("does not match type");
   }
 

@@ -1,5 +1,6 @@
 package com.provys.db.query.elements;
 
+import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
@@ -35,7 +36,8 @@ public interface QueryConsumer {
    * @param function  is built-in function, used for evaluation
    * @param arguments are arguments to be passed to function
    */
-  void function(Class<?> type, Function function, Collection<? extends Expression<?>> arguments);
+  void function(Class<?> type, BuiltInFunction function,
+      Collection<? extends Expression<?>> arguments);
 
   /**
    * Consume literal expression of given type and value.
@@ -124,13 +126,12 @@ public interface QueryConsumer {
    * Consume from element, based on select statement.
    *
    * @param select is select statement from element is based on
-   * @param alias is alias used to refer to this from element
+   * @param alias  is alias used to refer to this from element
    */
   void fromSelect(SelectT<?> select, @Nullable SimpleName alias);
 
   /**
-   * Consume from element, based on dual pseudo-table (or however no table in from is
-   * represented).
+   * Consume from element, based on dual pseudo-table (or however no table in from is represented).
    *
    * @param alias is alias used to refer to this from element
    */
@@ -141,7 +142,7 @@ public interface QueryConsumer {
    *
    * @param expression1 is the first operand of comparison
    * @param expression2 is the second operand of comparison
-   * @param <T> is type of items being compared
+   * @param <T>         is type of items being compared
    */
   <T> void eq(Expression<T> expression1, Expression<T> expression2);
 

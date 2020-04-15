@@ -1,7 +1,7 @@
 package com.provys.db.query.elements;
 
-import static com.provys.db.query.elements.Function.STRING_CHR;
-import static com.provys.db.query.elements.Function.STRING_CONCAT;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
 import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

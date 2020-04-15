@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.types;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.datatype.DtUid;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
@@ -9,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Default type adapter for DtUid class.
  */
+@Immutable
 public class SqlTypeAdapterDtUid implements SqlTypeAdapter<DtUid> {
 
   private static final SqlTypeAdapterDtUid INSTANCE = new SqlTypeAdapterDtUid();

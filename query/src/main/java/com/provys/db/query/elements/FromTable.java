@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -30,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("FROMTABLE")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from FromElement
+@Immutable
 final class FromTable implements FromElement {
 
   @JsonProperty("TABLENAME")

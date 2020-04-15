@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
+import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindVariableCollector;
@@ -32,6 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("FUNCTION")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
+@Immutable
 final class ExpressionFunction<T> implements Expression<T> {
 
   /**
@@ -41,25 +44,12 @@ final class ExpressionFunction<T> implements Expression<T> {
    */
   private final Class<T> type;
   @JsonProperty("FUNCTION")
-  private final Function function;
+  private final BuiltInFunction function;
   @JsonProperty("ARGUMENTS")
   @JacksonXmlProperty(localName = "ARGUMENT")
   @JacksonXmlElementWrapper(localName = "ARGUMENTS", useWrapping = true)
+  @SuppressWarnings("Immutable") // list product of copyOf, Expression is immutable
   private final List<Expression<?>> arguments;
-
-  /**
-   * Evaluate return type of expression based on function given function and list of arguments.
-   *
-   * @param function is function expression is based on
-   * @param arguments is list of expressions passed as arguments to function
-   * @return type of value expression evaluates to
-   */
-  static Class<?> getReturnType(Function function, List<? extends Expression<?>> arguments) {
-    if (function.getResultAsArgument() >= 0) {
-      return arguments.get(function.getResultAsArgument()).getType();
-    }
-    return function.getResult();
-  }
 
   /**
    * Create function expression based on function and arguments; type is inferred from function and
@@ -70,51 +60,10 @@ final class ExpressionFunction<T> implements Expression<T> {
    * @return new expression, based on supplied function and arguments
    */
   @JsonCreator
-  static ExpressionFunction<?> ofFunction(@JsonProperty("FUNCTION") Function function,
+  static ExpressionFunction<?> ofFunction(@JsonProperty("FUNCTION") BuiltInFunction function,
       @JsonProperty("ARGUMENTS") List<? extends Expression<?>> arguments) {
-    return new ExpressionFunction<>(getReturnType(function, arguments), function, arguments);
-  }
-
-  private void verifyReturnType() {
-    Class<?> returnType;
-    if (function.getResultAsArgument() >= 0) {
-      returnType = arguments.get(function.getResultAsArgument()).getType();
-    } else {
-      returnType = function.getResult();
-    }
-    if (!type.isAssignableFrom(returnType)) {
-      throw new InternalException("Function return type not compatible with required "
-          + "expression type");
-    }
-  }
-
-  private void verifyArguments() {
-    var argumentTypes = function.getArguments();
-    if (argumentTypes.size() > arguments.size()) {
-      throw new InternalException(
-          "Insufficient arguments for function " + function + ": " + arguments);
-    }
-    if ((argumentTypes.size() < arguments.size()) && !function.lastArgumentRepeatable()) {
-      throw new InternalException(
-          "Too many arguments for function " + function + " :" + arguments);
-    }
-    // nothing to check if there are no arguments
-    if (arguments.isEmpty()) {
-      return;
-    }
-    var argumentIterator = argumentTypes.iterator();
-    // we have at least one argument, thus this statement does not fail
-    Class<?> argumentType = argumentIterator.next();
-    for (Expression<?> argument : arguments) {
-      if (!argumentType.isAssignableFrom(argument.getType())) {
-        throw new InternalException(
-            "Invalid argument type in function " + function + "; expected " + argumentType
-                + ", passed " + argument);
-      }
-      if (argumentIterator.hasNext()) {
-        argumentType = argumentIterator.next();
-      }
-    }
+    return new ExpressionFunction<>(
+        function.getReturnType(arguments.stream().map(Expression::getType)), function, arguments);
   }
 
   /**
@@ -125,13 +74,14 @@ final class ExpressionFunction<T> implements Expression<T> {
    * @param function is built-in function, used for evaluation
    * @param arguments are arguments to be passed to function
    */
-  ExpressionFunction(Class<T> type, Function function,
+  ExpressionFunction(Class<T> type, BuiltInFunction function,
       Collection<? extends Expression<?>> arguments) {
+    var argumentTypes = arguments.stream().map(Expression::getType).collect(Collectors.toList());
+    function.validateArguments(argumentTypes);
+    function.validateReturnType(type, argumentTypes);
     this.type = type;
     this.function = function;
     this.arguments = List.copyOf(arguments);
-    verifyReturnType();
-    verifyArguments();
   }
 
   /**
@@ -139,7 +89,7 @@ final class ExpressionFunction<T> implements Expression<T> {
    *
    * @return value of field function
    */
-  public Function getFunction() {
+  public BuiltInFunction getFunction() {
     return function;
   }
 

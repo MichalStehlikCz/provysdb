@@ -14,6 +14,10 @@
             <artifactId>checker-qual</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc10</artifactId>
         </dependency>

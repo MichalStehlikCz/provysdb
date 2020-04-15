@@ -1,5 +1,6 @@
 package com.provys.db.sqlparser.impl;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.QueryConsumer;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@Immutable
 final class ParsedBind extends ParsedTokenBase {
 
   private final BindVariable bindVariable;
@@ -19,7 +21,7 @@ final class ParsedBind extends ParsedTokenBase {
   }
 
   ParsedBind(int line, int pos, String name) {
-    this(line, pos, new BindVariable(name, Object.class, null));
+    this(line, pos, new BindVariable(name));
   }
 
   BindVariable getBindVariable() {

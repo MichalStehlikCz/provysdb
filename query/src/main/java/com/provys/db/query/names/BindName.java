@@ -2,6 +2,7 @@ package com.provys.db.query.names;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -18,6 +19,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @JsonSerialize(using = BindNameSerializer.class)
 @JsonDeserialize(using = BindNameDeserializer.class)
+@Immutable
 public final class BindName implements Serializable {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("([A-Z][A-Z0-9_]*)");
@@ -86,8 +88,11 @@ public final class BindName implements Serializable {
       this.name = value.getName();
     }
 
-    private Object readResolve() {
-      return valueOf(Objects.requireNonNull(name));
+    private Object readResolve() throws InvalidObjectException {
+      if (name == null) {
+        throw new InvalidObjectException("Name not found during BindName deserialization");
+      }
+      return valueOf(name);
     }
   }
 

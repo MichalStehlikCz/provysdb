@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+import com.provys.common.exception.InternalException;
+import com.provys.common.types.TypeMapImpl;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import java.util.Collection;
@@ -26,12 +30,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 @JsonSerialize(using = LiteralSerializer.class)
 @JsonDeserialize(using = LiteralDeserializer.class)
-final class Literal<T> implements Expression<T> {
+@Immutable
+final class Literal<@ImmutableTypeParameter T> implements Expression<T> {
 
   private final Class<T> type;
+  @SuppressWarnings("Immutable") // type is verified to be immutable in constructor
   private final @Nullable T value;
 
   Literal(Class<T> type, @Nullable T value) {
+    if ((value != null) && !type.isInstance(value)) {
+      throw new InternalException("Literal value " + value + " does not match type " + type);
+    }
+    TypeMapImpl.getDefault().validateType(type);
     this.type = type;
     this.value = value;
   }

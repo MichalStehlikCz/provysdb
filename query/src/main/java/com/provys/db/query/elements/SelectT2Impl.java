@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindVariableCollector;
@@ -28,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("SELECT2")
 @JsonPropertyOrder({"COLUMN1", "COLUMN2", "FROM", "WHERE", "PARENTCONTEXT"})
+@Immutable
 final class SelectT2Impl<T1, T2> extends SelectTImpl implements SelectT2<T1, T2> {
 
   @JsonProperty("COLUMN1")

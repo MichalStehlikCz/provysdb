@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext.spring;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.provysdb.ProvysConnectionPoolDataSource;
 import com.provys.db.provysdb.ProvysConnectionPoolDataSourceImpl;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * Spring factory class, producing beans for DbContext library.
  */
 @Configuration
+@Immutable
 public class DbContextFactory {
 
   @Bean

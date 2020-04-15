@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.provys.db.query.functions.BuiltInFunction;
 
 /**
  * Class contains Jackson annotation for {@link Expression}. This way, we avoid cyclical
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Literal.class, name = "LITERAL"),
-    @JsonSubTypes.Type(value = Function.class, name = "FUNCTION"),
+    @JsonSubTypes.Type(value = BuiltInFunction.class, name = "FUNCTION"),
     @JsonSubTypes.Type(value = ExpressionColumn.class, name = "COLUMN"),
     @JsonSubTypes.Type(value = ExpressionBind.class, name = "BIND"),
 })

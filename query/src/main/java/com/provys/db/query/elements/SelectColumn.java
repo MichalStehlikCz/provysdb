@@ -1,5 +1,6 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.SimpleName;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -8,6 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is Java type corresponding to values in this column
  */
+@Immutable
 public interface SelectColumn<T> extends Element<SelectColumn<T>> {
 
   /**

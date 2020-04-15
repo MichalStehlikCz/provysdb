@@ -99,8 +99,11 @@ public final class LiteralSerializer extends StdSerializer<Literal<?>> {
       this.typeMap = value.typeMap;
     }
 
-    private Object readResolve() {
-      return new LiteralSerializer(Objects.requireNonNull(typeMap));
+    private Object readResolve() throws InvalidObjectException {
+      if (typeMap == null) {
+        throw new InvalidObjectException("TypeMap not found in LiteralSerializer deserialization");
+      }
+      return new LiteralSerializer(typeMap);
     }
   }
 

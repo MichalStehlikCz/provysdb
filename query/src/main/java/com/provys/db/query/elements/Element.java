@@ -1,5 +1,6 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import java.util.Collection;
@@ -7,6 +8,7 @@ import java.util.Collection;
 /**
  * Common interface for all Sql element data objects.
  */
+@Immutable
 public interface Element<T extends Element<T>> {
 
   /**

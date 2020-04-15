@@ -123,12 +123,6 @@ public final class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
     return result;
   }
 
-
-  @Override
-  public <T> String getLiteral(@Nullable T value, Class<T> type) {
-    return getHandler(type).getLiteral(value);
-  }
-
   private <T> String getLiteralT(@NonNull T value) {
     @SuppressWarnings("unchecked")
     var type = (Class<T>) value.getClass();
@@ -136,19 +130,24 @@ public final class SqlLiteralTypeHandlerMap implements SqlLiteralHandler {
   }
 
   @Override
-  public String getLiteral(Object value) {
-    return getLiteralT(value);
+  public <T> String getLiteral(@Nullable T value, Class<T> type) {
+    return getHandler(type).getLiteral(value);
   }
 
   @Override
-  public <T> void appendLiteral(StringBuilder builder, @Nullable T value, Class<T> type) {
-    getHandler(type).appendLiteral(builder, value);
+  public String getLiteral(Object value) {
+    return getLiteralT(value);
   }
 
   private <T> void appendLiteralT(StringBuilder builder, @NonNull T value) {
     @SuppressWarnings("unchecked")
     var type = (Class<T>) value.getClass();
     appendLiteral(builder, value, type);
+  }
+
+  @Override
+  public <T> void appendLiteral(StringBuilder builder, @Nullable T value, Class<T> type) {
+    getHandler(type).appendLiteral(builder, value);
   }
 
   @Override

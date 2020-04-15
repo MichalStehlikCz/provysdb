@@ -1,5 +1,6 @@
 package com.provys.db.query.names;
 
+import com.google.errorprone.annotations.Immutable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -8,10 +9,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Immutable data class, holding bind name and type together with positions it is used in statement.
  */
+@Immutable
 public final class BindWithPos {
 
   private final BindName name;
   private final Class<?> type;
+  @SuppressWarnings("Immutable") // list created by copyOf, Integer is immutable
   private final List<Integer> positions;
 
   /**

@@ -1,12 +1,6 @@
 package com.provys.db.query.elements;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -23,8 +17,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * separated list, each from element on separate line. Implementation assumes that list is
  * relatively small, thus it is not necessary to index list by alias for faster access.
  */
+@Immutable
 final class DefaultFromClause implements FromClause {
 
+  // created as unmodifiable list, containing immutable FromElement
+  @SuppressWarnings("Immutable")
   private final List<FromElement> fromElements;
 
   /**

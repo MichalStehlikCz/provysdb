@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext.spring;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.provysdb.ProvysDbConfiguration;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -12,6 +13,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * ProvysConnectionPoolDataSource} as source of properties for establishing connection
  */
 @ConfigurationProperties(prefix = "provysdb")
+@Immutable
 public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
 
   private final String url;

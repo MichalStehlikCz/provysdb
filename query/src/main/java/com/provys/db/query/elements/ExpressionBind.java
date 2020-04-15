@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -28,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("BIND")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
+@Immutable
 final class ExpressionBind<T> implements Expression<T> {
 
   /**

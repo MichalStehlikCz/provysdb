@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.types.ProvysClassDeserializer;
 import com.provys.common.types.ProvysClassSerializer;
 import com.provys.db.query.names.BindMap;
@@ -35,6 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("COLUMN")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from Expression
+@Immutable
 final class ExpressionColumn<T> implements Expression<T> {
 
   @JsonProperty("TYPE")

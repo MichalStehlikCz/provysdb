@@ -1,5 +1,6 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.NamePath;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -8,6 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Used when select statement is used in expression or condition, but target context for given
  * expression / condition is not known.
  */
+@Immutable
 final class UnknownFromContext implements FromContext {
 
   private static final UnknownFromContext INSTANCE = new UnknownFromContext();

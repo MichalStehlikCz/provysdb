@@ -64,13 +64,21 @@ public final class BindVariableDeserializer extends StdDeserializer<BindVariable
     return typeMap.getType(((TextNode) typeNode).textValue());
   }
 
-  private static @Nullable Object getValue(ObjectCodec objectCodec, TreeNode objectNode,
-      Class<?> type) throws JsonProcessingException {
+  private static <T extends Serializable> @Nullable T getValue(ObjectCodec objectCodec,
+      TreeNode objectNode, Class<T> type) throws JsonProcessingException {
     var valueNode = objectNode.get("VALUE");
     if (valueNode == null) {
       return null;
     }
     return objectCodec.treeToValue(valueNode, type);
+  }
+
+  // First, Object.class is handled in deserialize and all other classes returned by TypeMap should
+  // be immutable. Second, we hope that whoever serialized this knew what he does...
+  @SuppressWarnings("Immutable")
+  private static <T extends Serializable> BindVariable deserializeWithValue(String name,
+      Class<T> type, ObjectCodec objectCodec, TreeNode objectNode) throws JsonProcessingException {
+    return new BindVariable(name, type, getValue(objectCodec, objectNode, type));
   }
 
   @Override
@@ -80,8 +88,10 @@ public final class BindVariableDeserializer extends StdDeserializer<BindVariable
     var objectNode = objectCodec.readTree(parser);
     var name = getName(objectNode);
     var type = getType(objectNode);
-    var value = getValue(objectCodec, objectNode, type);
-    return new BindVariable(name, type, value);
+    if (type == Object.class) {
+      return new BindVariable(name);
+    }
+    return deserializeWithValue(name, type.asSubclass(Serializable.class), objectCodec, objectNode);
   }
 
   /**

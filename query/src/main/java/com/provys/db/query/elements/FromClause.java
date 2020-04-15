@@ -3,6 +3,7 @@ package com.provys.db.query.elements;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.NamePath;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -13,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonRootName("FROM")
 @JsonSerialize(using = FromClauseSerializer.class)
 @JsonDeserialize(using = FromClauseDeserializer.class)
+@Immutable
 public interface FromClause extends Element<FromClause> {
 
   /**

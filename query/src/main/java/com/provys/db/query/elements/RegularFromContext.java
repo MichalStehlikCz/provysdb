@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.NamePath;
@@ -31,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 )
 @JsonRootName("REGULARFROMCONTEXT")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
+@Immutable
 class RegularFromContext implements FromContext {
 
   @JsonProperty("PARENTCONTEXT")
@@ -102,7 +104,7 @@ class RegularFromContext implements FromContext {
     var segments = alias.getSegments();
     assert parentContext != null;
     // we already know that element has alias, thus this is non-null
-    var parentAlias = Objects.requireNonNull(parentContext.getDefaultAlias(fromElement));
+    var parentAlias = castNonNull(parentContext.getDefaultAlias(fromElement));
     //noinspection ForLoopReplaceableByWhile
     for (var i = segments.size() - parentAlias.getSegments().size(); i > 0; i--) {
       var subAlias = SegmentedName.ofSegments(segments.subList(i, segments.size()));

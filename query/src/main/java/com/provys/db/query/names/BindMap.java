@@ -1,5 +1,6 @@
 package com.provys.db.query.names;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.Element;
 import java.util.Collection;
 import java.util.Map;
@@ -12,8 +13,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Immutable map, used for lookup of corresponding variable when transferring {@link Element}s.
  */
+@Immutable
 public final class BindMap {
 
+  // map is product of copyOf, e.g. immutable and both BindMap and BindVariable are immutable
+  @SuppressWarnings("Immutable")
   private final Map<BindName, BindVariable> bindsByName;
 
   /**

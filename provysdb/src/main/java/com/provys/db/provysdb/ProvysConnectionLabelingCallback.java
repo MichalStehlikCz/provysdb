@@ -2,6 +2,7 @@ package com.provys.db.provysdb;
 
 import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Labeling callback implementation - switch to required session.
  */
+@Immutable
 class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
 
   private static final Logger LOG = LogManager

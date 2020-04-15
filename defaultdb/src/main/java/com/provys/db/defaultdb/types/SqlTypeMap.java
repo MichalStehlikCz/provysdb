@@ -2,6 +2,7 @@ package com.provys.db.defaultdb.types;
 
 import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Map;
 import java.util.Objects;
@@ -26,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Default implementation of type map. Uses types of supplied adapters as their mapping, inheritance
  * primarily via superclasses, interfaces are checked afterwards.
  */
+@Immutable
 public final class SqlTypeMap implements SqlTypeHandler {
 
   private static final SqlTypeMap DEFAULT_MAP = new SqlTypeMap(
@@ -47,6 +50,7 @@ public final class SqlTypeMap implements SqlTypeHandler {
 
   private static final Logger LOG = LogManager.getLogger(SqlTypeMap.class);
 
+  @SuppressWarnings("Immutable") // is assigned unmodifiable map
   private final Map<Class<?>, SqlTypeAdapter<?>> adaptersByType;
 
   /**
@@ -55,14 +59,16 @@ public final class SqlTypeMap implements SqlTypeHandler {
    * @param adapters are adapters that should form this adapter map
    */
   public SqlTypeMap(Collection<? extends SqlTypeAdapter<?>> adapters) {
-    adaptersByType = new ConcurrentHashMap<>(adapters.size());
+    Map<Class<?>, SqlTypeAdapter<?>> adaptersByTypeBuilder = new ConcurrentHashMap<>(
+        adapters.size());
     for (var adapter : adapters) {
-      var old = adaptersByType.put(adapter.getType(), Objects.requireNonNull(adapter));
+      var old = adaptersByTypeBuilder.put(adapter.getType(), Objects.requireNonNull(adapter));
       if ((old != null) && !adapter.equals(old)) {
         LOG.warn("Replaced mapping of Sql type adapter for class {}; old {}, new {}",
             adapter::getType, old::toString, adapter::toString);
       }
     }
+    adaptersByType = Collections.unmodifiableMap(adaptersByTypeBuilder);
   }
 
   public SqlTypeMap(SqlTypeAdapter<?>... adapters) {
@@ -112,7 +118,7 @@ public final class SqlTypeMap implements SqlTypeHandler {
    * Get adapter, handling supplied type.
    *
    * @param type is type we want to find adapter for
-   * @param <T> is type parameter corresponding to type of adapter
+   * @param <T>  is type parameter corresponding to type of adapter
    * @return type adapter, capable oh handling given type
    */
   public <T> SqlTypeAdapter<T> getAdapter(Class<T> type) {
@@ -217,8 +223,11 @@ public final class SqlTypeMap implements SqlTypeHandler {
       this.adapters = value.adaptersByType.values();
     }
 
-    private Object readResolve() {
-      var value = new SqlTypeMap(Objects.requireNonNull(adapters));
+    private Object readResolve() throws InvalidObjectException {
+      if (adapters == null) {
+        throw new InvalidObjectException("Adapters missing in deserialization of SqlTypeMap");
+      }
+      var value = new SqlTypeMap(adapters);
       if (value.equals(DEFAULT_MAP)) {
         return DEFAULT_MAP;
       }

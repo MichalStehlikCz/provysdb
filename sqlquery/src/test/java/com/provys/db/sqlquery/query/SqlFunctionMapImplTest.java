@@ -1,16 +1,14 @@
 package com.provys.db.sqlquery.query;
 
-import static com.provys.db.query.elements.Function.ANY_NVL;
-import static com.provys.db.query.elements.Function.STRING_CHR;
-import static com.provys.db.query.elements.Function.STRING_CONCAT;
+import static com.provys.db.query.functions.BuiltInFunction.ANY_NVL;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
+import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
 import static org.assertj.core.api.Assertions.*;
 
 import com.provys.db.query.elements.QueryConsumer;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindWithPos;
-import com.provys.db.sqlquery.codebuilder.CodeBuilder;
-import com.provys.db.sqlquery.codebuilder.CodeBuilderFactory;
 import com.provys.db.sqlquery.literals.SqlLiteralTypeHandlerMap;
 import java.util.List;
 import java.util.Map;

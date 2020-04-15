@@ -1,13 +1,15 @@
 package com.provys.db.dbcontext;
 
+import com.google.errorprone.annotations.Immutable;
 import java.io.Serializable;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Used to hold set of {link SqlTypeAdapter} and retrieve particular adapter for given class.
+ * Used to handle usage of Java types mapped to database types with statements and result set.
  */
+@Immutable
 public interface SqlTypeHandler extends Serializable {
 
   /**

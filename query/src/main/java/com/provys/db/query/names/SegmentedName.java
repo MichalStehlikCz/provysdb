@@ -54,6 +54,7 @@ public final class SegmentedName extends NamePathBase {
     return ofSegments(segments);
   }
 
+  @SuppressWarnings("Immutable") // list produced by copyOf, SimpleName is immutable
   private final List<SimpleName> segments;
 
   private SegmentedName(Collection<SimpleName> segments) {
@@ -124,8 +125,11 @@ public final class SegmentedName extends NamePathBase {
       this.segments = value.getSegments();
     }
 
-    private Object readResolve() {
-      return SegmentedName.ofSegments(Objects.requireNonNull(segments));
+    private Object readResolve() throws InvalidObjectException {
+      if (segments == null) {
+        throw new InvalidObjectException("Segments not found in SegmentedName deserialization");
+      }
+      return ofSegments(segments);
     }
   }
 

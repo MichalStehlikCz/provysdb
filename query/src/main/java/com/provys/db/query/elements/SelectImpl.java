@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindVariableCollector;
@@ -31,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @JsonRootName("SELECT")
 @JsonPropertyOrder({"SELECT", "FROM", "WHERE", "PARENTCONTEXT"})
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from Select
+@Immutable
 final class SelectImpl extends SelectTImpl implements Select {
 
   @JsonProperty("SELECT")

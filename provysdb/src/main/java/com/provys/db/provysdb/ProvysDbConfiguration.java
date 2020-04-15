@@ -1,9 +1,12 @@
 package com.provys.db.provysdb;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * Interface represents configuration needed for datasource initiation. Used internally when
  * initiating connection pool data source
  */
+@Immutable
 public interface ProvysDbConfiguration {
 
   /**

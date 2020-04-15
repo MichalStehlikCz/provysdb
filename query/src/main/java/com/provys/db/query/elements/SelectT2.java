@@ -1,5 +1,8 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
+
+@Immutable
 public interface SelectT2<T1, T2> extends SelectT<SelectT2<T1, T2>> {
 
   /**

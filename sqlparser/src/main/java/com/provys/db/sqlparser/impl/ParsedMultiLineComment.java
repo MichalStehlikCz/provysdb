@@ -1,5 +1,6 @@
 package com.provys.db.sqlparser.impl;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.QueryConsumer;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -13,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Instance represents multi-line comment.
  */
+@Immutable
 final class ParsedMultiLineComment extends ParsedTokenBase {
 
   private final String comment;

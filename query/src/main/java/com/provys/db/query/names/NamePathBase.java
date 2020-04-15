@@ -1,8 +1,11 @@
 package com.provys.db.query.names;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * Implements common methods that can have default implementation.
  */
+@Immutable
 public abstract class NamePathBase implements NamePath {
 
   private static final long serialVersionUID = -1326470113424865384L;

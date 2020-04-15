@@ -1,5 +1,6 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -7,6 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Represents single query in FROM clause.
  */
+@Immutable
 public interface FromElement extends Element<FromElement> {
 
   /**

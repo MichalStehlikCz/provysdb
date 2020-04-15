@@ -2,6 +2,7 @@ package com.provys.db.query.names;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @JsonSerialize(using = NamePathSerializer.class)
 @JsonDeserialize(using = NamePathDeserializer.class)
+@Immutable
 public interface NamePath extends Serializable {
 
   /**

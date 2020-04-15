@@ -3,6 +3,7 @@ package com.provys.db.query.names;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.NotImplementedException;
 import java.util.Collection;
 import java.util.List;
@@ -13,8 +14,10 @@ import java.util.stream.Stream;
 @SuppressWarnings("java:S1192") // duplicate string
 class NamePathBaseTest {
 
+  @Immutable
   private static class TestNamePathBase extends NamePathBase {
 
+    @SuppressWarnings("Immutable") // List product of copyOf, String immutable
     private final List<String> dbNames;
 
     TestNamePathBase(Collection<String> dbNames) {

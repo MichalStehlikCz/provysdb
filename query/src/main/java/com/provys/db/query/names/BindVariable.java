@@ -6,12 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.provys.common.exception.InternalException;
 import com.provys.common.types.ProvysClassSerializer;
+import com.provys.common.types.TypeMapImpl;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -29,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("BINDVARIABLE")
 @JsonDeserialize(using = BindVariableDeserializer.class)
+@Immutable
 public final class BindVariable implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -38,9 +43,10 @@ public final class BindVariable implements Serializable {
   @JsonProperty("TYPE")
   @JsonSerialize(using = ProvysClassSerializer.class)
   private final Class<?> type;
+  // verification in constructor should be sufficient to only have immutable values here
+  @SuppressWarnings("Immutable")
   @JsonProperty("VALUE")
-  @SuppressWarnings("java:S1948") // serialization goes via proxy
-  private final @Nullable Object value;
+  private final @Nullable Serializable value;
 
   /**
    * Create new bind variable.
@@ -48,9 +54,13 @@ public final class BindVariable implements Serializable {
    * @param name  is name of new bind variable
    * @param type  is type of new bind variable
    * @param value is default value for bind variable
+   * @param <T> is type of bind variable. Used to ensure both match of class and value and to ensure
+   *          that bind variables are only based on immutable classes
    */
-  public BindVariable(BindName name, Class<?> type, @Nullable Object value) {
+  public <@ImmutableTypeParameter T extends Serializable> BindVariable(BindName name, Class<T> type,
+      @Nullable T value) {
     this.name = name;
+    TypeMapImpl.getDefault().validateType(type);
     this.type = type;
     if ((value != null) && !type.isInstance(value)) {
       throw new InternalException("Bind variable value " + value + " does not match type " + type);
@@ -64,9 +74,32 @@ public final class BindVariable implements Serializable {
    * @param name  is name of new bind variable
    * @param type  is type of new bind variable
    * @param value is default value for bind variable
+   * @param <T> is type of bind variable. Used to ensure both match of class and value and to ensure
+   *          that bind variables are only based on immutable classes
    */
-  public BindVariable(String name, Class<?> type, @Nullable Object value) {
+  public <@ImmutableTypeParameter T extends Serializable> BindVariable(String name, Class<T> type,
+      @Nullable T value) {
     this(BindName.valueOf(name), type, value);
+  }
+
+  /**
+   * Create new bind variable of unknown type.
+   *
+   * @param name is name of new bind variable
+   */
+  public BindVariable(BindName name) {
+    this.name = name;
+    this.type = TypeMapImpl.getDefault().getAnyType();
+    this.value = null;
+  }
+
+  /**
+   * Create new bind variable of unknown type.
+   *
+   * @param name is name of new bind variable
+   */
+  public BindVariable(String name) {
+    this(BindName.valueOf(name));
   }
 
   /**
@@ -93,7 +126,7 @@ public final class BindVariable implements Serializable {
    *
    * @return value held in this bind variable
    */
-  public @Nullable Object getValue() {
+  public @Nullable Serializable getValue() {
     return value;
   }
 
@@ -119,11 +152,9 @@ public final class BindVariable implements Serializable {
   private static final class SerializationProxy implements Serializable {
 
     private static final long serialVersionUID = -2106530400141373951L;
-    private @Nullable BindName name;
-    private @Nullable Class<?> type;
-    // we know that serialization might fail... and we do not care, at least not at the moment
-    @SuppressWarnings({"java:S1948", "NonSerializableFieldInSerializableClass"})
-    private @Nullable Object value;
+    private @MonotonicNonNull BindName name;
+    private @MonotonicNonNull Class<?> type;
+    private @Nullable Serializable value;
 
     SerializationProxy() {
     }
@@ -134,8 +165,25 @@ public final class BindVariable implements Serializable {
       this.value = bindVariable.getValue();
     }
 
-    private Object readResolve() {
-      return new BindVariable(Objects.requireNonNull(name), Objects.requireNonNull(type), value);
+    private Object readResolve() throws InvalidObjectException {
+      if (name == null) {
+        throw new InvalidObjectException("Name not found during BindVariable deserialization");
+      }
+      if (type == null) {
+        throw new InvalidObjectException("Type not found during BindVariable deserialization");
+      }
+      if (type == TypeMapImpl.getDefault().getAnyType()) {
+        if (value != null) {
+          throw new InvalidObjectException(
+              "Value cannot be specified for bind variable with no type (" + value + ')');
+        }
+        return new BindVariable(name);
+      }
+      // we have to rely on the fact that serialized object was immutable - no way to reasonably
+      // check it in runtime...
+      @SuppressWarnings("Immutable")
+      var result = new BindVariable(name, type.asSubclass(Serializable.class), value);
+      return result;
     }
   }
 

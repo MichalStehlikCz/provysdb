@@ -4,10 +4,10 @@ import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.FromClause;
 import com.provys.db.query.elements.FromElement;
-import com.provys.db.query.elements.Function;
 import com.provys.db.query.elements.SelectClause;
 import com.provys.db.query.elements.SelectColumn;
 import com.provys.db.query.elements.SelectT;
+import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindWithPos;
@@ -22,10 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import org.checkerframework.checker.initialization.qual.Initialized;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 
 /**
  * Default implementation of Sql builder, delegating code builder functionality to internal code
@@ -79,9 +76,14 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
    * @param function       is function to be invoked
    * @param argumentAppend are appenders for individual arguments
    */
-  protected void append(Function function,
+  protected void append(BuiltInFunction function,
       List<? extends Consumer<? super DefaultSqlBuilder>> argumentAppend) {
     sqlFunctionMap.append(function, argumentAppend, this);
+  }
+
+  @Override
+  public void append(String text) {
+    codeBuilder.append(text);
   }
 
   @Override
@@ -115,7 +117,7 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   }
 
   @Override
-  public void function(Class<?> type, Function function,
+  public void function(Class<?> type, BuiltInFunction function,
       Collection<? extends Expression<?>> arguments) {
     List<Consumer<? super SqlBuilder<?>>> argumentsAppend = arguments.stream()
         .map(ArgumentAppender::new)
@@ -264,11 +266,6 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
         .append("/*")
         .append(comment)
         .append("*/");
-  }
-
-  @Override
-  public void append(String text) {
-    codeBuilder.append(text);
   }
 
   @Override

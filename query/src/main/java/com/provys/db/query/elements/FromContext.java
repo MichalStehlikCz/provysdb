@@ -1,7 +1,8 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
+import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.NamePath;
-import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -9,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * and uses it to look up source table, ans also evaluate which part of path is needed to uniquely
  * identify table and thus should be used as table specification in SQL
  */
+@Immutable
 public interface FromContext {
 
   /**
@@ -45,8 +47,12 @@ public interface FromContext {
   default NamePath getDefaultAlias(NamePath alias) {
     var fromElement = getFromElement(alias);
     if (fromElement != null) {
-      return Objects.requireNonNull(getDefaultAlias(fromElement),
-          "Unexpected null default alias for element, retrieved using alias");
+      var defaultAlias = getDefaultAlias(fromElement);
+      if (defaultAlias == null) {
+        throw new InternalException(
+            "Unexpected null default alias for element, retrieved using alias");
+      }
+      return defaultAlias;
     }
     return alias;
   }

@@ -1,8 +1,11 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * Select query with single column of type T1.
  */
+@Immutable
 public interface SelectT1<T1> extends SelectT<SelectT1<T1>> {
 
   /**

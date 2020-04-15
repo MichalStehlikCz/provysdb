@@ -1,5 +1,6 @@
 package com.provys.db.sqlparser.impl;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.QueryConsumer;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@Immutable
 final class ParsedKeyword extends ParsedTokenBase {
 
   private final SqlKeyword keyword;

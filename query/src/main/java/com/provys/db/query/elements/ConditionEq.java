@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.datatype.DbBoolean;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
@@ -23,6 +24,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 )
 @JsonRootName("EQ")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlFromClause
+@Immutable
 final class ConditionEq<T> implements Condition {
 
   @JsonProperty("EXPR1")

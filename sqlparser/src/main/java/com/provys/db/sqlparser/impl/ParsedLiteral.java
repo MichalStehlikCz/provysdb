@@ -1,17 +1,21 @@
 package com.provys.db.sqlparser.impl;
 
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.QueryConsumer;
-import com.provys.db.query.elements.QueryFactory;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.sqlparser.SqlToken;
 import com.provys.db.sqlparser.SqlTokenType;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class ParsedLiteral<T> extends ParsedTokenBase {
+@Immutable
+final class ParsedLiteral<@ImmutableTypeParameter T extends Serializable> extends ParsedTokenBase {
 
   private final Expression<T> value;
 
@@ -21,7 +25,7 @@ final class ParsedLiteral<T> extends ParsedTokenBase {
   }
 
   ParsedLiteral(int line, int pos, Class<T> type, T value) {
-    this(line, pos, QueryFactory.getInstance().literal(type, value));
+    this(line, pos, ElementFactory.getInstance().literal(type, value));
   }
 
   @Override

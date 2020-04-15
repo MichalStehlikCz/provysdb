@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.types;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import java.math.BigInteger;
@@ -9,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Default type adapter for BigInteger class.
  */
+@Immutable
 public class SqlTypeAdapterBigInteger implements SqlTypeAdapter<BigInteger> {
 
   private static final SqlTypeAdapterBigInteger INSTANCE = new SqlTypeAdapterBigInteger();

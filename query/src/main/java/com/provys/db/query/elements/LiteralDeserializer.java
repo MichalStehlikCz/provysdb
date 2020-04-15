@@ -37,6 +37,9 @@ public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
     this(TypeMapImpl.getDefault());
   }
 
+  // we are not able to verify in runtime that type is immutable, but in general, types retrieved
+  // via TypeMap should be immutable
+  @SuppressWarnings("Immutable")
   @Override
   public Literal<?> deserialize(JsonParser parser,
       DeserializationContext context) throws IOException {
@@ -95,8 +98,12 @@ public final class LiteralDeserializer extends StdDeserializer<Literal<?>> {
       this.typeMap = value.typeMap;
     }
 
-    private Object readResolve() {
-      return new LiteralDeserializer(Objects.requireNonNull(typeMap));
+    private Object readResolve() throws InvalidObjectException {
+      if (typeMap == null) {
+        throw new InvalidObjectException(
+            "TypeMap not found during LiteralDeserializer deserialization");
+      }
+      return new LiteralDeserializer(typeMap);
     }
   }
 

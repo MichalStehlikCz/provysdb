@@ -1,12 +1,13 @@
 package com.provys.db.sqlquery.query;
 
-import com.provys.db.query.elements.Function;
+import com.provys.db.query.functions.BuiltInFunction;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Supports translation of function expression to its com.provys.db.sql representation via templates.
+ * Supports translation of function expression to its com.provys.db.sql representation via
+ * templates.
  */
 public interface SqlFunctionMap {
 
@@ -17,23 +18,23 @@ public interface SqlFunctionMap {
    *
    * @return map this function map is based on
    */
-  Map<Function, String> getTemplateByFunction();
+  Map<BuiltInFunction, SqlFunctionAppender> getAppenderByFunction();
 
   /**
-   * Get template usable for given function.
+   * Get appender usable for given function.
    *
-   * @param function is function we want to get template for
-   * @return template, with {i} used as placeholder for i-th argument
+   * @param function is function we want to get appender for
+   * @return appender that will apply function with given arguments to builder
    */
-  String getTemplate(Function function);
+  SqlFunctionAppender getAppender(BuiltInFunction function);
 
   /**
-   * Append evaluated template to builder.
+   * Append evaluated function to builder.
    *
-   *  @param function is function to be applied
+   * @param function       is function to be applied
    * @param argumentAppend is procedure that appends given argument to builder
-   * @param builder is builder where whole expression should be appended
+   * @param builder        is builder where whole expression should be appended
    */
-  <B extends SqlBuilder<B>> void append(Function function,
+  <B extends SqlBuilder<B>> void append(BuiltInFunction function,
       List<? extends Consumer<? super B>> argumentAppend, B builder);
 }

@@ -1,5 +1,7 @@
 package com.provys.db.sqlquery.query;
 
+import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
+
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
@@ -25,6 +27,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.Covariant;
 
 abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
 
@@ -319,6 +322,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     return stream(rowMapper, false);
   }
 
+  @Covariant(0)
   private static final class DbResultSetIterator<T> implements Iterator<T> {
 
     private final DbRowMapper<? extends T> rowMapper;
@@ -358,7 +362,7 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      var result = Objects.requireNonNull(next); // safe after hasNext
+      T result = Objects.requireNonNull(castNonNull(next)); // should be safe after hasNext
       next = null;
       return result;
     }

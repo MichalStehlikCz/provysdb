@@ -1,10 +1,14 @@
 package com.provys.db.query.elements;
 
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
+import java.io.Serializable;
 import java.util.Collection;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -50,7 +54,8 @@ public final class ElementFactory {
    * @param <T>   is type parameter denoting type of expression
    * @return expression based on bind variable
    */
-  public <T> Expression<T> bind(Class<T> type, BindName name, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> bind(Class<T> type,
+      BindName name, @Nullable T value) {
     return new ExpressionBind<>(type, new BindVariable(name, type, value));
   }
 
@@ -62,7 +67,8 @@ public final class ElementFactory {
    * @param <T>  is type parameter denoting type of expression
    * @return expression based on bind variable
    */
-  public <T> Expression<T> bind(Class<T> type, BindName name) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> bind(Class<T> type,
+      BindName name) {
     return bind(type, name, null);
   }
 
@@ -75,7 +81,8 @@ public final class ElementFactory {
    * @param <T>   is type parameter denoting type of expression
    * @return expression based on bind variable
    */
-  public <T> Expression<T> bind(Class<T> type, String name, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> bind(Class<T> type,
+      String name, @Nullable T value) {
     return new ExpressionBind<>(type, new BindVariable(name, type, value));
   }
 
@@ -87,8 +94,29 @@ public final class ElementFactory {
    * @param <T>  is type parameter denoting type of expression
    * @return expression based on bind variable
    */
-  public <T> Expression<T> bind(Class<T> type, String name) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> bind(Class<T> type,
+      String name) {
     return bind(type, name, null);
+  }
+
+  /**
+   * Create untyped bind expression based on supplied parameters.
+   *
+   * @param name is name of bind variable
+   * @return expression based on bind variable
+   */
+  public Expression<Object> bind(BindName name) {
+    return new ExpressionBind<>(Object.class, new BindVariable(name));
+  }
+
+  /**
+   * Create untyped bind expression based on supplied parameters.
+   *
+   * @param name is name of bind variable
+   * @return expression based on bind variable
+   */
+  public Expression<Object> bind(String name) {
+    return new ExpressionBind<>(Object.class, new BindVariable(name));
   }
 
   /**
@@ -132,7 +160,7 @@ public final class ElementFactory {
    * @param <T>       is type parameter denoting type of expression
    * @return function, representing built-in function applied on supplied arguments
    */
-  public <T> Expression<T> function(Class<T> type, Function function,
+  public <T> Expression<T> function(Class<T> type, BuiltInFunction function,
       Collection<? extends Expression<?>> arguments) {
     return new ExpressionFunction<>(type, function, arguments);
   }
@@ -145,7 +173,8 @@ public final class ElementFactory {
    * @param <T>   is parameter denoting type of expression
    * @return new literal, representing supplied value
    */
-  public <T> Expression<T> literal(Class<T> type, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> literal(Class<T> type,
+      @Nullable T value) {
     return new Literal<>(type, value);
   }
 
@@ -157,7 +186,7 @@ public final class ElementFactory {
    * @param <T>   is parameter denoting type of expression
    * @return new literal, representing supplied value
    */
-  public <T> Expression<T> literal(@NonNull T value) {
+  public <@ImmutableTypeParameter T extends Serializable> Expression<T> literal(@NonNull T value) {
     return new Literal<>(value);
   }
 
@@ -209,10 +238,10 @@ public final class ElementFactory {
   /**
    * Create new top level select query based on supplied list of columns, from and where clauses.
    *
-   * @param columns is list of columns for select clause
-   * @param fromClause   is from (sources) part of query
-   * @param whereClause  is where (conditions) part of query
-   * @param bindMap       is bind map, used to remap bind variables on creation
+   * @param columns     is list of columns for select clause
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
+   * @param bindMap     is bind map, used to remap bind variables on creation
    * @return created select query
    */
   public Select select(Collection<? extends SelectColumn<?>> columns, FromClause fromClause,
@@ -223,9 +252,9 @@ public final class ElementFactory {
   /**
    * Create new top level select query based on supplied list of columns, from and where clauses.
    *
-   * @param columns is list of columns for select clause
-   * @param fromClause   is from (sources) part of query
-   * @param whereClause  is where (conditions) part of query
+   * @param columns     is list of columns for select clause
+   * @param fromClause  is from (sources) part of query
+   * @param whereClause is where (conditions) part of query
    * @return created select query
    */
   public Select select(Collection<? extends SelectColumn<?>> columns, FromClause fromClause,

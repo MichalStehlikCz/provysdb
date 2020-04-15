@@ -68,6 +68,11 @@ class TestCodeBuilder implements CodeBuilder {
   }
 
   @Override
+  public CodeBuilder appendName(String text) {
+    throw new NotImplementedException(TestCodeBuilder.class);
+  }
+
+  @Override
   public CodeBuilder appendWrapped(String text) {
     throw new NotImplementedException(TestCodeBuilder.class);
   }

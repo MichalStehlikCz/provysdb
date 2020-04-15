@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.types;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import java.sql.Types;
@@ -8,6 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Default type adapter for Integer class.
  */
+@Immutable
 public class SqlTypeAdapterInteger implements SqlTypeAdapter<Integer> {
 
   private static final SqlTypeAdapterInteger INSTANCE = new SqlTypeAdapterInteger();

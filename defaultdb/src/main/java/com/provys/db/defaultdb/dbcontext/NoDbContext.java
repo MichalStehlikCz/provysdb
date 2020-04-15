@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.dbcontext;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
@@ -14,6 +15,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Default context can be used to construct statements, compatible with Provys mapping of data
  * types, but without database connection.
  */
+@Immutable
 public class NoDbContext implements DbContext, Serializable {
 
   private static final DbContext INSTANCE = new NoDbContext();
