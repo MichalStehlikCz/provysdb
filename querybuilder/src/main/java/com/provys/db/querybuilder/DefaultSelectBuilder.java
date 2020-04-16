@@ -44,6 +44,6 @@ public class DefaultSelectBuilder extends DefaultSelectBuilderT<DefaultSelectBui
   @Override
   public Select build() {
     return getElementFactory().select(columns, getElementFactory().from(getFromElements()),
-        getElementFactory().getConditions());
+        getConditions());
   }
 }

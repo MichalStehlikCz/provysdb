@@ -1,10 +1,12 @@
 package com.provys.db.query.elements;
 
+import static com.provys.db.query.functions.ConditionalOperator.COND_EQ_NONNULL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.datatype.DtUid;
 import com.provys.common.jackson.JacksonMappers;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.SegmentedName;
 import com.provys.db.query.names.SimpleName;
 import java.io.IOException;
@@ -15,13 +17,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class SelectT1ImplTest {
 
+  private static final ElementFactory FACTORY = ElementFactory.getInstance();
+
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
         new Object[]{
             new SelectT1Impl<>(
                 new ColumnExpression<>(
-                        new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("rec"),
-                            SimpleName.valueOf("record_id")), SimpleName.valueOf("record_id")),
+                    new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("rec"),
+                        SimpleName.valueOf("record_id")), SimpleName.valueOf("record_id")),
                 new DefaultFromClause(List.of(
                     new FromTable(SegmentedName.valueOf("brc.brc_record_tb"),
                         SimpleName.valueOf("rec")))),
@@ -37,32 +41,34 @@ public class SelectT1ImplTest {
                 + "</FROMTABLE></ELEM></FROM><WHERE/><PARENTCONTEXT/></SELECT1>"
         }
         , new Object[]{new SelectT1Impl<>(
-                new ColumnExpression<>(
-                    new ExpressionColumn<>(DtUid.class, null, SimpleName.valueOf("prog_id")),
-                    null),
+            new ColumnExpression<>(
+                new ExpressionColumn<>(DtUid.class, null, SimpleName.valueOf("prog_id")),
+                null),
             new DefaultFromClause(List.of(
                 new FromTable(SegmentedName.valueOf("brc.brc_prog_tb"), SimpleName.valueOf("prog")),
                 new FromTable(SimpleName.valueOf("brc_series_tb"), SimpleName.valueOf("series")))),
-            new ConditionEq<>(new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("prog"),
-                SimpleName.valueOf("series_id")),
-                new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("series"),
-                    SimpleName.valueOf("series_id"))), null, null),
-            "{\"COLUMN\":{\"EXPRESSION\":{\"EXPRESSION\":{\"COLUMN\":{\"TYPE\":\"UID\","
-                + "\"COLUMN\":\"prog_id\"}}}},\"FROM\":[{\"FROMTABLE\":"
-                + "{\"TABLENAME\":\"brc.brc_prog_tb\",\"ALIAS\":\"prog\"}},{\"FROMTABLE\":"
-                + "{\"TABLENAME\":\"brc_series_tb\",\"ALIAS\":\"series\"}}],\"WHERE\":{\"EQ\":"
-                + "{\"EXPR1\":{\"COLUMN\":{\"TYPE\":\"UID\",\"TABLE\":\"prog\","
-                + "\"COLUMN\":\"series_id\"}},\"EXPR2\":{\"COLUMN\":{\"TYPE\":\"UID\","
-                + "\"TABLE\":\"series\",\"COLUMN\":\"series_id\"}}}}}",
+            FACTORY.condition(COND_EQ_NONNULL,
+                List.of(new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("prog"),
+                        SimpleName.valueOf("series_id")),
+                    new ExpressionColumn<>(DtUid.class, SimpleName.valueOf("series"),
+                        SimpleName.valueOf("series_id")))), null, null),
+            "{\"COLUMN\":{\"EXPRESSION\":{\"EXPRESSION\":{\"COLUMN\":{\"TYPE\":\"UID\",\"COLUMN\":"
+                + "\"prog_id\"}}}},\"FROM\":[{\"FROMTABLE\":{\"TABLENAME\":\"brc.brc_prog_tb\","
+                + "\"ALIAS\":\"prog\"}},{\"FROMTABLE\":{\"TABLENAME\":\"brc_series_tb\",\"ALIAS\":"
+                + "\"series\"}}],\"WHERE\":{\"CONDOP\":{\"OPERATOR\":\"COND_EQ_NONNULL\","
+                + "\"ARGUMENTS\":[{\"COLUMN\":{\"TYPE\":\"UID\",\"TABLE\":\"prog\","
+                + "\"COLUMN\":\"series_id\"}},{\"COLUMN\":{\"TYPE\":\"UID\",\"TABLE\":\"series\","
+                + "\"COLUMN\":\"series_id\"}}]}}}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SELECT1><COLUMN><EXPRESSION><EXPRESSION>"
                 + "<COLUMN><TYPE>UID</TYPE><TABLE/><COLUMN>prog_id</COLUMN></COLUMN></EXPRESSION>"
                 + "<ALIAS/></EXPRESSION></COLUMN><FROM><ELEM><FROMTABLE>"
                 + "<TABLENAME>brc.brc_prog_tb</TABLENAME><ALIAS>prog</ALIAS></FROMTABLE></ELEM>"
                 + "<ELEM><FROMTABLE><TABLENAME>brc_series_tb</TABLENAME><ALIAS>series</ALIAS>"
-                + "</FROMTABLE></ELEM></FROM><WHERE><EQ><EXPR1><COLUMN><TYPE>UID</TYPE>"
-                + "<TABLE>prog</TABLE><COLUMN>series_id</COLUMN></COLUMN></EXPR1><EXPR2>"
-                + "<COLUMN><TYPE>UID</TYPE><TABLE>series</TABLE><COLUMN>series_id</COLUMN>"
-                + "</COLUMN></EXPR2></EQ></WHERE><PARENTCONTEXT/></SELECT1>"
+                + "</FROMTABLE></ELEM></FROM><WHERE><CONDOP><OPERATOR>COND_EQ_NONNULL</OPERATOR>"
+                + "<ARGUMENTS><ARGUMENT><COLUMN><TYPE>UID</TYPE><TABLE>prog</TABLE>"
+                + "<COLUMN>series_id</COLUMN></COLUMN></ARGUMENT><ARGUMENT><COLUMN><TYPE>UID</TYPE>"
+                + "<TABLE>series</TABLE><COLUMN>series_id</COLUMN></COLUMN></ARGUMENT></ARGUMENTS>"
+                + "</CONDOP></WHERE><PARENTCONTEXT/></SELECT1>"
         }
     );
   }

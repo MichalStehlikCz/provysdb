@@ -42,7 +42,8 @@ public class JacksonModule extends SimpleModule {
     @Override
     public List<BeanPropertyDefinition> updateProperties(DeserializationConfig config,
         BeanDescription beanDesc, List<BeanPropertyDefinition> propDefs) {
-      if (beanDesc.getBeanClass() == ExpressionFunction.class) {
+      if ((beanDesc.getBeanClass() == ExpressionFunction.class)
+          || (beanDesc.getBeanClass() == ConditionOperation.class)) {
         return propDefs.stream().filter(p -> p.getConstructorParameter() != null).collect(
             Collectors.toList());
       }

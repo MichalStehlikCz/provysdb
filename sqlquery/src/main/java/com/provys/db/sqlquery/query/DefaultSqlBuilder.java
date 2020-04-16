@@ -7,7 +7,9 @@ import com.provys.db.query.elements.FromElement;
 import com.provys.db.query.elements.SelectClause;
 import com.provys.db.query.elements.SelectColumn;
 import com.provys.db.query.elements.SelectT;
+import com.provys.db.query.functions.BuiltIn;
 import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindWithPos;
@@ -16,7 +18,9 @@ import com.provys.db.query.names.SimpleName;
 import com.provys.db.sqlquery.codebuilder.CodeBuilder;
 import com.provys.db.sqlquery.codebuilder.CodeBuilderFactory;
 import com.provys.db.sqlquery.literals.SqlLiteralHandler;
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,19 +35,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
 
   private final CodeBuilder codeBuilder = CodeBuilderFactory.getCodeBuilder();
+  private final Deque<SqlBuilderPosition> positionStack = new ArrayDeque<>(5);
   private final SqlLiteralHandler sqlLiteralHandler;
-  private final SqlFunctionMap sqlFunctionMap;
+  private final SqlBuiltInMap sqlBuiltInMap;
 
   /**
    * Constructor, creating sql builder that creates new code builder using factory and uses supplied
    * literal handler, function map end element builder.
    *
    * @param sqlLiteralHandler is literal handler that will manage export of literals
-   * @param sqlFunctionMap    will support export of functions
+   * @param sqlBuiltInMap    will support export of functions
    */
-  public DefaultSqlBuilder(SqlLiteralHandler sqlLiteralHandler, SqlFunctionMap sqlFunctionMap) {
+  public DefaultSqlBuilder(SqlLiteralHandler sqlLiteralHandler, SqlBuiltInMap sqlBuiltInMap) {
     this.sqlLiteralHandler = sqlLiteralHandler;
-    this.sqlFunctionMap = sqlFunctionMap;
+    this.sqlBuiltInMap = sqlBuiltInMap;
   }
 
   /**
@@ -73,17 +78,60 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   /**
    * Append text, corresponding to invocation of supplied function with supplied arguments.
    *
-   * @param function       is function to be invoked
+   * @param builtIn       is function to be invoked
    * @param argumentAppend are appenders for individual arguments
    */
-  protected void append(BuiltInFunction function,
+  protected void append(BuiltIn builtIn,
       List<? extends Consumer<? super DefaultSqlBuilder>> argumentAppend) {
-    sqlFunctionMap.append(function, argumentAppend, this);
+    sqlBuiltInMap.append(builtIn, argumentAppend, this);
   }
 
   @Override
-  public void append(String text) {
+  public DefaultSqlBuilder append(String text) {
     codeBuilder.append(text);
+    return this;
+  }
+
+  @Override
+  public DefaultSqlBuilder appendLine(String text) {
+    codeBuilder.appendLine(text);
+    return this;
+  }
+
+  @Override
+  public DefaultSqlBuilder appendLine() {
+    codeBuilder.appendLine();
+    return this;
+  }
+
+  @Override
+  public DefaultSqlBuilder increasedIdent(int increaseBy) {
+    codeBuilder.increasedIdent(increaseBy);
+    return this;
+  }
+
+  @Override
+  public DefaultSqlBuilder popIdent() {
+    codeBuilder.popIdent();
+    return this;
+  }
+
+  @Override
+  public SqlBuilderPosition getPosition() {
+    var result = positionStack.peek();
+    return (result == null) ? SqlBuilderPosition.GENERAL : result;
+  }
+
+  @Override
+  public DefaultSqlBuilder pushPosition(SqlBuilderPosition position) {
+    positionStack.push(position);
+    return this;
+  }
+
+  @Override
+  public DefaultSqlBuilder popPosition() {
+    positionStack.pop();
+    return this;
   }
 
   @Override
@@ -116,6 +164,24 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     }
   }
 
+  /**
+   * Consume condition, based on supplied operator and arguments.
+   *
+   * @param operator  is condition operator / function
+   * @param arguments are supplied arguments
+   */
+  @Override
+  public void condition(ConditionalOperator operator,
+      Collection<? extends Expression<?>> arguments) {
+    if (getPosition() == SqlBuilderPosition.WHERE) {
+      append("    ");
+    }
+    List<Consumer<? super SqlBuilder<?>>> argumentsAppend = arguments.stream()
+        .map(ArgumentAppender::new)
+        .collect(Collectors.toList());
+    append(operator, argumentsAppend);
+  }
+
   @Override
   public void function(Class<?> type, BuiltInFunction function,
       Collection<? extends Expression<?>> arguments) {
@@ -144,16 +210,25 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     }
   }
 
+  @SuppressWarnings("TypeMayBeWeakened")
+  private void where(@Nullable Condition whereClause) {
+    if (whereClause != null) {
+      appendLine("WHERE");
+      increasedIdent(2);
+      pushPosition(SqlBuilderPosition.WHERE);
+      whereClause.apply(this);
+      appendLine();
+      popPosition();
+      popIdent();
+    }
+  }
+
   @Override
   public void select(SelectClause selectClause, FromClause fromClause,
       @Nullable Condition whereClause) {
     selectClause.apply(this);
     fromClause.apply(this);
-    if (whereClause != null) {
-      codeBuilder.appendLine("WHERE").increasedIdent(2);
-      whereClause.apply(this);
-      codeBuilder.popIdent();
-    }
+    where(whereClause);
   }
 
   @Override
@@ -161,11 +236,7 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
       @Nullable Condition whereClause) {
     selectColumns(columns);
     fromClause.apply(this);
-    if (whereClause != null) {
-      codeBuilder.appendLine("WHERE").increasedIdent(2);
-      whereClause.apply(this);
-      codeBuilder.popIdent();
-    }
+    where(whereClause);
   }
 
   @Override
@@ -212,8 +283,9 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     select.apply(this);
     codeBuilder
         .popIdent()
-        .appendLine()
-        .append(')');
+        .increasedIdent(0) // we want clear line with original ident level
+        .append(')')
+        .popIdent();
     appendAlias(alias);
   }
 
@@ -221,15 +293,6 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
   public void fromDual(@Nullable SimpleName alias) {
     codeBuilder.append("dual");
     appendAlias(alias);
-  }
-
-  @Override
-  public <T> void eq(Expression<T> expression1, Expression<T> expression2) {
-    codeBuilder.append('(');
-    expression1.apply(this);
-    codeBuilder.append('=');
-    expression2.apply(this);
-    codeBuilder.append(')');
   }
 
   @Override
@@ -270,7 +333,7 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
 
   @Override
   public DefaultSqlBuilder getClone() {
-    return new DefaultSqlBuilder(sqlLiteralHandler, sqlFunctionMap);
+    return new DefaultSqlBuilder(sqlLiteralHandler, sqlBuiltInMap);
   }
 
   @Override
@@ -300,14 +363,14 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     DefaultSqlBuilder that = (DefaultSqlBuilder) o;
     return codeBuilder.equals(that.codeBuilder)
         && sqlLiteralHandler.equals(that.sqlLiteralHandler)
-        && sqlFunctionMap.equals(that.sqlFunctionMap);
+        && sqlBuiltInMap.equals(that.sqlBuiltInMap);
   }
 
   @Override
   public int hashCode() {
     int result = codeBuilder.hashCode();
     result = 31 * result + sqlLiteralHandler.hashCode();
-    result = 31 * result + sqlFunctionMap.hashCode();
+    result = 31 * result + sqlBuiltInMap.hashCode();
     return result;
   }
 
@@ -316,7 +379,7 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     return "DefaultSqlBuilder{"
         + "codeBuilder=" + codeBuilder
         + ", sqlLiteralHandler=" + sqlLiteralHandler
-        + ", sqlFunctionMap=" + sqlFunctionMap
+        + ", sqlFunctionMap=" + sqlBuiltInMap
         + '}';
   }
 }

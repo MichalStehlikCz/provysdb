@@ -23,6 +23,7 @@ public interface StatementFactory {
    *
    * @param query is supplied query definition
    * @return select statement based on supplied query
+   * @param <T1> is type of first column
    */
   <T1> SelectStatementT1<T1> getSelect(SelectT1<T1> query);
 
@@ -31,6 +32,8 @@ public interface StatementFactory {
    *
    * @param query is supplied query definition
    * @return select statement based on supplied query
+   * @param <T1> is type of first column
+   * @param <T2> is type of second column
    */
   <T1, T2> SelectStatementT2<T1, T2> getSelect(SelectT2<? extends T1, ? extends T2> query);
 }

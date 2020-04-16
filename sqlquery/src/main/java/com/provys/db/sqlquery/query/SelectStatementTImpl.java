@@ -328,8 +328,8 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     private final DbRowMapper<? extends T> rowMapper;
     private final DbResultSet resultSet;
     private long rowNumber = 0;
+    private boolean fetched = false;
     private boolean finished = false;
-    private @Nullable T next = null;
 
     DbResultSetIterator(DbRowMapper<? extends T> rowMapper, DbResultSet resultSet) {
       this.rowMapper = rowMapper;
@@ -337,12 +337,12 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
     }
 
     private void fetch() {
-      if (finished || (next != null)) {
+      if (finished || fetched) {
         return;
       }
       try {
         if (resultSet.next()) {
-          next = rowMapper.map(resultSet, rowNumber++);
+          fetched = true;
         } else {
           finished = true;
         }
@@ -362,8 +362,8 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      T result = Objects.requireNonNull(castNonNull(next)); // should be safe after hasNext
-      next = null;
+      var result = rowMapper.map(resultSet, rowNumber++);
+      fetched = false;
       return result;
     }
 
@@ -372,8 +372,8 @@ abstract class SelectStatementTImpl<S extends SelectStatementTImpl<S>> {
       return "DbResultSetIterator{"
           + "rowMapper=" + rowMapper
           + ", rowNumber=" + rowNumber
+          + ", fetched=" + fetched
           + ", finished=" + finished
-          + ", next=" + next
           + '}';
     }
   }

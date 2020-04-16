@@ -16,6 +16,11 @@ class TestCodeBuilder implements CodeBuilder {
   private final StringBuilder builder = new StringBuilder();
 
   @Override
+  public boolean isNewLine() {
+    throw new NotImplementedException(TestCodeBuilder.class);
+  }
+
+  @Override
   public CodeBuilder append(String text) {
     builder.append(text);
     return this;

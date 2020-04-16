@@ -24,7 +24,7 @@ class SqlLiteralDtDateTimeHandlerTest {
             "TO_DATE('1000-01-03T00:00:00', 'YYYY-MM-DD\"T\"HH24:MI:SS')"}
         , new Object[]{DtDateTime.MAX,
             "TO_DATE('5000-01-01T00:00:00', 'YYYY-MM-DD\"T\"HH24:MI:SS')"}
-        , new @Nullable Object[]{null, "NULL"}
+        , new @Nullable Object[]{null, "TO_DATE(NULL)"}
     );
   }
 

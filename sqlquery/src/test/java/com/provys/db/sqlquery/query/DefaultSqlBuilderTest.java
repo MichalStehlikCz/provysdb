@@ -2,9 +2,13 @@ package com.provys.db.sqlquery.query;
 
 import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
 import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
+import static com.provys.db.query.functions.ConditionalOperator.COND_AND;
+import static com.provys.db.query.functions.ConditionalOperator.COND_EQ_NONNULL;
+import static com.provys.db.query.functions.ConditionalOperator.COND_OR;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+import com.provys.common.datatype.DtUid;
 import com.provys.db.query.elements.Element;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.names.BindName;
@@ -27,11 +31,26 @@ import java.util.stream.Stream;
 class DefaultSqlBuilderTest {
 
   private static final ElementFactory FACTORY = ElementFactory.getInstance();
-  public static final BindWithPos[] BIND_WITH_POS = new BindWithPos[]{};
+  public static final BindWithPos[] EMPTY_BIND_WITH_POS = new BindWithPos[]{};
 
   private static DefaultSqlBuilder getBuilder() {
     return new DefaultSqlBuilder(SqlLiteralTypeHandlerMap.getDefaultMap(),
-        SqlFunctionMapImpl.getDefault());
+        SqlBuiltInMapImpl.getDefault());
+  }
+
+  @Test
+  void positionTest() {
+    var builder = getBuilder();
+    assertThat(builder.getPosition()).isSameAs(SqlBuilderPosition.GENERAL);
+    builder.pushPosition(SqlBuilderPosition.EXPR_ADD);
+    assertThat(builder.getPosition()).isSameAs(SqlBuilderPosition.EXPR_ADD);
+    builder.pushPosition(SqlBuilderPosition.EXPR_MULTIPLY);
+    assertThat(builder.getPosition()).isSameAs(SqlBuilderPosition.EXPR_MULTIPLY);
+    builder.popPosition();
+    assertThat(builder.getPosition()).isSameAs(SqlBuilderPosition.EXPR_ADD);
+    builder.popPosition();
+    assertThat(builder.getPosition()).isSameAs(SqlBuilderPosition.GENERAL);
+    assertThatThrownBy(builder::popPosition);
   }
 
   static Stream<Object[]> bindTest() {
@@ -81,7 +100,7 @@ class DefaultSqlBuilderTest {
     return Stream.of(
         new Object[]{FACTORY.function(String.class, STRING_CHR,
             List.of(FACTORY.literal(5))),
-            "CHR(5)", BIND_WITH_POS, Collections.emptyMap()}
+            "CHR(5)", EMPTY_BIND_WITH_POS, Collections.emptyMap()}
         , new Object[]{FACTORY.function(String.class, STRING_CONCAT,
             List.of(FACTORY.literal("first"), FACTORY.literal("second"),
                 FACTORY.bind(String.class, new BindVariable("bind1", String.class, null)))),
@@ -119,23 +138,19 @@ class DefaultSqlBuilderTest {
     assertThat(builder.getBindValues()).isEmpty();
   }
 
-  @ParameterizedTest
-  @MethodSource
+  @Test
   void selectTest() {
   }
 
-  @ParameterizedTest
-  @MethodSource
+  @Test
   void testSelectTest() {
   }
 
-  @ParameterizedTest
-  @MethodSource
+  @Test
   void selectColumnsTest() {
   }
 
-  @ParameterizedTest
-  @MethodSource
+  @Test
   void selectColumnTest() {
   }
 
@@ -180,20 +195,96 @@ class DefaultSqlBuilderTest {
     assertThat(builder.getBindValues()).isEmpty();
   }
 
-  @ParameterizedTest
-  @MethodSource
-  void fromSelectTest() {
+
+  static Stream<Object[]> fromSelectTest() {
+    return Stream.of(
+        new Object[]{FACTORY.fromSelect(FACTORY
+            .select(FACTORY.selectColumn(
+                FACTORY.bind(String.class, new BindVariable("name1", String.class, null)), null),
+                FACTORY.from(List.of(FACTORY.fromDual(null))), null), null),
+            "(\n  SELECT\n      ?\n  FROM\n      dual\n)",
+            new BindWithPos[]{new BindWithPos(BindName.valueOf("name1"), String.class,
+                List.of(1))}, Collections.emptyMap()}
+        , new Object[]{FACTORY.fromSelect(FACTORY
+                .select(FACTORY.selectColumn(
+                    FACTORY.bind(String.class, new BindVariable("name1", String.class, null)), null),
+                    FACTORY.from(List.of(FACTORY.fromDual(null))), FACTORY.condition(
+                        COND_EQ_NONNULL, List.of(FACTORY.bind(DtUid.class,
+                            new BindVariable("name2_id", DtUid.class, DtUid.valueOf("102345698"))),
+                            FACTORY.literal(DtUid.valueOf("1284752922"))))),
+            SimpleName.valueOf("table2")),
+            "(\n  SELECT\n      ?\n  FROM\n      dual\n  WHERE\n        (?=1284752922)\n) table2",
+            new BindWithPos[]{new BindWithPos(BindName.valueOf("name1"), String.class,
+                List.of(1)), new BindWithPos(BindName.valueOf("name2_id"), DtUid.class,
+                List.of(2))}, Map.of(BindName.valueOf("name2_id"), DtUid.valueOf("102345698"))}
+
+    );
   }
 
   @ParameterizedTest
   @MethodSource
-  void eqTest() {
+  void fromSelectTest(Element<?> element, String sql, BindWithPos[] bindWithPos,
+      Map<BindName, Object> bindValue) {
+    var builder = getBuilder();
+    element.apply(builder);
+    assertThat(builder.getSql()).isEqualTo(sql);
+    assertThat(builder.getBindsWithPos()).containsExactlyInAnyOrder(bindWithPos);
+    assertThat(builder.getBindValues()).containsExactlyInAnyOrderEntriesOf(bindValue);
+  }
+
+  static Stream<Object[]> conditionTest() {
+    return Stream.of(
+        new Object[]{FACTORY.condition(
+            COND_EQ_NONNULL, List.of(FACTORY.bind(DtUid.class,
+                new BindVariable("name2_id", DtUid.class, DtUid.valueOf("102345698"))),
+                FACTORY.literal(DtUid.valueOf("1284752922")))),
+            "(?=1284752922)",
+            new BindWithPos[]{new BindWithPos(BindName.valueOf("name2_id"), DtUid.class,
+                List.of(1))}, Map.of(BindName.valueOf("name2_id"), DtUid.valueOf("102345698"))}
+        , new Object[]{FACTORY.condition(COND_AND, List.of(
+            FACTORY.condition(COND_EQ_NONNULL,
+                List.of(FACTORY.column(String.class, null, SimpleName.valueOf("record_id")),
+                    FACTORY.literal("text"))),
+            FACTORY.condition(COND_EQ_NONNULL,
+                List.of(FACTORY.column(DtUid.class, null, SimpleName.valueOf("prog_id")),
+                    FACTORY.column(DtUid.class, null, SimpleName.valueOf("series_id")))))),
+            "    (record_id='text')\nAND (prog_id=series_id)", EMPTY_BIND_WITH_POS,
+            Collections.emptyMap()}
+        , new Object[]{FACTORY.condition(COND_AND, List.of(
+            FACTORY.condition(COND_OR, List.of(FACTORY.condition(COND_EQ_NONNULL,
+                List.of(FACTORY.column(String.class, null, SimpleName.valueOf("record_id")),
+                    FACTORY.literal("text"))),
+                FACTORY.condition(COND_EQ_NONNULL,
+                    List.of(FACTORY.column(DtUid.class, SimpleName.valueOf("prog"),
+                        SimpleName.valueOf("series_id")),
+                        FACTORY.column(DtUid.class, SimpleName.valueOf("series"),
+                            SimpleName.valueOf("series_id"))))
+            )),
+            FACTORY.condition(COND_EQ_NONNULL,
+                List.of(FACTORY.column(DtUid.class, null, SimpleName.valueOf("prog_id")),
+                    FACTORY.column(DtUid.class, null, SimpleName.valueOf("series_id")))))),
+            "    (\n      (record_id='text')\n  OR  (prog.series_id=series.series_id)\n    )"
+                + "\nAND (prog_id=series_id)",
+            EMPTY_BIND_WITH_POS,
+            Collections.emptyMap()}
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void conditionTest(Element<?> element, String sql, BindWithPos[] bindWithPos,
+      Map<BindName, Object> bindValue) {
+    var builder = getBuilder();
+    element.apply(builder);
+    assertThat(builder.getSql()).isEqualTo(sql);
+    assertThat(builder.getBindsWithPos()).containsExactlyInAnyOrder(bindWithPos);
+    assertThat(builder.getBindValues()).containsExactlyInAnyOrderEntriesOf(bindValue);
   }
 
   @Test
   void getCloneTest() {
     var sqlLiteralHandler = mock(SqlLiteralHandler.class);
-    var sqlFunctionMap = mock(SqlFunctionMap.class);
+    var sqlFunctionMap = mock(SqlBuiltInMap.class);
     var sourceBuilder = new DefaultSqlBuilder(sqlLiteralHandler, sqlFunctionMap);
     sourceBuilder.append("text");
     assertThat(sourceBuilder.getClone().getSql()).isEmpty();

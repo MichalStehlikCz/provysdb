@@ -3,6 +3,9 @@ package com.provys.db.sqlquery.query;
 import static com.provys.db.query.functions.BuiltInFunction.ANY_NVL;
 import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
 import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
+import static com.provys.db.sqlquery.query.SqlBuilderPosition.EXPR_ADD;
+import static com.provys.db.sqlquery.query.SqlBuilderPosition.EXPR_BRACKET;
+import static com.provys.db.sqlquery.query.SqlBuilderPosition.IN_BRACKET;
 import static org.assertj.core.api.Assertions.*;
 
 import com.provys.db.query.elements.QueryConsumer;
@@ -19,54 +22,33 @@ class SqlFunctionMapImplTest {
 
   @Test
   void getTemplateTest() {
-    var map = new SqlFunctionMapImpl(Map.of(STRING_CHR, "CHR({0})",
-        STRING_CONCAT, "{0}||{1}"));
-    assertThat(map.getTemplate(STRING_CONCAT)).isEqualTo("{0}||{1}");
+    var chrAppender = new SqlTemplateAppender("CHR({0})", EXPR_BRACKET, IN_BRACKET);
+    var concatAppender = SqlRecursiveAppender.forTemplate("{0}||{1}", EXPR_ADD, EXPR_ADD);
+    var map = new SqlBuiltInMapImpl(Map.of(STRING_CHR, chrAppender, STRING_CONCAT, concatAppender));
+    assertThat(map.getAppender(STRING_CONCAT))
+        .isEqualTo(concatAppender);
   }
 
   @Test
   void getTemplateFailTest() {
-    var map = new SqlFunctionMapImpl(Map.of(STRING_CHR, "CHR({0})",
-        STRING_CONCAT, "{0}||{1}"));
-    assertThatThrownBy(() -> map.getTemplate(ANY_NVL))
+    var chrAppender = new SqlTemplateAppender("CHR({0})", EXPR_BRACKET, IN_BRACKET);
+    var concatAppender = SqlRecursiveAppender.forTemplate("{0}||{1}", EXPR_ADD, EXPR_ADD);
+    var map = new SqlBuiltInMapImpl(Map.of(STRING_CHR, chrAppender, STRING_CONCAT, concatAppender));
+    assertThatThrownBy(() -> map.getAppender(ANY_NVL))
         .isInstanceOf(NoSuchElementException.class)
-        .hasMessageContaining("Template not found");
+        .hasMessageContaining("Appender not found");
   }
 
   private static final BindName bindName1 = BindName.valueOf("name1");
-  private static final BindName bindName2 = BindName.valueOf("name2");
 
   private static void appendArg0(QueryConsumer builder) {
     builder.bind(Integer.class, new BindVariable(bindName1, Integer.class, 4));
   }
 
-  private static void appendArg1(QueryConsumer builder) {
-    builder.bind(Integer.class, new BindVariable(bindName1, Integer.class, 4));
-    builder.bind(String.class, new BindVariable(bindName2, String.class, null));
-  }
-
-  private static void appendArg2(QueryConsumer builder) {
-    builder.bind(String.class, new BindVariable(bindName2, String.class, null));
-  }
-
-  @Test
-  void appendOperatorTest() {
-    var map = new SqlFunctionMapImpl(Map.of(STRING_CHR, "CHR({0})",
-        STRING_CONCAT, "{1}||{0}"));
-    var builder = new DefaultSqlBuilder(SqlLiteralTypeHandlerMap.getDefaultMap(), map);
-    map.append(STRING_CONCAT,
-        List.of(SqlFunctionMapImplTest::appendArg0, SqlFunctionMapImplTest::appendArg1,
-            SqlFunctionMapImplTest::appendArg2), builder);
-    assertThat(builder.getSql()).isEqualTo("?||??||?");
-    assertThat(builder.getBindsWithPos())
-        .containsExactlyInAnyOrder(new BindWithPos(bindName1, Integer.class, List.of(2, 4)),
-            new BindWithPos(bindName2, String.class, List.of(1, 3)));
-  }
-
   @Test
   void appendFunctionTest() {
-    var map = new SqlFunctionMapImpl(Map.of(STRING_CHR, "CHR({0})",
-        STRING_CONCAT, "{1}||{0}"));
+    var chrAppender = new SqlTemplateAppender("CHR({0})", EXPR_BRACKET, IN_BRACKET);
+    var map = new SqlBuiltInMapImpl(Map.of(STRING_CHR, chrAppender));
     var builder = new DefaultSqlBuilder(SqlLiteralTypeHandlerMap.getDefaultMap(), map);
     map.append(STRING_CHR, List.of(SqlFunctionMapImplTest::appendArg0), builder);
     assertThat(builder.getSql()).isEqualTo("CHR(?)");

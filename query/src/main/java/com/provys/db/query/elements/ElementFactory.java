@@ -3,6 +3,7 @@ package com.provys.db.query.elements;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
@@ -447,15 +448,15 @@ public final class ElementFactory {
   }
 
   /**
-   * Create new condition with equals comparison of two expressions.
+   * Build condition based on supplied operator and arguments.
    *
-   * @param expression1 is the first operand of comparison
-   * @param expression2 is the second operand of comparison
-   * @param <T>         is type of items being compared
-   * @return condition evaluating equality of two operands
+   * @param operator  is condition operator
+   * @param arguments are supplied arguments
+   * @return condition based on supplied operation and arguments
    */
-  public <T> Condition eq(Expression<T> expression1, Expression<T> expression2) {
-    return new ConditionEq<>(expression1, expression2);
+  public Condition condition(ConditionalOperator operator,
+      Collection<? extends Expression<?>> arguments) {
+    return new ConditionOperation(operator, arguments);
   }
 
   @Override

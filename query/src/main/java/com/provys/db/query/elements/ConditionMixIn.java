@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonRootName("CONDITION")
 @JsonTypeInfo(use = Id.NAME, include = As.WRAPPER_OBJECT)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = ConditionEq.class, name = "EQ"),
+    @JsonSubTypes.Type(value = ConditionOperation.class, name = "CONDOP"),
 })
 public interface ConditionMixIn {
 

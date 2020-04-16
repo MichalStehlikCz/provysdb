@@ -1,11 +1,13 @@
 package com.provys.db.querybuilder;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.SelectColumn;
 import com.provys.db.query.names.SimpleName;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@Immutable
 class DecoratingExpressionBuilder<T> implements ExpressionBuilder<T> {
 
   private final Expression<T> expression;

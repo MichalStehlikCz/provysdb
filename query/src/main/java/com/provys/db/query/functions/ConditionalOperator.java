@@ -15,7 +15,19 @@ public enum ConditionalOperator implements BuiltIn, ConditionalOperatorInt {
 
   COND_OR(new RepeatingConditionalOperator("COND_OR")),
   COND_AND(new RepeatingConditionalOperator("COND_AND")),
-  COND_NOT(new NotOperator());
+  COND_NOT(new NotOperator()),
+  COND_EQ_NONNULL(new EqOperator("COND_EQ_NONNULL")),
+  COND_EQ_NULLABLE(new EqOperator("COND_EQ_NULLABLE")),
+  COND_NOT_EQ_NONNULL(new EqOperator("COND_NOT_EQ_NONNULL")),
+  COND_NOT_EQ_NULLABLE(new EqOperator("COND_NOT_EQ_NULLABLE")),
+  COND_LT_NONNULL(new CompareOperator("COND_LT_NONNULL")),
+  COND_LT_NULL_UNLIMITED(new CompareOperator("COND_LT_NULL_UNLIMITED")),
+  COND_LT_OR_EQ_NONNULL(new CompareOperator("COND_LT_OR_EQ_NONNULL")),
+  COND_LT_OR_EQ_NULL_UNLIMITED(new CompareOperator("COND_LT_OR_EQ_NULL_UNLIMITED")),
+  COND_GT_NONNULL(new CompareOperator("COND_GT_NONNULL")),
+  COND_GT_NULL_UNLIMITED(new CompareOperator("COND_GT_NULL_UNLIMITED")),
+  COND_GT_OR_EQ_NONNULL(new CompareOperator("COND_GT_OR_EQ_NONNULL")),
+  COND_GT_OR_EQ_NULL_UNLIMITED(new CompareOperator("COND_GT_OR_EQ_NULL_UNLIMITED"));
 
   private final ConditionalOperatorInt impl;
 

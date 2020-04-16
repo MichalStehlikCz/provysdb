@@ -1,9 +1,11 @@
 package com.provys.db.querybuilder;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+@Immutable
 final class DecoratingConditionBuilder implements ConditionBuilder {
 
   private final Condition condition;

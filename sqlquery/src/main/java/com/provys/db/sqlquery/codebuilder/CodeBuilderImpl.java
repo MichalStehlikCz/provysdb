@@ -42,6 +42,11 @@ final class CodeBuilderImpl implements CodeBuilder {
     this.bindsWithPos = new ConcurrentHashMap<>(10);
   }
 
+  @Override
+  public boolean isNewLine() {
+    return newLine;
+  }
+
   private void beforeAppend() {
     if (newLine) {
       currentIdent.use(builder);
@@ -186,7 +191,7 @@ final class CodeBuilderImpl implements CodeBuilder {
 
   @Override
   public CodeBuilder setIdent(CodeIdent ident) {
-    tempIdents.add(currentIdent);
+    tempIdents.push(currentIdent);
     // we create a copy of supplied ident to make sure it will not be changed externally
     currentIdent = ident.copy();
     return this;
@@ -202,6 +207,9 @@ final class CodeBuilderImpl implements CodeBuilder {
     if (chars < ident.length()) {
       throw new IllegalArgumentException(
           "Ident length cannot be smaller than length of supplied ident prefix");
+    }
+    if (chars == 0) {
+      return setIdent(CodeIdentVoid.getInstance());
     }
     var format = "%1$" + chars + 's';
     return setIdent(String.format(format, ident));

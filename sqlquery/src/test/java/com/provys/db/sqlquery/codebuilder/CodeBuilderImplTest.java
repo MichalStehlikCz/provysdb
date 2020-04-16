@@ -118,6 +118,36 @@ class CodeBuilderImplTest {
         .isEqualTo("abc\n    xyz\n  , uvw\n");
   }
 
+  /**
+   * setIdent with length 0 should pass
+   */
+  @Test
+  void setIdentLength0Test() {
+    assertThat(new CodeBuilderImpl()
+        .increasedIdent(", ", 3)
+        .appendLine("abc")
+        .setIdent("", 0)
+        .appendLine("xyz")
+        .build())
+        .isEqualTo(" , abc\nxyz\n");
+  }
+
+  /**
+   * setIdent with non-zero length should pass
+   */
+  @Test
+  void setIdentLength1Test() {
+    assertThat(new CodeBuilderImpl()
+        .increasedIdent(", ", 3)
+        .appendLine("abc")
+        .setIdent("", 1)
+        .appendLine("def")
+        .setIdent("x", 1)
+        .appendLine("ghi")
+        .build())
+        .isEqualTo(" , abc\n def\nxghi\n");
+  }
+
   @Test
   void increasedIdentTest() {
     assertThat(
@@ -147,5 +177,21 @@ class CodeBuilderImplTest {
         .appendLine("ghi")
         .build())
         .isEqualTo("abc\n  def\nghi\n");
+  }
+
+  @Test
+  void popIdent2Test() {
+    assertThat(new CodeBuilderImpl()
+        .appendLine("abc")
+        .setIdent("  ")
+        .appendLine("def")
+        .increasedIdent(2)
+        .appendLine("ghi")
+        .popIdent()
+        .appendLine("jkl")
+        .popIdent()
+        .appendLine("mno")
+        .build())
+        .isEqualTo("abc\n  def\n    ghi\n  jkl\nmno\n");
   }
 }

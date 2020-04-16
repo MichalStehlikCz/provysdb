@@ -1,6 +1,7 @@
 package com.provys.db.query.elements;
 
 import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
@@ -8,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface QueryConsumer {
+public interface QueryConsumer extends ConditionConsumer {
 
   /**
    * Consume expression, based on supplied bind variable.
@@ -136,15 +137,6 @@ public interface QueryConsumer {
    * @param alias is alias used to refer to this from element
    */
   void fromDual(@Nullable SimpleName alias);
-
-  /**
-   * Consume condition with equals comparison of two expressions.
-   *
-   * @param expression1 is the first operand of comparison
-   * @param expression2 is the second operand of comparison
-   * @param <T>         is type of items being compared
-   */
-  <T> void eq(Expression<T> expression1, Expression<T> expression2);
 
   /**
    * Consume keyword. Used by tokens produced by parsing sql using tokenizer.

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.google.errorprone.annotations.Immutable;
-import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindVariableCollector;
@@ -20,9 +20,7 @@ import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Expression based on built-in function.
- *
- * @param <T> is type of values expression produces.
+ * Condition based on built-in conditional operator.
  */
 @JsonAutoDetect(
     fieldVisibility = Visibility.NONE,
@@ -31,19 +29,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     isGetterVisibility = Visibility.NONE,
     creatorVisibility = Visibility.NONE
 )
-@JsonRootName("FUNCTION")
+@JsonRootName("CONDOP")
 @JsonTypeInfo(use = Id.NONE) // Needed to prevent inheritance from SqlExpression
 @Immutable
-final class ExpressionFunction<T> implements Expression<T> {
+final class ConditionOperation implements Condition {
 
-  /**
-   * Type of resulting expression. It can be evaluated from function and arguments and thus is not
-   * serialized, but we still prefer to have variable here to make compile time type checking
-   * smoother
-   */
-  private final Class<T> type;
-  @JsonProperty("FUNCTION")
-  private final BuiltInFunction function;
+  @JsonProperty("OPERATOR")
+  private final ConditionalOperator operator;
   @JsonProperty("ARGUMENTS")
   @JacksonXmlProperty(localName = "ARGUMENT")
   @JacksonXmlElementWrapper(localName = "ARGUMENTS", useWrapping = true)
@@ -51,45 +43,28 @@ final class ExpressionFunction<T> implements Expression<T> {
   private final List<Expression<?>> arguments;
 
   /**
-   * Create function expression based on function and arguments; type is inferred from function and
-   * supplied arguments.
-   *
-   * @param function  is function expression is based on
-   * @param arguments is list of expressions passed as arguments to function
-   * @return new expression, based on supplied function and arguments
-   */
-  @JsonCreator
-  static ExpressionFunction<?> ofFunction(@JsonProperty("FUNCTION") BuiltInFunction function,
-      @JsonProperty("ARGUMENTS") List<? extends Expression<?>> arguments) {
-    return new ExpressionFunction<>(
-        function.getReturnType(arguments.stream().map(Expression::getType)), function, arguments);
-  }
-
-  /**
    * Create function that will evaluate to supplied type, based on supplied function and using
    * arguments. Type of function and arguments are validated against function definition.
    *
-   * @param type is type of object expression returns
-   * @param function is built-in function, used for evaluation
-   * @param arguments are arguments to be passed to function
+   * @param operator is conditional operator, used for evaluation
+   * @param arguments are arguments to be passed to operator
    */
-  ExpressionFunction(Class<T> type, BuiltInFunction function,
-      Collection<? extends Expression<?>> arguments) {
+  @JsonCreator
+  ConditionOperation(@JsonProperty("OPERATOR") ConditionalOperator operator,
+      @JsonProperty("ARGUMENTS") Collection<? extends Expression<?>> arguments) {
     var argumentTypes = arguments.stream().map(Expression::getType).collect(Collectors.toList());
-    function.validateArguments(argumentTypes);
-    function.validateReturnType(type, argumentTypes);
-    this.type = type;
-    this.function = function;
+    operator.validateArguments(argumentTypes);
+    this.operator = operator;
     this.arguments = List.copyOf(arguments);
   }
 
   /**
-   * Value of field function.
+   * Value of field operator.
    *
-   * @return value of field function
+   * @return value of field operator
    */
-  public BuiltInFunction getFunction() {
-    return function;
+  public ConditionalOperator getOperator() {
+    return operator;
   }
 
   /**
@@ -102,11 +77,6 @@ final class ExpressionFunction<T> implements Expression<T> {
   }
 
   @Override
-  public Class<T> getType() {
-    return type;
-  }
-
-  @Override
   public Collection<BindVariable> getBinds() {
     BindVariableCollector binds = new BindVariableCollector();
     for (var argument : arguments) {
@@ -116,28 +86,21 @@ final class ExpressionFunction<T> implements Expression<T> {
   }
 
   @Override
-  public Expression<T> mapBinds(BindMap bindMap) {
+  public Condition mapBinds(BindMap bindMap) {
     var newArguments = arguments.stream()
         .map(argument -> argument.mapBinds(bindMap))
         .collect(Collectors.toList());
     if (arguments.equals(newArguments)) {
       return this;
     }
-    return new ExpressionFunction<>(type, function, newArguments);
+    return new ConditionOperation(operator, newArguments);
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
-    consumer.function(type, function, arguments);
+  public void apply(ConditionConsumer consumer) {
+    consumer.condition(operator, arguments);
   }
 
-  /**
-   * Type is intentionally not included in comparison, as regardless of declared type, expression
-   * evaluates to the same result and thus type is not part of expression signature.
-   *
-   * @param o is other object to be compared
-   * @return true if both expressions are equivalent, false otherwise
-   */
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
@@ -146,23 +109,22 @@ final class ExpressionFunction<T> implements Expression<T> {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExpressionFunction<?> that = (ExpressionFunction<?>) o;
-    return function == that.function
+    ConditionOperation that = (ConditionOperation) o;
+    return operator == that.operator
         && arguments.equals(that.arguments);
   }
 
   @Override
   public int hashCode() {
-    int result = function.hashCode();
+    int result = operator.hashCode();
     result = 31 * result + arguments.hashCode();
     return result;
   }
 
   @Override
   public String toString() {
-    return "ExpressionFunction{"
-        + "type=" + type
-        + ", function=" + function
+    return "ConditionOperation{"
+        + "operator=" + operator
         + ", arguments=" + arguments
         + '}';
   }

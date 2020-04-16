@@ -9,7 +9,7 @@ class SqlLiteralDoubleHandlerTest {
   @Test
   void getLiteralTest() {
     var value = 15486521.754;
-    assertThat(SqlLiteralDoubleHandler.getInstance().getLiteral(value)).isEqualTo("15486521.754");
+    assertThat(SqlLiteralDoubleHandler.getInstance().getLiteral(value)).isEqualTo("1.5486521754E7");
   }
 
   @Test

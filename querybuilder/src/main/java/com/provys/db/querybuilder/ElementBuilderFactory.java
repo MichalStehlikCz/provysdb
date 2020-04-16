@@ -1,5 +1,6 @@
 package com.provys.db.querybuilder;
 
+import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
@@ -8,6 +9,7 @@ import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -73,7 +75,8 @@ public final class ElementBuilderFactory {
    * @param <T>   is type parameter denoting type of expression
    * @return expression builder based on bind variable expression
    */
-  public <T> ExpressionBuilder<T> bind(Class<T> type, BindName name, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      BindName name, @Nullable T value) {
     return expression(elementFactory.bind(type, name, value));
   }
 
@@ -85,7 +88,8 @@ public final class ElementBuilderFactory {
    * @param <T>  is type parameter denoting type of expression
    * @return expression builder based on bind variable expression
    */
-  public <T> ExpressionBuilder<T> bind(Class<T> type, BindName name) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      BindName name) {
     return expression(elementFactory.bind(type, name));
   }
 
@@ -98,7 +102,8 @@ public final class ElementBuilderFactory {
    * @param <T>   is type parameter denoting type of expression
    * @return expression builder based on bind variable expression
    */
-  public <T> ExpressionBuilder<T> bind(Class<T> type, String name, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      String name, @Nullable T value) {
     return expression(elementFactory.bind(type, name, value));
   }
 
@@ -110,7 +115,8 @@ public final class ElementBuilderFactory {
    * @param <T>  is type parameter denoting type of expression
    * @return expression builder based on bind variable expression
    */
-  public <T> ExpressionBuilder<T> bind(Class<T> type, String name) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      String name) {
     return expression(elementFactory.bind(type, name));
   }
 
@@ -171,7 +177,8 @@ public final class ElementBuilderFactory {
    * @param <T>   is parameter denoting type of expression
    * @return new expression builder based on literal, representing supplied value
    */
-  public <T> ExpressionBuilder<T> literal(Class<T> type, @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> literal(
+      Class<T> type, @Nullable T value) {
     return expression(elementFactory.literal(type, value));
   }
 
@@ -184,7 +191,8 @@ public final class ElementBuilderFactory {
    * @param <T>   is parameter denoting type of expression
    * @return expression builder based on literal, representing supplied value
    */
-  public <T> ExpressionBuilder<T> literal(@NonNull T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> literal(
+      @NonNull T value) {
     return expression(elementFactory.literal(value));
   }
 

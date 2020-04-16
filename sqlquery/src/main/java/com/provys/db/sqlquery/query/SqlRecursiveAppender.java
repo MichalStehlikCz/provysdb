@@ -13,21 +13,26 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * appender.
  */
 @Immutable
-final class SqlRecursiveAppender implements SqlFunctionAppender {
+final class SqlRecursiveAppender implements SqlBuiltInAppender {
 
   /**
    * Create recursive appender, decorating template appender based on supplied template.
    *
    * @param template is template used for decorated template appender
+   * @param outerPriority is outer priority of templated statement, used to decide if it should be
+   *                     surrounded by brackets
+   * @param argumentPosition is position that should be used as context when building arguments
    * @return recursive appender for processing given template
    */
-  static SqlRecursiveAppender forTemplate(String template) {
-    return new SqlRecursiveAppender(new SqlTemplateAppender(template));
+  static SqlRecursiveAppender forTemplate(String template, SqlBuilderPosition outerPriority,
+      SqlBuilderPosition argumentPosition) {
+    return new SqlRecursiveAppender(
+        new SqlTemplateAppender(template, outerPriority, argumentPosition));
   }
 
-  private final SqlFunctionAppender baseAppender;
+  private final SqlBuiltInAppender baseAppender;
 
-  SqlRecursiveAppender(SqlFunctionAppender baseAppender) {
+  SqlRecursiveAppender(SqlBuiltInAppender baseAppender) {
     this.baseAppender = baseAppender;
   }
 

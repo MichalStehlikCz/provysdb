@@ -2,9 +2,7 @@ package com.provys.db.query.functions;
 
 import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -70,11 +68,6 @@ abstract class BuiltInBase implements BuiltInInt {
   @Override
   public void validateArguments(Stream<? extends Class<?>> callArguments) {
     validateArguments(callArguments.collect(Collectors.toList()));
-  }
-
-  @Override
-  public <B> List<Consumer<? super B>> unnestCall(BuiltInBuildCall<B> call, List<? extends Consumer<? super B>> argumentAppend, B builder) {
-    return Collections.unmodifiableList(argumentAppend);
   }
 
   @Override

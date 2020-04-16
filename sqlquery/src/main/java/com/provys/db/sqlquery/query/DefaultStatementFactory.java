@@ -15,20 +15,20 @@ public final class DefaultStatementFactory implements StatementFactory {
 
   private final DbContext dbContext;
   private final SqlLiteralHandler sqlLiteralHandler;
-  private final SqlFunctionMap sqlFunctionMap;
+  private final SqlBuiltInMap sqlBuiltInMap;
 
   /**
    * Create statement factory based on supplied database context, literal handler and function map.
    *
    * @param dbContext         is database context used as source for connections
    * @param sqlLiteralHandler is literal handler, used to produce Sql literal values
-   * @param sqlFunctionMap    is function map, defining templates for sql built-in functions
+   * @param sqlBuiltInMap    is function map, defining templates for sql built-in functions
    */
   public DefaultStatementFactory(DbContext dbContext, SqlLiteralHandler sqlLiteralHandler,
-      SqlFunctionMap sqlFunctionMap) {
+      SqlBuiltInMap sqlBuiltInMap) {
     this.dbContext = dbContext;
     this.sqlLiteralHandler = sqlLiteralHandler;
-    this.sqlFunctionMap = sqlFunctionMap;
+    this.sqlBuiltInMap = sqlBuiltInMap;
   }
 
   /**
@@ -38,7 +38,7 @@ public final class DefaultStatementFactory implements StatementFactory {
    * @param dbContext is database context used as source for connections
    */
   public DefaultStatementFactory(DbContext dbContext) {
-    this(dbContext, SqlLiteralTypeHandlerMap.getDefaultMap(), SqlFunctionMapImpl.getDefault());
+    this(dbContext, SqlLiteralTypeHandlerMap.getDefaultMap(), SqlBuiltInMapImpl.getDefault());
   }
 
   /**
@@ -64,12 +64,12 @@ public final class DefaultStatementFactory implements StatementFactory {
    *
    * @return value of field sqlFunctionMap
    */
-  public SqlFunctionMap getSqlFunctionMap() {
-    return sqlFunctionMap;
+  public SqlBuiltInMap getSqlBuiltInMap() {
+    return sqlBuiltInMap;
   }
 
   private DefaultSqlBuilder getSqlBuilder() {
-    return new DefaultSqlBuilder(sqlLiteralHandler, sqlFunctionMap);
+    return new DefaultSqlBuilder(sqlLiteralHandler, sqlBuiltInMap);
   }
 
   @Override
@@ -107,14 +107,14 @@ public final class DefaultStatementFactory implements StatementFactory {
     DefaultStatementFactory that = (DefaultStatementFactory) o;
     return dbContext.equals(that.dbContext)
         && sqlLiteralHandler.equals(that.sqlLiteralHandler)
-        && sqlFunctionMap.equals(that.sqlFunctionMap);
+        && sqlBuiltInMap.equals(that.sqlBuiltInMap);
   }
 
   @Override
   public int hashCode() {
     int result = dbContext.hashCode();
     result = 31 * result + sqlLiteralHandler.hashCode();
-    result = 31 * result + sqlFunctionMap.hashCode();
+    result = 31 * result + sqlBuiltInMap.hashCode();
     return result;
   }
 
@@ -123,7 +123,7 @@ public final class DefaultStatementFactory implements StatementFactory {
     return "DefaultStatementFactory{"
         + "dbContext=" + dbContext
         + ", sqlLiteralHandler=" + sqlLiteralHandler
-        + ", sqlFunctionMap=" + sqlFunctionMap
+        + ", sqlFunctionMap=" + sqlBuiltInMap
         + '}';
   }
 }

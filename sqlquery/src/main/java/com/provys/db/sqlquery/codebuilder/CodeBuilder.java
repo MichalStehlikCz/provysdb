@@ -19,6 +19,13 @@ import java.util.function.Consumer;
 public interface CodeBuilder {
 
   /**
+   * Indicates if current builder position is newLine (and ident will be applied).
+   *
+   * @return value of field newLine
+   */
+  boolean isNewLine();
+
+  /**
    * Appends piece of text to already existing code.
    *
    * @param text contains text to be added
@@ -110,6 +117,9 @@ public interface CodeBuilder {
   /**
    * Appends piece of text (usually name) that should not follow exactly after another text. If
    * previous character was alphanumeric, insert separating space character before actual text.
+   *
+   * @param text is name to be appended
+   * @return self to support fluent build
    */
   CodeBuilder appendName(String text);
 
@@ -193,7 +203,7 @@ public interface CodeBuilder {
    * Increase ident length by defined number of characters and replace ident with specified text,
    * left padded with spaces.
    *
-   * @param ident      new ident text, left padded ith spaces to required length
+   * @param ident      new ident text, left padded with spaces to required length
    * @param increaseBy is number of characters ident should be increased by
    * @return self to support fluent build
    */

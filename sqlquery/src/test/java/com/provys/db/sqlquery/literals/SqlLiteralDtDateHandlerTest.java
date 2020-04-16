@@ -18,7 +18,7 @@ class SqlLiteralDtDateHandlerTest {
         , new Object[]{DtDate.ME, "DATE'1000-01-01'"}
         , new Object[]{DtDate.MIN, "DATE'1000-01-03'"}
         , new Object[]{DtDate.MAX, "DATE'5000-01-01'"}
-        , new @Nullable Object[]{null, "NULL"}
+        , new @Nullable Object[]{null, "TO_DATE(NULL)"}
     );
   }
 

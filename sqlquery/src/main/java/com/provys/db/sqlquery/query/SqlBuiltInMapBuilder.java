@@ -1,24 +1,24 @@
 package com.provys.db.sqlquery.query;
 
-import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.BuiltIn;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Allows to either build {@link SqlFunctionMap} from ground up or adopt existing function map,
+ * Allows to either build {@link SqlBuiltInMap} from ground up or adopt existing function map,
  * modify selected function appenders and build new one.
  */
-public final class SqlFunctionMapBuilder {
+public final class SqlBuiltInMapBuilder {
 
-  private final Map<BuiltInFunction, SqlFunctionAppender> appenderByFunction;
+  private final Map<BuiltIn, SqlBuiltInAppender> appenderByBuiltIn;
 
   /**
    * Create empty {@code SqlFunctionMapBuilder}.
    */
-  public SqlFunctionMapBuilder() {
-    this.appenderByFunction = new ConcurrentHashMap<>(30);
+  public SqlBuiltInMapBuilder() {
+    this.appenderByBuiltIn = new ConcurrentHashMap<>(30);
   }
 
   /**
@@ -26,20 +26,20 @@ public final class SqlFunctionMapBuilder {
    *
    * @param source is function map used as source for initial mapping
    */
-  public SqlFunctionMapBuilder(SqlFunctionMap source) {
-    this.appenderByFunction = new ConcurrentHashMap<>(source.getAppenderByFunction());
+  public SqlBuiltInMapBuilder(SqlBuiltInMap source) {
+    this.appenderByBuiltIn = new ConcurrentHashMap<>(source.getAppenderByBuiltIn());
   }
 
   /**
    * Change mapping of specified function to provided template. Does not complain about mapping
    * being changed repeatedly
    *
-   * @param function is function we want to map
+   * @param builtIn is function or condition oeprator we want to map
    * @param appender is template that should be used for given function
    * @return self to support fluent build
    */
-  public SqlFunctionMapBuilder put(BuiltInFunction function, SqlFunctionAppender appender) {
-    appenderByFunction.put(function, appender);
+  public SqlBuiltInMapBuilder put(BuiltIn builtIn, SqlBuiltInAppender appender) {
+    appenderByBuiltIn.put(builtIn, appender);
     return this;
   }
 
@@ -48,8 +48,8 @@ public final class SqlFunctionMapBuilder {
    *
    * @return function map with mappings, present in this builder
    */
-  public SqlFunctionMap build() {
-    return new SqlFunctionMapImpl(appenderByFunction);
+  public SqlBuiltInMap build() {
+    return new SqlBuiltInMapImpl(appenderByBuiltIn);
   }
 
   @Override
@@ -60,19 +60,19 @@ public final class SqlFunctionMapBuilder {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SqlFunctionMapBuilder that = (SqlFunctionMapBuilder) o;
-    return Objects.equals(appenderByFunction, that.appenderByFunction);
+    SqlBuiltInMapBuilder that = (SqlBuiltInMapBuilder) o;
+    return Objects.equals(appenderByBuiltIn, that.appenderByBuiltIn);
   }
 
   @Override
   public int hashCode() {
-    return appenderByFunction != null ? appenderByFunction.hashCode() : 0;
+    return appenderByBuiltIn != null ? appenderByBuiltIn.hashCode() : 0;
   }
 
   @Override
   public String toString() {
-    return "SqlFunctionMapBuilder{"
-        + "appenderByFunction=" + appenderByFunction
+    return "SqlBuiltInMapBuilder{"
+        + "appenderByBuiltIn=" + appenderByBuiltIn
         + '}';
   }
 }

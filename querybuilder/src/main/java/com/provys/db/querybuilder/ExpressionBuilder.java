@@ -1,5 +1,6 @@
 package com.provys.db.querybuilder;
 
+import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.SelectColumn;
 import com.provys.db.query.names.SimpleName;
@@ -10,6 +11,7 @@ import com.provys.db.query.names.SimpleName;
  *
  * @param <T> is Java type corresponding to values of given expression
  */
+@Immutable
 public interface ExpressionBuilder<T> {
 
   /**
