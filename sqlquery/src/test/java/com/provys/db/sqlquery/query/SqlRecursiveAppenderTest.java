@@ -1,10 +1,6 @@
 package com.provys.db.sqlquery.query;
 
-import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
-import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
 import static com.provys.db.sqlquery.query.SqlBuilderPosition.EXPR_ADD;
-import static com.provys.db.sqlquery.query.SqlBuilderPosition.EXPR_BRACKET;
-import static com.provys.db.sqlquery.query.SqlBuilderPosition.IN_BRACKET;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
@@ -14,11 +10,7 @@ import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.BindWithPos;
 import com.provys.db.sqlquery.literals.SqlLiteralTypeHandlerMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import java.util.stream.Stream;
 
 class SqlRecursiveAppenderTest {
 

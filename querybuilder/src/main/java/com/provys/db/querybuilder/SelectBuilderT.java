@@ -2,18 +2,41 @@ package com.provys.db.querybuilder;
 
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.FromElement;
+import com.provys.db.query.elements.SelectColumn;
 import com.provys.db.query.elements.SelectT;
 import com.provys.db.query.names.NamePath;
 import com.provys.db.query.names.SimpleName;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Ancestor for all select builder classes, including SelectBuilderT0 that does not allow
- * production of Select statement.
+ * Ancestor for all select builder classes, including SelectBuilderT0 that does not allow production
+ * of Select statement.
  *
  * @param <T> is actual implementation of select builder
  */
-interface SelectBuilderT<T extends SelectBuilderT<T>> {
+public interface SelectBuilderT<T extends SelectBuilderT<T>> {
+
+  /**
+   * Add column to select builder.
+   *
+   * @param column is column to be added
+   * @param <T1>   is type of column to be added
+   * @return builder with column added. Note that interface does not prescribe if original builder
+   *     should be modified and returned or new builder should be created
+   */
+  @SuppressWarnings("ClassReferencesSubclass")
+  <T1> SelectBuilderBase<? extends SelectT<?>, ?> column(SelectColumn<T1> column);
+
+  /**
+   * Add column to select builder.
+   *
+   * @param column is expression to be added as column
+   * @param <T1>   is type of column to be added
+   * @return builder with column added. Note that interface does not prescribe if original builder
+   *     should be modified and returned or new builder should be created
+   */
+  @SuppressWarnings("ClassReferencesSubclass")
+  <T1> SelectBuilderBase<? extends SelectT<?>, ?> column(ExpressionBuilder<T1> column);
 
   /**
    * Add from element to from clause.
@@ -62,8 +85,7 @@ interface SelectBuilderT<T extends SelectBuilderT<T>> {
   }
 
   /**
-   * Add from element, based on dual pseudo-table (or however no table in from is
-   * represented).
+   * Add from element, based on dual pseudo-table (or however no table in from is represented).
    *
    * @param alias is alias used to refer to this from element
    * @return builder with specified from element added
@@ -71,8 +93,7 @@ interface SelectBuilderT<T extends SelectBuilderT<T>> {
   T fromDual(@Nullable SimpleName alias);
 
   /**
-   * Add from element, based on dual pseudo-table (or however no table in from is
-   * represented).
+   * Add from element, based on dual pseudo-table (or however no table in from is represented).
    *
    * @return builder with specified from element added
    */

@@ -2,7 +2,6 @@ package com.provys.db.sqlquery.query;
 
 import com.google.errorprone.annotations.Immutable;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;

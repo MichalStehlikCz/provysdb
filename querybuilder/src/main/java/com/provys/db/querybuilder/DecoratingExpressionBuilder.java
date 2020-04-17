@@ -4,7 +4,9 @@ import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
 import com.provys.db.query.elements.SelectColumn;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.SimpleName;
+import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @Immutable
@@ -34,13 +36,26 @@ class DecoratingExpressionBuilder<T> implements ExpressionBuilder<T> {
   }
 
   @Override
+  public SelectColumn<T> buildColumn() {
+    return elementFactory.selectColumn(expression, null);
+  }
+
+  @Override
   public SelectColumn<T> as(SimpleName alias) {
     return elementFactory.selectColumn(expression, alias);
   }
 
   @Override
   public ConditionBuilder eq(Expression<T> compareWith) {
-    return new DecoratingConditionBuilder(elementFactory.eq(expression, compareWith),
+    return new DecoratingConditionBuilder(elementFactory.condition(
+        ConditionalOperator.COND_EQ_NONNULL, List.of(expression, compareWith)),
+        elementFactory);
+  }
+
+  @Override
+  public ConditionBuilder eqNullable(Expression<T> compareWith) {
+    return new DecoratingConditionBuilder(elementFactory.condition(
+        ConditionalOperator.COND_EQ_NULLABLE, List.of(expression, compareWith)),
         elementFactory);
   }
 

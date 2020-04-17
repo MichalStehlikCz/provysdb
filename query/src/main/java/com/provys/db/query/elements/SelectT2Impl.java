@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
 import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -100,7 +99,7 @@ final class SelectT2Impl<T1, T2> extends SelectTImpl implements SelectT2<T1, T2>
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(SelectConsumer consumer) {
     consumer.select(column1, column2, getFromClause(), getWhereClause());
   }
 

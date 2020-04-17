@@ -103,8 +103,9 @@ class RegularFromContext implements FromContext {
     // get identifying alias from parent and prolong it until it doesn't interfere with fromClause
     var segments = alias.getSegments();
     assert parentContext != null;
-    // we already know that element has alias, thus this is non-null
-    var parentAlias = castNonNull(parentContext.getDefaultAlias(fromElement));
+    var parentAlias = parentContext.getDefaultAlias(fromElement);
+    assert parentAlias != null
+        : "@AssumeAssertion(nullness): we already know that element has alias";
     //noinspection ForLoopReplaceableByWhile
     for (var i = segments.size() - parentAlias.getSegments().size(); i > 0; i--) {
       var subAlias = SegmentedName.ofSegments(segments.subList(i, segments.size()));

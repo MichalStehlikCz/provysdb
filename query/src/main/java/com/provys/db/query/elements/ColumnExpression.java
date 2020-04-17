@@ -82,7 +82,7 @@ final class ColumnExpression<T> implements SelectColumn<T> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(SelectColumnConsumer consumer) {
     consumer.selectColumn(expression, alias);
   }
 

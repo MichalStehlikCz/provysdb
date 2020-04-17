@@ -1,9 +1,11 @@
-package com.provys.db.query.names;
+package com.provys.db.query.elements;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.provys.db.query.elements.BindVariableCollector;
 import com.provys.db.query.elements.Element;
+import com.provys.db.query.names.BindVariable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

@@ -6,12 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
 import java.util.Collection;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -85,7 +82,7 @@ final class SelectT1Impl<T1> extends SelectTImpl implements SelectT1<T1> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(SelectConsumer consumer) {
     consumer.select(column1, getFromClause(), getWhereClause());
   }
 

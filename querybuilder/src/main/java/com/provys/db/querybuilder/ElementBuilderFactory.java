@@ -1,9 +1,19 @@
 package com.provys.db.querybuilder;
 
 import com.google.errorprone.annotations.ImmutableTypeParameter;
+import com.provys.common.exception.InternalException;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
+import com.provys.db.query.elements.FromClause;
+import com.provys.db.query.elements.SelectClause;
+import com.provys.db.query.elements.SelectClauseConsumer;
+import com.provys.db.query.elements.SelectColumn;
+import com.provys.db.query.elements.SelectColumnConsumer;
+import com.provys.db.query.elements.SelectConsumer;
+import com.provys.db.query.elements.SelectT;
+import com.provys.db.query.elements.SelectT1;
+import com.provys.db.query.elements.SelectT2;
 import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
@@ -135,6 +145,40 @@ public final class ElementBuilderFactory {
     return expression(elementFactory.column(type, table, column));
   }
 
+  private static final class SelectColumnAnalyzer implements SelectColumnConsumer {
+
+    private @Nullable Expression<?> expressionFound;
+    private @Nullable SimpleName aliasFound;
+
+    @Override
+    public void selectColumn(Expression<?> expression, @Nullable SimpleName alias) {
+      expressionFound = expression;
+      aliasFound = alias;
+    }
+  }
+
+  /**
+   * Create expression builder, based on supplied column. Column must be of type based on expression
+   * - if column is other type (e.g. table.*), action fails.
+   *
+   * @param column is column expression should be based on
+   * @param <T>    is type parameter denoting type of expression
+   * @return expression builder, representing single column / property from source
+   */
+  public <T> ExpressionBuilder<T> column(SelectColumn<T> column) {
+    var selectColumnAnalyzer = new SelectColumnAnalyzer();
+    column.apply(selectColumnAnalyzer);
+    if (selectColumnAnalyzer.expressionFound == null) {
+      throw new InternalException(
+          "Cannot create expression builder from column not based on expression " + column);
+    }
+    // should be safe, given that we extract expression from column of type T
+    @SuppressWarnings("unchecked")
+    var expression = (Expression<T>) selectColumnAnalyzer.expressionFound;
+    return new DecoratingColumnExpressionBuilder<>(expression, selectColumnAnalyzer.aliasFound,
+        elementFactory);
+  }
+
   /**
    * Create function builder that will evaluate to supplied type, based on supplied function and
    * using arguments. Type of function and arguments are validated against function definition.
@@ -202,8 +246,127 @@ public final class ElementBuilderFactory {
    * @param condition is condition to be decorated
    * @return new condition builder
    */
-  public ConditionBuilder condition(Condition condition) {
+  public StartConditionBuilder condition(Condition condition) {
     return new DecoratingConditionBuilder(condition, elementFactory);
+  }
+
+  /**
+   * Create builder, allowing construction of AND connected chain of conditions. Note that it is
+   * also possible to use {@code condition()} and follow with appending further conditions.
+   *
+   * @return AND condition chain builder
+   */
+  public AndConditionBuilder andCondition() {
+    return new CombiningConditionBuilderAnd(elementFactory);
+  }
+
+  /**
+   * Create builder, allowing construction of OR connected chain of conditions. Note that it is
+   * also possible to use {@code condition()} and follow with appending further conditions.
+   *
+   * @return OR condition chain builder
+   */
+  public OrConditionBuilder orCondition() {
+    return new CombiningConditionBuilderOr(elementFactory);
+  }
+
+  /**
+   * Create select builder, allowing to add columns, from conditions, where clause etc.
+   *
+   * @return new empty select builder
+   */
+  public SelectBuilderT0 select() {
+    return new DefaultSelectBuilderT0(elementFactory);
+  }
+
+  private final class SelectBuilderFactory implements SelectConsumer {
+
+    private @Nullable SelectBuilder builder;
+
+    private final class SelectClauseBuilder implements SelectClauseConsumer {
+
+      private @Nullable Collection<? extends SelectColumn<?>> foundColumns;
+
+      @Override
+      public void selectColumns(Collection<? extends SelectColumn<?>> columns) {
+        foundColumns = columns;
+      }
+    }
+
+    @Override
+    public void select(SelectClause selectClause, FromClause fromClause,
+        @Nullable Condition whereClause) {
+      var selectClauseBuilder = new SelectClauseBuilder();
+      selectClause.apply(selectClauseBuilder);
+      if (selectClauseBuilder.foundColumns == null) {
+        throw new InternalException("Columns not found in select clause");
+      }
+      select(selectClauseBuilder.foundColumns, fromClause, whereClause);
+    }
+
+    @Override
+    public void select(Collection<? extends SelectColumn<?>> columns, FromClause fromClause,
+        @Nullable Condition whereClause) {
+      builder = new DefaultSelectBuilder(columns, fromClause.getElements(), whereClause,
+          elementFactory);
+    }
+  }
+
+  /**
+   * Create select builder based on supplied select statement - general version.
+   *
+   * @param select is select query builder should be based on
+   * @return new select builder
+   */
+  public SelectBuilder select(SelectT<?> select) {
+    var selectBuilderFactory = new SelectBuilderFactory();
+    select.apply(selectBuilderFactory);
+    if (selectBuilderFactory.builder == null) {
+      throw new InternalException("Cannot build select builder around supplied select statement");
+    }
+    return selectBuilderFactory.builder;
+  }
+
+  /**
+   * Create select builder based on supplied select statement with single column.
+   *
+   * @param select is single column select query this builder should be based on
+   * @param <T1> is type of the first and only column
+   * @return new select builder, initialized based on supplied statement
+   */
+  public <T1> SelectBuilderT1<T1> select(SelectT1<T1> select) {
+    return new DefaultSelectBuilderT1<>(select.getColumn1(), select.getFromClause().getElements(),
+        select.getWhereClause(), elementFactory);
+  }
+
+  /**
+   * Create select builder based on supplied select statement with two columns.
+   *
+   * @param select is two column select query this builder is based on
+   * @param <T1> is type of the first column
+   * @param <T2> is type of the second column
+   * @return new select builder, initialized based on supplied statement
+   */
+  public <T1, T2> SelectBuilderT2<T1, T2> select(SelectT2<T1, T2> select) {
+    return new DefaultSelectBuilderT2<>(select.getColumn1(), select.getColumn2(),
+        select.getFromClause().getElements(), select.getWhereClause(), elementFactory);
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ElementBuilderFactory that = (ElementBuilderFactory) o;
+    return elementFactory.equals(that.elementFactory);
+  }
+
+  @Override
+  public int hashCode() {
+    return elementFactory.hashCode();
   }
 
   @Override

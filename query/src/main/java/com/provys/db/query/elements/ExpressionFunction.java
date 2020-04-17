@@ -13,7 +13,6 @@ import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.functions.BuiltInFunction;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ final class ExpressionFunction<T> implements Expression<T> {
   private final BuiltInFunction function;
   @JsonProperty("ARGUMENTS")
   @JacksonXmlProperty(localName = "ARGUMENT")
-  @JacksonXmlElementWrapper(localName = "ARGUMENTS", useWrapping = true)
+  @JacksonXmlElementWrapper(localName = "ARGUMENTS")
   @SuppressWarnings("Immutable") // list product of copyOf, Expression is immutable
   private final List<Expression<?>> arguments;
 

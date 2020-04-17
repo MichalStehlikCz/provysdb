@@ -18,6 +18,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Allows creation of all types of query elements. Created elements are serializable and can be
  * serialized / deserialized to / from Xml using Jackson.
  */
+@Immutable
 public final class ElementFactory {
 
   private static final ElementFactory INSTANCE = new ElementFactory();

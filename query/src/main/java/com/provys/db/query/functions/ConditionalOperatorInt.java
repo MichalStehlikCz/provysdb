@@ -2,7 +2,6 @@ package com.provys.db.query.functions;
 
 import com.google.errorprone.annotations.Immutable;
 import com.provys.common.datatype.DbBoolean;
-import com.provys.common.exception.InternalException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,10 +24,7 @@ interface ConditionalOperatorInt extends BuiltInInt {
   }
 
   default boolean verifyReturnType(Class<?> returnType) {
-    if (returnType != DbBoolean.class) {
-      throw new InternalException("Invalid return type for conditional operator - " + returnType);
-    }
-    return true;
+    return returnType == DbBoolean.class;
   }
 
   @Override

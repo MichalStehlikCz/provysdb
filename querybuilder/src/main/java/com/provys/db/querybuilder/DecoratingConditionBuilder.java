@@ -3,10 +3,11 @@ package com.provys.db.querybuilder;
 import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
+import java.util.Collection;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @Immutable
-final class DecoratingConditionBuilder implements ConditionBuilder {
+final class DecoratingConditionBuilder implements StartConditionBuilder {
 
   private final Condition condition;
   private final ElementFactory elementFactory;
@@ -14,6 +15,48 @@ final class DecoratingConditionBuilder implements ConditionBuilder {
   DecoratingConditionBuilder(Condition condition, ElementFactory elementFactory) {
     this.condition = condition;
     this.elementFactory = elementFactory;
+  }
+
+  @Override
+  public AndConditionBuilder and(@Nullable Condition newCondition) {
+    return new CombiningConditionBuilderAnd(elementFactory)
+        .and(condition)
+        .and(newCondition);
+  }
+
+  @Override
+  public AndConditionBuilder and(Collection<? extends Condition> newConditions) {
+    return new CombiningConditionBuilderAnd(elementFactory)
+        .and(condition)
+        .and(newConditions);
+  }
+
+  @Override
+  public AndConditionBuilder and(ConditionBuilder newCondition) {
+    return new CombiningConditionBuilderAnd(elementFactory)
+        .and(condition)
+        .and(newCondition);
+  }
+
+  @Override
+  public OrConditionBuilder or(Condition newCondition) {
+    return new CombiningConditionBuilderOr(elementFactory)
+        .or(condition)
+        .or(newCondition);
+  }
+
+  @Override
+  public OrConditionBuilder or(Collection<? extends Condition> newConditions) {
+    return new CombiningConditionBuilderOr(elementFactory)
+        .or(condition)
+        .or(newConditions);
+  }
+
+  @Override
+  public OrConditionBuilder or(ConditionBuilder newCondition) {
+    return new CombiningConditionBuilderOr(elementFactory)
+        .or(condition)
+        .or(newCondition);
   }
 
   @Override

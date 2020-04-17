@@ -29,9 +29,17 @@ public interface ExpressionBuilder<T> {
   Expression<T> build();
 
   /**
+   * Build column from, this expression. Usually, column is created without alias, but if expression
+   * builder was based on select column, its alias will be used.
+   *
+   * @return column built
+   */
+  SelectColumn<T> buildColumn();
+
+  /**
    * Build column from this expression, using supplied alias.
    *
-   * @param alias  is alias this column will get
+   * @param alias is alias this column will get
    * @return select column based on given expression
    */
   SelectColumn<T> as(SimpleName alias);
@@ -39,7 +47,7 @@ public interface ExpressionBuilder<T> {
   /**
    * Build column from this expression, using supplied alias.
    *
-   * @param alias  is alias this column will get
+   * @param alias is alias this column will get
    * @return select column based on given expression
    */
   default SelectColumn<T> as(String alias) {
@@ -50,7 +58,8 @@ public interface ExpressionBuilder<T> {
    * Build condition by comparing this expression to other.
    *
    * @param compareWith is expression to be compared with
-   * @return condition produced by comparison of this builder with other
+   * @return condition produced by comparison of this builder with other; expressions should be
+   *     non-NULL, otherwise comparison will fail with NULL values
    */
   ConditionBuilder eq(Expression<T> compareWith);
 
@@ -62,5 +71,23 @@ public interface ExpressionBuilder<T> {
    */
   default ConditionBuilder eq(ExpressionBuilder<T> compareWith) {
     return eq(compareWith.build());
+  }
+
+  /**
+   * Build condition by comparing this expression to other.
+   *
+   * @param compareWith is expression to be compared with
+   * @return condition produced by comparison of this builder with other; NULLs are considered equal
+   */
+  ConditionBuilder eqNullable(Expression<T> compareWith);
+
+  /**
+   * Build condition by comparing this expression to other.
+   *
+   * @param compareWith is expression to be compared with
+   * @return condition produced by comparison of this builder with other; NULLs are considered equal
+   */
+  default ConditionBuilder eqNullable(ExpressionBuilder<T> compareWith) {
+    return eqNullable(compareWith.build());
   }
 }

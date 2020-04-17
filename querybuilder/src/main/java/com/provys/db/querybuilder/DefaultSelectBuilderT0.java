@@ -3,29 +3,36 @@ package com.provys.db.querybuilder;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.FromElement;
-import java.util.ArrayList;
+import com.provys.db.query.elements.SelectColumn;
 import java.util.Collection;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-class DefaultSelectBuilderT0 extends DefaultSelectBuilderT<DefaultSelectBuilderT0>
+final class DefaultSelectBuilderT0 extends DefaultSelectBuilderT<DefaultSelectBuilderT0>
     implements SelectBuilderT0 {
 
+  DefaultSelectBuilderT0(ElementFactory elementFactory) {
+    super(elementFactory);
+  }
+
   DefaultSelectBuilderT0(Collection<FromElement> fromElements,
-      Collection<Condition> conditions,
+      @Nullable Condition condition,
       ElementFactory elementFactory) {
-    super(fromElements, conditions, elementFactory);
+    super(fromElements, condition, elementFactory);
   }
 
   @Override
-  public DefaultSelectBuilderT0 from(FromElement fromElement) {
-    var newFromElements = new ArrayList<>(getFromElements());
-    newFromElements.add(fromElement);
-    return new DefaultSelectBuilderT0(newFromElements, getConditions(), getElementFactory());
+  protected DefaultSelectBuilderT0 self() {
+    return this;
   }
 
   @Override
-  public DefaultSelectBuilderT0 where(Condition condition) {
-    var newConditions = new ArrayList<>(getConditions());
-    newConditions.add(condition);
-    return new DefaultSelectBuilderT0(getFromElements(), newConditions, getElementFactory());
+  public <T1> SelectBuilderT1<T1> column(SelectColumn<T1> column) {
+    return new DefaultSelectBuilderT1<>(column, getFromElements(), getCondition(),
+        getElementFactory());
+  }
+
+  @Override
+  public String toString() {
+    return "DefaultSelectBuilderT0{" + super.toString() + '}';
   }
 }

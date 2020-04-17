@@ -3,7 +3,6 @@ package com.provys.db.sqlquery.query;
 import com.provys.db.query.elements.QueryConsumer;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindWithPos;
-import com.provys.db.sqlquery.codebuilder.CodeBuilder;
 import java.util.Collection;
 import java.util.Map;
 

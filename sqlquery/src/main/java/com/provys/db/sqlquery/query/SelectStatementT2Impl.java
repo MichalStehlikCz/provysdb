@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SelectStatementT2Impl<T1, T2>
     extends SelectStatementTImpl<SelectStatementT2Impl<T1, T2>>

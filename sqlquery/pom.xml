@@ -15,10 +15,6 @@
       <artifactId>checker-qual</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-xml</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
     </dependency>
@@ -29,17 +25,7 @@
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -59,11 +45,6 @@
     <dependency>
       <groupId>com.provys.common</groupId>
       <artifactId>common-datatype</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.provys.common</groupId>
-      <artifactId>common-jackson</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.provys.db</groupId>

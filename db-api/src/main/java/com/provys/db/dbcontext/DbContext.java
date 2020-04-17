@@ -11,20 +11,9 @@ public interface DbContext {
    * for actions that do not require user context - e.g. loading configuration or performing
    * asynchronous actions, that are made under system and not user credentials
    *
-   * @return admin (no user contexted) connection
+   * @return connection to provys database
    */
   DbConnection getConnection();
-
-  /**
-   * Retrieve connection that can be used to access Provys database. Uses ProvysConnection wrapper
-   * that provides monitoring, logging and wrappers around prepared statement and result-set,
-   * supporting Provys framework specific classes / mapping to types used in database. Uses token to
-   * switch to particular Provys user account
-   *
-   * @param dbToken is valid token, registered in Provys database
-   * @return retrieved connection
-   */
-  DbConnection getConnection(String dbToken);
 
   /**
    * Oracle user used to access Provys database.

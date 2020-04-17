@@ -1,7 +1,5 @@
 package com.provys.db.query.elements;
 
-import static com.provys.db.query.functions.BuiltInFunction.STRING_CHR;
-import static com.provys.db.query.functions.BuiltInFunction.STRING_CONCAT;
 import static com.provys.db.query.functions.ConditionalOperator.COND_AND;
 import static com.provys.db.query.functions.ConditionalOperator.COND_EQ_NONNULL;
 import static com.provys.db.query.functions.ConditionalOperator.COND_GT_NONNULL;
@@ -10,8 +8,6 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.jackson.JacksonMappers;
-import com.provys.db.query.functions.ConditionalOperator;
-import com.provys.db.query.names.BindVariable;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;

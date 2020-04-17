@@ -14,4 +14,18 @@ public interface SelectClause extends Element<SelectClause> {
    * @return column with specified alias if it exists, null if such column doesn't exist
    */
   @Nullable SelectColumn<?> getColumnByAlias(SimpleName alias);
+
+  /**
+   * Apply this element on supplied consumer. Uses specialised consumer instead of generic
+   * QueryConsumer.
+   *
+   * @param consumer is select clause consumer consumer, supplying methods that allow to apply
+   *                content of element
+   */
+  void apply(SelectClauseConsumer consumer);
+
+  @Override
+  default void apply(QueryConsumer consumer) {
+    apply((SelectClauseConsumer) consumer);
+  }
 }

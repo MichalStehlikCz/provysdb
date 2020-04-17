@@ -1,7 +1,5 @@
 package com.provys.db.sqlquery.query;
 
-import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
-
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;

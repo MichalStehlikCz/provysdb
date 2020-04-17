@@ -8,42 +8,68 @@ import com.provys.db.query.elements.SelectColumn;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DefaultSelectBuilder extends DefaultSelectBuilderT<DefaultSelectBuilder>
+final class DefaultSelectBuilder extends DefaultSelectBuilderT<DefaultSelectBuilder>
     implements SelectBuilder {
 
   private final List<SelectColumn<?>> columns;
 
+  DefaultSelectBuilder(ElementFactory elementFactory) {
+    super(elementFactory);
+    this.columns = new ArrayList<>(5);
+  }
+
   DefaultSelectBuilder(Collection<? extends SelectColumn<?>> columns,
       Collection<FromElement> fromElements,
-      Collection<Condition> conditions,
+      @Nullable Condition condition,
       ElementFactory elementFactory) {
-    super(fromElements, conditions, elementFactory);
-    this.columns = List.copyOf(columns);
+    super(fromElements, condition, elementFactory);
+    this.columns = new ArrayList<>(columns);
   }
 
   @Override
-  public DefaultSelectBuilder from(FromElement fromElement) {
-    var newFromElements = new ArrayList<>(getFromElements());
-    newFromElements.add(fromElement);
-    return new DefaultSelectBuilder(columns, newFromElements, getConditions(), getElementFactory());
+  protected DefaultSelectBuilder self() {
+    return this;
   }
 
   @Override
-  public DefaultSelectBuilder where(Condition condition) {
-    var newConditions = new ArrayList<>(getConditions());
-    newConditions.add(condition);
-    return new DefaultSelectBuilder(columns, getFromElements(), newConditions, getElementFactory());
+  public <T1> SelectBuilder column(SelectColumn<T1> column) {
+    columns.add(column);
+    return self();
   }
 
-  /**
-   * Build select statement from content of this builder.
-   *
-   * @return select statement built from content of this builder
-   */
   @Override
   public Select build() {
-    return getElementFactory().select(columns, getElementFactory().from(getFromElements()),
-        getConditions());
+    return getElementFactory().select(columns, getFromClause(), getConditionBuilder().build());
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    DefaultSelectBuilder that = (DefaultSelectBuilder) o;
+    return columns.equals(that.columns);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + columns.hashCode();
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return "DefaultSelectBuilder{"
+        + "columns=" + columns
+        + ", " + super.toString() + '}';
   }
 }

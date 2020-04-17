@@ -4,7 +4,6 @@ import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
 import com.provys.db.query.names.NamePath;
 import java.util.Collection;
 import java.util.Collections;

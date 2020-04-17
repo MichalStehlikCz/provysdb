@@ -6,7 +6,6 @@ import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindWithPos;
 import java.util.Collection;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SelectStatementImpl extends SelectStatementTImpl<SelectStatementImpl> implements
     SelectStatement {

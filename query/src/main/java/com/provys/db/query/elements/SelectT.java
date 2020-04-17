@@ -31,4 +31,16 @@ public interface SelectT<T extends SelectT<T>> extends Element<T> {
    * @return where clause of this statement
    */
   @Nullable Condition getWhereClause();
+
+  /**
+   * Apply this element on supplied consumer; allows to use SelectConsumer instead of QueryConsumer.
+   *
+   * @param consumer is select consumer, supplying methods that allow to apply content of element
+   */
+  void apply(SelectConsumer consumer);
+
+  @Override
+  default void apply(QueryConsumer consumer) {
+    apply((SelectConsumer) consumer);
+  }
 }

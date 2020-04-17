@@ -1,7 +1,5 @@
 package com.provys.db.sqlquery.literals;
 
-import com.provys.db.dbcontext.DbPreparedStatement;
-import com.provys.db.dbcontext.DbResultSet;
 import java.math.BigInteger;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

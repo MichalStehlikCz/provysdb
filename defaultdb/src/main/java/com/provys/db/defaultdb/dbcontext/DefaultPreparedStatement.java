@@ -58,9 +58,9 @@ public class DefaultPreparedStatement<T extends PreparedStatement> extends Defau
   }
 
   /**
-   * Value of field com.provys.db.sql.
+   * Value of field sql.
    *
-   * @return value of field com.provys.db.sql
+   * @return value of field sql
    */
   @Override
   public String getSql() {

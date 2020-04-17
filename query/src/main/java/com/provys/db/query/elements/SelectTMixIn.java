@@ -1,12 +1,10 @@
 package com.provys.db.query.elements;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Class contains Jackson annotation for {@link SelectT}. This way, we avoid cyclical

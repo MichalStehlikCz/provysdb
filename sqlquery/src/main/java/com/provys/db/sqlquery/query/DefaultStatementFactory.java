@@ -1,7 +1,7 @@
 package com.provys.db.sqlquery.query;
 
 import com.provys.db.dbcontext.DbContext;
-import com.provys.db.query.elements.Select;
+import com.provys.db.query.elements.SelectT;
 import com.provys.db.query.elements.SelectT1;
 import com.provys.db.query.elements.SelectT2;
 import com.provys.db.sqlquery.literals.SqlLiteralHandler;
@@ -73,7 +73,7 @@ public final class DefaultStatementFactory implements StatementFactory {
   }
 
   @Override
-  public SelectStatement getSelect(Select query) {
+  public SelectStatement getSelect(SelectT<?> query) {
     var builder = getSqlBuilder();
     query.apply(builder);
     return new SelectStatementImpl(builder.getSql(), builder.getBindsWithPos(),

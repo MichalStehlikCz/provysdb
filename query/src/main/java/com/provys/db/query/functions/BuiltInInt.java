@@ -3,7 +3,6 @@ package com.provys.db.query.functions;
 import com.google.errorprone.annotations.Immutable;
 import com.provys.common.exception.InternalException;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 @Immutable

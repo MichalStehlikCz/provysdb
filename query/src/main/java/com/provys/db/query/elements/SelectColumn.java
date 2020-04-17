@@ -25,4 +25,16 @@ public interface SelectColumn<T> extends Element<SelectColumn<T>> {
    * @return alias of this column, null when column has no alias
    */
   @Nullable SimpleName getAlias();
+
+  /**
+   * Specialized action that passes information about this column to consumer.
+   *
+   * @param consumer is specialized select column consumer
+   */
+  void apply(SelectColumnConsumer consumer);
+
+  @Override
+  default void apply(QueryConsumer consumer) {
+    apply((SelectColumnConsumer) consumer);
+  }
 }

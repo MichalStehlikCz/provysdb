@@ -1,6 +1,6 @@
 package com.provys.db.sqlquery.query;
 
-import com.provys.db.query.elements.Select;
+import com.provys.db.query.elements.SelectT;
 import com.provys.db.query.elements.SelectT1;
 import com.provys.db.query.elements.SelectT2;
 
@@ -16,7 +16,7 @@ public interface StatementFactory {
    * @param query is supplied query definition
    * @return select statement based on supplied query
    */
-  SelectStatement getSelect(Select query);
+  SelectStatement getSelect(SelectT<?> query);
 
   /**
    * Build select statement from supplied select query.

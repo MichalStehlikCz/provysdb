@@ -1,7 +1,5 @@
 package com.provys.db.query.elements;
 
-import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,7 +12,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.errorprone.annotations.Immutable;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindVariable;
-import com.provys.db.query.names.BindVariableCollector;
 import java.util.Collection;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -75,7 +72,7 @@ final class SelectImpl extends SelectTImpl implements Select {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(SelectConsumer consumer) {
     consumer.select(selectClause, getFromClause(), getWhereClause());
   }
 

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.jackson.JacksonMappers;
-import com.provys.db.query.names.SegmentedName;
 import com.provys.db.query.names.SimpleName;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;

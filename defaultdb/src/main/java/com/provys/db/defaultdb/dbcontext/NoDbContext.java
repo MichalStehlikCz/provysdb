@@ -52,11 +52,6 @@ public class NoDbContext implements DbContext, Serializable {
   }
 
   @Override
-  public DbConnection getConnection(String dbToken) {
-    throw getNotConnected();
-  }
-
-  @Override
   public String getUser() {
     throw getNotConnected();
   }

@@ -1,7 +1,8 @@
-package com.provys.db.query.names;
+package com.provys.db.query.elements;
 
 import com.provys.common.exception.InternalException;
-import com.provys.db.query.elements.Element;
+import com.provys.db.query.names.BindName;
+import com.provys.db.query.names.BindVariable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,9 +82,9 @@ public final class BindVariableCollector {
   }
 
   /**
-   * Put binds used by given element to collection, check for conflicts.
+   * Put all supplied binds to collection, check for conflicts.
    *
-   * @param element is element using binds to be added
+   * @param element is element whose binds we want to add
    * @return self to support fluent build
    */
   public BindVariableCollector add(@Nullable Element<?> element) {

@@ -1,7 +1,6 @@
 package com.provys.db.query.names;
 
 import com.google.errorprone.annotations.Immutable;
-import com.provys.db.query.elements.Element;
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Immutable map, used for lookup of corresponding variable when transferring {@link Element}s.
+ * Immutable map, used for lookup of corresponding variable when transferring elements.
  */
 @Immutable
 public final class BindMap {

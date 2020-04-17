@@ -129,12 +129,16 @@ public class DefaultConnection implements DbConnection {
     connection.clearWarnings();
   }
 
+  private static SqlException getFailedToCreateException(SQLException e) {
+    return new SqlException("Failed to create statement", e);
+  }
+
   @Override
   public DbStatement createStatement() {
     try {
       return new DefaultStatement<>(connection.createStatement(), sqlTypeHandler);
     } catch (SQLException e) {
-      throw new SqlException("Failed to create statement", e);
+      throw getFailedToCreateException(e);
     }
   }
 
@@ -144,7 +148,7 @@ public class DefaultConnection implements DbConnection {
       return new DefaultStatement<>(connection.createStatement(resultSetType, resultSetConcurrency),
           sqlTypeHandler);
     } catch (SQLException e) {
-      throw new SqlException("Failed to create statement", e);
+      throw getFailedToCreateException(e);
     }
   }
 
@@ -156,7 +160,7 @@ public class DefaultConnection implements DbConnection {
           connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability),
           sqlTypeHandler);
     } catch (SQLException e) {
-      throw new SqlException("Failed to create statement", e);
+      throw getFailedToCreateException(e);
     }
   }
 
