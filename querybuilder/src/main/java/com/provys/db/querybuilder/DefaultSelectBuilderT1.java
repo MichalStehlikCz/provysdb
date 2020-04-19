@@ -30,6 +30,12 @@ final class DefaultSelectBuilderT1<T1> extends
   }
 
   @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    super.appendBinds(combiner);
+    combiner.addElement(column1);
+  }
+
+  @Override
   public <T2> SelectBuilderT2<T1, T2> column(SelectColumn<T2> column) {
     return new DefaultSelectBuilderT2<>(column1, column, getFromElements(), getCondition(),
         getElementFactory());

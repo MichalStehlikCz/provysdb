@@ -1,10 +1,15 @@
 package com.provys.db.defaultdb.types;
 
 import com.google.errorprone.annotations.Immutable;
+import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Types;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Default type adapter for Integer class.
@@ -65,6 +70,31 @@ public class SqlTypeAdapterInteger implements SqlTypeAdapter<Integer> {
   public void bindValue(DbPreparedStatement statement, int parameterIndex,
       @Nullable Integer value) {
     statement.setNullableInteger(parameterIndex, value);
+  }
+
+  @Override
+  public boolean isAssignableFrom(Class<?> sourceType) {
+    return (sourceType == Integer.class)
+        || (sourceType == Byte.class)
+        || (sourceType == Short.class);
+  }
+
+  @Override
+  public @PolyNull Integer convert(@PolyNull Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof Integer) {
+      return (Integer) value;
+    }
+    if (value instanceof Byte) {
+      return (int) (byte) value;
+    }
+    if (value instanceof Short) {
+      return (int) (short) value;
+    }
+    throw new InternalException(
+        "Conversion not supported from " + value.getClass() + " to Integer");
   }
 
   protected Object readResolve() {

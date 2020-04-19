@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Default implementation of type map. Uses types of supplied adapters as their mapping, inheritance
@@ -190,6 +191,16 @@ public final class SqlTypeMap implements SqlTypeHandler {
     @SuppressWarnings("unchecked")
     Class<Object> type = (Class<Object>) value.getClass();
     bindValue(statement, parameterIndex, value, type);
+  }
+
+  @Override
+  public boolean isAssignableFrom(Class<?> targetType, Class<?> sourceType) {
+    return getAdapter(targetType).isAssignableFrom(sourceType);
+  }
+
+  @Override
+  public <T> @PolyNull T convert(Class<T> targetType, @PolyNull Object value) {
+    return getAdapter(targetType).convert(value);
   }
 
   /**

@@ -11,7 +11,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Support class - used to build bind variable collection based on several supplied collections.
- * Throws an exception when there are two different bind variables with the same name.
+ * Throws an exception when there are two different bind variables with the same name - it expects
+ * that combination of incomplete bind variables has already been done by query builder.
  */
 @SuppressWarnings("UnusedReturnValue")
 public final class BindVariableCollector {

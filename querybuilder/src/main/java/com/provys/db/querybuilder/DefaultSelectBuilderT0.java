@@ -25,6 +25,12 @@ final class DefaultSelectBuilderT0 extends DefaultSelectBuilderT<DefaultSelectBu
     return this;
   }
 
+  // method is needed here to make it public and implement interface
+  @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    super.appendBinds(combiner);
+  }
+
   @Override
   public <T1> SelectBuilderT1<T1> column(SelectColumn<T1> column) {
     return new DefaultSelectBuilderT1<>(column, getFromElements(), getCondition(),

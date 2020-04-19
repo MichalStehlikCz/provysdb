@@ -76,6 +76,16 @@ abstract class DefaultSelectBuilderT<T extends DefaultSelectBuilderT<T>> {
   }
 
   /**
+   * Append binds to combiner.
+   *
+   * @param combiner is bind variable collector that combines (merges) variables
+   */
+  protected void appendBinds(BindVariableCombiner combiner) {
+    combiner.addElements(fromElements);
+    combiner.addBuilder(conditionBuilder);
+  }
+
+  /**
    * Build and return condition.
    *
    * @return condition built from builder

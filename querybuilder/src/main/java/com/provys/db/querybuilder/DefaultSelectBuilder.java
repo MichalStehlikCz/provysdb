@@ -34,6 +34,12 @@ final class DefaultSelectBuilder extends DefaultSelectBuilderT<DefaultSelectBuil
   }
 
   @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    super.appendBinds(combiner);
+    combiner.addElements(columns);
+  }
+
+  @Override
   public <T1> SelectBuilder column(SelectColumn<T1> column) {
     columns.add(column);
     return self();

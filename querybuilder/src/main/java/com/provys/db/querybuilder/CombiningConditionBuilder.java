@@ -52,10 +52,15 @@ abstract class CombiningConditionBuilder implements ConditionBuilder {
     return elementFactory;
   }
 
+  @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    combiner.addElements(conditions);
+  }
+
   /**
    * Allows to extract sub-conditions from combined condition with same operator as this builder.
    */
-  private static class Consumer implements ConditionConsumer {
+  private static final class Consumer implements ConditionConsumer {
 
     private final ConditionalOperator operator;
     private @MonotonicNonNull Collection<Condition> subConditions;

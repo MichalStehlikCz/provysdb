@@ -4,7 +4,7 @@ import com.provys.db.query.elements.Condition;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface ConditionBuilder {
+public interface ConditionBuilder extends BuilderBase {
 
   /**
    * Build condition prepared by this builder.

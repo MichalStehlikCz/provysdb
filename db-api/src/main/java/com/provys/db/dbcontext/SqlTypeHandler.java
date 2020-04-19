@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Used to handle usage of Java types mapped to database types with statements and result set.
@@ -116,4 +117,26 @@ public interface SqlTypeHandler extends Serializable {
    * @param value          is value to be set
    */
   void bindValue(DbPreparedStatement statement, int parameterIndex, Object value);
+
+  /**
+   * Returns true if target type can accept value of source type (implicit conversion exists). In
+   * general, implicit conversions are allowed from type with less values or smaller precision
+   * to type with more values / higher precision, but not the other way around
+   *
+   * @param targetType is target type for conversion
+   * @param sourceType is source type for conversion
+   * @return true if such implicit conversion is possible and false otherwise
+   */
+  boolean isAssignableFrom(Class<?> targetType, Class<?> sourceType);
+
+  /**
+   * Convert value to target type using implicit conversion, throw exception if implicit conversion
+   * is not possible.
+   *
+   * @param targetType is target type for conversion
+   * @param value is source value
+   * @param <T> is type parameter corresponding to target type
+   * @return converted value
+   */
+  <T> @PolyNull T convert(Class<T> targetType, @PolyNull Object value);
 }

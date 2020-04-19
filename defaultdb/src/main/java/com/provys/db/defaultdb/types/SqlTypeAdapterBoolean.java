@@ -1,10 +1,17 @@
 package com.provys.db.defaultdb.types;
 
 import com.google.errorprone.annotations.Immutable;
+import com.provys.common.datatype.DbBoolean;
+import com.provys.common.datatype.DtBoolean;
+import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Types;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Default type adapter for Boolean class; translates boolean to 'Y' / 'N' character.
@@ -66,6 +73,27 @@ public class SqlTypeAdapterBoolean implements SqlTypeAdapter<Boolean> {
   public void bindValue(DbPreparedStatement statement, int parameterIndex,
       @Nullable Boolean value) {
     statement.setNullableBoolean(parameterIndex, value);
+  }
+
+  @Override
+  public boolean isAssignableFrom(Class<?> sourceType) {
+    return (sourceType == Boolean.class)
+        || (sourceType == DbBoolean.class);
+  }
+
+  @Override
+  public @PolyNull Boolean convert(@PolyNull Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof Boolean) {
+      return (Boolean) value;
+    }
+    var type = value.getClass();
+    if (type == DbBoolean.class) {
+      return ((DbBoolean) value).value();
+    }
+    throw new InternalException("Conversion not supported from " + type + " to BigInteger");
   }
 
   protected Object readResolve() {

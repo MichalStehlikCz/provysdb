@@ -1,12 +1,14 @@
 package com.provys.db.defaultdb.types;
 
 import com.google.errorprone.annotations.Immutable;
+import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import java.io.Serializable;
 import java.util.Optional;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Supports reading values of given type from {@link DbResultSet} and binding them to {@link
@@ -107,4 +109,36 @@ public interface SqlTypeAdapter<T> extends Serializable {
    * @param value          is value to be set
    */
   void bindValue(DbPreparedStatement statement, int parameterIndex, @Nullable T value);
+
+  /**
+   * Returns true if type adapter is used for can accept value of source type (implicit conversion
+   * exists). In general, implicit conversions are allowed from type with less values or smaller
+   * precision to type with more values / higher precision, but not the other way around
+   *
+   * @param sourceType is source type for conversion
+   * @return true if such implicit conversion is possible and false otherwise
+   */
+  default boolean isAssignableFrom(Class<?> sourceType) {
+    return sourceType == getType();
+  }
+
+  /**
+   * Convert value to type adapter is used for using implicit conversion, throw exception if
+   * implicit conversion is not possible.
+   *
+   * @param value is source value
+   * @return converted value
+   */
+  default @PolyNull T convert(@PolyNull Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (getType().isInstance(value)) {
+      @SuppressWarnings("unchecked") // should be safe as long as we do not use parametrised types
+      var result = (@NonNull T) value;
+      return result;
+    }
+    throw new InternalException(
+        "Conversion not supported from " + value.getClass() + " to " + getType());
+  }
 }

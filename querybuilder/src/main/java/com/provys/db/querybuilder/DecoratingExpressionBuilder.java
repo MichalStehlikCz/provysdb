@@ -31,6 +31,11 @@ class DecoratingExpressionBuilder<T> implements ExpressionBuilder<T> {
   }
 
   @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    combiner.addElement(expression);
+  }
+
+  @Override
   public Expression<T> build() {
     return expression;
   }

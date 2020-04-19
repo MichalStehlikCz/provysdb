@@ -2,10 +2,16 @@ package com.provys.db.defaultdb.types;
 
 import com.google.errorprone.annotations.Immutable;
 import com.provys.common.datatype.DtDate;
+import com.provys.common.datatype.DtDateTime;
+import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Default type adapter for DtDate class.
@@ -65,6 +71,26 @@ public class SqlTypeAdapterDtDate implements SqlTypeAdapter<DtDate> {
   @Override
   public void bindValue(DbPreparedStatement statement, int parameterIndex, @Nullable DtDate value) {
     statement.setNullableDtDate(parameterIndex, value);
+  }
+
+  @Override
+  public boolean isAssignableFrom(Class<?> sourceType) {
+    return (sourceType == DtDate.class)
+        || (sourceType == LocalDate.class);
+  }
+
+  @Override
+  public @PolyNull DtDate convert(@PolyNull Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof DtDate) {
+      return (DtDate) value;
+    }
+    if (value instanceof LocalDate) {
+      return DtDate.ofLocalDate((LocalDate) value);
+    }
+    throw new InternalException("Conversion not supported from " + value.getClass() + " to DtDate");
   }
 
   protected Object readResolve() {

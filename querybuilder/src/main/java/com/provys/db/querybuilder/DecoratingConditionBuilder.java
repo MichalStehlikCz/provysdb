@@ -18,6 +18,11 @@ final class DecoratingConditionBuilder implements StartConditionBuilder {
   }
 
   @Override
+  public void appendBinds(BindVariableCombiner combiner) {
+    combiner.addElement(condition);
+  }
+
+  @Override
   public AndConditionBuilder and(@Nullable Condition newCondition) {
     return new CombiningConditionBuilderAnd(elementFactory)
         .and(condition)

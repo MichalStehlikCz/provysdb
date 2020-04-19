@@ -14,7 +14,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T> is actual implementation of select builder
  */
-public interface SelectBuilderT<T extends SelectBuilderT<T>> {
+public interface SelectBuilderT<T extends SelectBuilderT<T>> extends BuilderBase {
 
   /**
    * Add column to select builder.

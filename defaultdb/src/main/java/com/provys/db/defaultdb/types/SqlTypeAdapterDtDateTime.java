@@ -1,11 +1,19 @@
 package com.provys.db.defaultdb.types;
 
 import com.google.errorprone.annotations.Immutable;
+import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
+import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbPreparedStatement;
 import com.provys.db.dbcontext.DbResultSet;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Default type adapter for DtDateTime class.
@@ -66,6 +74,35 @@ public class SqlTypeAdapterDtDateTime implements SqlTypeAdapter<DtDateTime> {
   public void bindValue(DbPreparedStatement statement, int parameterIndex,
       @Nullable DtDateTime value) {
     statement.setNullableDtDateTime(parameterIndex, value);
+  }
+
+  @Override
+  public boolean isAssignableFrom(Class<?> sourceType) {
+    return (sourceType == DtDateTime.class)
+        || (sourceType == DtDate.class)
+        || (sourceType == LocalDateTime.class)
+        || (sourceType == LocalDate.class);
+  }
+
+  @Override
+  public @PolyNull DtDateTime convert(@PolyNull Object value) {
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof DtDateTime) {
+      return (DtDateTime) value;
+    }
+    if (value instanceof DtDate) {
+      return DtDateTime.ofDate((DtDate) value);
+    }
+    if (value instanceof LocalDateTime) {
+      return DtDateTime.ofLocalDateTime((LocalDateTime) value);
+    }
+    if (value instanceof LocalDate) {
+      return DtDateTime.ofDate(DtDate.ofLocalDate((LocalDate) value));
+    }
+    throw new InternalException(
+        "Conversion not supported from " + value.getClass() + " to DtDateTime");
   }
 
   protected Object readResolve() {

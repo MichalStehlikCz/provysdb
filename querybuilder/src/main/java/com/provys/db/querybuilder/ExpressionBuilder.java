@@ -12,7 +12,7 @@ import com.provys.db.query.names.SimpleName;
  * @param <T> is Java type corresponding to values of given expression
  */
 @Immutable
-public interface ExpressionBuilder<T> {
+public interface ExpressionBuilder<T> extends BuilderBase {
 
   /**
    * Get type of expression being built.
