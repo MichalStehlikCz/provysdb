@@ -72,39 +72,6 @@ public class SqlTypeAdapterBigInteger implements SqlTypeAdapter<BigInteger> {
     statement.setNullableBigInteger(parameterIndex, value);
   }
 
-  @Override
-  public boolean isAssignableFrom(Class<?> sourceType) {
-    return (sourceType == BigInteger.class)
-        || (sourceType == Byte.class)
-        || (sourceType == Short.class)
-        || (sourceType == Integer.class)
-        || (sourceType == Long.class);
-  }
-
-  @Override
-  public @PolyNull BigInteger convert(@PolyNull Object value) {
-    if (value == null) {
-      return null;
-    }
-    if (value instanceof BigInteger) {
-      return (BigInteger) value;
-    }
-    if (value instanceof Byte) {
-      return BigInteger.valueOf((byte) value);
-    }
-    if (value instanceof Short) {
-      return BigInteger.valueOf((short) value);
-    }
-    if (value instanceof Integer) {
-      return BigInteger.valueOf((int) value);
-    }
-    if (value instanceof Long) {
-      return BigInteger.valueOf((long) value);
-    }
-    throw new InternalException(
-        "Conversion not supported from " + value.getClass() + " to BigInteger");
-  }
-
   protected Object readResolve() {
     return getInstance();
   }

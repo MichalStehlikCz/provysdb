@@ -2,6 +2,8 @@ package com.provys.db.querybuilder;
 
 import com.provys.common.exception.InternalException;
 import com.provys.common.exception.ProvysException;
+import com.provys.common.types.TypeMap;
+import com.provys.common.types.TypeMapImpl;
 import com.provys.db.query.elements.Element;
 import com.provys.db.query.names.BindMap;
 import com.provys.db.query.names.BindName;
@@ -15,15 +17,15 @@ import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Combines bind variables with the same name into single item.
- * Rules for combination are (1) when two variables of different types are being combined,
- * more specific type prevails; if types are not super / sub type, exception is thrown and (2)
- * if value and null is combined, values prevails, if two different values are met, exception is
- * thrown
+ * Combines bind variables with the same name into single item. Rules for combination are (1) when
+ * two variables of different types are being combined, more specific type prevails; if types are
+ * not super / sub type, exception is thrown and (2) if value and null is combined, values prevails,
+ * if two different values are met, exception is thrown
  */
 @SuppressWarnings("UnusedReturnValue")
 public final class BindVariableCombiner {
 
+  private final TypeMap typeMap = TypeMapImpl.getDefault();
   private final Map<BindName, BindVariable> variableByName = new HashMap<>(5);
 
   /**
@@ -55,38 +57,60 @@ public final class BindVariableCombiner {
     return new BindMap(variableByName);
   }
 
-  private static ProvysException getCannotCombineException(BindVariable bind, String text) {
-    return new InternalException("Cannot combine bind variable " + bind.getName() + ": " + text);
+  private static ProvysException getCannotCombineException(BindVariable bind, String text,
+      @Nullable Throwable e) {
+    return new InternalException("Cannot combine bind variable " + bind.getName() + ": " + text, e);
   }
 
-  private static Class<?> combineType(BindVariable old, BindVariable bind) {
-    
-    if (bind.getType().isAssignableFrom(old.getType())) {
-      return old.getType();
-    }
-    if (old.getType().isAssignableFrom(bind.getType())) {
+  private static ProvysException getCannotCombineException(BindVariable bind, String text) {
+    return getCannotCombineException(bind, text, null);
+  }
+
+  /**
+   * Type combination - we return more specific type, if none is more specific than other, fail.
+   *
+   * @param old  is old bind variable
+   * @param bind is new bind variable being combined with old
+   * @return more specific of bind variable types
+   */
+  private Class<?> combineType(BindVariable old, BindVariable bind) {
+    if (typeMap.isAssignableFrom(old.getType(), bind.getType())) {
       return bind.getType();
+    }
+    if (typeMap.isAssignableFrom(bind.getType(), old.getType())) {
+      return old.getType();
     }
     throw getCannotCombineException(old,
         "types " + old.getType() + " and " + bind.getType() + " are not compatible");
   }
 
-  private static @Nullable Serializable combineValue(BindVariable old, BindVariable bind) {
+  private Serializable retypeValue(Class<? extends Serializable> resultType, Serializable value,
+      BindVariable old) {
+    try {
+      return typeMap.convert(resultType, value);
+    } catch (RuntimeException e) {
+      throw getCannotCombineException(old,
+          "cannot retype " + value + " to " + resultType, e);
+    }
+  }
+
+  private @Nullable Serializable combineValue(Class<? extends Serializable> resultType,
+      BindVariable old, @Nullable Serializable bindValue) {
     var oldValue = old.getValue();
-    var bindValue = bind.getValue();
     if ((bindValue == null) || bindValue.equals(oldValue)) {
-      if ((oldValue != null) && !bind.getType().isInstance(oldValue)) {
-        throw getCannotCombineException(old,
-            "value " + oldValue + " is not compatible with type " + bind.getType());
+      if (oldValue == null) {
+        return null;
       }
-      return oldValue;
+      return retypeValue(resultType, oldValue, old);
     }
     if (oldValue == null) {
-      if (!old.getType().isInstance(bindValue)) {
-        throw getCannotCombineException(old,
-            "value " + bindValue + " is not compatible with type " + old.getType());
-      }
-      return bindValue;
+      return retypeValue(resultType, bindValue, old);
+    }
+    /* both are non-null, but potentially of different types... we need to convert them before
+     comparison */
+    var newValue = retypeValue(resultType, oldValue, old);
+    if (newValue.equals(retypeValue(resultType, bindValue, old))) {
+      return newValue;
     }
     throw getCannotCombineException(old,
         "values " + oldValue + " and " + bindValue + " are not compatible");
@@ -101,9 +125,9 @@ public final class BindVariableCombiner {
         return this;
       }
       // merge types
-      var resultType = combineType(old, bind);
+      var resultType = combineType(old, bind).asSubclass(Serializable.class);
       // merge values
-      var resultValue = combineValue(old, bind);
+      var resultValue = combineValue(resultType, old, bind.getValue());
       // merged result is the same as original mapping, we can leave original mapping
       if ((old.getType() == resultType) && Objects.equals(old.getValue(), resultValue)) {
         return this;

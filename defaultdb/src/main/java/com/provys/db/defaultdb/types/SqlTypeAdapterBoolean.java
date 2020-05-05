@@ -75,27 +75,6 @@ public class SqlTypeAdapterBoolean implements SqlTypeAdapter<Boolean> {
     statement.setNullableBoolean(parameterIndex, value);
   }
 
-  @Override
-  public boolean isAssignableFrom(Class<?> sourceType) {
-    return (sourceType == Boolean.class)
-        || (sourceType == DbBoolean.class);
-  }
-
-  @Override
-  public @PolyNull Boolean convert(@PolyNull Object value) {
-    if (value == null) {
-      return null;
-    }
-    if (value instanceof Boolean) {
-      return (Boolean) value;
-    }
-    var type = value.getClass();
-    if (type == DbBoolean.class) {
-      return ((DbBoolean) value).value();
-    }
-    throw new InternalException("Conversion not supported from " + type + " to BigInteger");
-  }
-
   protected Object readResolve() {
     return getInstance();
   }

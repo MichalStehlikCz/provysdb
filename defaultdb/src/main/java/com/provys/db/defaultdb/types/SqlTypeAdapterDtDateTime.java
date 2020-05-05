@@ -76,35 +76,6 @@ public class SqlTypeAdapterDtDateTime implements SqlTypeAdapter<DtDateTime> {
     statement.setNullableDtDateTime(parameterIndex, value);
   }
 
-  @Override
-  public boolean isAssignableFrom(Class<?> sourceType) {
-    return (sourceType == DtDateTime.class)
-        || (sourceType == DtDate.class)
-        || (sourceType == LocalDateTime.class)
-        || (sourceType == LocalDate.class);
-  }
-
-  @Override
-  public @PolyNull DtDateTime convert(@PolyNull Object value) {
-    if (value == null) {
-      return null;
-    }
-    if (value instanceof DtDateTime) {
-      return (DtDateTime) value;
-    }
-    if (value instanceof DtDate) {
-      return DtDateTime.ofDate((DtDate) value);
-    }
-    if (value instanceof LocalDateTime) {
-      return DtDateTime.ofLocalDateTime((LocalDateTime) value);
-    }
-    if (value instanceof LocalDate) {
-      return DtDateTime.ofDate(DtDate.ofLocalDate((LocalDate) value));
-    }
-    throw new InternalException(
-        "Conversion not supported from " + value.getClass() + " to DtDateTime");
-  }
-
   protected Object readResolve() {
     return getInstance();
   }
