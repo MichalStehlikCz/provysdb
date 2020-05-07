@@ -25,7 +25,6 @@ abstract class SelectTImpl extends RegularFromContext {
     return whereClause;
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

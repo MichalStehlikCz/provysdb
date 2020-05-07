@@ -351,7 +351,6 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
     return codeBuilder.getBindValues();
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

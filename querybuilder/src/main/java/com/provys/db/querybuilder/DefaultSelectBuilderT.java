@@ -118,7 +118,6 @@ abstract class DefaultSelectBuilderT<T extends DefaultSelectBuilderT<T>> {
     return self();
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

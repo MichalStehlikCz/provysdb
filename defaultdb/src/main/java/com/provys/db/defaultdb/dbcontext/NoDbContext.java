@@ -110,7 +110,6 @@ public class NoDbContext implements DbContext, Serializable {
   }
 
   @Override
-  @SuppressWarnings("EqualsGetClass")
   public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;

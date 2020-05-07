@@ -92,7 +92,6 @@ abstract class DefaultDbSelectBuilderT<S extends SelectBuilderT<S>,
     return withSelectBuilder(selectBuilder.where(condition));
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

@@ -29,7 +29,6 @@ abstract class ParsedTokenBase implements SqlParsedToken {
     return pos;
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {

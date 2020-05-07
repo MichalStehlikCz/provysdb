@@ -157,7 +157,6 @@ class RegularFromContext implements FromContext {
     return getDefaultAliasFromParent(alias, fromElement);
   }
 
-  @SuppressWarnings("EqualsGetClass")
   @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
