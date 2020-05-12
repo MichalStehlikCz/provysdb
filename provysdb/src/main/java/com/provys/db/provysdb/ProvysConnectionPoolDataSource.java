@@ -1,5 +1,6 @@
 package com.provys.db.provysdb;
 
+import com.provys.common.datatype.DtUid;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
@@ -22,6 +23,13 @@ public interface ProvysConnectionPoolDataSource extends DataSource {
   Connection getConnectionWithToken(String dbToken) throws SQLException;
 
   /**
+   * Url of Provys database.
+   *
+   * @return url of Provys database
+   */
+  String getUrl();
+
+  /**
    * Oracle user, used to connect to Provys database.
    *
    * @return Oracle user, used to connect to Provys database
@@ -29,9 +37,9 @@ public interface ProvysConnectionPoolDataSource extends DataSource {
   String getUser();
 
   /**
-   * Url of Provys database.
+   * Provys user account Id, corresponding to account used to connect to database.
    *
-   * @return url of Provys database
+   * @return provys user Id for account, used to connect to database
    */
-  String getUrl();
+  DtUid getProvysUserId();
 }

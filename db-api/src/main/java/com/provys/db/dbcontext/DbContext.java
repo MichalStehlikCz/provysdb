@@ -1,5 +1,7 @@
 package com.provys.db.dbcontext;
 
+import com.provys.common.datatype.DtUid;
+
 /**
  * Represents database context for Sql builder - statements are deferred to this context's
  * connections.
@@ -22,6 +24,14 @@ public interface DbContext {
    */
   String getUser();
 
+  /**
+   * Provys user used in calls to Provys database. Depending on context, it might be based on Oracle
+   * account or retrieved from security context.
+   *
+   * @return provys user Id that will be used in call to database using this context
+   */
+  DtUid getProvysUserId();
+  
   /**
    * URL of database connections are connected to. It is Oracle JDBC thin URL, might include
    * fail-over

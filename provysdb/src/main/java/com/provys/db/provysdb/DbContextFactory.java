@@ -1,4 +1,4 @@
-package com.provys.db.dbcontext.spring;
+package com.provys.db.provysdb;
 
 import com.google.errorprone.annotations.Immutable;
 import com.provys.db.provysdb.AdminDbContext;
@@ -21,7 +21,7 @@ public class DbContextFactory {
   }
 
   @Bean
-  AdminDbContext provysDbContext(ProvysConnectionPoolDataSource provysDataSource) {
+  AdminDbContext adminDbContext(ProvysConnectionPoolDataSource provysDataSource) {
     return new AdminDbContext(provysDataSource);
   }
 

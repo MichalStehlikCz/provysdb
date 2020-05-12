@@ -1,11 +1,13 @@
 package com.provys.db.provysdb;
 
+import com.provys.common.datatype.DtUid;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
 import com.provys.db.dbcontext.SqlException;
 import com.provys.db.dbcontext.SqlTypeHandler;
 import com.provys.db.defaultdb.dbcontext.DefaultConnection;
 import com.provys.db.defaultdb.types.SqlTypeMap;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -16,10 +18,7 @@ import java.sql.SQLException;
  *
  * @author stehlik
  */
-public final class AdminDbContext implements DbContext {
-
-  private final ProvysConnectionPoolDataSource provysDataSource;
-  private final SqlTypeHandler sqlTypeHandler;
+public final class AdminDbContext extends ProvysDbContext {
 
   /**
    * Creator for Provys admin database context.
@@ -29,8 +28,7 @@ public final class AdminDbContext implements DbContext {
    */
   public AdminDbContext(ProvysConnectionPoolDataSource provysDataSource,
       SqlTypeHandler sqlTypeHandler) {
-    this.provysDataSource = provysDataSource;
-    this.sqlTypeHandler = sqlTypeHandler;
+    super(provysDataSource, sqlTypeHandler);
   }
 
   /**
@@ -43,34 +41,17 @@ public final class AdminDbContext implements DbContext {
   }
 
   @Override
-  public DbConnection getConnection() {
-    try {
-      return new DefaultConnection(provysDataSource.getConnection(), getSqlTypeHandler());
-    } catch (SQLException e) {
-      throw new SqlException("Failed to initialize connection", e);
-    }
+  public DtUid getProvysUserId() {
+    return getProvysDataSource().getProvysUserId();
   }
 
   @Override
-  public String getUser() {
-    return provysDataSource.getUser();
-  }
-
-  @Override
-  public String getUrl() {
-    return provysDataSource.getUrl();
-  }
-
-  @Override
-  public SqlTypeHandler getSqlTypeHandler() {
-    return sqlTypeHandler;
+  protected Connection getConnectionInt() throws SQLException {
+    return getProvysDataSource().getConnection();
   }
 
   @Override
   public String toString() {
-    return "AdminDbContext{"
-        + "provysDataSource=" + provysDataSource
-        + ", sqlTypeHandler=" + sqlTypeHandler
-        + '}';
+    return "AdminDbContext{" + super.toString() + '}';
   }
 }

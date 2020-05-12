@@ -1,6 +1,7 @@
 package com.provys.db.defaultdb.dbcontext;
 
 import com.google.errorprone.annotations.Immutable;
+import com.provys.common.datatype.DtUid;
 import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbConnection;
 import com.provys.db.dbcontext.DbContext;
@@ -53,6 +54,11 @@ public class NoDbContext implements DbContext, Serializable {
 
   @Override
   public String getUser() {
+    throw getNotConnected();
+  }
+
+  @Override
+  public DtUid getProvysUserId() {
     throw getNotConnected();
   }
 

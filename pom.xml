@@ -4,22 +4,22 @@
   <parent>
     <groupId>com.provys.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>1.4.4</version>
+    <version>1.6.0</version>
   </parent>
   <groupId>com.provys.db</groupId>
   <artifactId>db-parent</artifactId>
+  <name>Db</name>
   <version>2.1.1-SNAPSHOT</version>
   <modules>
     <module>db-api</module>
     <module>defaultdb</module>
     <module>provysdb</module>
-    <module>provysdb-spring</module>
     <module>query</module>
     <module>sqlquery</module>
     <module>sqlparser</module>
     <module>querybuilder</module>
     <module>sqlquerybuilder</module>
-    <module>provysquery-spring</module>
+    <module>provysquery</module>
   </modules>
   <packaging>pom</packaging>
   <properties>

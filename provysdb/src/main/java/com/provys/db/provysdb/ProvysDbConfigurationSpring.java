@@ -1,7 +1,6 @@
-package com.provys.db.dbcontext.spring;
+package com.provys.db.provysdb;
 
 import com.google.errorprone.annotations.Immutable;
-import com.provys.db.provysdb.ProvysDbConfiguration;
 import java.util.Objects;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;

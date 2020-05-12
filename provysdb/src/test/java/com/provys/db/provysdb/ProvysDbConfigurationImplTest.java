@@ -1,8 +1,7 @@
-package com.provys.db.dbcontext.spring;
+package com.provys.db.provysdb;
 
 import static org.assertj.core.api.Assertions.*;
 
-import com.provys.db.provysdb.ProvysDbConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
