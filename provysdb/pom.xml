@@ -4,7 +4,7 @@
     <parent>
         <artifactId>db-parent</artifactId>
         <groupId>com.provys.db</groupId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>3.0.0</version>
     </parent>
     <artifactId>provysdb</artifactId>
     <packaging>jar</packaging>
