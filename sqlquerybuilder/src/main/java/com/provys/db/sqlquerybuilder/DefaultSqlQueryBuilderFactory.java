@@ -64,13 +64,14 @@ public final class DefaultSqlQueryBuilderFactory implements AdminQueryBuilderFac
   }
 
   @Override
-  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type, String name,
-      @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      String name, @Nullable T value) {
     return elementBuilderFactory.bind(type, name, value);
   }
 
   @Override
-  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type, String name) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> bind(Class<T> type,
+      String name) {
     return elementBuilderFactory.bind(type, name);
   }
 
@@ -87,8 +88,7 @@ public final class DefaultSqlQueryBuilderFactory implements AdminQueryBuilderFac
 
   @Override
   public <T> ExpressionBuilder<T> function(Class<T> type,
-      BuiltInFunction function,
-      Collection<? extends Expression<?>> arguments) {
+      BuiltInFunction function, Collection<? extends Expression<?>> arguments) {
     return elementBuilderFactory.function(type, function, arguments);
   }
 
@@ -99,8 +99,8 @@ public final class DefaultSqlQueryBuilderFactory implements AdminQueryBuilderFac
   }
 
   @Override
-  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> literal(Class<T> type,
-      @Nullable T value) {
+  public <@ImmutableTypeParameter T extends Serializable> ExpressionBuilder<T> literal(
+      Class<T> type, @Nullable T value) {
     return elementBuilderFactory.literal(type, value);
   }
 

@@ -96,6 +96,10 @@
             <artifactId>common-datatype</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.provys.auth</groupId>
+            <artifactId>auth-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.provys.db</groupId>
             <artifactId>db-api</artifactId>
             <version>${project.version}</version>

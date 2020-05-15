@@ -1,10 +1,7 @@
 package com.provys.db.provysdb;
 
 import com.google.errorprone.annotations.Immutable;
-import com.provys.db.provysdb.AdminDbContext;
-import com.provys.db.provysdb.ProvysConnectionPoolDataSource;
-import com.provys.db.provysdb.ProvysConnectionPoolDataSourceImpl;
-import com.provys.db.provysdb.ProvysDbConfiguration;
+import com.provys.auth.api.UserContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +20,12 @@ public class DbContextFactory {
   @Bean
   AdminDbContext adminDbContext(ProvysConnectionPoolDataSource provysDataSource) {
     return new AdminDbContext(provysDataSource);
+  }
+
+  @Bean
+  UserDbContext userDbContext(ProvysConnectionPoolDataSource provysDataSource,
+      UserContext userContext) {
+    return new UserDbContext(provysDataSource, userContext);
   }
 
   @Override

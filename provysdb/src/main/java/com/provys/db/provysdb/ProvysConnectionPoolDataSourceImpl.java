@@ -1,5 +1,6 @@
 package com.provys.db.provysdb;
 
+import com.provys.auth.api.UserData;
 import com.provys.common.datatype.DtUid;
 import com.provys.db.dbcontext.SqlException;
 import java.io.PrintWriter;
@@ -130,9 +131,9 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
   }
 
   @Override
-  public Connection getConnectionWithToken(String dbToken) throws SQLException {
+  public Connection getConnectionForUser(UserData userData) throws SQLException {
     var reqLabels = new Properties();
-    reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN, dbToken);
+    reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN, userData.getDbToken());
     return oraclePool.getConnection(reqLabels);
   }
 

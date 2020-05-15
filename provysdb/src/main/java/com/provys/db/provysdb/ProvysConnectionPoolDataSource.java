@@ -1,5 +1,6 @@
 package com.provys.db.provysdb;
 
+import com.provys.auth.api.UserData;
 import com.provys.common.datatype.DtUid;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,11 +17,11 @@ public interface ProvysConnectionPoolDataSource extends DataSource {
   /**
    * Retrieve database connection using token.
    *
-   * @param dbToken is token supplied to database to switch to Provys user context
+   * @param userData is Provys session context to be used to initiate connection
    * @return connection with proper Provys user context
    * @throws SQLException if there is any problem retrieving connection
    */
-  Connection getConnectionWithToken(String dbToken) throws SQLException;
+  Connection getConnectionForUser(UserData userData) throws SQLException;
 
   /**
    * Url of Provys database.
