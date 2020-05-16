@@ -182,21 +182,21 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
       if (reqLabels.containsKey(PROPERTY_TOKEN)) {
         // required token connection
         var propertyToken = castNonNull(reqLabels.getProperty(PROPERTY_TOKEN)); // contains key
-        if ((currentLabels == null) || !propertyToken
-            .equals(currentLabels.getProperty(PROPERTY_TOKEN))) {
+        if ((currentLabels == null)
+            || !propertyToken.equals(currentLabels.getProperty(PROPERTY_TOKEN))) {
           initToken(propertyToken, lconn);
         }
       } else if (reqLabels.containsKey(PROPERTY_USER)) {
         // required user connection
         var propertyUser = castNonNull(reqLabels.getProperty(PROPERTY_USER)); // contains key
-        if ((currentLabels == null) || !propertyUser
-            .equals(currentLabels.getProperty(PROPERTY_USER))) {
+        if ((currentLabels == null)
+            || !propertyUser.equals(currentLabels.getProperty(PROPERTY_USER))) {
           initUser(propertyUser, lconn);
         }
       } else {
         // required generic connection
-        if ((currentLabels == null) || !CONNECTION_GENERIC
-            .equals(currentLabels.getProperty(PROPERTY_TYPE))) {
+        if ((currentLabels == null)
+            || !CONNECTION_GENERIC.equals(currentLabels.getProperty(PROPERTY_TYPE))) {
           initGeneric(lconn);
         }
       }
