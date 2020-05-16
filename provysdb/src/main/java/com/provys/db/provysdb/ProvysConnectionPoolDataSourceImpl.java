@@ -106,7 +106,11 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
       oraclePool.setInitialPoolSize(minPoolSize);
       int maxPoolSize = dbConfiguration.getMaxPoolSize();
       oraclePool.setMaxPoolSize(maxPoolSize);
+      oraclePool.setConnectionLabelingHighCost(ProvysConnectionLabelingCallback.NEW_CONNECTION+1);
+      oraclePool.setHighCostConnectionReuseThreshold(maxPoolSize * 4 / 5);
+      oraclePool.setInactiveConnectionTimeout(300);
       oraclePool.setValidateConnectionOnBorrow(true);
+      oraclePool.setSecondsToTrustIdleConnection(5);
       // Register connection labeling callback
       oraclePool.registerConnectionLabelingCallback(new ProvysConnectionLabelingCallback());
       LOG.info("Connection pool created (user {}, db {}, minsize {}, maxsize {}", user, db,
