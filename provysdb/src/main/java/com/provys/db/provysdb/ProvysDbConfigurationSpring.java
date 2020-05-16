@@ -88,16 +88,16 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
     ProvysDbConfigurationSpring that = (ProvysDbConfigurationSpring) o;
     return minPoolSize == that.minPoolSize
         && maxPoolSize == that.maxPoolSize
-        && Objects.equals(url, that.url)
-        && Objects.equals(user, that.user)
-        && Objects.equals(pwd, that.pwd);
+        && url.equals(that.url)
+        && user.equals(that.user)
+        && pwd.equals(that.pwd);
   }
 
   @Override
   public int hashCode() {
-    int result = url != null ? url.hashCode() : 0;
-    result = 31 * result + (user != null ? user.hashCode() : 0);
-    result = 31 * result + (pwd != null ? pwd.hashCode() : 0);
+    int result = url.hashCode();
+    result = 31 * result + user.hashCode();
+    result = 31 * result + pwd.hashCode();
     result = 31 * result + minPoolSize;
     result = 31 * result + maxPoolSize;
     return result;
