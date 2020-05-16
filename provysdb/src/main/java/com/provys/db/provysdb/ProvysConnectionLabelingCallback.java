@@ -25,9 +25,9 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
       .getLogger(ProvysConnectionLabelingCallback.class.getName());
 
   static final int EXACT_MATCH = 0;
-  static final int TOKEN_MATCH = EXACT_MATCH + 1;
-  static final int USER_MATCH = TOKEN_MATCH + 1;
-  static final int GENERIC_CONNECTION = USER_MATCH + 1;
+  static final int TOKEN_MATCH = 0;
+  static final int USER_MATCH = 0;
+  static final int GENERIC_CONNECTION = 0;
   static final int NEW_CONNECTION = GENERIC_CONNECTION + 1;
   static final int REUSE_TOKEN = NEW_CONNECTION + 1;
   static final int REUSE_USER = REUSE_TOKEN + 1;
@@ -74,11 +74,13 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     }
     // user matches
     String reqUser = reqLabels.getProperty(PROPERTY_USER);
-    String currentUser = currentLabels.getProperty(PROPERTY_USER);
-    //noinspection EqualsReplaceableByObjectsCall - null == null is not considered match...
-    if ((reqUser != null) && reqUser.equals(currentUser)) {
-      LOG.debug("User match ({})", USER_MATCH);
-      return USER_MATCH;
+    if (reqToken == null) {
+      String currentUser = currentLabels.getProperty(PROPERTY_USER);
+      //noinspection EqualsReplaceableByObjectsCall - null == null is not considered match...
+      if ((reqUser != null) && reqUser.equals(currentUser)) {
+        LOG.debug("User match ({})", USER_MATCH);
+        return USER_MATCH;
+      }
     }
     // switch based on connection type
     switch (currentLabels.getProperty(PROPERTY_TYPE)) {
