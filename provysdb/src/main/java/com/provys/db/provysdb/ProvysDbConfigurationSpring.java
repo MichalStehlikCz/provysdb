@@ -15,6 +15,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Immutable
 public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
 
+  private static final long serialVersionUID = -269447777183213755L;
+
   private final String url;
 
   private final String user;
@@ -25,9 +27,18 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
 
   private final int maxPoolSize;
 
+  private final int connectionReuseThreshold;
+
+  private final boolean validateOnBorrow;
+
+  private final int validateSkipUntil;
+
   @ConstructorBinding
   ProvysDbConfigurationSpring(String url, String user, String pwd,
-      @DefaultValue("1") int minPoolSize, @DefaultValue("10") int maxPoolSize) {
+      @DefaultValue("1") int minPoolSize, @DefaultValue("10") int maxPoolSize,
+      @DefaultValue("-1") int connectionReuseThreshold,
+      @DefaultValue("true") boolean validateOnBorrow,
+      @DefaultValue("0") int validateSkipUntil) {
     if (Objects.requireNonNull(url, "Property provysdb.url not specified").isBlank()) {
       throw new IllegalArgumentException("Property provysdb.url cannot be blank");
     }
@@ -50,6 +61,14 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
           "Invalid value of property provysdb.maxpoolsize " + maxPoolSize);
     }
     this.maxPoolSize = maxPoolSize;
+    this.connectionReuseThreshold =
+        connectionReuseThreshold >= 0 ? connectionReuseThreshold : maxPoolSize;
+    this.validateOnBorrow = validateOnBorrow;
+    if (validateSkipUntil < 0) {
+      throw new IllegalArgumentException(
+          "Invalid value of property provysdb.validateskipuntil " + validateSkipUntil);
+    }
+    this.validateSkipUntil = validateSkipUntil;
   }
 
   @Override
@@ -78,16 +97,34 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
   }
 
   @Override
+  public int getConnectionReuseThreshold() {
+    return connectionReuseThreshold;
+  }
+
+  @Override
+  public boolean isValidateOnBorrow() {
+    return validateOnBorrow;
+  }
+
+  @Override
+  public int getValidateSkipUntil() {
+    return validateSkipUntil;
+  }
+
+  @Override
   public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ProvysDbConfigurationSpring)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
     ProvysDbConfigurationSpring that = (ProvysDbConfigurationSpring) o;
     return minPoolSize == that.minPoolSize
         && maxPoolSize == that.maxPoolSize
+        && connectionReuseThreshold == that.connectionReuseThreshold
+        && validateOnBorrow == that.validateOnBorrow
+        && validateSkipUntil == that.validateSkipUntil
         && url.equals(that.url)
         && user.equals(that.user)
         && pwd.equals(that.pwd);
@@ -100,6 +137,9 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
     result = 31 * result + pwd.hashCode();
     result = 31 * result + minPoolSize;
     result = 31 * result + maxPoolSize;
+    result = 31 * result + connectionReuseThreshold;
+    result = 31 * result + (validateOnBorrow ? 1 : 0);
+    result = 31 * result + validateSkipUntil;
     return result;
   }
 
@@ -108,8 +148,12 @@ public class ProvysDbConfigurationSpring implements ProvysDbConfiguration {
     return "ProvysDbConfigurationSpring{"
         + "url='" + url + '\''
         + ", user='" + user + '\''
+        + ", pwd='" + pwd + '\''
         + ", minPoolSize=" + minPoolSize
         + ", maxPoolSize=" + maxPoolSize
+        + ", connectionReuseThreshold=" + connectionReuseThreshold
+        + ", validateOnBorrow=" + validateOnBorrow
+        + ", validateSkipUntil=" + validateSkipUntil
         + '}';
   }
 }
