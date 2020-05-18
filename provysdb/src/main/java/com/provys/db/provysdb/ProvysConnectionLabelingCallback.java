@@ -174,12 +174,27 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     labelableConnection.applyConnectionLabel(PROPERTY_USER, userId.toPlainString());
   }
 
+  private static Properties getLabels(LabelableConnection connection) {
+    try {
+      return connection.getConnectionLabels();
+    } catch (SQLException e) {
+      LOG.warn("Failed to retrieve labels from connection", e);
+      return new Properties();
+    }
+  }
+
   @Override
   public boolean configure(Properties reqLabels, Object conn) {
     Objects.requireNonNull(reqLabels);
+    LabelableConnection lconn = (LabelableConnection) conn;
+    Properties currentLabels;
     try {
-      LabelableConnection lconn = (LabelableConnection) conn;
-      var currentLabels = lconn.getConnectionLabels();
+      currentLabels = lconn.getConnectionLabels();
+    } catch (SQLException e) {
+      LOG.warn("SQL exception getting labels from connection", e);
+      return false;
+    }
+    try {
       LOG.debug("Configure connection for labels {}; current {}", reqLabels, currentLabels);
       if (reqLabels.containsKey(PROPERTY_TOKEN)) {
         // required token connection
@@ -202,8 +217,11 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
           initGeneric(lconn);
         }
       }
+      LOG.debug("Configured connection for labels {}; original {}, new {}", reqLabels::toString,
+          () -> currentLabels, () -> getLabels(lconn));
     } catch (SQLException e) {
-      LOG.warn("SQL exception during connection configuration", e);
+      LOG.warn("SQL exception during connection configuration for labels {}; current {}", reqLabels,
+          currentLabels, e);
       return false;
     }
     return true;
