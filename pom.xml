@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.provys.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>1.7.0</version>
+    <version>1.10.0</version>
   </parent>
   <groupId>com.provys.db</groupId>
   <artifactId>db-parent</artifactId>
@@ -24,7 +24,7 @@
   <packaging>pom</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>3.13.0</common.version>
+    <common.version>3.14.0</common.version>
     <auth.version>1.2.0</auth.version>
   </properties>
   <scm>
