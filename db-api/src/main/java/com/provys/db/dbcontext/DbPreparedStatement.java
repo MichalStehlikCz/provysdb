@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext;
 
+import com.provys.common.datatype.DtBinaryData;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.common.datatype.DtUid;
@@ -276,6 +277,24 @@ public interface DbPreparedStatement extends PreparedStatement, DbStatement {
    * @throws SqlException when any problem is encountered
    */
   void setNullableDtDateTime(int parameterIndex, @Nullable DtDateTime value);
+
+  /**
+   * Set (mandatory) value to bind value of Blob type.
+   *
+   * @param parameterIndex is index of bind variable
+   * @param value          is value to be bound
+   * @throws SqlException when any problem is encountered
+   */
+  void setNonNullDtBinaryData(int parameterIndex, DtBinaryData value);
+
+  /**
+   * Set (optional) value to bind value of Blob type.
+   *
+   * @param parameterIndex is index of bind variable
+   * @param value          is value to be bound
+   * @throws SqlException when any problem is encountered
+   */
+  void setNullableDtBinaryData(int parameterIndex, @Nullable DtBinaryData value);
 
   /**
    * Set mandatory value to bind value, use default conversion of supplied type to Sql. Note that

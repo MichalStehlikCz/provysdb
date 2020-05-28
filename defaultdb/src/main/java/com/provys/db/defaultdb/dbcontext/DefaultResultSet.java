@@ -2,6 +2,7 @@ package com.provys.db.defaultdb.dbcontext;
 
 import static org.checkerframework.checker.nullness.NullnessUtil.castNonNull;
 
+import com.provys.common.datatype.DtBinaryData;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
@@ -10,6 +11,7 @@ import com.provys.common.exception.InternalException;
 import com.provys.db.dbcontext.DbResultSet;
 import com.provys.db.dbcontext.SqlException;
 import com.provys.db.dbcontext.SqlTypeHandler;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -1839,7 +1841,65 @@ public class DefaultResultSet implements DbResultSet {
   public Optional<DtDateTime> getOptionalDtDateTime(String columnLabel) {
     return Optional.ofNullable(getNullableDtDateTime(columnLabel));
   }
-  
+
+  @Override
+  public DtBinaryData getNonNullDtBinaryData(int columnIndex) {
+    var result = getNullableDtBinaryData(columnIndex);
+    if (result == null) {
+      throw getNullException(columnIndex);
+    }
+    return result;
+  }
+
+  @Override
+  public DtBinaryData getNonNullDtBinaryData(String columnLabel) {
+    var result = getNullableDtBinaryData(columnLabel);
+    if (result == null) {
+      throw getNullException(columnLabel);
+    }
+    return result;
+  }
+
+  @Override
+  public @Nullable DtBinaryData getNullableDtBinaryData(int columnIndex) {
+    try {
+      var value = resultSet.getBlob(columnIndex);
+      if (resultSet.wasNull()) {
+        return null;
+      }
+      return new DtBinaryData(castNonNull(value).getBinaryStream());
+    } catch (SQLException e) {
+      throw getGetSqlException(columnIndex, DtBinaryData.class, e);
+    } catch (IOException e) {
+      throw new InternalException("Error reading data from Blob", e);
+    }
+  }
+
+  @Override
+  public @Nullable DtBinaryData getNullableDtBinaryData(String columnLabel) {
+    try {
+      var value = resultSet.getBlob(columnLabel);
+      if (resultSet.wasNull()) {
+        return null;
+      }
+      return new DtBinaryData(castNonNull(value).getBinaryStream());
+    } catch (SQLException e) {
+      throw getGetSqlException(columnLabel, DtBinaryData.class, e);
+    } catch (IOException e) {
+      throw new InternalException("Error reading data from Blob", e);
+    }
+  }
+
+  @Override
+  public Optional<DtBinaryData> getOptionalDtBinaryData(int columnIndex) {
+    return Optional.ofNullable(getNullableDtBinaryData(columnIndex));
+  }
+
+  @Override
+  public Optional<DtBinaryData> getOptionalDtBinaryData(String columnLabel) {
+    return Optional.ofNullable(getNullableDtBinaryData(columnLabel));
+  }
+
   @Override
   public <T> @NonNull T getNonNullValue(int columnIndex, Class<T> type) {
     return sqlTypeHandler.readNonNullValue(this, columnIndex, type);

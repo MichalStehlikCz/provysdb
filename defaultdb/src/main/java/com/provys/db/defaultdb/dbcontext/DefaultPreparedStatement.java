@@ -1,5 +1,6 @@
 package com.provys.db.defaultdb.dbcontext;
 
+import com.provys.common.datatype.DtBinaryData;
 import com.provys.common.datatype.DtBoolean;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
@@ -645,9 +646,27 @@ public class DefaultPreparedStatement<T extends PreparedStatement> extends Defau
   @Override
   public void setNullableDtDateTime(int parameterIndex, @Nullable DtDateTime value) {
     if (value == null) {
-      setNullInternal(parameterIndex, DtDateTime.class, Types.DATE);
+      setNullInternal(parameterIndex, DtDateTime.class, Types.TIMESTAMP);
     } else {
       setNonNullDtDateTime(parameterIndex, value);
+    }
+  }
+
+  @Override
+  public void setNonNullDtBinaryData(int parameterIndex, DtBinaryData value) {
+    try {
+      setBinaryStream(parameterIndex, value.getInputStream());
+    } catch (SQLException e) {
+      throw getSetException(parameterIndex, DtBinaryData.class, value, e);
+    }
+  }
+
+  @Override
+  public void setNullableDtBinaryData(int parameterIndex, @Nullable DtBinaryData value) {
+    if (value == null) {
+      setNullInternal(parameterIndex, DtBinaryData.class, Types.BLOB);
+    } else {
+      setNonNullDtBinaryData(parameterIndex, value);
     }
   }
 

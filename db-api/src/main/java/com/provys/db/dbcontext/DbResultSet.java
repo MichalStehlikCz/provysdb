@@ -1,5 +1,6 @@
 package com.provys.db.dbcontext;
 
+import com.provys.common.datatype.DtBinaryData;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.datatype.DtDateTime;
 import com.provys.common.datatype.DtUid;
@@ -640,6 +641,54 @@ public interface DbResultSet extends ResultSet {
    * @return value in column
    */
   Optional<DtDateTime> getOptionalDtDateTime(String columnLabel);
+
+  /**
+   * Return value of (mandatory) Blob column.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @return value in column
+   */
+  DtBinaryData getNonNullDtBinaryData(int columnIndex);
+
+  /**
+   * Return value of (mandatory) Blob column.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @return value in column
+   */
+  DtBinaryData getNonNullDtBinaryData(String columnLabel);
+
+  /**
+   * Return value of optional Blob column.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @return value in column, null when empty
+   */
+  @Nullable DtBinaryData getNullableDtBinaryData(int columnIndex);
+
+  /**
+   * Return value of optional Blob column.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @return value in column, null when empty
+   */
+  @Nullable DtBinaryData getNullableDtBinaryData(String columnLabel);
+
+  /**
+   * Return value of optional Blob column.
+   *
+   * @param columnIndex is index of column to be retrieved
+   * @return value in column
+   */
+  Optional<DtBinaryData> getOptionalDtBinaryData(int columnIndex);
+
+  /**
+   * Return value of optional Blob column.
+   *
+   * @param columnLabel is name of column to be retrieved
+   * @return value in column
+   */
+  Optional<DtBinaryData> getOptionalDtBinaryData(String columnLabel);
 
   /**
    * Return value of (mandatory) column of specified type.
