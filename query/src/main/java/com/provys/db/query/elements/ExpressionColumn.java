@@ -136,7 +136,7 @@ final class ExpressionColumn<T> implements Expression<T> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(ExpressionConsumer consumer) {
     consumer.column(type, table, column);
   }
 

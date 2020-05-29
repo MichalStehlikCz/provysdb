@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.provys.common.datatype.DtDate;
 import com.provys.common.jackson.JacksonMappers;
+import com.provys.db.query.names.SimpleName;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,13 +22,14 @@ class ConditionOperationTest {
   static Stream<Object[]> jacksonTest() {
     return Stream.of(
         new Object[]{new ConditionOperation(COND_EQ_NONNULL,
-            List.of(FACTORY.bind(String.class, "bind"), FACTORY.literal("text"))),
-            "{\"OPERATOR\":\"COND_EQ_NONNULL\",\"ARGUMENTS\":[{\"BIND\":{\"NAME\":\"BIND\","
-                + "\"TYPE\":\"STRING\"}},{\"LITERAL\":{\"STRING\":\"text\"}}]}",
+            List.of(FACTORY.columnOuter(String.class, null, SimpleName.valueOf("column")),
+                FACTORY.literal("text"))),
+            "{\"OPERATOR\":\"COND_EQ_NONNULL\",\"ARGUMENTS\":[{\"COLUMNOUTER\":{\"TYPE\":\"STRING\""
+                + ",\"COLUMN\":\"column\"}},{\"LITERAL\":{\"STRING\":\"text\"}}]}",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?><CONDOP><OPERATOR>COND_EQ_NONNULL</OPERATOR>"
-                + "<ARGUMENTS><ARGUMENT><BIND><NAME>BIND</NAME><TYPE>STRING</TYPE><VALUE/></BIND>"
-                + "</ARGUMENT><ARGUMENT><LITERAL><STRING>text</STRING></LITERAL></ARGUMENT>"
-                + "</ARGUMENTS></CONDOP>"}
+                + "<ARGUMENTS><ARGUMENT><COLUMNOUTER><TYPE>STRING</TYPE><TABLE/><COLUMN>column"
+                + "</COLUMN></COLUMNOUTER></ARGUMENT><ARGUMENT><LITERAL><STRING>text</STRING>"
+                + "</LITERAL></ARGUMENT></ARGUMENTS></CONDOP>"}
         , new Object[]{new ConditionOperation(COND_AND, List.of(
             new ConditionOperation(COND_EQ_NONNULL,
                 List.of(FACTORY.bind(String.class, "bind"), FACTORY.literal("text"))),

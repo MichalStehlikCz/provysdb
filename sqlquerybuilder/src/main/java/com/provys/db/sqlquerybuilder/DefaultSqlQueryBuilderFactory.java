@@ -87,6 +87,17 @@ public final class DefaultSqlQueryBuilderFactory implements AdminQueryBuilderFac
   }
 
   @Override
+  public <T> ExpressionBuilder<T> columnOuter(Class<T> type,
+      @Nullable NamePath table, SimpleName column) {
+    return elementBuilderFactory.columnOuter(type, table, column);
+  }
+
+  @Override
+  public <T> ExpressionBuilder<T> columnOuter(SelectColumn<T> column) {
+    return elementBuilderFactory.columnOuter(column);
+  }
+
+  @Override
   public <T> ExpressionBuilder<T> function(Class<T> type,
       BuiltInFunction function, Collection<? extends Expression<?>> arguments) {
     return elementBuilderFactory.function(type, function, arguments);

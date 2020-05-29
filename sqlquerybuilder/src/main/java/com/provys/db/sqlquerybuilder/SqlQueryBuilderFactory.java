@@ -105,8 +105,7 @@ public interface SqlQueryBuilderFactory {
    * @param <T> is type of expression
    * @return expression builder, representing single column / property from source
    */
-  <T> ExpressionBuilder<T> column(Class<T> type,
-      @Nullable NamePath table, SimpleName column);
+  <T> ExpressionBuilder<T> column(Class<T> type, @Nullable NamePath table, SimpleName column);
 
   /**
    * Create expression builder, based on supplied column. Column must be of type based on expression
@@ -117,6 +116,29 @@ public interface SqlQueryBuilderFactory {
    * @return expression builder, representing single column / property from source
    */
   <T> ExpressionBuilder<T> column(SelectColumn<T> column);
+
+  /**
+   * Create column expression builder, based on specified source (identified by alias), column name
+   * and type. Outer join sign (+) is appended to column.
+   *
+   * @param type   is type that given expression should yield
+   * @param table  is alias identifying source
+   * @param column is name of column, evaluated in context of source
+   * @param <T> is type of expression
+   * @return expression builder, representing single column / property from source
+   */
+  <T> ExpressionBuilder<T> columnOuter(Class<T> type, @Nullable NamePath table, SimpleName column);
+
+  /**
+   * Create expression builder, based on supplied column. Column must be of type based on column
+   * reference, in case of any other column or expression type action fails. Outer join sign (+) is
+   * appended to column.
+   *
+   * @param column is column expression should be based on
+   * @param <T> is type of expression
+   * @return expression builder, representing single column / property from source
+   */
+  <T> ExpressionBuilder<T> columnOuter(SelectColumn<T> column);
 
   /**
    * Create function builder that will evaluate to supplied type, based on supplied function and

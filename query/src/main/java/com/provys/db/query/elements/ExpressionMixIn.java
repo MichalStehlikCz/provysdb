@@ -19,6 +19,7 @@ import com.provys.db.query.functions.BuiltInFunction;
     @JsonSubTypes.Type(value = Literal.class, name = "LITERAL"),
     @JsonSubTypes.Type(value = BuiltInFunction.class, name = "FUNCTION"),
     @JsonSubTypes.Type(value = ExpressionColumn.class, name = "COLUMN"),
+    @JsonSubTypes.Type(value = ExpressionColumnOuter.class, name = "COLUMNOUTER"),
     @JsonSubTypes.Type(value = ExpressionBind.class, name = "BIND"),
     @JsonSubTypes.Type(value = Condition.class, name = "CONDITION")
 })

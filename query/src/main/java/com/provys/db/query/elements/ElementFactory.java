@@ -133,7 +133,7 @@ public final class ElementFactory {
    * @param <T>         is type parameter denoting type of expression
    * @return expression, representing single column / property from source
    */
-  public <T> Expression<T> column(Class<T> type, @Nullable NamePath table, SimpleName column,
+  public <T> ExpressionColumn<T> column(Class<T> type, @Nullable NamePath table, SimpleName column,
       @Nullable FromContext fromContext) {
     return new ExpressionColumn<>(type, table, column, fromContext);
   }
@@ -148,8 +148,53 @@ public final class ElementFactory {
    * @param <T>    is type parameter denoting type of expression
    * @return expression, representing single column / property from source
    */
-  public <T> Expression<T> column(Class<T> type, @Nullable NamePath table, SimpleName column) {
+  public <T> ExpressionColumn<T> column(Class<T> type, @Nullable NamePath table,
+      SimpleName column) {
     return column(type, table, column, null);
+  }
+
+  /**
+   * Create outer column expression (column with (+) sign, used to indicate outer join), based on
+   * specified column.
+   *
+   * @param column is column expression is based on
+   * @param <T>    is type parameter denoting type of expression
+   * @return expression, representing single column / property from source, usable in outer join
+   */
+  public <T> Expression<T> columnOuter(ExpressionColumn<T> column) {
+    return new ExpressionColumnOuter<>(column);
+  }
+
+  /**
+   * Create outer column expression (column with (+) sign, used to indicate outer join), based on
+   * specified source (identified by alias), column name and type. Expression is validated against
+   * supplied context.
+   *
+   * @param type        is type that given expression should yield
+   * @param table       is alias identifying source
+   * @param column      is name of column, evaluated in context of source
+   * @param fromContext is context in which sources are evaluated; if left empty, no validation is
+   *                    performed
+   * @param <T>         is type parameter denoting type of expression
+   * @return expression, representing single column / property from source
+   */
+  public <T> Expression<T> columnOuter(Class<T> type, @Nullable NamePath table, SimpleName column,
+      @Nullable FromContext fromContext) {
+    return columnOuter(column(type, table, column, fromContext));
+  }
+
+  /**
+   * Create outer column expression (column with (+) sign, used to indicate outer join), based on
+   * specified source (identified by alias), column name and type.
+   *
+   * @param table  is alias identifying source
+   * @param column is name of column, evaluated in context of source
+   * @param type   is type that given expression should yield
+   * @param <T>    is type parameter denoting type of expression
+   * @return expression, representing single column / property from source
+   */
+  public <T> Expression<T> columnOuter(Class<T> type, @Nullable NamePath table, SimpleName column) {
+    return columnOuter(type, table, column, null);
   }
 
   /**

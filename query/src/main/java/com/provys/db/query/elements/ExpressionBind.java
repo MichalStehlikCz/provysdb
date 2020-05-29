@@ -102,7 +102,7 @@ final class ExpressionBind<T> implements Expression<T> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(ExpressionConsumer consumer) {
     consumer.bind(type, bindVariable);
   }
 

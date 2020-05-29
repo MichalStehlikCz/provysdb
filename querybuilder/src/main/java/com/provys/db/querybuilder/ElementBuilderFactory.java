@@ -5,6 +5,7 @@ import com.provys.common.exception.InternalException;
 import com.provys.db.query.elements.Condition;
 import com.provys.db.query.elements.ElementFactory;
 import com.provys.db.query.elements.Expression;
+import com.provys.db.query.elements.ExpressionConsumer;
 import com.provys.db.query.elements.FromClause;
 import com.provys.db.query.elements.SelectClause;
 import com.provys.db.query.elements.SelectClauseConsumer;
@@ -15,6 +16,7 @@ import com.provys.db.query.elements.SelectT;
 import com.provys.db.query.elements.SelectT1;
 import com.provys.db.query.elements.SelectT2;
 import com.provys.db.query.functions.BuiltInFunction;
+import com.provys.db.query.functions.ConditionalOperator;
 import com.provys.db.query.names.BindName;
 import com.provys.db.query.names.BindVariable;
 import com.provys.db.query.names.NamePath;
@@ -22,6 +24,7 @@ import com.provys.db.query.names.SimpleName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -177,6 +180,120 @@ public final class ElementBuilderFactory {
     var expression = (Expression<T>) selectColumnAnalyzer.expressionFound;
     return new DecoratingColumnExpressionBuilder<>(expression, selectColumnAnalyzer.aliasFound,
         elementFactory);
+  }
+
+  /**
+   * Create outer column (e.g. column with (+) ) expression builder, based on specified source
+   * (identified by alias), column name and type. Expression is validated against supplied context.
+   *
+   * @param type   is type that given expression should yield
+   * @param table  is alias identifying source
+   * @param column is name of column, evaluated in context of source
+   * @param <T>    is type parameter denoting type of expression
+   * @return expression builder, representing single column / property from source
+   */
+  public <T> ExpressionBuilder<T> columnOuter(Class<T> type, @Nullable NamePath table,
+      SimpleName column) {
+    return expression(elementFactory.columnOuter(type, table, column));
+  }
+
+  private static final class ExpressionColumnAnalyzer implements ExpressionConsumer {
+
+    private @MonotonicNonNull Class<?> typeFound;
+    private @Nullable NamePath tableFound;
+    private @MonotonicNonNull SimpleName columnFound;
+
+    /**
+     * Value of field typeFound.
+     *
+     * @return value of field typeFound
+     */
+    public Class<?> getTypeFound() {
+      if (typeFound == null) {
+        throw new IllegalStateException("Cannot read type - type not initialized");
+      }
+      return typeFound;
+    }
+
+    /**
+     * Value of field tableFound.
+     *
+     * @return value of field tableFound
+     */
+    public @Nullable NamePath getTableFound() {
+      return tableFound;
+    }
+
+    /**
+     * Value of field columnFound.
+     *
+     * @return value of field columnFound
+     */
+    public SimpleName getColumnFound() {
+      if (columnFound == null) {
+        throw new IllegalStateException("Cannot read column - column not initialized");
+      }
+      return columnFound;
+    }
+
+    @Override
+    public void bind(Class<?> type, BindVariable bindVariable) {
+      throw new InternalException("Cannot mark outer join on bind expression");
+    }
+
+    @Override
+    public void column(Class<?> type, @Nullable NamePath table, SimpleName column) {
+      typeFound = type;
+      tableFound = table;
+      columnFound = column;
+    }
+
+    @Override
+    public void columnOuter(Class<?> type, @Nullable NamePath table, SimpleName column) {
+      throw new InternalException("Cannot mark outer join - already marked on column");
+    }
+
+    @Override
+    public void function(Class<?> type, BuiltInFunction function,
+        Collection<? extends Expression<?>> arguments) {
+      throw new InternalException("Cannot mark outer join on built-in function expression");
+    }
+
+    @Override
+    public <T> void literal(Class<T> type, @Nullable T value) {
+      throw new InternalException("Cannot mark outer join on literal");
+    }
+
+    @Override
+    public void condition(ConditionalOperator operator,
+        Collection<? extends Expression<?>> arguments) {
+      throw new InternalException("Cannot mark outer join on condition");
+    }
+  }
+
+  /**
+   * Create outer column (e.g. column with (+) ) expression builder, based on specified select
+   * column. Used when using column definitions read from database.
+   *
+   * @param column is select column that is to be used as source for outer column expression
+   * @param <T>    is type parameter denoting type of expression
+   * @return expression builder, representing single column / property from source
+   */
+  public <T> ExpressionBuilder<T> columnOuter(SelectColumn<T> column) {
+    var selectColumnAnalyzer = new SelectColumnAnalyzer();
+    column.apply(selectColumnAnalyzer);
+    var expression = selectColumnAnalyzer.expressionFound;
+    if (expression == null) {
+      throw new InternalException(
+          "Cannot create expression builder from column not based on expression " + column);
+    }
+    var expressionAnalyzer = new ExpressionColumnAnalyzer();
+    expression.apply(expressionAnalyzer);
+    @SuppressWarnings("unchecked") // ok because we started from column of correct type
+    var result = (ExpressionBuilder<T>) expression(elementFactory.columnOuter(
+        expressionAnalyzer.getTypeFound(), expressionAnalyzer.getTableFound(),
+        expressionAnalyzer.getColumnFound()));
+    return result;
   }
 
   /**

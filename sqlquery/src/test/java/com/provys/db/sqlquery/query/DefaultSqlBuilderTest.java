@@ -96,6 +96,25 @@ class DefaultSqlBuilderTest {
     assertThat(builder.getBindValues()).isEmpty();
   }
 
+  static Stream<Object[]> columnOuterTest() {
+    return Stream.of(
+        new Object[]{FACTORY.columnOuter(Integer.class, null, SimpleName.valueOf("column")),
+            "column(+)"}
+        , new Object[]{FACTORY.columnOuter(String.class, SegmentedName.valueOf("scheme.table"),
+            SimpleName.valueOf("column")), "scheme.table.column(+)"}
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource
+  void columnOuterTest(Element<?> expression, String sql) {
+    var builder = getBuilder();
+    expression.apply(builder);
+    assertThat(builder.getSql()).isEqualTo(sql);
+    assertThat(builder.getBindsWithPos()).isEmpty();
+    assertThat(builder.getBindValues()).isEmpty();
+  }
+
   static Stream<Object[]> functionTest() {
     return Stream.of(
         new Object[]{FACTORY.function(String.class, STRING_CHR,

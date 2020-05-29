@@ -75,7 +75,7 @@ final class Literal<@ImmutableTypeParameter T> implements Expression<T> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(ExpressionConsumer consumer) {
     consumer.literal(type, value);
   }
 

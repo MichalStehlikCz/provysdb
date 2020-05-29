@@ -24,6 +24,11 @@ public interface Condition extends Expression<DbBoolean> {
   void apply(ConditionConsumer consumer);
 
   @Override
+  default void apply(ExpressionConsumer consumer) {
+    apply((ConditionConsumer) consumer);
+  }
+
+  @Override
   default void apply(QueryConsumer consumer) {
     apply((ConditionConsumer) consumer);
   }

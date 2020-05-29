@@ -126,7 +126,7 @@ final class ExpressionFunction<T> implements Expression<T> {
   }
 
   @Override
-  public void apply(QueryConsumer consumer) {
+  public void apply(ExpressionConsumer consumer) {
     consumer.function(type, function, arguments);
   }
 

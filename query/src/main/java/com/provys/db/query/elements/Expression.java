@@ -16,4 +16,17 @@ public interface Expression<T1> extends Element<Expression<T1>> {
    *     retrieval
    */
   Class<T1> getType();
+
+  /**
+   * Apply expression on consumer. Allows application on expression consumer, while generic element
+   * only supports QueryConsumer.
+   *
+   * @param consumer is consumer this expression should be applied to
+   */
+  void apply(ExpressionConsumer consumer);
+
+  @Override
+  default void apply(QueryConsumer consumer) {
+    apply((ExpressionConsumer) consumer);
+  }
 }

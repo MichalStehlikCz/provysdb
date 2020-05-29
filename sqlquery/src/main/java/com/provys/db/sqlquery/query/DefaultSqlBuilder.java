@@ -147,7 +147,12 @@ public class DefaultSqlBuilder implements SqlBuilder<DefaultSqlBuilder> {
       codeBuilder.append(table).append('.');
     }
     codeBuilder.append(column);
+  }
 
+  @Override
+  public void columnOuter(Class<?> type, @Nullable NamePath table, SimpleName column) {
+    column(type, table, column);
+    codeBuilder.append("(+)");
   }
 
   private class ArgumentAppender implements Consumer<SqlBuilder<?>> {
