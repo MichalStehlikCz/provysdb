@@ -136,7 +136,8 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
   @Override
   public Connection getConnectionForUser(UserData userData) throws SQLException {
     var reqLabels = new Properties();
-    reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN, userData.getDbToken());
+    reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN,
+        userData.getDbToken().getValue());
     return oraclePool.getConnection(reqLabels);
   }
 

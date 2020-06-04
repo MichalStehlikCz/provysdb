@@ -39,7 +39,7 @@ public final class UserDbContext extends ProvysDbContext {
    * @param userContext      is provider of user context for logged in user
    */
   public UserDbContext(ProvysConnectionPoolDataSource provysDataSource, UserContext userContext) {
-    this(provysDataSource, SqlTypeMap.getDefaultMap(), userContext);
+    this(provysDataSource, SqlTypeMap.getDefault(), userContext);
   }
 
   @Override

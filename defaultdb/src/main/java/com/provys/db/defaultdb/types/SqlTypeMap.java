@@ -18,7 +18,11 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.ServiceLoader.Provider;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -31,21 +35,31 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @Immutable
 public final class SqlTypeMap implements SqlTypeHandler {
 
-  private static final SqlTypeMap DEFAULT_MAP = new SqlTypeMap(
-      SqlTypeAdapterBoolean.getInstance(),
-      SqlTypeAdapterByte.getInstance(),
-      SqlTypeAdapterInteger.getInstance(),
-      SqlTypeAdapterDouble.getInstance(),
-      SqlTypeAdapterString.getInstance(),
-      SqlTypeAdapterBigDecimal.getInstance(),
-      SqlTypeAdapterBigInteger.getInstance(),
-      SqlTypeAdapterDtUid.getInstance(),
-      SqlTypeAdapterDtDate.getInstance(),
-      SqlTypeAdapterDtDateTime.getInstance()
-  );
+  private static final SqlTypeMap DEFAULT;
 
-  public static SqlTypeMap getDefaultMap() {
-    return DEFAULT_MAP;
+  static {
+    Stream<SqlTypeAdapter<?>> builtInAdapterStream = Stream.of(
+        SqlTypeAdapterBoolean.getInstance(),
+        SqlTypeAdapterByte.getInstance(),
+        SqlTypeAdapterInteger.getInstance(),
+        SqlTypeAdapterDouble.getInstance(),
+        SqlTypeAdapterString.getInstance(),
+        SqlTypeAdapterBigDecimal.getInstance(),
+        SqlTypeAdapterBigInteger.getInstance(),
+        SqlTypeAdapterDtUid.getInstance(),
+        SqlTypeAdapterDtDate.getInstance(),
+        SqlTypeAdapterDtDateTime.getInstance()
+    );
+    var loaderAdapterStream = ServiceLoader.load(SqlTypeModule.class).stream().map(Provider::get)
+        .map(SqlTypeModule::getAdapters).flatMap(Collection::stream);
+    var adapters = Stream
+        .concat(builtInAdapterStream, loaderAdapterStream)
+        .collect(Collectors.toUnmodifiableList());
+    DEFAULT = new SqlTypeMap(adapters);
+  }
+
+  public static SqlTypeMap getDefault() {
+    return DEFAULT;
   }
 
   private static final Logger LOG = LogManager.getLogger(SqlTypeMap.class);
@@ -228,8 +242,8 @@ public final class SqlTypeMap implements SqlTypeHandler {
         throw new InvalidObjectException("Adapters missing in deserialization of SqlTypeMap");
       }
       var value = new SqlTypeMap(adapters);
-      if (value.equals(DEFAULT_MAP)) {
-        return DEFAULT_MAP;
+      if (value.equals(DEFAULT)) {
+        return DEFAULT;
       }
       return value;
     }

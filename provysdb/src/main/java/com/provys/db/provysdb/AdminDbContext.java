@@ -1,11 +1,7 @@
 package com.provys.db.provysdb;
 
 import com.provys.common.datatype.DtUid;
-import com.provys.db.dbcontext.DbConnection;
-import com.provys.db.dbcontext.DbContext;
-import com.provys.db.dbcontext.SqlException;
 import com.provys.db.dbcontext.SqlTypeHandler;
-import com.provys.db.defaultdb.dbcontext.DefaultConnection;
 import com.provys.db.defaultdb.types.SqlTypeMap;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -37,7 +33,7 @@ public final class AdminDbContext extends ProvysDbContext {
    * @param provysDataSource is DataSource used to access Provys Oracle database
    */
   public AdminDbContext(ProvysConnectionPoolDataSource provysDataSource) {
-    this(provysDataSource, SqlTypeMap.getDefaultMap());
+    this(provysDataSource, SqlTypeMap.getDefault());
   }
 
   @Override

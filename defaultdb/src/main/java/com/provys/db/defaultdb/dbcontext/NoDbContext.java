@@ -40,7 +40,7 @@ public class NoDbContext implements DbContext, Serializable {
    * Creates default database context with default type map.
    */
   public NoDbContext() {
-    this(SqlTypeMap.getDefaultMap());
+    this(SqlTypeMap.getDefault());
   }
 
   private static InternalException getNotConnected() {
@@ -100,7 +100,7 @@ public class NoDbContext implements DbContext, Serializable {
     }
 
     SerializationProxy(NoDbContext value) {
-      if (value.sqlTypeHandler.equals(SqlTypeMap.getDefaultMap())) {
+      if (value.sqlTypeHandler.equals(SqlTypeMap.getDefault())) {
         this.sqlTypeHandler = null;
       } else {
         this.sqlTypeHandler = value.sqlTypeHandler;

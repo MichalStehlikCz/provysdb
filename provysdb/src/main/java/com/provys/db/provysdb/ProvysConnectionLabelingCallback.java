@@ -114,7 +114,7 @@ class ProvysConnectionLabelingCallback implements ConnectionLabelingCallback {
     BigDecimal userId;
     // switch using token supported even if working under light user (like REP)
     try (var callableStatement = ((Connection) labelableConnection).prepareCall(
-        "BEGIN"
+        "BEGIN\n"
             + "  KEC_User_CP.mp_SetUserID(\n"
             + "        p_TokenID => :c_Token\n"
             + "      , p_Remove => FALSE\n"
