@@ -135,6 +135,12 @@ public class ProvysConnectionPoolDataSourceImpl implements ProvysConnectionPoolD
 
   @Override
   public Connection getConnectionForUser(UserData userData) throws SQLException {
+    if (userData.getDbToken().getValue().equals("GENERIC")) {
+      /* Special case - token GENERIC means we want to use generic connection even though call is
+         in user context. This allows us to run some services both under authentication and
+         under hardcoded user account without authentication */
+      return getConnection();
+    }
     var reqLabels = new Properties();
     reqLabels.setProperty(ProvysConnectionLabelingCallback.PROPERTY_TOKEN,
         userData.getDbToken().getValue());
